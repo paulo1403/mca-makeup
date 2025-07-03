@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Playfair_Display, Allura, Montserrat } from 'next/font/google';
+import AuthProvider from '@/components/AuthProvider';
 import './globals.css';
 
 const playfairDisplay = Playfair_Display({
@@ -192,7 +193,7 @@ export default function RootLayout({
       <body
         className={`${playfairDisplay.variable} ${allura.variable} ${montserrat.variable} antialiased`}
       >
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );
