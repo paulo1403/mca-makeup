@@ -1,5 +1,9 @@
 'use client';
 
+import { motion } from 'framer-motion';
+import { useInView } from 'framer-motion';
+import { useRef } from 'react';
+
 export default function AboutSection() {
   const achievements = [
     {
@@ -36,13 +40,25 @@ export default function AboutSection() {
     { name: 'Asesoría de Imagen', level: 88 },
   ];
 
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
+
   return (
-    <section id='sobre-mi' className='py-20 bg-white'>
+    <section id='sobre-mi' className='py-20 bg-white' ref={ref}>
       <div className='container mx-auto px-6 lg:px-12'>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-16 items-center'>
           {/* Image Side */}
-          <div className='relative'>
-            <div className='relative h-96 lg:h-[500px] rounded-2xl overflow-hidden'>
+          <motion.div
+            className='relative'
+            initial={{ opacity: 0, x: -50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
+            transition={{ duration: 0.8 }}
+          >
+            <motion.div
+              className='relative h-96 lg:h-[500px] rounded-2xl overflow-hidden'
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.4 }}
+            >
               {/* Placeholder for about image */}
               <div className='absolute inset-0 bg-neutral-300 flex items-center justify-center'>
                 <span className='text-neutral text-lg'>
@@ -50,29 +66,56 @@ export default function AboutSection() {
                 </span>
               </div>
               <div className='absolute inset-0 bg-gradient-to-t from-primary-dark/30 to-transparent'></div>
-            </div>
+            </motion.div>
 
             {/* Floating Quote */}
-            <div className='absolute -bottom-6 -right-6 bg-primary-accent text-white p-6 rounded-xl shadow-lg max-w-xs'>
+            <motion.div
+              className='absolute -bottom-6 -right-6 bg-primary-accent text-white p-6 rounded-xl shadow-lg max-w-xs'
+              initial={{ opacity: 0, y: 20, scale: 0.8 }}
+              animate={
+                isInView
+                  ? { opacity: 1, y: 0, scale: 1 }
+                  : { opacity: 0, y: 20, scale: 0.8 }
+              }
+              transition={{ duration: 0.8, delay: 0.5 }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: '0 15px 35px rgba(212, 175, 55, 0.4)',
+              }}
+            >
               <p className='font-artistic text-lg italic'>
                 &ldquo;La belleza comienza en el momento en que decides ser tú
                 misma&rdquo;
               </p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Content Side */}
-          <div className='space-y-8'>
-            <div>
+          <motion.div
+            className='space-y-8'
+            initial={{ opacity: 0, x: 50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
               <h2 className='text-4xl lg:text-5xl font-playfair text-primary-dark mb-4'>
                 Sobre Mí
               </h2>
               <h3 className='text-2xl font-artistic text-primary-accent mb-6'>
                 Marcela Cordero
               </h3>
-            </div>
+            </motion.div>
 
-            <div className='space-y-6 text-lg text-neutral leading-relaxed'>
+            <motion.div
+              className='space-y-6 text-lg text-neutral leading-relaxed'
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
               <p>
                 Hola, soy Marcela, una maquilladora profesional apasionada por
                 resaltar la belleza natural de cada mujer. Con más de 5 años de
@@ -93,16 +136,27 @@ export default function AboutSection() {
                 es una nueva oportunidad para crear arte y hacer realidad los
                 sueños de mis clientas.
               </p>
-            </div>
+            </motion.div>
 
             {/* Skills */}
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+            >
               <h4 className='text-xl font-playfair text-primary-dark mb-4'>
                 Especialidades
               </h4>
               <div className='space-y-3'>
                 {skills.map((skill, index) => (
-                  <div key={index}>
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={
+                      isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }
+                    }
+                    transition={{ duration: 0.6, delay: 1 + index * 0.1 }}
+                  >
                     <div className='flex justify-between items-center mb-1'>
                       <span className='text-neutral font-medium'>
                         {skill.name}
@@ -112,44 +166,74 @@ export default function AboutSection() {
                       </span>
                     </div>
                     <div className='w-full bg-gray-200 rounded-full h-2'>
-                      <div
-                        className='bg-primary-accent h-2 rounded-full transition-all duration-500'
-                        style={{ width: `${skill.level}%` }}
-                      ></div>
+                      <motion.div
+                        className='bg-gradient-to-r from-primary-accent to-secondary-accent h-2 rounded-full'
+                        initial={{ width: 0 }}
+                        animate={
+                          isInView ? { width: `${skill.level}%` } : { width: 0 }
+                        }
+                        transition={{ duration: 1, delay: 1.2 + index * 0.1 }}
+                      ></motion.div>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
 
         {/* Achievements */}
-        <div className='mt-20'>
+        <motion.div
+          className='mt-20'
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.8, delay: 1 }}
+        >
           <h3 className='text-3xl font-playfair text-primary-dark text-center mb-12'>
             Logros y Certificaciones
           </h3>
 
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8'>
             {achievements.map((achievement, index) => (
-              <div
+              <motion.div
                 key={index}
                 className='text-center p-6 bg-gray-50 rounded-xl hover:shadow-lg transition-shadow'
+                initial={{ opacity: 0, y: 20 }}
+                animate={
+                  isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+                }
+                transition={{ duration: 0.6, delay: 1.2 + index * 0.1 }}
+                whileHover={{
+                  y: -5,
+                  boxShadow: '0 15px 35px rgba(0,0,0,0.1)',
+                }}
               >
-                <div className='text-4xl mb-4'>{achievement.icon}</div>
+                <motion.div
+                  className='text-4xl mb-4'
+                  whileHover={{ scale: 1.2, rotate: 10 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {achievement.icon}
+                </motion.div>
                 <h4 className='text-lg font-playfair text-primary-dark mb-3'>
                   {achievement.title}
                 </h4>
                 <p className='text-neutral text-sm'>
                   {achievement.description}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Personal Touch */}
-        <div className='mt-20 bg-gradient-to-r from-primary-dark to-secondary-accent text-white rounded-2xl p-8 lg:p-12'>
+        <motion.div
+          className='mt-20 personal-touch-section force-white-text rounded-2xl p-8 lg:p-12 shadow-2xl'
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.8, delay: 1.4 }}
+          whileHover={{ scale: 1.02 }}
+        >
           <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 items-center'>
             <div>
               <h3 className='text-3xl font-playfair mb-4'>
@@ -161,57 +245,50 @@ export default function AboutSection() {
                 que perdurarán en tu memoria para siempre.
               </p>
               <ul className='space-y-2'>
-                <li className='flex items-center'>
-                  <svg
-                    className='w-5 h-5 text-primary-accent mr-3'
-                    fill='currentColor'
-                    viewBox='0 0 20 20'
+                {[
+                  'Productos de alta calidad y duración',
+                  'Atención personalizada y profesional',
+                  'Puntualidad y responsabilidad garantizada',
+                ].map((item, index) => (
+                  <motion.li
+                    key={index}
+                    className='flex items-center'
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={
+                      isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }
+                    }
+                    transition={{ duration: 0.6, delay: 1.6 + index * 0.1 }}
                   >
-                    <path
-                      fillRule='evenodd'
-                      d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'
-                      clipRule='evenodd'
-                    />
-                  </svg>
-                  Productos de alta calidad y duración
-                </li>
-                <li className='flex items-center'>
-                  <svg
-                    className='w-5 h-5 text-primary-accent mr-3'
-                    fill='currentColor'
-                    viewBox='0 0 20 20'
-                  >
-                    <path
-                      fillRule='evenodd'
-                      d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'
-                      clipRule='evenodd'
-                    />
-                  </svg>
-                  Atención personalizada y profesional
-                </li>
-                <li className='flex items-center'>
-                  <svg
-                    className='w-5 h-5 text-primary-accent mr-3'
-                    fill='currentColor'
-                    viewBox='0 0 20 20'
-                  >
-                    <path
-                      fillRule='evenodd'
-                      d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'
-                      clipRule='evenodd'
-                    />
-                  </svg>
-                  Puntualidad y responsabilidad garantizada
-                </li>
+                    <svg
+                      className='w-5 h-5 check-icon mr-3 flex-shrink-0'
+                      fill='currentColor'
+                      viewBox='0 0 20 20'
+                    >
+                      <path
+                        fillRule='evenodd'
+                        d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'
+                        clipRule='evenodd'
+                      />
+                    </svg>
+                    <span>{item}</span>
+                  </motion.li>
+                ))}
               </ul>
             </div>
 
             <div className='text-center'>
-              <div className='inline-block p-8 bg-white/10 rounded-full mb-4'>
+              <motion.div
+                className='inline-block p-8 bg-white/10 rounded-full mb-4'
+                whileHover={{
+                  scale: 1.1,
+                  boxShadow: '0 0 30px rgba(212, 175, 55, 0.3)',
+                }}
+                transition={{ duration: 0.3 }}
+              >
                 <svg
-                  className='w-16 h-16 text-primary-accent'
+                  className='w-16 h-16'
                   fill='none'
-                  stroke='currentColor'
+                  stroke='#D4AF37'
                   viewBox='0 0 24 24'
                 >
                   <path
@@ -221,11 +298,11 @@ export default function AboutSection() {
                     d='M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'
                   />
                 </svg>
-              </div>
+              </motion.div>
               <p className='text-2xl font-playfair'>Tu belleza, mi pasión</p>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

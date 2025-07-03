@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { motion } from 'framer-motion';
+import { useInView } from 'framer-motion';
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -15,6 +17,9 @@ export default function ContactSection() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
+
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   const services = [
     'Maquillaje de Novia',
@@ -102,11 +107,35 @@ export default function ContactSection() {
   // Get minimum date (today)
   const today = new Date().toISOString().split('T')[0];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 30, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+    },
+  };
+
   return (
-    <section id='contacto' className='py-20 bg-gray-50'>
+    <section id='contacto' className='py-20 bg-gray-50' ref={ref}>
       <div className='container mx-auto px-6 lg:px-12'>
         {/* Header */}
-        <div className='text-center mb-16'>
+        <motion.div
+          className='text-center mb-16'
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.8 }}
+        >
           <h2 className='text-4xl lg:text-5xl font-playfair text-primary-dark mb-4'>
             Agenda tu Cita
           </h2>
@@ -114,7 +143,7 @@ export default function ContactSection() {
             ¿Lista para verte hermosa? Completa el formulario y me pondré en
             contacto contigo para confirmar tu cita y todos los detalles.
           </p>
-        </div>
+        </motion.div>
 
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-16'>
           {/* Contact Form */}

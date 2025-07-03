@@ -1,5 +1,9 @@
 'use client';
 
+import { motion } from 'framer-motion';
+import { useInView } from 'framer-motion';
+import { useRef } from 'react';
+
 export default function ServicesSection() {
   const services = [
     {
@@ -54,11 +58,38 @@ export default function ServicesSection() {
     },
   ];
 
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 50, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+    },
+  };
+
   return (
-    <section id='servicios' className='py-20 bg-white'>
+    <section id='servicios' className='py-20 bg-white' ref={ref}>
       <div className='container mx-auto px-6 lg:px-12'>
         {/* Header */}
-        <div className='text-center mb-16'>
+        <motion.div
+          className='text-center mb-16'
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.8 }}
+        >
           <h2 className='text-4xl lg:text-5xl font-playfair text-primary-dark mb-4'>
             Mis Servicios
           </h2>
@@ -66,14 +97,25 @@ export default function ServicesSection() {
             Cada servicio está diseñado para resaltar tu belleza natural y
             hacerte sentir segura y radiante en tu día especial.
           </p>
-        </div>
+        </motion.div>
 
         {/* Services Grid */}
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+        <motion.div
+          className='grid grid-cols-1 md:grid-cols-2 gap-8'
+          variants={containerVariants}
+          initial='hidden'
+          animate={isInView ? 'visible' : 'hidden'}
+        >
           {services.map((service, index) => (
-            <div
+            <motion.div
               key={index}
-              className={`relative p-8 rounded-xl shadow-lg transition-transform hover:scale-105 ${
+              variants={itemVariants}
+              transition={{ duration: 0.8, delay: index * 0.1 }}
+              whileHover={{
+                y: -10,
+                boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+              }}
+              className={`relative p-8 rounded-xl shadow-lg ${
                 service.popular
                   ? 'bg-gradient-to-br from-primary-accent/10 to-secondary-accent/10 border-2 border-primary-accent'
                   : 'bg-gray-50 border border-gray-200'
@@ -114,7 +156,7 @@ export default function ServicesSection() {
                 ))}
               </ul>
 
-              <button
+              <motion.button
                 className={`w-full py-3 px-6 rounded-lg font-medium transition-colors ${
                   service.popular
                     ? 'btn-primary'
@@ -125,16 +167,30 @@ export default function ServicesSection() {
                     .getElementById('contacto')
                     ?.scrollIntoView({ behavior: 'smooth' })
                 }
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 Solicitar Información
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Additional Info */}
-        <div className='mt-16 text-center'>
-          <div className='bg-primary-dark text-white p-8 rounded-xl'>
+        <motion.div
+          className='mt-16 text-center'
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+        >
+          <motion.div
+            className='bg-primary-dark text-white p-8 rounded-xl'
+            whileHover={{
+              scale: 1.02,
+              boxShadow: '0 25px 50px rgba(28, 28, 28, 0.3)',
+            }}
+            transition={{ duration: 0.3 }}
+          >
             <h3 className='text-2xl font-playfair mb-4'>
               Servicios a Domicilio
             </h3>
@@ -183,8 +239,8 @@ export default function ServicesSection() {
                 <span>Puntualidad garantizada</span>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
