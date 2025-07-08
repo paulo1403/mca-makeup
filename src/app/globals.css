@@ -280,3 +280,37 @@ button:focus-visible, a:focus-visible {
 .force-white-text p {
   color: rgba(255, 255, 255, 0.9) !important;
 }
+
+/* Form inputs styling */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+select,
+textarea {
+  color: #1C1C1C !important;
+  background-color: #ffffff !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+  color: #1C1C1C !important;
+  background-color: #ffffff !important;
+}
+
+/* Placeholder text styling */
+input::placeholder,
+textarea::placeholder {
+  color: #5A5A5A !important;
+  opacity: 0.7;
+}
+
+/* Select option styling */
+select option {
+  color: #1C1C1C !important;
+  background-color: #ffffff !important;
+}
