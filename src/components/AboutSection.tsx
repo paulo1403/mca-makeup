@@ -70,7 +70,7 @@ export default function AboutSection() {
 
             {/* Floating Quote */}
             <motion.div
-              className='absolute -bottom-6 -right-6 bg-primary-accent text-white p-6 rounded-xl shadow-lg max-w-xs'
+              className='absolute -bottom-4 -right-4 bg-primary-accent text-white p-6 rounded-xl shadow-lg max-w-xs'
               initial={{ opacity: 0, y: 20, scale: 0.8 }}
               animate={
                 isInView
