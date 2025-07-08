@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { Check, MapPin, Clock } from 'lucide-react';
 
 export default function ServicesSection() {
   const services = [
@@ -140,17 +141,9 @@ export default function ServicesSection() {
               <ul className='space-y-3 mb-6'>
                 {service.features.map((feature, idx) => (
                   <li key={idx} className='flex items-center text-neutral'>
-                    <svg
+                    <Check
                       className='w-5 h-5 text-primary-accent mr-3 flex-shrink-0'
-                      fill='currentColor'
-                      viewBox='0 0 20 20'
-                    >
-                      <path
-                        fillRule='evenodd'
-                        d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'
-                        clipRule='evenodd'
-                      />
-                    </svg>
+                    />
                     {feature}
                   </li>
                 ))}
@@ -201,41 +194,15 @@ export default function ServicesSection() {
             </p>
             <div className='flex flex-col sm:flex-row gap-4 justify-center items-center'>
               <div className='flex items-center'>
-                <svg
+                <MapPin
                   className='w-6 h-6 text-primary-accent mr-2'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z'
-                  />
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M15 11a3 3 0 11-6 0 3 3 0 016 0z'
-                  />
-                </svg>
+                />
                 <span>Sin costo adicional</span>
               </div>
               <div className='flex items-center'>
-                <svg
+                <Clock
                   className='w-6 h-6 text-primary-accent mr-2'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'
-                  />
-                </svg>
+                />
                 <span>Puntualidad garantizada</span>
               </div>
             </div>

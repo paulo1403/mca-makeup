@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { Check, Heart } from 'lucide-react';
 
 export default function AboutSection() {
   const achievements = [
@@ -259,17 +260,9 @@ export default function AboutSection() {
                     }
                     transition={{ duration: 0.6, delay: 1.6 + index * 0.1 }}
                   >
-                    <svg
+                    <Check
                       className='w-5 h-5 check-icon mr-3 flex-shrink-0'
-                      fill='currentColor'
-                      viewBox='0 0 20 20'
-                    >
-                      <path
-                        fillRule='evenodd'
-                        d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'
-                        clipRule='evenodd'
-                      />
-                    </svg>
+                    />
                     <span>{item}</span>
                   </motion.li>
                 ))}
@@ -285,19 +278,12 @@ export default function AboutSection() {
                 }}
                 transition={{ duration: 0.3 }}
               >
-                <svg
+                <Heart
                   className='w-16 h-16'
                   fill='none'
                   stroke='#D4AF37'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'
-                  />
-                </svg>
+                  strokeWidth={2}
+                />
               </motion.div>
               <p className='text-2xl font-playfair'>Tu belleza, mi pasión</p>
             </div>

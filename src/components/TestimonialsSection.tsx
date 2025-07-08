@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useInView } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function TestimonialsSection() {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -103,14 +102,11 @@ export default function TestimonialsSection() {
                 <div className='flex justify-center lg:justify-start mb-4'>
                   {[...Array(testimonials[currentTestimonial].rating)].map(
                     (_, i) => (
-                      <svg
+                      <Star
                         key={i}
                         className='w-6 h-6 text-primary-accent'
                         fill='currentColor'
-                        viewBox='0 0 20 20'
-                      >
-                        <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
-                      </svg>
+                      />
                     )
                   )}
                 </div>
@@ -139,38 +135,14 @@ export default function TestimonialsSection() {
             onClick={prevTestimonial}
             className='absolute left-4 top-1/2 transform -translate-y-1/2 bg-primary-accent hover:bg-opacity-80 text-white p-2 rounded-full transition-colors'
           >
-            <svg
-              className='w-6 h-6'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M15 19l-7-7 7-7'
-              />
-            </svg>
+            <ChevronLeft className='w-6 h-6' />
           </button>
 
           <button
             onClick={nextTestimonial}
             className='absolute right-4 top-1/2 transform -translate-y-1/2 bg-primary-accent hover:bg-opacity-80 text-white p-2 rounded-full transition-colors'
           >
-            <svg
-              className='w-6 h-6'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M9 5l7 7-7 7'
-              />
-            </svg>
+            <ChevronRight className='w-6 h-6' />
           </button>
         </div>
 
@@ -195,14 +167,11 @@ export default function TestimonialsSection() {
             <div key={index} className='bg-white/5 p-6 rounded-xl'>
               <div className='flex mb-3'>
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <svg
+                  <Star
                     key={i}
                     className='w-4 h-4 text-primary-accent'
                     fill='currentColor'
-                    viewBox='0 0 20 20'
-                  >
-                    <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
-                  </svg>
+                  />
                 ))}
               </div>
               <p className='text-sm mb-4 italic'>
