@@ -275,7 +275,7 @@ export default function PrivacyPolicy() {
                   <li>Presencial: Durante la prestación del servicio</li>
                   <li>Email: marcela@marcelamakeup.com (indicar &quot;QUEJA&quot; o &quot;RECLAMO&quot; en el asunto)</li>
                   <li>WhatsApp: +51 999 123 456</li>
-                  <li>Libro de Reclamaciones Virtual (próximamente disponible)</li>
+                  <li><a href="/libro-reclamaciones" className="text-primary-accent hover:underline">Libro de Reclamaciones Virtual</a></li>
                 </ul>
               </div>
 

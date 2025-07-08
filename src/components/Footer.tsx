@@ -215,10 +215,10 @@ export default function Footer() {
                 Términos y Condiciones
               </a>
               <a
-                href='#contacto'
+                href='/libro-reclamaciones'
                 className='text-gray-300 hover:text-primary-accent transition-colors'
               >
-                Contacto
+                Libro de Reclamaciones
               </a>
             </div>
           </div>
