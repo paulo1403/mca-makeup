@@ -156,23 +156,12 @@ export default function HeroSection() {
           >
             Contacto
           </a>
-          <button
-            className='btn-primary w-full mt-4'
-            onClick={() => {
-              setIsMenuOpen(false);
-              document
-                .getElementById('contacto')
-                ?.scrollIntoView({ behavior: 'smooth' });
-            }}
-          >
-            Agendar Cita
-          </button>
         </div>
       </motion.div>
 
       {/* Hero Content */}
       <motion.div
-        className='relative z-10 flex items-center min-h-screen'
+        className='relative z-10 flex items-center min-h-screen mb-6'
         variants={containerVariants}
         initial='hidden'
         animate='visible'
@@ -268,7 +257,7 @@ export default function HeroSection() {
 
               {/* Floating Elements */}
               <motion.div
-                className='absolute -top-4 -right-4 bg-primary-accent text-primary-dark px-6 py-3 rounded-full font-medium shadow-lg'
+                className='absolute -top-4 -right-4 bg-primary-accent text-primary-dark px-6 py-3 rounded-full font-medium shadow-lg z-20'
                 variants={floatingVariants}
                 whileHover={{
                   y: -5,
@@ -281,7 +270,7 @@ export default function HeroSection() {
               </motion.div>
 
               <motion.div
-                className='absolute -bottom-4 -left-4 bg-white text-primary-dark px-6 py-3 rounded-full font-medium shadow-lg'
+                className='absolute -bottom-4 -left-4 bg-white text-primary-dark px-6 py-3 rounded-full font-medium shadow-lg z-20'
                 variants={floatingVariants}
                 whileHover={{
                   y: -5,
@@ -299,7 +288,7 @@ export default function HeroSection() {
 
       {/* Scroll Indicator */}
       <motion.div
-        className='absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10'
+        className='absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 z-10'
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 1.5 }}
