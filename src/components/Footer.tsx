@@ -203,22 +203,22 @@ export default function Footer() {
 
             <div className='flex space-x-6 text-sm'>
               <a
-                href='#'
+                href='/politicas-privacidad'
                 className='text-gray-300 hover:text-primary-accent transition-colors'
               >
                 Política de Privacidad
               </a>
               <a
-                href='#'
+                href='/terminos-condiciones'
                 className='text-gray-300 hover:text-primary-accent transition-colors'
               >
-                Términos de Servicio
+                Términos y Condiciones
               </a>
               <a
-                href='#'
+                href='#contacto'
                 className='text-gray-300 hover:text-primary-accent transition-colors'
               >
-                Política de Cancelación
+                Contacto
               </a>
             </div>
           </div>
