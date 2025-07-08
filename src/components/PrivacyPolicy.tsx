@@ -240,10 +240,82 @@ export default function PrivacyPolicy() {
               </p>
             </section>
 
+            {/* Quejas y Reclamos */}
+            <section>
+              <h2 className="text-2xl font-playfair text-primary-dark mb-4">
+                13. Quejas y Reclamos
+              </h2>
+              <p className="text-neutral leading-relaxed mb-4">
+                De acuerdo con el Código de Protección y Defensa del Consumidor (Ley N° 29571), 
+                usted tiene derecho a presentar quejas y reclamos sobre nuestros servicios y 
+                el tratamiento de sus datos personales.
+              </p>
+              
+              <h3 className="text-xl font-medium text-primary-dark mb-3">
+                13.1 Diferencias entre Queja y Reclamo
+              </h3>
+              <ul className="list-disc list-inside text-neutral space-y-2 mb-4 ml-4">
+                <li><strong>Queja:</strong> Disconformidad no relacionada directamente con el servicio, 
+                sino con la atención al público en general</li>
+                <li><strong>Reclamo:</strong> Disconformidad relacionada con el servicio prestado o 
+                el tratamiento de sus datos personales</li>
+              </ul>
+
+              <h3 className="text-xl font-medium text-primary-dark mb-3">
+                13.2 Proceso de Presentación
+              </h3>
+              <div className="bg-secondary-accent/10 p-6 rounded-lg mb-4">
+                <p className="text-neutral leading-relaxed mb-4">
+                  <strong>Plazo para presentar:</strong> Hasta 30 días calendario después de ocurrido el hecho.
+                </p>
+                <p className="text-neutral leading-relaxed mb-4">
+                  <strong>Canales disponibles:</strong>
+                </p>
+                <ul className="list-disc list-inside text-neutral space-y-2 ml-4">
+                  <li>Presencial: Durante la prestación del servicio</li>
+                  <li>Email: marcela@marcelamakeup.com (indicar &quot;QUEJA&quot; o &quot;RECLAMO&quot; en el asunto)</li>
+                  <li>WhatsApp: +51 999 123 456</li>
+                  <li>Libro de Reclamaciones Virtual (próximamente disponible)</li>
+                </ul>
+              </div>
+
+              <h3 className="text-xl font-medium text-primary-dark mb-3">
+                13.3 Información Requerida
+              </h3>
+              <ul className="list-disc list-inside text-neutral space-y-2 mb-4 ml-4">
+                <li>Identificación del consumidor (nombre, DNI, teléfono, email)</li>
+                <li>Identificación del bien contratado o servicio prestado</li>
+                <li>Detalle de los hechos materia de la queja o reclamo</li>
+                <li>Pedido del consumidor</li>
+                <li>Fecha del incidente</li>
+              </ul>
+
+              <h3 className="text-xl font-medium text-primary-dark mb-3">
+                13.4 Plazos de Respuesta
+              </h3>
+              <ul className="list-disc list-inside text-neutral space-y-2 mb-4 ml-4">
+                <li><strong>Quejas:</strong> Respuesta en un máximo de 5 días hábiles</li>
+                <li><strong>Reclamos:</strong> Respuesta en un máximo de 15 días hábiles</li>
+              </ul>
+
+              <h3 className="text-xl font-medium text-primary-dark mb-3">
+                13.5 Instancias Superiores
+              </h3>
+              <p className="text-neutral leading-relaxed mb-4">
+                Si no está conforme con nuestra respuesta, puede acudir a:
+              </p>
+              <ul className="list-disc list-inside text-neutral space-y-2 ml-4">
+                <li><strong>INDECOPI:</strong> Para reclamos de consumo en general</li>
+                <li><strong>Autoridad Nacional de Protección de Datos Personales (ANPD):</strong> 
+                Para temas específicos de protección de datos</li>
+                <li><strong>Arbitraje de Consumo:</strong> Como alternativa de resolución de conflictos</li>
+              </ul>
+            </section>
+
             {/* Contacto */}
             <section>
               <h2 className="text-2xl font-playfair text-primary-dark mb-4">
-                13. Contacto
+                14. Contacto
               </h2>
               <div className="bg-primary-accent/10 p-6 rounded-lg">
                 <p className="text-neutral leading-relaxed mb-4">
@@ -267,7 +339,8 @@ export default function PrivacyPolicy() {
             <section className="border-t pt-8">
               <p className="text-center text-neutral">
                 Esta Política de Privacidad está vigente desde el {new Date().toLocaleDateString('es-PE')} y 
-                cumple con la Ley N° 29733 - Ley de Protección de Datos Personales del Perú.
+                cumple con la Ley N° 29733 - Ley de Protección de Datos Personales del Perú y la 
+                Ley N° 29571 - Código de Protección y Defensa del Consumidor.
               </p>
             </section>
 

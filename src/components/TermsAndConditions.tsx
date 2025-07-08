@@ -237,10 +237,116 @@ export default function TermsAndConditions() {
               </p>
             </section>
 
+            {/* Quejas y Reclamos */}
+            <section>
+              <h2 className="text-2xl font-playfair text-primary-dark mb-4">
+                10. Sistema de Quejas y Reclamos
+              </h2>
+              <p className="text-neutral leading-relaxed mb-4">
+                De conformidad con el Código de Protección y Defensa del Consumidor (Ley N° 29571), 
+                ponemos a disposición de nuestros clientes el siguiente sistema de atención de 
+                quejas y reclamos.
+              </p>
+              
+              <h3 className="text-xl font-medium text-primary-dark mb-3">
+                10.1 Definiciones
+              </h3>
+              <div className="bg-primary-accent/10 p-6 rounded-lg mb-4">
+                <ul className="list-disc list-inside text-neutral space-y-3">
+                  <li><strong>QUEJA:</strong> Manifestación de disconformidad relacionada con la atención 
+                  al cliente, demora en la respuesta, trato inadecuado o cualquier aspecto no relacionado 
+                  directamente con la calidad del servicio de maquillaje.</li>
+                  <li><strong>RECLAMO:</strong> Manifestación de disconformidad relacionada directamente 
+                  con el servicio de maquillaje prestado, calidad de productos utilizados, cumplimiento 
+                  de horarios, resultado del servicio o cualquier aspecto del servicio contratado.</li>
+                </ul>
+              </div>
+
+              <h3 className="text-xl font-medium text-primary-dark mb-3">
+                10.2 Canales de Atención
+              </h3>
+              <ul className="list-disc list-inside text-neutral space-y-2 mb-4 ml-4">
+                <li><strong>Presencial:</strong> Durante la prestación del servicio</li>
+                <li><strong>Email:</strong> marcela@marcelamakeup.com 
+                (Asunto: &quot;QUEJA&quot; o &quot;RECLAMO&quot; seguido del motivo)</li>
+                <li><strong>WhatsApp:</strong> +51 999 123 456</li>
+                <li><strong>Libro de Reclamaciones:</strong> Físico durante el servicio presencial</li>
+              </ul>
+
+              <h3 className="text-xl font-medium text-primary-dark mb-3">
+                10.3 Información a Proporcionar
+              </h3>
+              <ul className="list-disc list-inside text-neutral space-y-2 mb-4 ml-4">
+                <li>Datos personales completos (nombre, DNI, teléfono, email)</li>
+                <li>Fecha y lugar donde se prestó el servicio</li>
+                <li>Tipo de servicio contratado</li>
+                <li>Descripción detallada del problema</li>
+                <li>Solicitud específica o solución propuesta</li>
+                <li>Evidencias si las hubiera (fotografías, documentos)</li>
+              </ul>
+
+              <h3 className="text-xl font-medium text-primary-dark mb-3">
+                10.4 Plazos y Proceso
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                <div className="bg-secondary-accent/10 p-4 rounded-lg">
+                  <h4 className="font-medium text-primary-dark mb-2">Para QUEJAS:</h4>
+                  <ul className="text-sm text-neutral space-y-1">
+                    <li>• Plazo para presentar: 30 días calendario</li>
+                    <li>• Respuesta: Máximo 5 días hábiles</li>
+                    <li>• Solución inmediata cuando sea posible</li>
+                  </ul>
+                </div>
+                <div className="bg-primary-accent/10 p-4 rounded-lg">
+                  <h4 className="font-medium text-primary-dark mb-2">Para RECLAMOS:</h4>
+                  <ul className="text-sm text-neutral space-y-1">
+                    <li>• Plazo para presentar: 30 días calendario</li>
+                    <li>• Respuesta: Máximo 15 días hábiles</li>
+                    <li>• Evaluación técnica si corresponde</li>
+                  </ul>
+                </div>
+              </div>
+
+              <h3 className="text-xl font-medium text-primary-dark mb-3">
+                10.5 Soluciones Disponibles
+              </h3>
+              <ul className="list-disc list-inside text-neutral space-y-2 mb-4 ml-4">
+                <li>Repetición del servicio sin costo adicional</li>
+                <li>Devolución parcial o total del pago</li>
+                <li>Servicio de cortesía en siguiente cita</li>
+                <li>Compensación acordada mutuamente</li>
+                <li>Disculpas formales y mejora en protocolos</li>
+              </ul>
+
+              <h3 className="text-xl font-medium text-primary-dark mb-3">
+                10.6 Instancias Superiores
+              </h3>
+              <p className="text-neutral leading-relaxed mb-4">
+                Si considera que nuestra respuesta no es satisfactoria, puede acudir a:
+              </p>
+              <div className="bg-neutral/10 p-4 rounded-lg">
+                <ul className="list-disc list-inside text-neutral space-y-2">
+                  <li><strong>INDECOPI (Instituto Nacional de Defensa de la Competencia y de la 
+                  Protección de la Propiedad Intelectual)</strong></li>
+                  <li><strong>Servicios de Arbitraje de Consumo</strong></li>
+                  <li><strong>Centros de Conciliación autorizados</strong></li>
+                  <li><strong>Poder Judicial</strong> (como última instancia)</li>
+                </ul>
+              </div>
+
+              <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-sm text-yellow-800">
+                  <strong>Importante:</strong> La presentación de una queja o reclamo no genera 
+                  ningún costo para el consumidor. Nos comprometemos a tratar todas las comunicaciones 
+                  con seriedad, respeto y confidencialidad.
+                </p>
+              </div>
+            </section>
+
             {/* Modificaciones */}
             <section>
               <h2 className="text-2xl font-playfair text-primary-dark mb-4">
-                10. Modificaciones de los Términos
+                11. Modificaciones de los Términos
               </h2>
               <p className="text-neutral leading-relaxed">
                 Nos reservamos el derecho de modificar estos términos y condiciones en cualquier momento. 
@@ -252,7 +358,7 @@ export default function TermsAndConditions() {
             {/* Contacto */}
             <section>
               <h2 className="text-2xl font-playfair text-primary-dark mb-4">
-                11. Información de Contacto
+                12. Información de Contacto
               </h2>
               <div className="bg-primary-accent/10 p-6 rounded-lg">
                 <p className="text-neutral leading-relaxed mb-4">
@@ -272,7 +378,8 @@ export default function TermsAndConditions() {
             <section className="border-t pt-8">
               <p className="text-center text-neutral">
                 Estos Términos y Condiciones están vigentes desde el {new Date().toLocaleDateString('es-PE')} y 
-                se rigen por las leyes de la República del Perú.
+                se rigen por las leyes de la República del Perú, incluyendo la Ley N° 29571 - 
+                Código de Protección y Defensa del Consumidor.
               </p>
             </section>
 
