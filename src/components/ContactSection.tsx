@@ -4,6 +4,12 @@ import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { Mail, Phone, MapPin } from 'lucide-react';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { es } from 'date-fns/locale';
+import { format, isAfter, isBefore, isSameDay, subDays, addMonths } from 'date-fns';
+
+registerLocale('es', es);
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -11,8 +17,8 @@ export default function ContactSection() {
     email: '',
     phone: '',
     service: '',
-    date: '',
-    time: '',
+    date: null as Date | null,
+    time: null as Date | null,
     message: '',
   });
 
@@ -31,21 +37,6 @@ export default function ContactSection() {
     'Otro (especificar en mensaje)',
   ];
 
-  const timeSlots = [
-    '09:00',
-    '10:00',
-    '11:00',
-    '12:00',
-    '13:00',
-    '14:00',
-    '15:00',
-    '16:00',
-    '17:00',
-    '18:00',
-    '19:00',
-    '20:00',
-  ];
-
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -55,6 +46,20 @@ export default function ContactSection() {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  const handleDateChange = (date: Date | null) => {
+    setFormData((prev) => ({
+      ...prev,
+      date: date,
+    }));
+  };
+
+  const handleTimeChange = (time: Date | null) => {
+    setFormData((prev) => ({
+      ...prev,
+      time: time,
     }));
   };
 
@@ -74,8 +79,8 @@ export default function ContactSection() {
           clientEmail: formData.email,
           clientPhone: formData.phone,
           serviceType: formData.service,
-          appointmentDate: formData.date,
-          appointmentTime: formData.time,
+          appointmentDate: formData.date ? format(formData.date, 'yyyy-MM-dd') : '',
+          appointmentTime: formData.time ? format(formData.time, 'HH:mm') : '',
           additionalNotes: formData.message,
         }),
       });
@@ -89,8 +94,8 @@ export default function ContactSection() {
           email: '',
           phone: '',
           service: '',
-          date: '',
-          time: '',
+          date: null,
+          time: null,
           message: '',
         });
       } else {
@@ -104,9 +109,6 @@ export default function ContactSection() {
       setIsSubmitting(false);
     }
   };
-
-  // Get minimum date (today)
-  const today = new Date().toISOString().split('T')[0];
 
   return (
     <section id='contacto' className='py-20 bg-gray-50' ref={ref}>
@@ -229,16 +231,42 @@ export default function ContactSection() {
                   >
                     Fecha Preferida *
                   </label>
-                  <input
-                    type='date'
-                    id='date'
-                    name='date'
-                    value={formData.date}
-                    onChange={handleInputChange}
-                    min={today}
-                    required
-                    className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-accent focus:border-transparent'
-                  />
+                  <div className='relative'>
+                    <DatePicker
+                      selected={formData.date}
+                      onChange={handleDateChange}
+                      minDate={new Date()}
+                      maxDate={addMonths(new Date(), 6)}
+                      dateFormat="dd/MM/yyyy"
+                      placeholderText="Selecciona una fecha"
+                      className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-accent focus:border-transparent'
+                      wrapperClassName='w-full'
+                      calendarClassName='shadow-xl border-0 rounded-xl'
+                      showPopperArrow={false}
+                      required
+                      locale="es"
+                      excludeDates={[]}
+                      filterDate={(date) => {
+                        return isAfter(date, subDays(new Date(), 1));
+                      }}
+                      dayClassName={(date) => {
+                        const today = new Date();
+                        
+                        if (isBefore(date, today)) {
+                          return 'text-gray-300 cursor-not-allowed bg-gray-100';
+                        }
+                        
+                        if (isSameDay(date, today)) {
+                          return 'text-primary-accent font-semibold hover:bg-primary-accent hover:text-white rounded-full';
+                        }
+                        
+                        return 'text-primary-dark hover:bg-primary-accent hover:text-white rounded-full transition-colors duration-200';
+                      }}
+                      weekDayClassName={() => 'text-primary-accent font-medium'}
+                      monthClassName={() => 'text-primary-accent'}
+                      dropdownMode="select"
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -248,21 +276,24 @@ export default function ContactSection() {
                   >
                     Hora Preferida *
                   </label>
-                  <select
-                    id='time'
-                    name='time'
-                    value={formData.time}
-                    onChange={handleInputChange}
-                    required
+                  <DatePicker
+                    selected={formData.time}
+                    onChange={handleTimeChange}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={60}
+                    timeCaption="Hora"
+                    dateFormat="HH:mm"
+                    placeholderText="Selecciona una hora"
                     className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-accent focus:border-transparent'
-                  >
-                    <option value=''>Selecciona una hora</option>
-                    {timeSlots.map((time) => (
-                      <option key={time} value={time}>
-                        {time}
-                      </option>
-                    ))}
-                  </select>
+                    wrapperClassName='w-full'
+                    calendarClassName='shadow-xl border-0 rounded-xl'
+                    showPopperArrow={false}
+                    required
+                    locale="es"
+                    minTime={new Date(new Date().setHours(9, 0, 0, 0))}
+                    maxTime={new Date(new Date().setHours(20, 0, 0, 0))}
+                  />
                 </div>
               </div>
 
