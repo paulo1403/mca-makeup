@@ -4,133 +4,201 @@ import { prisma } from '@/lib/prisma';
 // GET /api/admin/availability - Get availability settings
 export async function GET() {
   try {
-    const availability = await prisma.availability.findMany({
+    const timeSlots = await prisma.regularAvailability.findMany({
+      orderBy: { dayOfWeek: 'asc' },
+    });
+
+    const specialDates = await prisma.specialDate.findMany({
       orderBy: { date: 'asc' },
     });
 
     return NextResponse.json({
       success: true,
-      data: availability,
+      timeSlots,
+      specialDates,
     });
   } catch (error) {
     console.error('Error fetching availability:', error);
     return NextResponse.json(
-      { success: false, message: 'Failed to fetch availability' },
+      { success: false, message: 'Error al cargar la disponibilidad' },
       { status: 500 }
     );
   }
 }
 
-// POST /api/admin/availability - Create availability slot
+// POST /api/admin/availability - Create availability slot or special date
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { date, startTime, endTime, available = true } = body;
+    const { type, ...data } = body;
 
-    // Validate required fields
-    if (!date || !startTime || !endTime) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: 'Date, start time, and end time are required',
-        },
-        { status: 400 }
-      );
-    }
+    if (type === 'timeSlot') {
+      const { dayOfWeek, startTime, endTime } = data;
 
-    // Create or update availability
-    const availability = await prisma.availability.upsert({
-      where: {
-        date_startTime_endTime: {
-          date: new Date(date),
+      // Validate required fields
+      if (dayOfWeek === undefined || !startTime || !endTime) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: 'Día de la semana, hora de inicio y hora de fin son requeridos',
+          },
+          { status: 400 }
+        );
+      }
+
+      // Validate time format and logic
+      if (startTime >= endTime) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: 'La hora de inicio debe ser anterior a la hora de fin',
+          },
+          { status: 400 }
+        );
+      }
+
+      // Check for overlapping time slots on the same day
+      const overlapping = await prisma.regularAvailability.findFirst({
+        where: {
+          dayOfWeek,
+          isActive: true,
+          OR: [
+            {
+              AND: [
+                { startTime: { lte: startTime } },
+                { endTime: { gt: startTime } }
+              ]
+            },
+            {
+              AND: [
+                { startTime: { lt: endTime } },
+                { endTime: { gte: endTime } }
+              ]
+            },
+            {
+              AND: [
+                { startTime: { gte: startTime } },
+                { endTime: { lte: endTime } }
+              ]
+            }
+          ]
+        }
+      });
+
+      if (overlapping) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: 'Ya existe un horario que se superpone con el que intentas agregar',
+          },
+          { status: 400 }
+        );
+      }
+
+      // Create the time slot
+      const timeSlot = await prisma.regularAvailability.create({
+        data: {
+          dayOfWeek,
           startTime,
           endTime,
         },
-      },
-      update: {
-        available,
-      },
-      create: {
-        date: new Date(date),
-        startTime,
-        endTime,
-        available,
-      },
-    });
+      });
 
-    return NextResponse.json({
-      success: true,
-      data: availability,
-      message: 'Availability updated successfully',
-    });
-  } catch (error) {
-    console.error('Error creating/updating availability:', error);
-    return NextResponse.json(
-      { success: false, message: 'Failed to update availability' },
-      { status: 500 }
-    );
-  }
-}
+      return NextResponse.json({
+        success: true,
+        ...timeSlot,
+      });
 
-// PUT /api/admin/availability - Update availability
-export async function PUT(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { id, ...updateData } = body;
+    } else if (type === 'specialDate') {
+      const { date, isAvailable, customHours, note } = data;
 
-    if (!id) {
+      // Validate required fields
+      if (!date) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: 'La fecha es requerida',
+          },
+          { status: 400 }
+        );
+      }
+
+      // Validate custom hours if available
+      if (isAvailable && customHours) {
+        if (!customHours.startTime || !customHours.endTime) {
+          return NextResponse.json(
+            {
+              success: false,
+              message: 'Para fechas disponibles, hora de inicio y fin son requeridas',
+            },
+            { status: 400 }
+          );
+        }
+
+        if (customHours.startTime >= customHours.endTime) {
+          return NextResponse.json(
+            {
+              success: false,
+              message: 'La hora de inicio debe ser anterior a la hora de fin',
+            },
+            { status: 400 }
+          );
+        }
+      }
+
+      // Create the special date
+      const specialDate = await prisma.specialDate.create({
+        data: {
+          date: new Date(date),
+          isAvailable,
+          startTime: isAvailable && customHours ? customHours.startTime : null,
+          endTime: isAvailable && customHours ? customHours.endTime : null,
+          note: note || null,
+        },
+      });
+
+      return NextResponse.json({
+        success: true,
+        ...specialDate,
+      });
+
+    } else {
       return NextResponse.json(
-        { success: false, message: 'Availability ID is required' },
+        {
+          success: false,
+          message: 'Tipo de solicitud no válido',
+        },
         { status: 400 }
       );
     }
 
-    // Update availability
-    const availability = await prisma.availability.update({
-      where: { id },
-      data: updateData,
-    });
-
-    return NextResponse.json({
-      success: true,
-      data: availability,
-      message: 'Availability updated successfully',
-    });
-  } catch (error) {
-    console.error('Error updating availability:', error);
-    return NextResponse.json(
-      { success: false, message: 'Failed to update availability' },
-      { status: 500 }
-    );
-  }
-}
-
-// DELETE /api/admin/availability - Delete availability
-export async function DELETE(request: NextRequest) {
-  try {
-    const searchParams = request.nextUrl.searchParams;
-    const id = searchParams.get('id');
-
-    if (!id) {
-      return NextResponse.json(
-        { success: false, message: 'Availability ID is required' },
-        { status: 400 }
-      );
+  } catch (error: unknown) {
+    console.error('Error creating availability:', error);
+    
+    // Handle unique constraint violations
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
+      const prismaError = error as { meta?: { target?: string[] } };
+      if (prismaError.meta?.target?.includes('dayOfWeek')) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: 'Ya existe un horario para este día con esos horarios',
+          },
+          { status: 400 }
+        );
+      } else if (prismaError.meta?.target?.includes('date')) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: 'Ya existe una configuración especial para esta fecha',
+          },
+          { status: 400 }
+        );
+      }
     }
 
-    // Delete availability
-    await prisma.availability.delete({
-      where: { id },
-    });
-
-    return NextResponse.json({
-      success: true,
-      message: 'Availability deleted successfully',
-    });
-  } catch (error) {
-    console.error('Error deleting availability:', error);
     return NextResponse.json(
-      { success: false, message: 'Failed to delete availability' },
+      { success: false, message: 'Error al crear la disponibilidad' },
       { status: 500 }
     );
   }
