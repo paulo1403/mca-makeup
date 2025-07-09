@@ -15,6 +15,8 @@ export async function GET() {
       totalAppointments,
       pendingAppointments,
       confirmedAppointments,
+      completedAppointments,
+      cancelledAppointments,
       todayAppointments,
       thisWeekAppointments,
       thisMonthAppointments,
@@ -22,6 +24,8 @@ export async function GET() {
       prisma.appointment.count(),
       prisma.appointment.count({ where: { status: 'PENDING' } }),
       prisma.appointment.count({ where: { status: 'CONFIRMED' } }),
+      prisma.appointment.count({ where: { status: 'COMPLETED' } }),
+      prisma.appointment.count({ where: { status: 'CANCELLED' } }),
       prisma.appointment.count({
         where: {
           appointmentDate: {
@@ -76,7 +80,7 @@ export async function GET() {
     });
 
     // Calculate estimated revenue (basic calculation with average price)
-    const thisMonthRevenue = thisMonthAppointments * 150; // Average price
+    // const thisMonthRevenue = thisMonthAppointments * 150; // Average price
 
     // Get weekly schedule
     const weeklySchedule = await Promise.all(
@@ -101,14 +105,14 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       data: {
-        stats: {
-          totalAppointments,
-          pendingAppointments,
-          confirmedAppointments,
-          todayAppointments,
-          thisWeekAppointments,
-          thisMonthRevenue,
-        },
+        totalAppointments,
+        pendingAppointments,
+        confirmedAppointments,
+        completedAppointments,
+        cancelledAppointments,
+        todayAppointments,
+        thisWeekAppointments,
+        thisMonthAppointments,
         serviceStats: serviceStats.map((stat) => ({
           service: stat.serviceType,
           count: stat._count.serviceType,

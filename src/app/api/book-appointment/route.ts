@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
+import { sendEmail, emailTemplates } from '@/lib/email';
 
 const prisma = new PrismaClient();
 
@@ -57,8 +58,49 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // TODO: Send confirmation emails
-    // await sendConfirmationEmails(appointment);
+    // Send notification emails
+    try {
+      const formatDate = (date: Date) => {
+        return new Date(date).toLocaleDateString('es-ES', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+      };
+
+      const formatTime = (time: string) => {
+        return new Date(`1970-01-01T${time}`).toLocaleTimeString('es-ES', {
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+      };
+
+      // Send notification to admin/Marcela
+      if (process.env.ADMIN_EMAIL) {
+        const adminEmailData = emailTemplates.newAppointmentAlert(
+          appointment.clientName,
+          appointment.serviceType,
+          formatDate(appointment.appointmentDate),
+          formatTime(appointment.appointmentTime),
+          appointment.clientEmail,
+          appointment.clientPhone
+        );
+
+        await sendEmail({
+          to: process.env.ADMIN_EMAIL,
+          subject: adminEmailData.subject,
+          html: adminEmailData.html,
+          text: adminEmailData.text,
+        });
+      }
+
+      // Send confirmation to client
+      // Note: Solo enviamos confirmación cuando el admin confirme la cita
+      console.log('Email notifications sent successfully');
+    } catch (emailError) {
+      console.error('Error sending email notifications:', emailError);
+      // No fallar la operación si el email falla
+    }
 
     return NextResponse.json(
       {

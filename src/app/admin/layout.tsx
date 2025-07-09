@@ -1,14 +1,11 @@
 'use client';
 
-import { Metadata } from 'next';
 import { signOut, useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import NotificationCenter from '@/components/NotificationCenter';
 import { LogOut, User } from 'lucide-react';
-
-// Note: metadata needs to be exported from a Server Component
-// We'll handle this differently or move it to a separate file
 
 export default function AdminLayout({
   children,
@@ -22,7 +19,6 @@ export default function AdminLayout({
     await signOut({ callbackUrl: '/admin/login' });
   };
 
-  // Don't wrap login page with ProtectedRoute
   if (pathname === '/admin/login') {
     return <>{children}</>;
   }
@@ -67,6 +63,9 @@ export default function AdminLayout({
                 >
                   Ver Sitio
                 </Link>
+
+                {/* Notification Center */}
+                <NotificationCenter />
 
                 {/* User Info & Logout */}
                 <div className='flex items-center space-x-2 border-l border-gray-200 pl-4'>

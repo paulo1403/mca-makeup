@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendEmail, emailTemplates } from '@/lib/email';
 
 // GET /api/admin/appointments - Get all appointments
 export async function GET(request: NextRequest) {
@@ -128,11 +129,76 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    // Get current appointment data for email notifications
+    const currentAppointment = await prisma.appointment.findUnique({
+      where: { id },
+    });
+
+    if (!currentAppointment) {
+      return NextResponse.json(
+        { success: false, message: 'Appointment not found' },
+        { status: 404 }
+      );
+    }
+
     // Update appointment
     const appointment = await prisma.appointment.update({
       where: { id },
       data: updateData,
     });
+
+    // Send email notifications if status changed
+    if (updateData.status && updateData.status !== currentAppointment.status) {
+      const formatDate = (date: Date) => {
+        return new Date(date).toLocaleDateString('es-ES', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+      };
+
+      const formatTime = (time: string) => {
+        return new Date(`1970-01-01T${time}`).toLocaleTimeString('es-ES', {
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+      };
+
+      try {
+        if (updateData.status === 'CONFIRMED') {
+          const emailData = emailTemplates.appointmentConfirmed(
+            appointment.clientName,
+            appointment.serviceType,
+            formatDate(appointment.appointmentDate),
+            formatTime(appointment.appointmentTime)
+          );
+
+          await sendEmail({
+            to: appointment.clientEmail,
+            subject: emailData.subject,
+            html: emailData.html,
+            text: emailData.text,
+          });
+        } else if (updateData.status === 'CANCELLED') {
+          const emailData = emailTemplates.appointmentCancelled(
+            appointment.clientName,
+            appointment.serviceType,
+            formatDate(appointment.appointmentDate),
+            formatTime(appointment.appointmentTime)
+          );
+
+          await sendEmail({
+            to: appointment.clientEmail,
+            subject: emailData.subject,
+            html: emailData.html,
+            text: emailData.text,
+          });
+        }
+      } catch (emailError) {
+        console.error('Error sending email:', emailError);
+        // No fallar la operación si el email falla
+      }
+    }
 
     return NextResponse.json({
       success: true,
