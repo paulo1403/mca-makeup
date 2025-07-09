@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
 interface Appointment {
   id: string;
@@ -26,6 +27,8 @@ interface PaginationData {
 }
 
 export default function AppointmentsPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
@@ -36,6 +39,52 @@ export default function AppointmentsPage() {
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [highlightedId, setHighlightedId] = useState<string | null>(null);
+
+  // Función para cerrar modal y limpiar URL
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedAppointment(null);
+    
+    // Limpiar parámetros de URL si están presentes
+    const params = new URLSearchParams(searchParams);
+    if (params.has('showDetail') || params.has('highlight')) {
+      params.delete('showDetail');
+      params.delete('highlight');
+      const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
+      router.replace(newUrl);
+    }
+  };
+
+  // Manejar parámetros URL
+  useEffect(() => {
+    const filterParam = searchParams.get('filter');
+    const highlightParam = searchParams.get('highlight');
+    
+    if (filterParam && ['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'].includes(filterParam)) {
+      setFilter(filterParam);
+    }
+    
+    if (highlightParam) {
+      setHighlightedId(highlightParam);
+      // Remover el highlight después de 5 segundos
+      setTimeout(() => setHighlightedId(null), 5000);
+    }
+  }, [searchParams]);
+
+  // Efecto para abrir modal cuando se especifica en URL
+  useEffect(() => {
+    const showDetailParam = searchParams.get('showDetail');
+    const highlightParam = searchParams.get('highlight');
+    
+    if (showDetailParam === 'true' && highlightParam && appointments.length > 0) {
+      const appointment = appointments.find(apt => apt.id === highlightParam);
+      if (appointment) {
+        setSelectedAppointment(appointment);
+        setShowModal(true);
+      }
+    }
+  }, [appointments, searchParams]);
 
   const fetchAppointments = useCallback(async () => {
     try {
@@ -53,6 +102,15 @@ export default function AppointmentsPage() {
       if (result.success) {
         setAppointments(result.data.appointments);
         setPagination(result.data.pagination);
+        
+        if (highlightedId && result.data.appointments.some((apt: Appointment) => apt.id === highlightedId)) {
+          setTimeout(() => {
+            const element = document.getElementById(`appointment-${highlightedId}`);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }, 100);
+        }
       } else {
         console.error("Error fetching appointments:", result.message);
       }
@@ -61,7 +119,7 @@ export default function AppointmentsPage() {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, filter, searchTerm]);
+  }, [currentPage, filter, searchTerm, highlightedId]);
 
   useEffect(() => {
     fetchAppointments();
@@ -243,11 +301,24 @@ export default function AppointmentsPage() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {appointments.map((appointment) => (
-                  <tr key={appointment.id} className="hover:bg-gray-50">
+                  <tr 
+                    key={appointment.id}
+                    id={`appointment-${appointment.id}`}
+                    className={`hover:bg-gray-50 transition-colors ${
+                      highlightedId === appointment.id 
+                        ? 'bg-yellow-50 border-yellow-200 border-2' 
+                        : ''
+                    }`}
+                  >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
-                        <div className="font-medium text-gray-900">
+                        <div className="font-medium text-gray-900 flex items-center">
                           {appointment.clientName}
+                          {highlightedId === appointment.id && (
+                            <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+                              📌 Destacada
+                            </span>
+                          )}
                         </div>
                         <div className="text-sm text-gray-500">
                           {appointment.clientEmail}
@@ -388,7 +459,7 @@ export default function AppointmentsPage() {
                   Detalles de la Cita
                 </h2>
                 <button
-                  onClick={() => setShowModal(false)}
+                  onClick={() => closeModal()}
                   className="text-gray-500 hover:text-gray-700"
                 >
                   <svg
@@ -517,7 +588,7 @@ export default function AppointmentsPage() {
 
               <div className="flex justify-end space-x-3 mt-6 pt-6 border-t">
                 <button
-                  onClick={() => setShowModal(false)}
+                  onClick={() => closeModal()}
                   className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300"
                 >
                   Cerrar
@@ -530,7 +601,7 @@ export default function AppointmentsPage() {
                           selectedAppointment.id,
                           "CONFIRMED"
                         );
-                        setShowModal(false);
+                        closeModal();
                       }}
                       className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
                     >
@@ -542,7 +613,7 @@ export default function AppointmentsPage() {
                           selectedAppointment.id,
                           "CANCELLED"
                         );
-                        setShowModal(false);
+                        closeModal();
                       }}
                       className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
                     >
@@ -557,7 +628,7 @@ export default function AppointmentsPage() {
                         selectedAppointment.id,
                         "COMPLETED"
                       );
-                      setShowModal(false);
+                      closeModal();
                     }}
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                   >

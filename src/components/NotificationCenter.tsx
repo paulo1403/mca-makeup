@@ -101,8 +101,20 @@ export default function NotificationCenter() {
 
           <div className="max-h-96 overflow-y-auto">
             {notifications.length === 0 ? (
-              <div className="p-4 text-center text-gray-500">
-                No hay notificaciones
+              <div className="p-6 text-center">
+                <div className="text-gray-400 mb-3">
+                  <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <p className="text-gray-500 text-sm mb-4">No hay citas pendientes</p>
+                <Link
+                  href="/admin/appointments"
+                  onClick={() => setShowDropdown(false)}
+                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-[#D4AF37] hover:bg-[#B8941F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D4AF37]"
+                >
+                  Ver todas las citas
+                </Link>
               </div>
             ) : (
               notifications.map((notification) => (
@@ -131,7 +143,7 @@ export default function NotificationCenter() {
                       <div className="flex items-center space-x-2 mt-2">
                         {notification.link && (
                           <Link
-                            href={notification.link}
+                            href={`${notification.link}?highlight=${notification.id.replace('appointment-', '')}&showDetail=true`}
                             onClick={() => {
                               markAsRead(notification.id);
                               setShowDropdown(false);
@@ -160,11 +172,11 @@ export default function NotificationCenter() {
           {notifications.length > 0 && (
             <div className="p-4 border-t border-gray-200">
               <Link
-                href="/admin/appointments"
+                href="/admin/appointments?filter=PENDING"
                 onClick={() => setShowDropdown(false)}
                 className="text-sm text-[#D4AF37] hover:text-[#B8941F] font-medium"
               >
-                Ver todas las citas →
+                Ver todas las citas pendientes →
               </Link>
             </div>
           )}
