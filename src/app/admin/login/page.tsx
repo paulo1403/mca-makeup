@@ -18,7 +18,7 @@ export default function AdminLogin() {
 
   // React Query hooks
   const loginMutation = useLogin();
-  const { data: rateLimitStatus } = useRateLimitCheck(email);
+  const { data: rateLimitStatus, refetch: refetchRateLimit } = useRateLimitCheck(email);
 
   // Calcular info de rate limiting
   const rateLimitInfo = rateLimitStatus 
@@ -48,8 +48,7 @@ export default function AdminLogin() {
 
   // Handler cuando expira el bloqueo
   const handleBlockExpired = () => {
-    // Refetch del rate limit status
-    // React Query se encargará automáticamente
+    refetchRateLimit();
   };
 
   // Loading states
