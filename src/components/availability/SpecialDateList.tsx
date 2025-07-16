@@ -1,17 +1,19 @@
 'use client';
 
 import { SpecialDate } from '@/hooks/useAvailability';
-import { Trash2, Calendar, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Trash2, Calendar, Clock, CheckCircle, XCircle, Edit2 } from 'lucide-react';
 
 interface SpecialDateListProps {
   specialDates: SpecialDate[];
   onDelete: (id: string) => void;
+  onEdit?: (specialDate: SpecialDate) => void;
   isLoading?: boolean;
 }
 
 export default function SpecialDateList({ 
   specialDates, 
   onDelete, 
+  onEdit,
   isLoading = false 
 }: SpecialDateListProps) {
   const handleDelete = (id: string) => {
@@ -32,7 +34,14 @@ export default function SpecialDateList({
   }
 
   const sortedDates = specialDates
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    .sort((a, b) => {
+      // Crear fechas locales para ordenamiento correcto
+      const [yearA, monthA, dayA] = a.date.split('-');
+      const [yearB, monthB, dayB] = b.date.split('-');
+      const dateA = new Date(parseInt(yearA), parseInt(monthA) - 1, parseInt(dayA));
+      const dateB = new Date(parseInt(yearB), parseInt(monthB) - 1, parseInt(dayB));
+      return dateA.getTime() - dateB.getTime();
+    });
 
   return (
     <div className='space-y-3'>
@@ -45,7 +54,7 @@ export default function SpecialDateList({
               : 'bg-red-50 border-red-200'
           }`}
         >
-          <div className='flex items-start justify-between'>
+          <div className='flex flex-col space-y-3'>
             <div className='flex-1'>
               {/* Fecha y estado */}
               <div className='flex items-center space-x-3 mb-2'>
@@ -56,12 +65,17 @@ export default function SpecialDateList({
                 )}
                 <div>
                   <div className='font-medium text-gray-900'>
-                    {new Date(specialDate.date).toLocaleDateString('es-PE', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
+                    {(() => {
+                      // Crear la fecha manualmente para evitar problemas de zona horaria
+                      const [year, month, day] = specialDate.date.split('-');
+                      const localDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                      return localDate.toLocaleDateString('es-PE', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      });
+                    })()}
                   </div>
                   <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-1 ${
                     specialDate.isAvailable
@@ -91,15 +105,32 @@ export default function SpecialDateList({
               )}
             </div>
             
-            {/* Botón eliminar */}
-            <button
-              onClick={() => handleDelete(specialDate.id)}
-              disabled={isLoading}
-              className='p-2 text-red-600 hover:bg-red-100 rounded-md transition-colors disabled:opacity-50 ml-4'
-              title='Eliminar fecha especial'
-            >
-              <Trash2 className='h-4 w-4' />
-            </button>
+            {/* Botones de acción */}
+            <div className={`flex gap-2 ${onEdit ? 'space-x-0' : 'space-x-0'}`}>
+              {/* Botón Editar */}
+              {onEdit && (
+                <button
+                  onClick={() => onEdit(specialDate)}
+                  disabled={isLoading}
+                  className='flex items-center justify-center px-3 py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors disabled:opacity-50 text-xs sm:text-sm font-medium'
+                  title='Editar fecha especial'
+                >
+                  <Edit2 className='h-4 w-4' />
+                  <span className='hidden xs:inline ml-1'>Editar</span>
+                </button>
+              )}
+              
+              {/* Botón Eliminar */}
+              <button
+                onClick={() => handleDelete(specialDate.id)}
+                disabled={isLoading}
+                className='flex items-center justify-center px-3 py-2 bg-[#B06579] bg-opacity-10 text-[#9A5A6B] hover:bg-[#B06579] hover:bg-opacity-20 border border-[#B06579] border-opacity-30 rounded-lg transition-colors disabled:opacity-50 text-xs sm:text-sm font-medium'
+                title='Eliminar fecha especial'
+              >
+                <Trash2 className='h-4 w-4' />
+                <span className='hidden xs:inline ml-1'>Eliminar</span>
+              </button>
+            </div>
           </div>
         </div>
       ))}

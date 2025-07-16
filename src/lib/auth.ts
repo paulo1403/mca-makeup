@@ -12,63 +12,36 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        console.log('🔐 AUTHORIZE CALLED with:', {
-          email: credentials?.email || 'NO EMAIL',
-          hasPassword: !!credentials?.password,
-          passwordLength: credentials?.password?.length || 0,
-        });
-
         if (!credentials?.email || !credentials?.password) {
-          console.log('❌ Missing credentials');
           return null;
         }
 
         try {
-          console.log('🔍 Looking for user:', credentials.email);
           const user = await prisma.user.findUnique({
             where: { email: credentials.email },
           });
 
-          console.log(
-            '👤 User query result:',
-            user
-              ? {
-                  id: user.id,
-                  email: user.email,
-                  role: user.role,
-                  hasPassword: !!user.password,
-                }
-              : 'USER NOT FOUND'
-          );
-
           if (!user) {
-            console.log('❌ User not found in database');
             return null;
           }
 
-          console.log('🔑 Checking password...');
           const isPasswordValid = await bcrypt.compare(
             credentials.password,
             user.password
           );
 
-          console.log('🔓 Password validation result:', isPasswordValid);
-
           if (!isPasswordValid) {
-            console.log('❌ Invalid password');
             return null;
           }
 
-          console.log('✅ Authentication successful, returning user object');
           const returnUser = {
             id: user.id,
             email: user.email,
             role: user.role,
           };
-          console.log('📤 Returning:', returnUser);
           return returnUser;
         } catch (error) {
-          console.error('🚨 Auth error:', error);
+          console.error('Auth error:', error);
           return null;
         }
       },
@@ -85,8 +58,20 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        // Cuando hay un nuevo login, establecer los datos del usuario en el token
+        token.sub = user.id;
         token.role = (user as { role: string }).role;
-        token.loginTime = Date.now(); // Guardar tiempo de login
+        token.loginTime = Date.now();
+      }
+
+      // Si no hay user y el token no tiene sub, significa que hay un token corrupto
+      if (!user && !token.sub) {
+        // Retornar token mínimo para forzar limpieza
+        return {
+          sub: '',
+          role: '',
+          loginTime: 0
+        };
       }
       
       // Verificar si el token ha expirado (2 horas)
@@ -95,10 +80,9 @@ export const authOptions: NextAuthOptions = {
       const maxAge = 2 * 60 * 60 * 1000; // 2 horas en millisegundos
       
       if (loginTime && (now - loginTime) > maxAge) {
-        console.log('🚨 Token expired, forcing logout');
-        // Retornar token mínimo que forzará re-autenticación
+        // Retornar token vacío para forzar re-autenticación
         return {
-          sub: undefined,
+          sub: '',
           role: '',
           loginTime: 0
         };
@@ -129,18 +113,9 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: '/admin/login',
+    signOut: '/admin/login',
+    error: '/admin/login',
   },
   debug: process.env.NODE_ENV === 'development',
-  logger: {
-    error(code, metadata) {
-      console.error('🚨 NextAuth Error:', code, metadata);
-    },
-    warn(code) {
-      console.warn('⚠️ NextAuth Warning:', code);
-    },
-    debug(code, metadata) {
-      console.log('🐛 NextAuth Debug:', code, metadata);
-    },
-  },
   secret: process.env.NEXTAUTH_SECRET,
 };

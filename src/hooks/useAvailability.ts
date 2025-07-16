@@ -103,6 +103,26 @@ const deleteTimeSlot = async (id: string): Promise<void> => {
   }
 };
 
+const editSpecialDate = async (id: string, data: {
+  date: string;
+  isAvailable: boolean;
+  customHours?: { startTime: string; endTime: string };
+  note?: string;
+}): Promise<SpecialDate> => {
+  const response = await fetch(`/api/admin/availability/special/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Error al editar la fecha especial');
+  }
+  
+  return response.json();
+};
+
 const createSpecialDate = async (data: {
   date: string;
   isAvailable: boolean;
@@ -230,6 +250,19 @@ export const useAvailability = () => {
     },
   });
 
+  // Mutación para editar fecha especial
+  const editSpecialDateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: { date: string; isAvailable: boolean; customHours?: { startTime: string; endTime: string }; note?: string } }) => 
+      editSpecialDate(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['availability'] });
+      showMessage('Fecha especial editada exitosamente');
+    },
+    onError: (error: Error) => {
+      showMessage(`❌ ${error.message}`);
+    },
+  });
+
   return {
     // Data
     timeSlots: data?.timeSlots ?? [],
@@ -242,6 +275,7 @@ export const useAvailability = () => {
     isEditingTimeSlot: editTimeSlotMutation.isPending,
     isDeletingTimeSlot: deleteTimeSlotMutation.isPending,
     isCreatingSpecialDate: createSpecialDateMutation.isPending,
+    isEditingSpecialDate: editSpecialDateMutation.isPending,
     isDeletingSpecialDate: deleteSpecialDateMutation.isPending,
     
     // Actions
@@ -250,6 +284,7 @@ export const useAvailability = () => {
     editTimeSlot: editTimeSlotMutation.mutate,
     deleteTimeSlot: deleteTimeSlotMutation.mutate,
     createSpecialDate: createSpecialDateMutation.mutate,
+    editSpecialDate: editSpecialDateMutation.mutate,
     deleteSpecialDate: deleteSpecialDateMutation.mutate,
     
     // UI

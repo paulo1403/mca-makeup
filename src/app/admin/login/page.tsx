@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useSession, signIn } from 'next-auth/react';
 import { Lock } from 'lucide-react';
 import { useLogin, useRateLimitCheck } from '@/hooks/useAuth';
 import { useCountdown } from '@/hooks/useCountdown';
@@ -13,10 +12,10 @@ import { LoginFormData, getMostRestrictiveRateLimit } from '@/lib/auth-utils';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
-  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const { status } = useSession();
 
-  // React Query hooks
+  // React Query hooks (solo para rate limiting)
   const loginMutation = useLogin();
   const { data: rateLimitStatus, refetch: refetchRateLimit } = useRateLimitCheck(email);
 
@@ -28,21 +27,48 @@ export default function AdminLogin() {
   // Countdown para bloqueo
   const { timeLeft } = useCountdown(rateLimitInfo?.blockedUntil);
 
-  // Redirect si ya está autenticado
+    // Redirect si ya está autenticado
   useEffect(() => {
     if (status === 'authenticated') {
-      router.push('/admin');
+      const callbackUrl = new URLSearchParams(window.location.search).get('callbackUrl');
+      const redirectUrl = callbackUrl || '/admin';
+      window.location.href = redirectUrl;
     }
-  }, [status, router]);
+  }, [status]);
 
-  // Handler para submit del formulario
+  // Handler para submit del formulario - usando solo NextAuth
   const handleSubmit = async (formData: LoginFormData) => {
+    setIsLoading(true);
+    
     try {
-      await loginMutation.mutateAsync(formData);
-      router.push('/admin');
+      const result = await signIn('credentials', {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+      
+      if (result?.error) {
+        throw new Error('Credenciales incorrectas');
+      }
+      
+      if (result?.ok) {        
+        // Obtener callbackUrl o usar /admin por defecto
+        const callbackUrl = new URLSearchParams(window.location.search).get('callbackUrl');
+        const redirectUrl = callbackUrl || '/admin';
+        
+        // Dar tiempo para que se actualice la sesión antes de redirigir
+        setTimeout(() => {
+          window.location.href = redirectUrl;
+        }, 500);
+      } else {
+        throw new Error('Error inesperado al iniciar sesión');
+      }
     } catch (error) {
-      // Los errores se manejan automáticamente por React Query
       console.error('Login error:', error);
+      // Mostrar el error al usuario usando React Query para mantener compatibilidad
+      loginMutation.mutate(formData);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -104,7 +130,7 @@ export default function AdminLogin() {
         <LoginForm
           onSubmit={handleSubmit}
           onEmailChange={setEmail}
-          isLoading={loginMutation.isPending}
+          isLoading={isLoading}
           rateLimitInfo={rateLimitInfo}
           countdownTime={timeLeft}
         />

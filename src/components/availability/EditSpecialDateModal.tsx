@@ -1,13 +1,16 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import DatePicker from 'react-datepicker';
+import { X } from 'lucide-react';
 import { es } from 'date-fns/locale';
+import { SpecialDate } from '@/hooks/useAvailability';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const specialDateSchema = z.object({
+const editSpecialDateSchema = z.object({
   date: z.date({
     required_error: 'Fecha es requerida',
   }),
@@ -28,52 +31,65 @@ const specialDateSchema = z.object({
   path: ['endTime'],
 });
 
-type SpecialDateFormData = z.infer<typeof specialDateSchema>;
+type EditSpecialDateForm = z.infer<typeof editSpecialDateSchema>;
 
-interface AddSpecialDateModalProps {
+interface EditSpecialDateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: {
+  onSubmit: (id: string, data: {
     date: string;
     isAvailable: boolean;
     customHours?: { startTime: string; endTime: string };
     note?: string;
   }) => void;
-  isLoading: boolean;
+  specialDate: SpecialDate | null;
+  isLoading?: boolean;
 }
 
-export default function AddSpecialDateModal({ 
-  isOpen, 
-  onClose, 
-  onSubmit, 
-  isLoading 
-}: AddSpecialDateModalProps) {
+export default function EditSpecialDateModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  specialDate,
+  isLoading = false,
+}: EditSpecialDateModalProps) {
   const {
     register,
     handleSubmit,
+    formState: { errors },
     reset,
-    watch,
     control,
-    formState: { errors }
-  } = useForm<SpecialDateFormData>({
-    resolver: zodResolver(specialDateSchema),
-    defaultValues: {
-      date: undefined,
-      isAvailable: false,
-      startTime: '09:00',
-      endTime: '17:00',
-      note: '',
-    }
+    watch,
+  } = useForm<EditSpecialDateForm>({
+    resolver: zodResolver(editSpecialDateSchema),
   });
 
   const isAvailable = watch('isAvailable');
+
+  useEffect(() => {
+    if (specialDate && isOpen) {
+      // Parsear la fecha del string YYYY-MM-DD a Date object
+      const [year, month, day] = specialDate.date.split('-');
+      const dateObject = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      
+      reset({
+        date: dateObject,
+        isAvailable: specialDate.isAvailable,
+        startTime: specialDate.startTime || '09:00',
+        endTime: specialDate.endTime || '17:00',
+        note: specialDate.note || '',
+      });
+    }
+  }, [specialDate, isOpen, reset]);
 
   const handleClose = () => {
     reset();
     onClose();
   };
 
-  const handleFormSubmit = (data: SpecialDateFormData) => {
+  const handleFormSubmit = (data: EditSpecialDateForm) => {
+    if (!specialDate) return;
+    
     // Formatear la fecha asegurando que se mantenga la fecha local seleccionada
     const year = data.date.getFullYear();
     const month = String(data.date.getMonth() + 1).padStart(2, '0');
@@ -89,19 +105,27 @@ export default function AddSpecialDateModal({
       note: data.note || undefined,
     };
     
-    onSubmit(formattedData);
+    onSubmit(specialDate.id, formattedData);
     reset();
     onClose();
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !specialDate) return null;
 
   return (
     <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4'>
       <div className='bg-white rounded-lg p-4 sm:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto'>
-        <h3 className='text-lg font-semibold text-gray-900 mb-4'>
-          Agregar Fecha Especial
-        </h3>
+        <div className='flex items-center justify-between mb-4'>
+          <h3 className='text-lg font-semibold text-gray-900'>
+            Editar Fecha Especial
+          </h3>
+          <button
+            onClick={handleClose}
+            className='p-2 hover:bg-gray-100 rounded-lg transition-colors'
+          >
+            <X className='h-5 w-5 text-gray-500' />
+          </button>
+        </div>
         
         <form onSubmit={handleSubmit(handleFormSubmit)} className='space-y-4'>
           <div>
@@ -214,14 +238,6 @@ export default function AddSpecialDateModal({
               className='w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#B06579] focus:border-[#B06579] text-base'
             />
           </div>
-
-          <div className='bg-blue-50 border border-blue-200 rounded-lg p-3'>
-            <p className='text-sm text-blue-800'>
-              <strong>Ejemplos:</strong><br/>
-              • Día libre: Selecciona &quot;No disponible&quot; para vacaciones<br/>
-              • Horario extendido: Selecciona &quot;Disponible&quot; para días especiales como San Valentín
-            </p>
-          </div>
           
           <div className='flex flex-col sm:flex-row justify-end gap-3 sm:space-x-3 mt-6'>
             <button
@@ -237,7 +253,7 @@ export default function AddSpecialDateModal({
               disabled={isLoading}
               className='w-full sm:w-auto px-4 py-3 sm:py-2 bg-[#B06579] text-white rounded-lg hover:bg-[#9A5A6B] transition-colors disabled:opacity-50 font-medium'
             >
-              {isLoading ? 'Guardando...' : 'Agregar Fecha'}
+              {isLoading ? 'Guardando...' : 'Guardar Cambios'}
             </button>
           </div>
         </form>

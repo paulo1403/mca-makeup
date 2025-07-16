@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useAvailability, TimeSlot } from '@/hooks/useAvailability';
+import { useAvailability, TimeSlot, SpecialDate } from '@/hooks/useAvailability';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import AddTimeSlotModal from '@/components/availability/AddTimeSlotModal';
 import EditTimeSlotModal from '@/components/availability/EditTimeSlotModal';
 import AddSpecialDateModal from '@/components/availability/AddSpecialDateModal';
+import EditSpecialDateModal from '@/components/availability/EditSpecialDateModal';
 import TimeSlotList from '@/components/availability/TimeSlotList';
 import SpecialDateList from '@/components/availability/SpecialDateList';
 import { Calendar, Clock, Plus } from 'lucide-react';
@@ -14,6 +15,7 @@ export default function AvailabilityPage() {
   const [showAddSlot, setShowAddSlot] = useState(false);
   const [showAddSpecialDate, setShowAddSpecialDate] = useState(false);
   const [editingSlot, setEditingSlot] = useState<string | null>(null);
+  const [editingSpecialDate, setEditingSpecialDate] = useState<SpecialDate | null>(null);
 
   const {
     timeSlots,
@@ -22,11 +24,13 @@ export default function AvailabilityPage() {
     isCreatingTimeSlot,
     isCreatingSpecialDate,
     isEditingTimeSlot,
+    isEditingSpecialDate,
     createTimeSlot,
     updateTimeSlot,
     editTimeSlot,
     deleteTimeSlot,
     createSpecialDate,
+    editSpecialDate,
     deleteSpecialDate,
     message,
   } = useAvailability();
@@ -171,6 +175,7 @@ export default function AvailabilityPage() {
         <div className='p-3 sm:p-6'>
           <SpecialDateList 
             specialDates={specialDates}
+            onEdit={(specialDate: SpecialDate) => setEditingSpecialDate(specialDate)}
             onDelete={deleteSpecialDate}
           />
           
@@ -204,6 +209,17 @@ export default function AvailabilityPage() {
         }}
         isLoading={isEditingTimeSlot}
         slot={editingSlot ? timeSlots.find(slot => slot.id === editingSlot) || null : null}
+      />
+
+      <EditSpecialDateModal 
+        isOpen={!!editingSpecialDate}
+        onClose={() => setEditingSpecialDate(null)}
+        onSubmit={(id, data) => {
+          editSpecialDate({ id, data });
+          setEditingSpecialDate(null);
+        }}
+        isLoading={isEditingSpecialDate}
+        specialDate={editingSpecialDate}
       />
 
       <AddSpecialDateModal 

@@ -14,18 +14,29 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const router = useRouter();
 
   useEffect(() => {
+    console.log('🔐 ProtectedRoute check:', {
+      status,
+      hasSession: !!session,
+      userRole: session?.user?.role,
+      sessionData: session
+    });
+
     if (status === 'loading') return; // Still loading
 
     if (!session) {
+      console.log('❌ No session found, redirecting to login');
       router.push('/admin/login');
       return;
     }
 
     // Optional: Check for admin role
     if (session.user.role !== 'ADMIN') {
+      console.log('❌ User role is not ADMIN:', session.user.role);
       router.push('/admin/login');
       return;
     }
+
+    console.log('✅ ProtectedRoute: Access granted');
   }, [session, status, router]);
 
   if (status === 'loading') {

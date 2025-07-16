@@ -23,30 +23,38 @@ export default withAuth(
       authorized: ({ token, req }) => {
         // Check if user is accessing admin routes
         if (req.nextUrl.pathname.startsWith('/admin')) {
-          // Allow access to login page
+          // Always allow access to login page
           if (req.nextUrl.pathname === '/admin/login') {
             return true;
           }
           
-          // For other admin routes, check if user is authenticated and has admin role
-          if (!token || token.role !== 'ADMIN') {
+          // Si hay un token pero está corrupto (sin sub o con sub vacío), forzar logout
+          if (token && (!token.sub || token.sub === '')) {
             return false;
           }
           
-          // Verificar expiración del token
-          const now = Date.now();
-          const loginTime = token.loginTime || 0;
-          const maxAge = 2 * 60 * 60 * 1000; // 2 horas
-          
-          if (loginTime && (now - loginTime) > maxAge) {
-            console.log('🚨 Token expired in middleware, denying access');
+          // For other admin routes, check authentication
+          if (!token) {
+            return false;
+          }
+
+          if (!token.sub) {
+            return false;
+          }
+
+          if (token.role !== 'ADMIN') {
             return false;
           }
           
           return true;
         }
+        
+        // Allow access to all non-admin routes
         return true;
       },
+    },
+    pages: {
+      signIn: '/admin/login',
     },
   }
 );
