@@ -85,6 +85,9 @@ model Appointment {
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
 
+  // Relación con notificaciones
+  notifications Notification[]
+
   @@map("appointments")
 }
 
@@ -168,6 +171,23 @@ model SpecialDate {
   @@map("special_dates")
 }
 
+model Notification {
+  id        String            @id @default(cuid())
+  type      NotificationType
+  title     String
+  message   String
+  link      String?
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  // Relaciones opcionales para diferentes tipos de notificaciones
+  appointmentId String?
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
 enum Role {
   ADMIN
 }
@@ -177,6 +197,13 @@ enum AppointmentStatus {
   CONFIRMED
   CANCELLED
   COMPLETED
+}
+
+enum NotificationType {
+  APPOINTMENT
+  SYSTEM
+  REMINDER
+  ALERT
 }
 
 enum ComplaintType {

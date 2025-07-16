@@ -58,22 +58,35 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // Create notification for the admin
+    const formatDate = (date: Date) => {
+      return new Date(date).toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    };
+
+    const formatTime = (time: string) => {
+      return new Date(`1970-01-01T${time}`).toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    };
+
+    await prisma.notification.create({
+      data: {
+        type: 'APPOINTMENT',
+        title: 'Nueva cita pendiente',
+        message: `${appointment.clientName} solicita ${appointment.serviceType} para el ${formatDate(appointment.appointmentDate)} a las ${formatTime(appointment.appointmentTime)}`,
+        link: '/admin/appointments',
+        appointmentId: appointment.id,
+        read: false,
+      },
+    });
+
     // Send notification emails
     try {
-      const formatDate = (date: Date) => {
-        return new Date(date).toLocaleDateString('es-ES', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        });
-      };
-
-      const formatTime = (time: string) => {
-        return new Date(`1970-01-01T${time}`).toLocaleTimeString('es-ES', {
-          hour: '2-digit',
-          minute: '2-digit',
-        });
-      };
 
       // Send notification to admin/Marcela
       if (process.env.ADMIN_EMAIL) {
