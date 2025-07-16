@@ -76,21 +76,53 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: 'jwt',
+    maxAge: 60 * 60 * 2, // 2 hours - Sesión más corta para mayor seguridad
+    updateAge: 60 * 15, // 15 minutes - Actualizar sesión cada 15 minutos si está activa
   },
   jwt: {
-    maxAge: 60 * 60 * 24 * 30, // 30 days
+    maxAge: 60 * 60 * 2, // 2 hours - JWT expira en 2 horas
   },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = (user as any).role;
+        token.role = (user as { role: string }).role;
+        token.loginTime = Date.now(); // Guardar tiempo de login
       }
+      
+      // Verificar si el token ha expirado (2 horas)
+      const now = Date.now();
+      const loginTime = token.loginTime || now;
+      const maxAge = 2 * 60 * 60 * 1000; // 2 horas en millisegundos
+      
+      if (loginTime && (now - loginTime) > maxAge) {
+        console.log('🚨 Token expired, forcing logout');
+        // Retornar token mínimo que forzará re-autenticación
+        return {
+          sub: undefined,
+          role: '',
+          loginTime: 0
+        };
+      }
+      
       return token;
     },
     async session({ session, token }) {
-      if (token && session.user) {
-        session.user.id = token.sub!;
-        session.user.role = token.role;
+      if (token && token.sub && session.user) {
+        session.user.id = token.sub;
+        session.user.role = token.role || '';
+        
+        // Agregar información de expiración a la sesión
+        const loginTime = token.loginTime || Date.now();
+        const now = Date.now();
+        const maxAge = 2 * 60 * 60 * 1000; // 2 horas
+        const timeLeft = maxAge - (now - loginTime);
+        
+        session.expiresAt = new Date(now + timeLeft).toISOString();
+        session.timeLeft = Math.max(0, Math.floor(timeLeft / 1000)); // en segundos
+      } else {
+        // Si no hay token válido, limpiar la sesión
+        session.expiresAt = new Date().toISOString();
+        session.timeLeft = 0;
       }
       return session;
     },

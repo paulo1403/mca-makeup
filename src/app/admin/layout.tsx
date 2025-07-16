@@ -4,6 +4,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import SessionMonitor from '@/components/SessionMonitor';
 import NotificationCenter from '@/components/NotificationCenter';
 import { LogOut, User } from 'lucide-react';
 
@@ -26,6 +27,9 @@ export default function AdminLayout({
   return (
     <ProtectedRoute>
       <div className='min-h-screen bg-gray-50'>
+        {/* Monitor de sesión para alertas de expiración */}
+        <SessionMonitor />
+        
         <header className='bg-white shadow-sm border-b'>
           <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
             <div className='flex justify-between items-center h-16'>
