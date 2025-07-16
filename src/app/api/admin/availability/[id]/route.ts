@@ -89,3 +89,98 @@ export async function DELETE(
     );
   }
 }
+
+// PUT /api/admin/availability/[id] - Update complete time slot data
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { id } = params;
+    const body = await request.json();
+    const { dayOfWeek, startTime, endTime } = body;
+
+    // Validation
+    if (typeof dayOfWeek !== 'number' || dayOfWeek < 0 || dayOfWeek > 6) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'dayOfWeek debe ser un número entre 0 y 6',
+        },
+        { status: 400 }
+      );
+    }
+
+    if (!startTime || !endTime) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'startTime y endTime son requeridos',
+        },
+        { status: 400 }
+      );
+    }
+
+    if (startTime >= endTime) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'La hora de inicio debe ser anterior a la hora de fin',
+        },
+        { status: 400 }
+      );
+    }
+
+    // Check for overlapping slots
+    const existingSlots = await prisma.regularAvailability.findMany({
+      where: {
+        dayOfWeek,
+        isActive: true,
+        id: { not: id }, // Exclude current slot from check
+      },
+    });
+
+    const hasOverlap = existingSlots.some(slot => {
+      return (startTime < slot.endTime && endTime > slot.startTime);
+    });
+
+    if (hasOverlap) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'El horario se superpone con otro existente',
+        },
+        { status: 400 }
+      );
+    }
+
+    // Update the time slot
+    const timeSlot = await prisma.regularAvailability.update({
+      where: { id },
+      data: { dayOfWeek, startTime, endTime },
+    });
+
+    return NextResponse.json({
+      success: true,
+      ...timeSlot,
+    });
+
+  } catch (error) {
+    console.error('Error updating time slot:', error);
+    
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Horario no encontrado',
+        },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { success: false, message: 'Error al actualizar el horario' },
+      { status: 500 }
+    );
+  }
+}

@@ -8,6 +8,9 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        'xs': '475px', // Extra small devices - between mobile and sm
+      },
       colors: {
         'primary-dark': '#1C1C1C',
         'light-contrast': '#FFFFFF',
