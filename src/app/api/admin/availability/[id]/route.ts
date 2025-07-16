@@ -4,10 +4,10 @@ import { prisma } from '@/lib/prisma';
 // PATCH /api/admin/availability/[id] - Update time slot (toggle active/inactive)
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await context.params;
     const body = await request.json();
     const { isActive } = body;
 
@@ -55,10 +55,10 @@ export async function PATCH(
 // DELETE /api/admin/availability/[id] - Delete time slot
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await context.params;
 
     // Delete the time slot
     await prisma.regularAvailability.delete({
@@ -93,10 +93,10 @@ export async function DELETE(
 // PUT /api/admin/availability/[id] - Update complete time slot data
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await context.params;
     const body = await request.json();
     const { dayOfWeek, startTime, endTime } = body;
 

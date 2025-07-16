@@ -4,10 +4,10 @@ import { prisma } from '@/lib/prisma';
 // PUT /api/admin/availability/special/[id] - Update special date
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await context.params;
     const body = await request.json();
     const { date, isAvailable, customHours, note } = body;
 
@@ -96,10 +96,10 @@ export async function PUT(
 // DELETE /api/admin/availability/special/[id] - Delete special date
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await context.params;
 
     // Delete the special date
     await prisma.specialDate.delete({

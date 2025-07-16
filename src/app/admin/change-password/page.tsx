@@ -58,7 +58,7 @@ export default function ChangePassword() {
         setNewPassword('');
         setConfirmPassword('');
       }
-    } catch (error) {
+    } catch {
       setError('Error al cambiar la contraseña');
     } finally {
       setIsLoading(false);
