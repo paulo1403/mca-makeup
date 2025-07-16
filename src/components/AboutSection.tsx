@@ -34,11 +34,11 @@ export default function AboutSection() {
   ];
 
   const skills = [
-    { name: 'Maquillaje de Novia', level: 98 },
-    { name: 'Maquillaje Social', level: 95 },
-    { name: 'Maquillaje Editorial', level: 90 },
-    { name: 'Peinados', level: 85 },
-    { name: 'Asesoría de Imagen', level: 88 },
+    { name: 'Maquillaje de Novia', level: 98, color: 'from-[#D4AF37] to-[#B8941F]' },
+    { name: 'Maquillaje Social', level: 95, color: 'from-[#B06579] to-[#8B4A5C]' },
+    { name: 'Maquillaje Editorial', level: 90, color: 'from-[#D4AF37] to-[#B06579]' },
+    { name: 'Peinados', level: 85, color: 'from-[#B06579] to-[#D4AF37]' },
+    { name: 'Asesoría de Imagen', level: 88, color: 'from-[#8B4A5C] to-[#B8941F]' },
   ];
 
   const ref = useRef(null);
@@ -84,10 +84,15 @@ export default function AboutSection() {
                 boxShadow: '0 15px 35px rgba(212, 175, 55, 0.4)',
               }}
             >
-              <p className='font-artistic text-lg italic'>
-                &ldquo;La belleza comienza en el momento en que decides ser tú
-                misma&rdquo;
-              </p>
+              <div className="text-center">
+                <p className='font-playfair text-sm italic font-medium text-white leading-relaxed'>
+                  &ldquo;La belleza comienza en el momento en que decides ser tú
+                  misma&rdquo;
+                </p>
+                <p className='font-montserrat text-sm italic text-white/90 mt-2 font-light tracking-wide'>
+                  - Coco Chanel
+                </p>
+              </div>
             </motion.div>
           </motion.div>
 
@@ -148,17 +153,10 @@ export default function AboutSection() {
               <h4 className='text-xl font-playfair text-primary-dark mb-4'>
                 Especialidades
               </h4>
-              <div className='space-y-3'>
+              <div className='space-y-4'>
                 {skills.map((skill, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={
-                      isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }
-                    }
-                    transition={{ duration: 0.6, delay: 1 + index * 0.1 }}
-                  >
-                    <div className='flex justify-between items-center mb-1'>
+                  <div key={index} className="mb-4">
+                    <div className='flex justify-between items-center mb-2'>
                       <span className='text-neutral font-medium'>
                         {skill.name}
                       </span>
@@ -166,17 +164,24 @@ export default function AboutSection() {
                         {skill.level}%
                       </span>
                     </div>
-                    <div className='w-full bg-gray-200 rounded-full h-2'>
+                    <div className='w-full bg-gray-200 rounded-full h-3 overflow-hidden shadow-inner'>
                       <motion.div
-                        className='bg-gradient-to-r from-primary-accent to-secondary-accent h-2 rounded-full'
-                        initial={{ width: 0 }}
-                        animate={
-                          isInView ? { width: `${skill.level}%` } : { width: 0 }
-                        }
-                        transition={{ duration: 1, delay: 1.2 + index * 0.1 }}
-                      ></motion.div>
+                        className={`h-full rounded-full bg-gradient-to-r ${skill.color} shadow-sm relative`}
+                        initial={{ width: "0%" }}
+                        animate={{ 
+                          width: isInView ? `${skill.level}%` : "0%" 
+                        }}
+                        transition={{ 
+                          duration: 2, 
+                          delay: 1.2 + index * 0.3,
+                          ease: [0.25, 0.46, 0.45, 0.94]
+                        }}
+                      >
+                        {/* Inner highlight for 3D effect */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-white/30 to-transparent rounded-full"></div>
+                      </motion.div>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </motion.div>
