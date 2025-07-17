@@ -21,7 +21,22 @@ const appointmentSchema = z.object({
   serviceType: z.string().min(1, 'Tipo de servicio requerido'),
   appointmentDate: z.string().min(1, 'Fecha requerida'),
   appointmentTime: z.string().min(1, 'Hora requerida'),
+  locationType: z.enum(['STUDIO', 'HOME'], { 
+    errorMap: () => ({ message: 'Selecciona una ubicación válida' }) 
+  }),
+  district: z.string().optional(),
+  address: z.string().optional(),
+  addressReference: z.string().optional(),
   additionalNotes: z.string().optional(),
+}).refine((data) => {
+  // Si es a domicilio, distrito y dirección son requeridos
+  if (data.locationType === 'HOME') {
+    return data.district && data.district.length > 0 && data.address && data.address.length > 0;
+  }
+  return true;
+}, {
+  message: "Para servicios a domicilio, distrito y dirección son requeridos",
+  path: ["address"]
 });
 
 export async function POST(request: NextRequest) {
@@ -61,7 +76,12 @@ export async function POST(request: NextRequest) {
         serviceType: validatedData.serviceType,
         appointmentDate: appointmentDateTime,
         appointmentTime: validatedData.appointmentTime,
-        additionalNotes: validatedData.additionalNotes || '',
+        // TODO: Actualizar cuando el cliente de Prisma se regenere
+        // locationType: validatedData.locationType,
+        // district: validatedData.district || null,
+        // address: validatedData.address || null,
+        // addressReference: validatedData.addressReference || null,
+        additionalNotes: `Ubicación: ${validatedData.locationType === 'STUDIO' ? 'Local en Pueblo Libre' : `Domicilio - ${validatedData.district || ''}, ${validatedData.address || ''}`}${validatedData.addressReference ? ` (Ref: ${validatedData.addressReference})` : ''}${validatedData.additionalNotes ? `\n\nNotas adicionales: ${validatedData.additionalNotes}` : ''}`,
         status: 'PENDING',
       },
     });

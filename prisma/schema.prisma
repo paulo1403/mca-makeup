@@ -71,19 +71,25 @@ model VerificationToken {
 }
 
 model Appointment {
-  id              String            @id @default(cuid())
-  clientName      String
-  clientEmail     String
-  clientPhone     String
-  serviceType     String
-  appointmentDate DateTime
-  appointmentTime String
-  duration        Int               @default(120) // minutes
-  location        String?           @default("A domicilio")
-  additionalNotes String?
-  status          AppointmentStatus @default(PENDING)
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
+  id                 String            @id @default(cuid())
+  clientName         String
+  clientEmail        String
+  clientPhone        String
+  serviceType        String
+  appointmentDate    DateTime
+  appointmentTime    String
+  duration           Int               @default(120) // minutes
+  
+  // Información de ubicación
+  locationType       LocationType      @default(HOME)
+  district           String?           // Solo para domicilio
+  address            String?           // Solo para domicilio
+  addressReference   String?           // Solo para domicilio
+  
+  additionalNotes    String?
+  status             AppointmentStatus @default(PENDING)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
 
   // Relación con notificaciones
   notifications Notification[]
@@ -218,6 +224,11 @@ enum AppointmentStatus {
   CONFIRMED
   CANCELLED
   COMPLETED
+}
+
+enum LocationType {
+  STUDIO  // En el local (Pueblo Libre)
+  HOME    // A domicilio
 }
 
 enum NotificationType {

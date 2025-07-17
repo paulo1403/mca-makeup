@@ -1,11 +1,14 @@
 /* Variables CSS - Paleta de colores y configuración base */
 :root {
-  /* Custom Color Palette */
-  --primary-dark: #1C1C1C;
-  --light-contrast: #FFFFFF;
-  --primary-accent: #D4AF37;
-  --secondary-accent: #B06579;
-  --neutral: #5A5A5A;
+  /* Modern Color Palette */
+  --primary-dark: #0A0A0A;        /* Negro más profundo */
+  --secondary-dark: #1A1A1A;      /* Gris oscuro para variedad */
+  --light-contrast: #FFFFFF;      /* Blanco puro mantener */
+  --primary-accent: #6366F1;      /* Indigo moderno (más tech/profesional) */
+  --secondary-accent: #10B981;    /* Verde esmeralda (sofisticado) */
+  --tertiary-accent: #F59E0B;     /* Ámbar cálido (para acentos especiales) */
+  --neutral: #6B7280;             /* Gris más suave */
+  --neutral-light: #9CA3AF;       /* Gris claro para texto secundario */
   --background: #ffffff;
   --foreground: #1C1C1C;
 }

@@ -13,6 +13,7 @@ import {
   User, 
   Palette,
   Send,
+  Home,
   Sparkles,
   Heart,
   Instagram
@@ -32,6 +33,10 @@ export default function ContactSection() {
     service: '',
     date: null as Date | null,
     time: null as Date | null,
+    locationType: 'HOME' as 'STUDIO' | 'HOME',
+    district: '',
+    address: '',
+    addressReference: '',
     message: '',
   });
 
@@ -130,6 +135,10 @@ export default function ContactSection() {
           serviceType: formData.service,
           appointmentDate: formData.date ? format(formData.date, 'yyyy-MM-dd') : '',
           appointmentTime: formData.time ? format(formData.time, 'HH:mm') : '',
+          locationType: formData.locationType,
+          district: formData.district,
+          address: formData.address,
+          addressReference: formData.addressReference,
           additionalNotes: formData.message,
         }),
       });
@@ -145,6 +154,10 @@ export default function ContactSection() {
           service: '',
           date: null,
           time: null,
+          locationType: 'HOME',
+          district: '',
+          address: '',
+          addressReference: '',
           message: '',
         });
       } else {
@@ -245,7 +258,7 @@ export default function ContactSection() {
                       htmlFor='name'
                       className='flex items-center gap-2 text-white font-medium text-sm'
                     >
-                      <User className="w-4 h-4 text-primary-accent" />
+                      <User className="w-4 h-4 text-indigo-500" />
                       Nombre Completo *
                     </label>
                     <input
@@ -255,7 +268,7 @@ export default function ContactSection() {
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className='w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:ring-primary-accent focus:border-transparent transition-all duration-300'
+                      className='w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300'
                       placeholder='Tu nombre completo'
                     />
                   </div>
@@ -265,7 +278,7 @@ export default function ContactSection() {
                       htmlFor='phone'
                       className='flex items-center gap-2 text-white font-medium text-sm'
                     >
-                      <Phone className="w-4 h-4 text-primary-accent" />
+                      <Phone className="w-4 h-4 text-indigo-500" />
                       Teléfono *
                     </label>
                     <input
@@ -275,7 +288,7 @@ export default function ContactSection() {
                       value={formData.phone}
                       onChange={handlePhoneChange}
                       required
-                      className='w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:ring-primary-accent focus:border-transparent transition-all duration-300'
+                      className='w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300'
                       placeholder='+51 999 209 880 o 999 209 880'
                       maxLength={15}
                     />
@@ -290,7 +303,7 @@ export default function ContactSection() {
                     htmlFor='email'
                     className='flex items-center gap-2 text-white font-medium text-sm'
                   >
-                    <Mail className="w-4 h-4 text-primary-accent" />
+                    <Mail className="w-4 h-4 text-indigo-500" />
                     Email *
                   </label>
                   <input
@@ -300,7 +313,7 @@ export default function ContactSection() {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className='w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:ring-primary-accent focus:border-transparent transition-all duration-300'
+                    className='w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300'
                     placeholder='tu@email.com'
                   />
                 </div>
@@ -311,7 +324,7 @@ export default function ContactSection() {
                     htmlFor='service'
                     className='flex items-center gap-2 text-white font-medium text-sm'
                   >
-                    <Palette className="w-4 h-4 text-primary-accent" />
+                    <Palette className="w-4 h-4 text-indigo-500" />
                     Tipo de Servicio *
                   </label>
                   <select
@@ -320,7 +333,7 @@ export default function ContactSection() {
                     value={formData.service}
                     onChange={handleInputChange}
                     required
-                    className='w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:ring-2 focus:ring-primary-accent focus:border-transparent transition-all duration-300'
+                    className='w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300'
                   >
                     <option value='' className="bg-primary-dark text-white">Selecciona un servicio</option>
                     {services.map((service) => (
@@ -331,6 +344,103 @@ export default function ContactSection() {
                   </select>
                 </div>
 
+                {/* Location Type Selection */}
+                <div className="space-y-2">
+                  <label className='flex items-center gap-2 text-white font-medium text-sm'>
+                    <MapPin className="w-4 h-4 text-indigo-500" />
+                    Ubicación del Servicio *
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <label className="location-radio flex items-center space-x-3 p-4 bg-white/5 border border-white/20 rounded-xl cursor-pointer hover:bg-white/10 transition-all duration-300">
+                      <input
+                        type="radio"
+                        name="locationType"
+                        value="STUDIO"
+                        checked={formData.locationType === 'STUDIO'}
+                        onChange={handleInputChange}
+                        className="w-4 h-4 text-indigo-500 bg-transparent border-white/40 focus:ring-indigo-500 focus:ring-2"
+                      />
+                      <div>
+                        <div className="text-white font-medium">Local</div>
+                        <div className="text-white/70 text-sm">Pueblo Libre, Lima</div>
+                      </div>
+                    </label>
+                    <label className="location-radio flex items-center space-x-3 p-4 bg-white/5 border border-white/20 rounded-xl cursor-pointer hover:bg-white/10 transition-all duration-300">
+                      <input
+                        type="radio"
+                        name="locationType"
+                        value="HOME"
+                        checked={formData.locationType === 'HOME'}
+                        onChange={handleInputChange}
+                        className="w-4 h-4 text-indigo-500 bg-transparent border-white/40 focus:ring-indigo-500 focus:ring-2"
+                      />
+                      <div>
+                        <div className="text-white font-medium">A Domicilio</div>
+                        <div className="text-white/70 text-sm">En tu ubicación</div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Address Details - Only show if HOME is selected */}
+                {formData.locationType === 'HOME' && (
+                  <div className="space-y-4 p-4 bg-white/5 border border-white/20 rounded-xl">
+                    <h4 className="text-white font-medium text-sm flex items-center gap-2">
+                      <Home className="w-4 h-4 text-indigo-500" />
+                      Detalles de Dirección
+                    </h4>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label htmlFor="district" className="text-white font-medium text-sm">
+                          Distrito *
+                        </label>
+                        <input
+                          type="text"
+                          id="district"
+                          name="district"
+                          value={formData.district}
+                          onChange={handleInputChange}
+                          required={formData.locationType === 'HOME'}
+                          className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300"
+                          placeholder="Ej: San Isidro, Miraflores, etc."
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label htmlFor="address" className="text-white font-medium text-sm">
+                          Dirección *
+                        </label>
+                        <input
+                          type="text"
+                          id="address"
+                          name="address"
+                          value={formData.address}
+                          onChange={handleInputChange}
+                          required={formData.locationType === 'HOME'}
+                          className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300"
+                          placeholder="Av/Jr/Calle y número"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label htmlFor="addressReference" className="text-white font-medium text-sm">
+                        Referencia (Opcional)
+                      </label>
+                      <input
+                        type="text"
+                        id="addressReference"
+                        name="addressReference"
+                        value={formData.addressReference}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300"
+                        placeholder="Ej: Frente al parque, casa color verde, etc."
+                      />
+                    </div>
+                  </div>
+                )}
+
                 {/* Date and Time */}
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                   <div className="space-y-2">
@@ -338,7 +448,7 @@ export default function ContactSection() {
                       htmlFor='date'
                       className='flex items-center gap-2 text-white font-medium text-sm'
                     >
-                      <Calendar className="w-4 h-4 text-primary-accent" />
+                      <Calendar className="w-4 h-4 text-indigo-500" />
                       Fecha Preferida *
                     </label>
                     <div className='relative'>
@@ -349,7 +459,7 @@ export default function ContactSection() {
                         maxDate={addMonths(new Date(), 6)}
                         dateFormat="dd/MM/yyyy"
                         placeholderText="Selecciona una fecha"
-                        className='w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:ring-primary-accent focus:border-transparent transition-all duration-300'
+                        className='w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300'
                         wrapperClassName='w-full'
                         calendarClassName='shadow-xl border-0 rounded-xl bg-white'
                         showPopperArrow={false}
@@ -367,13 +477,13 @@ export default function ContactSection() {
                           }
                           
                           if (isSameDay(date, today)) {
-                            return 'text-primary-accent font-semibold hover:bg-primary-accent hover:text-white rounded-full';
+                            return 'text-indigo-500 font-semibold hover:bg-indigo-500 hover:text-white rounded-full';
                           }
                           
-                          return 'text-primary-dark hover:bg-primary-accent hover:text-white rounded-full transition-colors duration-200';
+                          return 'text-primary-dark hover:bg-indigo-500 hover:text-white rounded-full transition-colors duration-200';
                         }}
-                        weekDayClassName={() => 'text-primary-accent font-medium'}
-                        monthClassName={() => 'text-primary-accent'}
+                        weekDayClassName={() => 'text-indigo-500 font-medium'}
+                        monthClassName={() => 'text-indigo-500'}
                         dropdownMode="select"
                       />
                     </div>
@@ -384,7 +494,7 @@ export default function ContactSection() {
                       htmlFor='time'
                       className='flex items-center gap-2 text-white font-medium text-sm'
                     >
-                      <Clock className="w-4 h-4 text-primary-accent" />
+                      <Clock className="w-4 h-4 text-indigo-500" />
                       Hora Preferida *
                     </label>
                     <DatePicker
@@ -396,7 +506,7 @@ export default function ContactSection() {
                       timeCaption="Hora"
                       dateFormat="HH:mm"
                       placeholderText="Selecciona una hora"
-                      className='w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:ring-primary-accent focus:border-transparent transition-all duration-300'
+                      className='w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300'
                       wrapperClassName='w-full'
                       calendarClassName='shadow-xl border-0 rounded-xl bg-white'
                       showPopperArrow={false}
@@ -414,7 +524,7 @@ export default function ContactSection() {
                     htmlFor='message'
                     className='flex items-center gap-2 text-white font-medium text-sm'
                   >
-                    <MessageSquare className="w-4 h-4 text-primary-accent" />
+                    <MessageSquare className="w-4 h-4 text-indigo-500" />
                     Mensaje Adicional
                   </label>
                   <textarea
@@ -423,7 +533,7 @@ export default function ContactSection() {
                     value={formData.message}
                     onChange={handleInputChange}
                     rows={4}
-                    className='w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:ring-primary-accent focus:border-transparent transition-all duration-300 resize-none'
+                    className='w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 resize-none'
                     placeholder='Cuéntame sobre tu evento, estilo preferido, o cualquier detalle especial...'
                   />
                 </div>

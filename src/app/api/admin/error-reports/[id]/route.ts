@@ -6,10 +6,11 @@ import { ErrorStatus } from '@prisma/client';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
+    const resolvedParams = await params;
     
     if (!session?.user?.role || session.user.role !== 'ADMIN') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -25,7 +26,7 @@ export async function PATCH(
     }
 
     const updatedReport = await prisma.errorReport.update({
-      where: { id: params.id },
+      where: { id: resolvedParams.id },
       data: { status: status as ErrorStatus },
     });
 
@@ -41,17 +42,18 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
+    const resolvedParams = await params;
     
     if (!session?.user?.role || session.user.role !== 'ADMIN') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     await prisma.errorReport.delete({
-      where: { id: params.id }
+      where: { id: resolvedParams.id }
     });
 
     return NextResponse.json({ success: true });
