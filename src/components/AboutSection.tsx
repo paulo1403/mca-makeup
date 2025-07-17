@@ -3,42 +3,31 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Check, Heart } from 'lucide-react';
+import { Check, Heart, Award, Camera, Palette, Calendar } from 'lucide-react';
 
 export default function AboutSection() {
   const achievements = [
     {
-      icon: '🏆',
-      title: 'Certificación Internacional',
-      description:
-        'Certificada en técnicas de maquillaje profesional por la Academia Internacional de Belleza',
+      icon: Award,
+      title: '+150 Clientas Satisfechas',
+      description: 'Novias y eventos especiales con resultados excepcionales',
     },
     {
-      icon: '✨',
-      title: 'Especialización en Novias',
-      description:
-        'Más de 150 novias han confiado en mí para el día más importante de sus vidas',
+      icon: Camera,
+      title: 'Maquillaje Profesional',
+      description: 'Bodas, sesiones fotográficas y eventos sociales',
     },
     {
-      icon: '📸',
-      title: 'Maquillaje Editorial',
-      description:
-        'Colaboraciones con fotógrafos profesionales y revistas de moda',
-    },
-    {
-      icon: '🎨',
-      title: 'Técnicas Avanzadas',
-      description:
-        'Dominio de técnicas de contouring, highlighting y maquillaje HD',
+      icon: Palette,
+      title: 'Belleza Natural',
+      description: 'Especialista en técnicas que resaltan tu esencia',
     },
   ];
 
   const skills = [
     { name: 'Maquillaje de Novia', level: 98, color: 'from-[#D4AF37] to-[#B8941F]' },
     { name: 'Maquillaje Social', level: 95, color: 'from-[#B06579] to-[#8B4A5C]' },
-    { name: 'Maquillaje Editorial', level: 90, color: 'from-[#D4AF37] to-[#B06579]' },
-    { name: 'Peinados', level: 85, color: 'from-[#B06579] to-[#D4AF37]' },
-    { name: 'Asesoría de Imagen', level: 88, color: 'from-[#8B4A5C] to-[#B8941F]' },
+    { name: 'Sesiones Fotográficas', level: 90, color: 'from-[#D4AF37] to-[#B06579]' },
   ];
 
   const ref = useRef(null);
@@ -127,32 +116,43 @@ export default function AboutSection() {
               transition={{ duration: 0.8, delay: 0.6 }}
             >
               <p>
-                Hola, soy Marcela, una maquilladora profesional apasionada por
-                resaltar la belleza natural de cada mujer. Con más de 5 años de
-                experiencia en la industria, he tenido el privilegio de ser
-                parte de los momentos más especiales de mis clientas.
+                Maquilladora profesional especializada en resaltar tu belleza natural. 
+                Con más de 5 años de experiencia, he sido parte de los momentos más 
+                especiales de mis clientas.
               </p>
 
               <p>
-                Mi filosofía se basa en crear looks que no solo sean hermosos,
-                sino que también reflejen la personalidad única de cada persona.
-                Creo firmemente que el maquillaje debe empoderar y hacer sentir
-                segura a quien lo lleva.
+                Mi filosofía: crear looks que reflejen tu personalidad única y te 
+                hagan sentir segura y hermosa.
               </p>
+            </motion.div>
 
-              <p>
-                Desde bodas íntimas hasta grandes celebraciones, sesiones
-                fotográficas editoriales y eventos corporativos, cada proyecto
-                es una nueva oportunidad para crear arte y hacer realidad los
-                sueños de mis clientas.
-              </p>
+            {/* CTA Button */}
+            <motion.div
+              className='flex justify-center lg:justify-start'
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.8, delay: 0.7 }}
+            >
+              <motion.a
+                href='#reservar'
+                className='inline-flex items-center px-6 sm:px-8 py-3 sm:py-4 bg-primary-accent text-white font-montserrat font-medium text-sm sm:text-base rounded-full shadow-lg hover:shadow-xl transition-all duration-300'
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: '0 10px 25px rgba(212, 175, 55, 0.3)'
+                }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Calendar className='w-4 h-4 sm:w-5 sm:h-5 mr-2' />
+                Reservar Cita
+              </motion.a>
             </motion.div>
 
             {/* Skills */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
+              transition={{ duration: 0.8, delay: 0.9 }}
             >
               <h4 className='text-lg sm:text-xl font-playfair text-primary-dark mb-4'>
                 Especialidades
@@ -219,11 +219,11 @@ export default function AboutSection() {
                 }}
               >
                 <motion.div
-                  className='text-3xl sm:text-4xl mb-3 sm:mb-4'
+                  className='text-primary-accent mb-3 sm:mb-4 flex justify-center'
                   whileHover={{ scale: 1.2, rotate: 10 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {achievement.icon}
+                  <achievement.icon className="w-8 h-8 sm:w-10 sm:h-10" />
                 </motion.div>
                 <h4 className='text-base sm:text-lg font-playfair text-primary-dark mb-2 sm:mb-3'>
                   {achievement.title}
