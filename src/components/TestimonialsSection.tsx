@@ -100,8 +100,12 @@ export default function TestimonialsSection() {
   return (
     <section
       id="testimonials"
-      className="py-16 md:py-24 bg-gradient-to-b from-black via-primary-dark to-black relative overflow-hidden"
+      className="py-16 md:py-24 section-bg-testimonials relative overflow-hidden"
     >
+      {/* Overlays difuminados */}
+      <div className="section-overlay-top" />
+      <div className="section-overlay-bottom" />
+      
       {/* Background Elements */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-accent/5 via-transparent to-transparent" />
       <div className="absolute top-20 left-10 text-primary-accent/10">

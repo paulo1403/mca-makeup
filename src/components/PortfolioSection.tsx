@@ -16,6 +16,7 @@ import {
   Gem,
   Flower
 } from 'lucide-react';
+import FadeTransition from './FadeTransition';
 
 export default function PortfolioSection() {
   const ref = useRef(null);
@@ -48,9 +49,16 @@ export default function PortfolioSection() {
   return (
     <section 
       id='portafolio' 
-      className='py-16 md:py-24 bg-gradient-to-b from-black via-primary-dark to-black relative overflow-hidden' 
+      className='py-16 md:py-24 section-bg-portfolio relative overflow-hidden' 
       ref={ref}
     >
+      {/* Overlays difuminados */}
+      <div className="section-overlay-top" />
+      <div className="section-overlay-bottom" />
+      
+      {/* Efectos de fade más sutiles */}
+      <FadeTransition position="both" intensity="medium" height={70} />
+      
       {/* Background Elements */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-accent/5 via-transparent to-transparent" />
       <div className="absolute top-20 left-10 text-primary-accent/10">

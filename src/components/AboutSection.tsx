@@ -30,9 +30,13 @@ export default function AboutSection() {
   return (
     <section 
       id='sobre-mi' 
-      className='py-16 md:py-24 bg-gradient-to-b from-primary-dark via-secondary-dark to-primary-dark relative overflow-hidden' 
+      className='py-16 md:py-24 section-bg-about relative overflow-hidden' 
       ref={ref}
     >
+      {/* Overlays difuminados */}
+      <div className="section-overlay-top" />
+      <div className="section-overlay-bottom" />
+      
       {/* Background Elements */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-accent/5 via-transparent to-transparent" />
       <div className="absolute top-20 left-10 text-primary-accent/10">

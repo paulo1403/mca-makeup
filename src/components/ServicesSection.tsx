@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { MapPin, Clock, Check } from 'lucide-react';
+import FadeTransition from './FadeTransition';
 
 export default function ServicesSection() {
   const services = [
@@ -60,7 +61,14 @@ export default function ServicesSection() {
   };
 
   return (
-    <section id='servicios' className='py-12 sm:py-16 bg-gradient-to-b from-primary-dark via-secondary-dark to-primary-dark relative overflow-hidden' ref={ref}>
+    <section id='servicios' className='py-12 sm:py-16 section-bg-services relative overflow-hidden' ref={ref}>
+      {/* Overlays difuminados */}
+      <div className="section-overlay-top" />
+      <div className="section-overlay-bottom" />
+      
+      {/* Efectos de fade adicionales */}
+      <FadeTransition position="both" intensity="medium" height={80} />
+      
       {/* Background Elements */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-accent/5 via-transparent to-transparent" />
       

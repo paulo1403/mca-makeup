@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Menu, ChevronDown, CheckCircle, MessageCircle, Palette } from 'lucide-react';
+import { Menu, ChevronDown, CheckCircle, Palette, MessageCircle } from 'lucide-react';
+import FadeTransition from './FadeTransition';
 
 export default function HeroSection() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,7 +45,12 @@ export default function HeroSection() {
   };
 
   return (
-    <section className='relative min-h-[100dvh] bg-primary-dark text-white overflow-hidden'>
+    <section className='relative min-h-[100dvh] section-bg-hero text-white overflow-hidden'>
+      {/* Overlay difuminado inferior */}
+      <div className="section-overlay-bottom" />
+      
+      {/* Efecto de fade más sutil en la parte inferior */}
+      <FadeTransition position="bottom" intensity="medium" height={80} />
       {/* Navigation */}
       <motion.nav
         className='relative z-50 flex justify-between items-center px-4 py-2 sm:px-6 sm:py-3 lg:px-12'
@@ -118,7 +124,10 @@ export default function HeroSection() {
         transition={{ duration: 0.3, ease: 'easeInOut' }}
         style={{ pointerEvents: isMenuOpen ? 'auto' : 'none' }}
       >
-        <div className='flex flex-col space-y-4 px-6 py-6 bg-primary-dark/95 backdrop-blur-sm border-t border-primary-accent/20'>
+        <div className='flex flex-col space-y-4 px-6 py-6 bg-primary-dark/95 backdrop-blur-sm relative'>
+          {/* Divisor elegante en lugar de border-t */}
+          <div className="section-divider-minimal absolute top-0 left-4 right-4" />
+          <div className="pt-4"></div>
           <a
             href='#servicios'
             className='hover:text-primary-accent transition-colors duration-200 py-2'

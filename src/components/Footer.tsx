@@ -21,9 +21,12 @@ export default function Footer() {
   ];
 
   return (
-    <footer className='bg-primary-dark text-white'>
+    <footer className='section-bg-footer text-white'>
+      {/* Overlay difuminado superior */}
+      <div className="section-overlay-top" />
+      
       {/* Main Footer Content */}
-      <div className='container mx-auto px-6 lg:px-12 py-16'>
+      <div className='container mx-auto px-6 lg:px-12 py-16 relative z-10'>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8'>
           {/* Brand Section */}
           <div className='lg:col-span-2'>
@@ -133,7 +136,9 @@ export default function Footer() {
         </div>
 
         {/* Contact Info Bar */}
-        <div className='mt-12 pt-8 border-t border-white/20'>
+        {/* Divisor elegante en lugar de border-t */}
+        <div className="section-divider-glow mt-12 mb-8" />
+        <div>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left'>
             <div className='flex items-center justify-center md:justify-start'>
               <Mail
@@ -162,7 +167,9 @@ export default function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className='border-t border-white/20'>
+      {/* Divisor principal elegante */}
+      <div className="section-divider-multi" />
+      <div>
         <div className='container mx-auto px-6 lg:px-12 py-6'>
           <div className='flex flex-col md:flex-row justify-between items-center'>
             <div className='text-gray-300 text-sm mb-4 md:mb-0'>

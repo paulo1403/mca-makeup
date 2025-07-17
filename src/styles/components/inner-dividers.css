@@ -1,0 +1,124 @@
+/* Divisores internos más sutiles para usar dentro de componentes */
+
+/* Divisor interno mínimo */
+.inner-divider {
+  position: relative;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(99, 102, 241, 0.2) 30%, 
+    rgba(99, 102, 241, 0.4) 50%, 
+    rgba(99, 102, 241, 0.2) 70%, 
+    transparent 100%
+  );
+  margin: 1rem 0;
+}
+
+/* Divisor interno con puntos */
+.inner-divider-dotted {
+  position: relative;
+  width: 100%;
+  height: 2px;
+  margin: 1.5rem 0;
+}
+
+.inner-divider-dotted::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 4px;
+  background: #6366F1;
+  border-radius: 50%;
+  box-shadow: 
+    -20px 0 0 rgba(99, 102, 241, 0.6),
+    -40px 0 0 rgba(99, 102, 241, 0.3),
+    20px 0 0 rgba(99, 102, 241, 0.6),
+    40px 0 0 rgba(99, 102, 241, 0.3);
+}
+
+/* Divisor interno con línea y acento */
+.inner-divider-accent {
+  position: relative;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(16, 185, 129, 0.3) 40%, 
+    rgba(16, 185, 129, 0.6) 50%, 
+    rgba(16, 185, 129, 0.3) 60%, 
+    transparent 100%
+  );
+  margin: 1.2rem 0;
+}
+
+.inner-divider-accent::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(45deg, #6366F1, #10B981);
+  border-radius: 50%;
+}
+
+/* Divisor para cards */
+.card-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.1) 20%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    rgba(255, 255, 255, 0.1) 80%, 
+    transparent 100%
+  );
+  margin: 0.75rem 0;
+}
+
+/* Divisor para formularios */
+.form-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(99, 102, 241, 0.3) 25%, 
+    rgba(99, 102, 241, 0.5) 50%, 
+    rgba(99, 102, 241, 0.3) 75%, 
+    transparent 100%
+  );
+  margin: 1rem 0;
+  position: relative;
+}
+
+.form-divider::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  background: #10B981;
+  border-radius: 50%;
+  border: 2px solid #0A0A0A;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .inner-divider,
+  .inner-divider-accent,
+  .card-divider,
+  .form-divider {
+    margin: 0.75rem 0;
+  }
+  
+  .inner-divider-dotted {
+    margin: 1rem 0;
+  }
+}
