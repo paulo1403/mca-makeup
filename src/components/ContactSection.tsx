@@ -63,6 +63,41 @@ export default function ContactSection() {
     }));
   };
 
+  // Función especial para formatear teléfono
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    
+    // Remover todo excepto números y +
+    value = value.replace(/[^\d+]/g, '');
+    
+    // Si empieza con +51, formatear como +51 999 999 999
+    if (value.startsWith('+51')) {
+      const digits = value.substring(3);
+      if (digits.length <= 3) {
+        value = `+51 ${digits}`;
+      } else if (digits.length <= 6) {
+        value = `+51 ${digits.substring(0, 3)} ${digits.substring(3)}`;
+      } else {
+        value = `+51 ${digits.substring(0, 3)} ${digits.substring(3, 6)} ${digits.substring(6, 9)}`;
+      }
+    }
+    // Si empieza con 9 (número peruano), formatear como 999 999 999
+    else if (value.startsWith('9') && !value.startsWith('+')) {
+      if (value.length <= 3) {
+        value = value;
+      } else if (value.length <= 6) {
+        value = `${value.substring(0, 3)} ${value.substring(3)}`;
+      } else {
+        value = `${value.substring(0, 3)} ${value.substring(3, 6)} ${value.substring(6, 9)}`;
+      }
+    }
+    
+    setFormData((prev) => ({
+      ...prev,
+      phone: value,
+    }));
+  };
+
   const handleDateChange = (date: Date | null) => {
     setFormData((prev) => ({
       ...prev,
@@ -113,12 +148,26 @@ export default function ContactSection() {
           message: '',
         });
       } else {
-        throw new Error('Error al enviar la solicitud');
+        // Intentar obtener el mensaje de error del servidor
+        const errorData = await response.json().catch(() => null);
+        const errorMessage = errorData?.message || errorData?.error || 'Error al enviar la solicitud';
+        throw new Error(errorMessage);
       }
-    } catch {
-      setSubmitMessage(
-        'Hubo un error al enviar tu solicitud. Por favor intenta nuevamente.'
-      );
+    } catch (error: unknown) {
+      let errorMessage = 'Hubo un error al enviar tu solicitud. Por favor intenta nuevamente.';
+      
+      // Si es un error del servidor con mensaje específico
+      if (error instanceof Error && error.message) {
+        if (error.message.includes('Teléfono') || error.message.includes('teléfono')) {
+          errorMessage = 'Por favor verifica el formato del teléfono. Ej: +51 999 209 880 o 999 209 880';
+        } else if (error.message.includes('Email') || error.message.includes('email')) {
+          errorMessage = 'Por favor verifica que el email sea válido.';
+        } else if (error.message.includes('fecha') || error.message.includes('hora')) {
+          errorMessage = 'Por favor selecciona una fecha y hora válidas.';
+        }
+      }
+      
+      setSubmitMessage(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -224,11 +273,15 @@ export default function ContactSection() {
                       id='phone'
                       name='phone'
                       value={formData.phone}
-                      onChange={handleInputChange}
+                      onChange={handlePhoneChange}
                       required
                       className='w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:ring-primary-accent focus:border-transparent transition-all duration-300'
-                      placeholder='+51 999 209 880'
+                      placeholder='+51 999 209 880 o 999 209 880'
+                      maxLength={15}
                     />
+                    <p className="text-xs text-white/60 mt-1">
+                      📱 Formato: +51 999 209 880 o 999 209 880
+                    </p>
                   </div>
                 </div>
 

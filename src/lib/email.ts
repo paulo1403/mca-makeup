@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
 export interface EmailData {
   to: string;
@@ -7,37 +7,30 @@ export interface EmailData {
   text?: string;
 }
 
-// Configurar el transportador de email
-const createTransporter = () => {
-  // Para desarrollo, usar Gmail SMTP
-  // En producción, usar un servicio como SendGrid, AWS SES, etc.
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_FROM,
-      pass: process.env.EMAIL_PASSWORD, // App password para Gmail
-    },
-  });
-};
+// Configurar Resend
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendEmail = async (emailData: EmailData): Promise<boolean> => {
   try {
-    if (!process.env.EMAIL_FROM) {
-      console.log('Email service not configured, skipping email send');
+    if (!process.env.RESEND_API_KEY) {
+      console.log('Resend API key not configured, skipping email send');
       return false;
     }
 
-    const transporter = createTransporter();
-
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM,
+    const result = await resend.emails.send({
+      from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
       to: emailData.to,
       subject: emailData.subject,
       html: emailData.html,
       text: emailData.text,
     });
 
-    console.log('Email sent successfully to:', emailData.to);
+    if (result.error) {
+      console.error('Error sending email with Resend:', result.error);
+      return false;
+    }
+
+    console.log('Email sent successfully to:', emailData.to, 'ID:', result.data?.id);
     return true;
   } catch (error) {
     console.error('Error sending email:', error);

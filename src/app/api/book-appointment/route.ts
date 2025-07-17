@@ -9,7 +9,15 @@ const prisma = new PrismaClient();
 const appointmentSchema = z.object({
   clientName: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
   clientEmail: z.string().email('Email inválido'),
-  clientPhone: z.string().min(10, 'Teléfono inválido'),
+  clientPhone: z.string()
+    .min(8, 'Teléfono inválido')
+    .max(20, 'Teléfono muy largo')
+    .refine((phone) => {
+      // Remover espacios, guiones y símbolos para validar solo números
+      const cleanPhone = phone.replace(/[\s\-\+\(\)]/g, '');
+      // Aceptar teléfonos peruanos: 9 dígitos o con código de país (11-12 dígitos)
+      return cleanPhone.length >= 9 && cleanPhone.length <= 12 && /^\d+$/.test(cleanPhone);
+    }, 'Formato de teléfono inválido. Ej: +51 999 209 880 o 999209880'),
   serviceType: z.string().min(1, 'Tipo de servicio requerido'),
   appointmentDate: z.string().min(1, 'Fecha requerida'),
   appointmentTime: z.string().min(1, 'Hora requerida'),
@@ -126,8 +134,26 @@ export async function POST(request: NextRequest) {
     console.error('Error creating appointment:', error);
 
     if (error instanceof z.ZodError) {
+      // Encontrar el primer error de teléfono para dar un mensaje más específico
+      const phoneError = error.errors.find(err => err.path.includes('clientPhone'));
+      
+      if (phoneError) {
+        return NextResponse.json(
+          { 
+            error: 'Formato de teléfono inválido', 
+            message: 'Por favor ingresa un número de teléfono válido. Ejemplos: +51 999 209 880 o 999 209 880',
+            details: error.errors 
+          },
+          { status: 400 }
+        );
+      }
+      
       return NextResponse.json(
-        { error: 'Datos inválidos', details: error.errors },
+        { 
+          error: 'Datos inválidos', 
+          message: 'Por favor verifica que todos los campos estén completos y sean válidos.',
+          details: error.errors 
+        },
         { status: 400 }
       );
     }
