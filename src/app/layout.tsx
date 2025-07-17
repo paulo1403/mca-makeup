@@ -188,11 +188,11 @@ export default function RootLayout({
         />
         <meta name='theme-color' content='#1C1C1C' />
         <meta name='msapplication-TileColor' content='#D4AF37' />
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' />
         <link rel='canonical' href='https://marcelacordero.com' />
       </head>
       <body
-        className={`${playfairDisplay.variable} ${allura.variable} ${montserrat.variable} antialiased`}
+        className={`${playfairDisplay.variable} ${allura.variable} ${montserrat.variable} antialiased overflow-x-hidden max-w-full`}
       >
         <AuthProvider>
           <QueryProvider>

@@ -45,18 +45,18 @@ export default function AboutSection() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section id='sobre-mi' className='py-20 bg-white' ref={ref}>
-      <div className='container mx-auto px-6 lg:px-12'>
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-16 items-center'>
+    <section id='sobre-mi' className='py-20 bg-white overflow-hidden' ref={ref}>
+      <div className='container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl'>
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center'>
           {/* Image Side */}
           <motion.div
-            className='relative'
+            className='relative order-2 lg:order-1'
             initial={{ opacity: 0, x: -50 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
             transition={{ duration: 0.8 }}
           >
             <motion.div
-              className='relative h-96 lg:h-[500px] rounded-2xl overflow-hidden'
+              className='relative h-80 sm:h-96 lg:h-[500px] rounded-2xl overflow-hidden mx-auto max-w-md lg:max-w-none'
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.4 }}
             >
@@ -69,9 +69,9 @@ export default function AboutSection() {
               <div className='absolute inset-0 bg-gradient-to-t from-primary-dark/30 to-transparent'></div>
             </motion.div>
 
-            {/* Floating Quote */}
+            {/* Floating Quote - Fixed for mobile */}
             <motion.div
-              className='absolute -bottom-4 -right-4 bg-primary-accent text-white p-6 rounded-xl shadow-lg max-w-xs'
+              className='absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 lg:-bottom-4 lg:-right-4 bg-primary-accent text-white p-3 sm:p-6 rounded-xl shadow-lg max-w-[280px] sm:max-w-xs z-10'
               initial={{ opacity: 0, y: 20, scale: 0.8 }}
               animate={
                 isInView
@@ -83,13 +83,17 @@ export default function AboutSection() {
                 scale: 1.05,
                 boxShadow: '0 15px 35px rgba(212, 175, 55, 0.4)',
               }}
+              style={{
+                // Ensure it doesn't overflow on mobile
+                transform: 'translateX(min(0px, calc(100vw - 100% - 1rem)))'
+              }}
             >
               <div className="text-center">
-                <p className='font-playfair text-sm italic font-medium text-white leading-relaxed'>
+                <p className='font-playfair text-xs sm:text-sm italic font-medium text-white leading-relaxed'>
                   &ldquo;La belleza comienza en el momento en que decides ser tú
                   misma&rdquo;
                 </p>
-                <p className='font-montserrat text-sm italic text-white/90 mt-2 font-light tracking-wide'>
+                <p className='font-montserrat text-xs sm:text-sm italic text-white/90 mt-2 font-light tracking-wide'>
                   - Coco Chanel
                 </p>
               </div>
@@ -98,7 +102,7 @@ export default function AboutSection() {
 
           {/* Content Side */}
           <motion.div
-            className='space-y-8'
+            className='space-y-6 sm:space-y-8 order-1 lg:order-2'
             initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -108,16 +112,16 @@ export default function AboutSection() {
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              <h2 className='text-4xl lg:text-5xl font-playfair text-primary-dark mb-4'>
+              <h2 className='text-3xl sm:text-4xl lg:text-5xl font-playfair text-primary-dark mb-4'>
                 Sobre Mí
               </h2>
-              <h3 className='text-2xl font-artistic text-primary-accent mb-6'>
+              <h3 className='text-xl sm:text-2xl font-artistic text-primary-accent mb-4 sm:mb-6'>
                 Marcela Cordero
               </h3>
             </motion.div>
 
             <motion.div
-              className='space-y-6 text-lg text-neutral leading-relaxed'
+              className='space-y-4 sm:space-y-6 text-base sm:text-lg text-neutral leading-relaxed'
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.8, delay: 0.6 }}
@@ -150,21 +154,21 @@ export default function AboutSection() {
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.8, delay: 0.8 }}
             >
-              <h4 className='text-xl font-playfair text-primary-dark mb-4'>
+              <h4 className='text-lg sm:text-xl font-playfair text-primary-dark mb-4'>
                 Especialidades
               </h4>
-              <div className='space-y-4'>
+              <div className='space-y-3 sm:space-y-4'>
                 {skills.map((skill, index) => (
-                  <div key={index} className="mb-4">
+                  <div key={index} className="mb-3 sm:mb-4">
                     <div className='flex justify-between items-center mb-2'>
-                      <span className='text-neutral font-medium'>
+                      <span className='text-sm sm:text-base text-neutral font-medium'>
                         {skill.name}
                       </span>
-                      <span className='text-primary-accent font-bold'>
+                      <span className='text-sm sm:text-base text-primary-accent font-bold'>
                         {skill.level}%
                       </span>
                     </div>
-                    <div className='w-full bg-gray-200 rounded-full h-3 overflow-hidden shadow-inner'>
+                    <div className='w-full bg-gray-200 rounded-full h-2 sm:h-3 overflow-hidden shadow-inner'>
                       <motion.div
                         className={`h-full rounded-full bg-gradient-to-r ${skill.color} shadow-sm relative`}
                         initial={{ width: "0%" }}
@@ -190,20 +194,20 @@ export default function AboutSection() {
 
         {/* Achievements */}
         <motion.div
-          className='mt-20'
+          className='mt-12 sm:mt-16 lg:mt-20'
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8, delay: 1 }}
         >
-          <h3 className='text-3xl font-playfair text-primary-dark text-center mb-12'>
+          <h3 className='text-2xl sm:text-3xl font-playfair text-primary-dark text-center mb-8 sm:mb-12'>
             Logros y Certificaciones
           </h3>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8'>
             {achievements.map((achievement, index) => (
               <motion.div
                 key={index}
-                className='text-center p-6 bg-gray-50 rounded-xl hover:shadow-lg transition-shadow'
+                className='text-center p-4 sm:p-6 bg-gray-50 rounded-xl hover:shadow-lg transition-shadow'
                 initial={{ opacity: 0, y: 20 }}
                 animate={
                   isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
@@ -215,16 +219,16 @@ export default function AboutSection() {
                 }}
               >
                 <motion.div
-                  className='text-4xl mb-4'
+                  className='text-3xl sm:text-4xl mb-3 sm:mb-4'
                   whileHover={{ scale: 1.2, rotate: 10 }}
                   transition={{ duration: 0.3 }}
                 >
                   {achievement.icon}
                 </motion.div>
-                <h4 className='text-lg font-playfair text-primary-dark mb-3'>
+                <h4 className='text-base sm:text-lg font-playfair text-primary-dark mb-2 sm:mb-3'>
                   {achievement.title}
                 </h4>
-                <p className='text-neutral text-sm'>
+                <p className='text-neutral text-xs sm:text-sm leading-relaxed'>
                   {achievement.description}
                 </p>
               </motion.div>
@@ -234,18 +238,18 @@ export default function AboutSection() {
 
         {/* Personal Touch */}
         <motion.div
-          className='mt-20 personal-touch-section force-white-text rounded-2xl p-8 lg:p-12 shadow-2xl'
+          className='mt-12 sm:mt-16 lg:mt-20 personal-touch-section force-white-text rounded-2xl p-6 sm:p-8 lg:p-12 shadow-2xl mx-2 sm:mx-0'
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8, delay: 1.4 }}
           whileHover={{ scale: 1.02 }}
         >
-          <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 items-center'>
+          <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-center'>
             <div>
-              <h3 className='text-3xl font-playfair mb-4'>
+              <h3 className='text-2xl sm:text-3xl font-playfair mb-4'>
                 Mi Compromiso Contigo
               </h3>
-              <p className='text-lg leading-relaxed mb-6'>
+              <p className='text-base sm:text-lg leading-relaxed mb-4 sm:mb-6'>
                 Cada cliente es única, y mi trabajo es descubrir y resaltar su
                 belleza natural. No solo aplico maquillaje, creo experiencias
                 que perdurarán en tu memoria para siempre.
@@ -266,9 +270,9 @@ export default function AboutSection() {
                     transition={{ duration: 0.6, delay: 1.6 + index * 0.1 }}
                   >
                     <Check
-                      className='w-5 h-5 check-icon mr-3 flex-shrink-0'
+                      className='w-4 h-4 sm:w-5 sm:h-5 check-icon mr-3 flex-shrink-0'
                     />
-                    <span>{item}</span>
+                    <span className='text-sm sm:text-base'>{item}</span>
                   </motion.li>
                 ))}
               </ul>
@@ -276,7 +280,7 @@ export default function AboutSection() {
 
             <div className='text-center'>
               <motion.div
-                className='inline-block p-8 bg-white/10 rounded-full mb-4'
+                className='inline-block p-6 sm:p-8 bg-white/10 rounded-full mb-4'
                 whileHover={{
                   scale: 1.1,
                   boxShadow: '0 0 30px rgba(212, 175, 55, 0.3)',
@@ -284,13 +288,13 @@ export default function AboutSection() {
                 transition={{ duration: 0.3 }}
               >
                 <Heart
-                  className='w-16 h-16'
+                  className='w-12 h-12 sm:w-16 sm:h-16'
                   fill='none'
                   stroke='#D4AF37'
                   strokeWidth={2}
                 />
               </motion.div>
-              <p className='text-2xl font-playfair'>Tu belleza, mi pasión</p>
+              <p className='text-xl sm:text-2xl font-playfair'>Tu belleza, mi pasión</p>
             </div>
           </div>
         </motion.div>
