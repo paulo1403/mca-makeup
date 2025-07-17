@@ -15,3 +15,27 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #B06579;
 }
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Smooth scroll behavior */
+@media (prefers-reduced-motion: no-preference) {
+  .smooth-scroll {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Touch-friendly scroll areas */
+@media (hover: none) and (pointer: coarse) {
+  .touch-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+}
