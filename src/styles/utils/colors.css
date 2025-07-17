@@ -1,43 +1,75 @@
-/* Utilidades de colores */
+/* Utilidades de colores - Paleta Modern Dark Mode */
 .text-accent {
-  color: #D4AF37;
+  color: #6366F1;
 }
 
 .text-primary-dark {
-  color: #1C1C1C;
+  color: #0A0A0A;
 }
 
 .bg-primary-dark {
-  background-color: #1C1C1C;
+  background-color: #0A0A0A;
+}
+
+.bg-secondary-dark {
+  background-color: #1A1A1A;
 }
 
 .text-primary-accent {
-  color: #D4AF37;
+  color: #6366F1;
 }
 
 .bg-primary-accent {
-  background-color: #D4AF37;
+  background-color: #6366F1;
 }
 
 .text-secondary-accent {
-  color: #B06579;
+  color: #10B981;
 }
 
 .bg-secondary-accent {
-  background-color: #B06579;
+  background-color: #10B981;
+}
+
+.text-tertiary-accent {
+  color: #F59E0B;
+}
+
+.bg-tertiary-accent {
+  background-color: #F59E0B;
 }
 
 .text-neutral {
-  color: #5A5A5A;
+  color: #6B7280;
 }
 
 .bg-neutral {
-  background-color: #5A5A5A;
+  background-color: #6B7280;
 }
 
-/* Gradientes especiales */
+.text-neutral-light {
+  color: #9CA3AF;
+}
+
+/* Gradientes especiales para modern dark mode */
 .hero-gradient {
-  background: linear-gradient(135deg, rgba(28, 28, 28, 0.9) 0%, rgba(176, 101, 121, 0.8) 100%);
+  background: linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(26, 26, 26, 0.9) 50%, rgba(99, 102, 241, 0.1) 100%);
+}
+
+.dark-gradient {
+  background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0A0A0A 100%);
+}
+
+.accent-gradient {
+  background: linear-gradient(135deg, #6366F1 0%, #10B981 100%);
+}
+
+.modern-gradient {
+  background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #10B981 100%);
+}
+
+.glass-gradient {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
 }
 
 /* Clases de fuerza para textos */

@@ -60,7 +60,7 @@ export default function ServicesSection() {
   };
 
   return (
-    <section id='servicios' className='py-12 sm:py-16 bg-gradient-to-b from-black via-primary-dark to-black relative overflow-hidden' ref={ref}>
+    <section id='servicios' className='py-12 sm:py-16 bg-gradient-to-b from-primary-dark via-secondary-dark to-primary-dark relative overflow-hidden' ref={ref}>
       {/* Background Elements */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-accent/5 via-transparent to-transparent" />
       
@@ -75,10 +75,10 @@ export default function ServicesSection() {
           <h2 className='text-3xl sm:text-4xl lg:text-5xl font-playfair text-white mb-3 sm:mb-4'>
             Mis Servicios
           </h2>
-          <p className='text-base sm:text-lg text-gray-300 max-w-2xl mx-auto mb-2'>
+          <p className='text-base sm:text-lg text-neutral-light max-w-2xl mx-auto mb-2'>
             Especialista en sociales, novias y publicidad. Servicios profesionales a domicilio y en locación.
           </p>
-          <p className='text-sm text-gray-400'>
+          <p className='text-sm text-neutral'>
             Toca cualquier servicio para agendar tu cita
           </p>
         </motion.div>
@@ -122,7 +122,7 @@ export default function ServicesSection() {
                 
                 <ul className='space-y-1 mb-3'>
                   {service.features.map((feature, idx) => (
-                    <li key={idx} className='flex items-start text-xs sm:text-sm text-gray-300'>
+                    <li key={idx} className='flex items-start text-xs sm:text-sm text-neutral-light'>
                       <Check className='w-3 h-3 sm:w-4 sm:h-4 text-primary-accent mr-2 mt-0.5 flex-shrink-0' />
                       <span className='leading-tight'>{feature}</span>
                     </li>

@@ -175,7 +175,7 @@ export default function HeroSection() {
                     variants={itemVariants}
                     whileHover={{
                       scale: 1.05,
-                      textShadow: '0 0 20px rgba(212, 175, 55, 0.5)',
+                      textShadow: '0 0 20px rgba(99, 102, 241, 0.5)',
                     }}
                     transition={{ duration: 0.3 }}
                   >
@@ -219,7 +219,7 @@ export default function HeroSection() {
                     }
                     whileHover={{
                       scale: 1.02,
-                      boxShadow: '0 8px 20px rgba(176, 101, 121, 0.3)',
+                      boxShadow: '0 8px 20px rgba(99, 102, 241, 0.3)',
                     }}
                     whileTap={{ scale: 0.98 }}
                     transition={{ duration: 0.2 }}
@@ -233,7 +233,7 @@ export default function HeroSection() {
                     }
                     whileHover={{
                       scale: 1.02,
-                      boxShadow: '0 8px 20px rgba(212, 175, 55, 0.3)',
+                      boxShadow: '0 8px 20px rgba(16, 185, 129, 0.3)',
                     }}
                     whileTap={{ scale: 0.98 }}
                     transition={{ duration: 0.2 }}
@@ -272,7 +272,7 @@ export default function HeroSection() {
                   whileHover={{
                     y: -2,
                     scale: 1.02,
-                    boxShadow: '0 8px 25px rgba(212, 175, 55, 0.4)',
+                    boxShadow: '0 8px 25px rgba(99, 102, 241, 0.4)',
                   }}
                   transition={{ duration: 0.3 }}
                 >

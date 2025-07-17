@@ -30,7 +30,7 @@ export default function AboutSection() {
   return (
     <section 
       id='sobre-mi' 
-      className='py-16 md:py-24 bg-gradient-to-b from-black via-primary-dark to-black relative overflow-hidden' 
+      className='py-16 md:py-24 bg-gradient-to-b from-primary-dark via-secondary-dark to-primary-dark relative overflow-hidden' 
       ref={ref}
     >
       {/* Background Elements */}
@@ -83,7 +83,7 @@ export default function AboutSection() {
                   </div>
                   <div>
                     <h4 className='text-lg font-playfair text-white mb-2'>Mi Pasión</h4>
-                    <p className='text-gray-300 leading-relaxed'>
+                    <p className='text-neutral-light leading-relaxed'>
                       Conocí el mundo del maquillaje en el 2016 y empecé a hacer mis primeros 
                       trabajos en el 2017. He tenido la oportunidad de trabajar en salón, 
                       para producciones y como maquilladora independiente.
@@ -99,7 +99,7 @@ export default function AboutSection() {
                   </div>
                   <div>
                     <h4 className='text-lg font-playfair text-white mb-2'>Mi Formación</h4>
-                    <p className='text-gray-300 leading-relaxed'>
+                    <p className='text-neutral-light leading-relaxed'>
                       Estudié la carrera de Maquillaje profesional en MUS by Christian Matta 
                       para seguir puliendo mi técnica y de la cual me gradué como alumna destacada. 
                       Además, me capacito de manera continua asistiendo a Masterclasses de 
@@ -119,10 +119,10 @@ export default function AboutSection() {
             >
               <motion.a
                 href='#reservar'
-                className='inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary-accent to-primary-accent/80 text-white font-montserrat font-medium text-base rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group'
+                className='inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary-accent to-secondary-accent text-white font-montserrat font-medium text-base rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group'
                 whileHover={{ 
                   scale: 1.05,
-                  boxShadow: '0 15px 35px rgba(212, 175, 55, 0.4)'
+                  boxShadow: '0 15px 35px rgba(99, 102, 241, 0.4)'
                 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -145,7 +145,7 @@ export default function AboutSection() {
               transition={{ duration: 0.4 }}
             >
               {/* Placeholder for about image */}
-              <div className='absolute inset-0 bg-gradient-to-br from-primary-accent/20 to-secondary-accent/30 flex items-center justify-center'>
+              <div className='absolute inset-0 bg-gradient-to-br from-primary-accent/20 to-secondary-accent/20 flex items-center justify-center'>
                 <div className='text-center'>
                   <Camera className='w-16 h-16 text-white/60 mx-auto mb-4' />
                   <span className='text-white/80 text-lg font-playfair'>
@@ -181,7 +181,7 @@ export default function AboutSection() {
                 <p className='font-playfair text-sm italic font-medium text-white leading-relaxed mb-2'>
                   &ldquo;La belleza comienza en el momento en que decides ser tú misma&rdquo;
                 </p>
-                <p className='font-montserrat text-xs text-gray-300 font-light'>
+                <p className='font-montserrat text-xs text-neutral-light font-light'>
                   - Coco Chanel
                 </p>
               </div>
@@ -232,7 +232,7 @@ export default function AboutSection() {
                 <h4 className='text-lg font-playfair text-white mb-3 group-hover:text-primary-accent transition-colors duration-300'>
                   {achievement.title}
                 </h4>
-                <p className='text-gray-300 text-sm leading-relaxed'>
+                <p className='text-neutral-light text-sm leading-relaxed'>
                   {achievement.description}
                 </p>
               </motion.div>

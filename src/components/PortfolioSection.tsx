@@ -94,7 +94,7 @@ export default function PortfolioSection() {
             className='inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary-accent to-secondary-accent hover:from-secondary-accent hover:to-primary-accent text-white font-medium text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300'
             whileHover={{ 
               scale: 1.05,
-              boxShadow: '0 20px 40px rgba(212, 175, 55, 0.4)'
+              boxShadow: '0 20px 40px rgba(99, 102, 241, 0.4)'
             }}
             whileTap={{ scale: 0.95 }}
             initial={{ opacity: 0, y: 20 }}
