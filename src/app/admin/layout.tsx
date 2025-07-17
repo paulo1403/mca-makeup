@@ -51,6 +51,12 @@ export default function AdminLayout({
                 Disponibilidad
               </Link>
               <Link
+                href='/admin/error-reports'
+                className='hidden lg:inline-block text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium font-montserrat transition-colors'
+              >
+                Errores
+              </Link>
+              <Link
                 href='/admin/change-password'
                 className='hidden md:inline-block text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium font-montserrat transition-colors'
               >

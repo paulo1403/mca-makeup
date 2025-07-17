@@ -160,6 +160,47 @@ class RateLimiter {
     const timeLeft = Math.max(0, attempt.blockedUntil - now);
     return Math.ceil(timeLeft / 1000);
   }
+
+  // Método genérico para verificar límites personalizados
+  async check(
+    request: Request, 
+    action: string, 
+    maxRequests: number, 
+    windowMs: number
+  ): Promise<boolean> {
+    const ip = getClientIP(request);
+    const key = `${action}:${ip}`;
+    
+    this.cleanExpiredAttempts();
+    
+    const now = Date.now();
+    const attempt = this.attempts.get(key);
+    
+    if (!attempt) {
+      // Primera vez
+      this.attempts.set(key, {
+        count: 1,
+        lastAttempt: now,
+      });
+      return true;
+    }
+    
+    // Verificar si la ventana de tiempo ha expirado
+    if (now - attempt.lastAttempt > windowMs) {
+      // Reset del contador
+      this.attempts.set(key, {
+        count: 1,
+        lastAttempt: now,
+      });
+      return true;
+    }
+    
+    // Incrementar contador
+    attempt.count++;
+    attempt.lastAttempt = now;
+    
+    return attempt.count <= maxRequests;
+  }
 }
 
 // Instancia global del rate limiter
@@ -174,6 +215,13 @@ export const suspiciousIPLimiter = new RateLimiter({
   maxAttempts: 10, // 10 intentos por IP en total
   windowMs: 60 * 60 * 1000, // 1 hora
   blockDurationMs: 2 * 60 * 60 * 1000, // 2 horas de bloqueo
+});
+
+// Rate limiter general para uso múltiple
+export const rateLimiter = new RateLimiter({
+  maxAttempts: 20, // 20 intentos por defecto
+  windowMs: 60 * 60 * 1000, // 1 hora
+  blockDurationMs: 60 * 60 * 1000, // 1 hora de bloqueo
 });
 
 // Función para obtener la IP del cliente

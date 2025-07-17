@@ -165,7 +165,7 @@ model SpecialDate {
   endTime     String?
   note        String?
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime @default(now())
 
   @@unique([date])
   @@map("special_dates")
@@ -186,6 +186,27 @@ model Notification {
   appointment   Appointment? @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
 
   @@map("notifications")
+}
+
+model ErrorReport {
+  id             String      @id @default(cuid())
+  reportId       String      @unique
+  userEmail      String?
+  userName       String      @default("Usuario Anónimo")
+  errorMessage   String
+  errorStack     String?     @db.Text
+  userAgent      String
+  url            String
+  timestamp      DateTime
+  userDescription String     @db.Text
+  errorType      ErrorType
+  severity       ErrorSeverity
+  status         ErrorStatus @default(PENDING)
+  ipAddress      String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@map("error_reports")
 }
 
 enum Role {
@@ -213,6 +234,29 @@ enum ComplaintType {
 
 enum ComplaintStatus {
   PENDING
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum ErrorType {
+  RUNTIME
+  NETWORK
+  UI
+  BOOKING
+  OTHER
+}
+
+enum ErrorSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ErrorStatus {
+  PENDING
+  ACKNOWLEDGED
   IN_PROGRESS
   RESOLVED
   CLOSED
