@@ -15,7 +15,7 @@ export default function Footer() {
   const quickLinks = [
     { name: 'Inicio', href: '#' },
     { name: 'Servicios', href: '#servicios' },
-    { name: 'Portafolio', href: '#portafolio' },
+    { name: 'Portafolio', href: 'https://marcelacorderomakeup.my.canva.site/', external: true },
     { name: 'Sobre Mí', href: '#sobre-mi' },
     { name: 'Contacto', href: '#contacto' },
   ];
@@ -121,6 +121,7 @@ export default function Footer() {
                 <li key={index}>
                   <a
                     href={link.href}
+                    {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                     className='text-gray-300 hover:text-primary-accent transition-colors'
                   >
                     {link.name}

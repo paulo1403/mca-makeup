@@ -98,9 +98,7 @@ export default function ServicesSection() {
                 cursor: 'pointer'
               }}
               onClick={() =>
-                document
-                  .getElementById('contacto')
-                  ?.scrollIntoView({ behavior: 'smooth' })
+                window.open('https://marcelacorderomakeup.my.canva.site/', '_blank')
               }
               className={`relative p-5 sm:p-6 rounded-xl shadow-lg transition-all duration-300 ${
                 service.popular

@@ -69,7 +69,9 @@ export default function HeroSection() {
             Servicios
           </a>
           <a
-            href='#portafolio'
+            href='https://marcelacorderomakeup.my.canva.site/'
+            target='_blank'
+            rel='noopener noreferrer'
             className='hover:text-primary-accent transition-colors text-sm lg:text-base'
           >
             Portafolio
@@ -125,7 +127,9 @@ export default function HeroSection() {
             Servicios
           </a>
           <a
-            href='#portafolio'
+            href='https://marcelacorderomakeup.my.canva.site/'
+            target='_blank'
+            rel='noopener noreferrer'
             className='hover:text-primary-accent transition-colors duration-200 py-2'
             onClick={() => setIsMenuOpen(false)}
           >
@@ -225,9 +229,7 @@ export default function HeroSection() {
                   <motion.button
                     className='btn-secondary text-sm sm:text-base px-5 sm:px-6 py-2 sm:py-3 flex-1 sm:flex-none'
                     onClick={() =>
-                      document
-                        .getElementById('portafolio')
-                        ?.scrollIntoView({ behavior: 'smooth' })
+                      window.open('https://marcelacorderomakeup.my.canva.site/', '_blank')
                     }
                     whileHover={{
                       scale: 1.02,
