@@ -4,16 +4,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #1A1A1A;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D4AF37;
+  background: #5A5A5A;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #B06579;
+  background: #6B7280;
 }
 
 /* Hide scrollbar but keep functionality */
