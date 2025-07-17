@@ -60,8 +60,11 @@ export default function ServicesSection() {
   };
 
   return (
-    <section id='servicios' className='py-12 sm:py-16 bg-white' ref={ref}>
-      <div className='container mx-auto px-4 sm:px-6 lg:px-12'>
+    <section id='servicios' className='py-12 sm:py-16 bg-gradient-to-b from-black via-primary-dark to-black relative overflow-hidden' ref={ref}>
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-accent/5 via-transparent to-transparent" />
+      
+      <div className='container mx-auto px-4 sm:px-6 lg:px-12 relative z-10'>
         {/* Header */}
         <motion.div
           className='text-center mb-8 sm:mb-12'
@@ -69,13 +72,13 @@ export default function ServicesSection() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className='text-3xl sm:text-4xl lg:text-5xl font-playfair text-primary-dark mb-3 sm:mb-4'>
+          <h2 className='text-3xl sm:text-4xl lg:text-5xl font-playfair text-white mb-3 sm:mb-4'>
             Mis Servicios
           </h2>
-          <p className='text-base sm:text-lg text-neutral max-w-2xl mx-auto mb-2'>
+          <p className='text-base sm:text-lg text-gray-300 max-w-2xl mx-auto mb-2'>
             Especialista en sociales, novias y publicidad. Servicios profesionales a domicilio y en locación.
           </p>
-          <p className='text-sm text-neutral/70'>
+          <p className='text-sm text-gray-400'>
             Toca cualquier servicio para agendar tu cita
           </p>
         </motion.div>
@@ -102,8 +105,8 @@ export default function ServicesSection() {
               }
               className={`relative p-5 sm:p-6 rounded-xl shadow-lg transition-all duration-300 ${
                 service.popular
-                  ? 'bg-gradient-to-br from-primary-accent/10 to-secondary-accent/10 border-2 border-primary-accent'
-                  : 'bg-gray-50 border border-gray-200 hover:border-primary-accent/50'
+                  ? 'bg-gradient-to-br from-primary-accent/20 to-secondary-accent/20 border-2 border-primary-accent backdrop-blur-md'
+                  : 'bg-white/10 backdrop-blur-md border border-white/20 hover:border-primary-accent/50 hover:bg-white/15'
               }`}
             >
               {service.popular && (
@@ -113,13 +116,13 @@ export default function ServicesSection() {
               )}
 
               <div>
-                <h3 className='text-lg sm:text-xl font-playfair text-primary-dark mb-2 text-center'>
+                <h3 className='text-lg sm:text-xl font-playfair text-white mb-2 text-center'>
                   {service.title}
                 </h3>
                 
                 <ul className='space-y-1 mb-3'>
                   {service.features.map((feature, idx) => (
-                    <li key={idx} className='flex items-start text-xs sm:text-sm text-neutral'>
+                    <li key={idx} className='flex items-start text-xs sm:text-sm text-gray-300'>
                       <Check className='w-3 h-3 sm:w-4 sm:h-4 text-primary-accent mr-2 mt-0.5 flex-shrink-0' />
                       <span className='leading-tight'>{feature}</span>
                     </li>
@@ -142,7 +145,7 @@ export default function ServicesSection() {
           transition={{ duration: 0.8, delay: 0.5 }}
         >
           <motion.div
-            className='bg-primary-dark text-white p-6 sm:p-8 rounded-xl'
+            className='bg-white/10 backdrop-blur-md border border-white/20 text-white p-6 sm:p-8 rounded-xl'
             whileHover={{
               scale: 1.02,
               boxShadow: '0 20px 40px rgba(28, 28, 28, 0.3)',
