@@ -183,8 +183,8 @@ export default function HeroSection() {
                   className='text-base sm:text-lg md:text-xl lg:text-2xl font-light text-gray-200 leading-relaxed max-w-2xl mx-auto lg:mx-0'
                   variants={itemVariants}
                 >
-                  Maquilladora profesional especializada en bodas, eventos y 
-                  sesiones fotográficas en Lima, Perú.
+                  Especialista en sociales, novias y publicidad. Atención profesional 
+                  a domicilio y en locación en Lima.
                 </motion.p>
 
                 {/* Trust Indicators for Peruvian Market */}
@@ -194,11 +194,11 @@ export default function HeroSection() {
                 >
                   <div className='flex items-center gap-2'>
                     <CheckCircle className='w-4 h-4 text-primary-accent' />
-                    Servicio a domicilio
+                    Room Studio Pueblo Libre
                   </div>
                   <div className='flex items-center gap-2'>
                     <CheckCircle className='w-4 h-4 text-primary-accent' />
-                    Lima, Perú
+                    Servicio a domicilio
                   </div>
                 </motion.div>
 

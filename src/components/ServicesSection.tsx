@@ -3,58 +3,36 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Check, MapPin, Clock } from 'lucide-react';
+import { MapPin, Clock, Check } from 'lucide-react';
 
 export default function ServicesSection() {
   const services = [
     {
       title: 'Maquillaje de Novia',
-      description:
-        'El día más importante de tu vida merece un look perfecto. Incluye prueba previa y retoque para la ceremonia.',
-      price: 'Desde $150',
+      price: 'Desde S/ 480',
       features: [
-        'Consulta personalizada',
-        'Prueba de maquillaje',
-        'Maquillaje del día',
-        'Retoque incluido',
-        'Productos de alta gama',
+        'Prueba previa incluida',
+        'Maquillaje de larga duración',
+        'Peinado profesional incluido'
       ],
       popular: true,
     },
     {
       title: 'Maquillaje Social',
-      description:
-        'Para eventos especiales, fiestas, graduaciones y ocasiones que requieren un look elegante y sofisticado.',
-      price: 'Desde $80',
+      price: 'Desde S/ 200',
       features: [
-        'Maquillaje personalizado',
-        'Duración 4-6 horas',
-        'Productos profesionales',
-        'Estilo según ocasión',
+        'Estilo natural o glam',
+        'Duración 1h30 - 2h',
+        'Pestañas postizas incluidas'
       ],
     },
     {
-      title: 'Sesión Fotográfica',
-      description:
-        'Maquillaje especializado para fotografía profesional, editorial y sesiones de estudio.',
-      price: 'Desde $100',
+      title: 'Piel Madura',
+      price: 'Desde S/ 230',
       features: [
-        'Maquillaje HD',
-        'Resistente a luces',
-        'Retoque durante sesión',
-        'Múltiples looks',
-      ],
-    },
-    {
-      title: 'Peinado Profesional',
-      description:
-        'Peinados elegantes que complementan perfectamente tu maquillaje para cualquier ocasión especial.',
-      price: 'Desde $60',
-      features: [
-        'Peinado personalizado',
-        'Productos profesionales',
-        'Fijación duradera',
-        'Accesorios incluidos',
+        'Técnicas específicas',
+        'Acabado natural luminoso',
+        'Preparación especializada'
       ],
     },
   ];
@@ -82,27 +60,29 @@ export default function ServicesSection() {
   };
 
   return (
-    <section id='servicios' className='py-20 bg-white' ref={ref}>
-      <div className='container mx-auto px-6 lg:px-12'>
+    <section id='servicios' className='py-12 sm:py-16 bg-white' ref={ref}>
+      <div className='container mx-auto px-4 sm:px-6 lg:px-12'>
         {/* Header */}
         <motion.div
-          className='text-center mb-16'
+          className='text-center mb-8 sm:mb-12'
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className='text-4xl lg:text-5xl font-playfair text-primary-dark mb-4'>
+          <h2 className='text-3xl sm:text-4xl lg:text-5xl font-playfair text-primary-dark mb-3 sm:mb-4'>
             Mis Servicios
           </h2>
-          <p className='text-xl text-neutral max-w-3xl mx-auto'>
-            Cada servicio está diseñado para resaltar tu belleza natural y
-            hacerte sentir segura y radiante en tu día especial.
+          <p className='text-base sm:text-lg text-neutral max-w-2xl mx-auto mb-2'>
+            Especialista en sociales, novias y publicidad. Servicios profesionales a domicilio y en locación.
+          </p>
+          <p className='text-sm text-neutral/70'>
+            Toca cualquier servicio para agendar tu cita
           </p>
         </motion.div>
 
         {/* Services Grid */}
         <motion.div
-          className='grid grid-cols-1 md:grid-cols-2 gap-8'
+          className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6'
           variants={containerVariants}
           initial='hidden'
           animate={isInView ? 'visible' : 'hidden'}
@@ -113,97 +93,78 @@ export default function ServicesSection() {
               variants={itemVariants}
               transition={{ duration: 0.8, delay: index * 0.1 }}
               whileHover={{
-                y: -10,
-                boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+                y: -5,
+                boxShadow: '0 15px 30px rgba(0,0,0,0.1)',
+                cursor: 'pointer'
               }}
-              className={`relative p-8 rounded-xl shadow-lg ${
+              onClick={() =>
+                document
+                  .getElementById('contacto')
+                  ?.scrollIntoView({ behavior: 'smooth' })
+              }
+              className={`relative p-5 sm:p-6 rounded-xl shadow-lg transition-all duration-300 ${
                 service.popular
                   ? 'bg-gradient-to-br from-primary-accent/10 to-secondary-accent/10 border-2 border-primary-accent'
-                  : 'bg-gray-50 border border-gray-200'
+                  : 'bg-gray-50 border border-gray-200 hover:border-primary-accent/50'
               }`}
             >
               {service.popular && (
-                <div className='absolute -top-3 left-6 bg-primary-accent text-white px-4 py-1 rounded-full text-sm font-medium'>
+                <div className='absolute -top-2 left-4 bg-primary-accent text-white px-3 py-1 rounded-full text-xs sm:text-sm font-medium'>
                   Más Popular
                 </div>
               )}
 
-              <div className='mb-6'>
-                <h3 className='text-2xl font-playfair text-primary-dark mb-2'>
+              <div>
+                <h3 className='text-lg sm:text-xl font-playfair text-primary-dark mb-2 text-center'>
                   {service.title}
                 </h3>
-                <p className='text-neutral mb-4'>{service.description}</p>
-                <div className='text-3xl font-bold text-secondary-accent'>
+                
+                <ul className='space-y-1 mb-3'>
+                  {service.features.map((feature, idx) => (
+                    <li key={idx} className='flex items-start text-xs sm:text-sm text-neutral'>
+                      <Check className='w-3 h-3 sm:w-4 sm:h-4 text-primary-accent mr-2 mt-0.5 flex-shrink-0' />
+                      <span className='leading-tight'>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                
+                <div className='text-xl sm:text-2xl font-bold text-secondary-accent text-center'>
                   {service.price}
                 </div>
               </div>
-
-              <ul className='space-y-3 mb-6'>
-                {service.features.map((feature, idx) => (
-                  <li key={idx} className='flex items-center text-neutral'>
-                    <Check
-                      className='w-5 h-5 text-primary-accent mr-3 flex-shrink-0'
-                    />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-
-              <motion.button
-                className={`w-full py-3 px-6 rounded-lg font-medium transition-colors ${
-                  service.popular
-                    ? 'btn-primary'
-                    : 'bg-primary-dark text-white hover:bg-neutral'
-                }`}
-                onClick={() =>
-                  document
-                    .getElementById('contacto')
-                    ?.scrollIntoView({ behavior: 'smooth' })
-                }
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Solicitar Información
-              </motion.button>
             </motion.div>
           ))}
         </motion.div>
 
         {/* Additional Info */}
         <motion.div
-          className='mt-16 text-center'
+          className='mt-8 sm:mt-12 text-center'
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8, delay: 0.5 }}
         >
           <motion.div
-            className='bg-primary-dark text-white p-8 rounded-xl'
+            className='bg-primary-dark text-white p-6 sm:p-8 rounded-xl'
             whileHover={{
               scale: 1.02,
-              boxShadow: '0 25px 50px rgba(28, 28, 28, 0.3)',
+              boxShadow: '0 20px 40px rgba(28, 28, 28, 0.3)',
             }}
             transition={{ duration: 0.3 }}
           >
-            <h3 className='text-2xl font-playfair mb-4'>
-              Servicios a Domicilio
+            <h3 className='text-xl sm:text-2xl font-playfair mb-3 sm:mb-4'>
+              Atención a Domicilio y en Locación
             </h3>
-            <p className='text-lg mb-6'>
-              Me desplazo hasta tu ubicación para que disfrutes de la comodidad
-              de tu hogar en tu día especial. Servicio disponible en toda la
-              ciudad.
+            <p className='text-sm sm:text-lg mb-4 sm:mb-6'>
+              Room Studio en Pueblo Libre o nos desplazamos hasta tu ubicación en Lima.
             </p>
-            <div className='flex flex-col sm:flex-row gap-4 justify-center items-center'>
+            <div className='flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center items-center text-sm sm:text-base'>
               <div className='flex items-center'>
-                <MapPin
-                  className='w-6 h-6 text-primary-accent mr-2'
-                />
-                <span>Sin costo adicional</span>
+                <MapPin className='w-5 h-5 sm:w-6 sm:h-6 text-primary-accent mr-2' />
+                <span>Movilidad incluida</span>
               </div>
               <div className='flex items-center'>
-                <Clock
-                  className='w-6 h-6 text-primary-accent mr-2'
-                />
-                <span>Puntualidad garantizada</span>
+                <Clock className='w-5 h-5 sm:w-6 sm:h-6 text-primary-accent mr-2' />
+                <span>Horarios flexibles</span>
               </div>
             </div>
           </motion.div>

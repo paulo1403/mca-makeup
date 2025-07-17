@@ -29,11 +29,12 @@ export default function ContactSection() {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   const services = [
-    'Maquillaje de Novia',
-    'Maquillaje Social',
-    'Sesión Fotográfica',
-    'Peinado Profesional',
-    'Asesoría de Imagen',
+    'Maquillaje de Novia - Paquete Básico (S/ 480)',
+    'Maquillaje de Novia - Paquete Clásico (S/ 980)',
+    'Maquillaje Social - Estilo Natural (S/ 200)',
+    'Maquillaje Social - Estilo Glam (S/ 210)',
+    'Maquillaje para Piel Madura (S/ 230)',
+    'Peinados (desde S/ 65)',
     'Otro (especificar en mensaje)',
   ];
 
@@ -173,7 +174,7 @@ export default function ContactSection() {
                     onChange={handleInputChange}
                     required
                     className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-accent focus:border-transparent'
-                    placeholder='+1 234 567 8900'
+                    placeholder='+51 999 209 880'
                   />
                 </div>
               </div>
@@ -358,9 +359,9 @@ export default function ContactSection() {
                     className='w-6 h-6 text-primary-accent mr-4'
                   />
                   <div>
-                    <div className='font-medium'>Email</div>
+                    <div className='font-medium'>WhatsApp / Contacto</div>
                     <div className='text-gray-300'>
-                      marcela@marcelamakeup.com
+                      +51 989 164 990
                     </div>
                   </div>
                 </div>
@@ -370,8 +371,8 @@ export default function ContactSection() {
                     className='w-6 h-6 text-primary-accent mr-4'
                   />
                   <div>
-                    <div className='font-medium'>Teléfono</div>
-                    <div className='text-gray-300'>+1 (555) 123-4567</div>
+                    <div className='font-medium'>Reservas</div>
+                    <div className='text-gray-300'>+51 999 209 880</div>
                   </div>
                 </div>
 
@@ -380,9 +381,9 @@ export default function ContactSection() {
                     className='w-6 h-6 text-primary-accent mr-4'
                   />
                   <div>
-                    <div className='font-medium'>Ubicación</div>
+                    <div className='font-medium'>Locación</div>
                     <div className='text-gray-300'>
-                      Servicio a domicilio disponible
+                      Room Studio - Pueblo Libre (cdra 10 Av Bolívar)
                     </div>
                   </div>
                 </div>

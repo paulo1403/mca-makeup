@@ -8,7 +8,7 @@ export default function Footer() {
   const services = [
     'Maquillaje de Novia',
     'Maquillaje Social',
-    'Sesiones Fotográficas',
+    'Piel Madura',
     'Peinados Profesionales',
   ];
 
@@ -29,15 +29,17 @@ export default function Footer() {
           <div className='lg:col-span-2'>
             <h3 className='text-3xl font-playfair mb-4'>Marcela Cordero</h3>
             <p className='text-gray-300 mb-6 leading-relaxed'>
-              Maquilladora profesional especializada en resaltar tu belleza
-              natural. Con más de 5 años de experiencia creando looks perfectos
-              para los momentos más especiales de tu vida.
+              Desde 2017 creando looks únicos que resaltan tu belleza natural. 
+              Graduada de MUS by Christian Matta como alumna destacada. 
+              Especialista en sociales, novias y publicidad.
             </p>
 
             {/* Social Media */}
             <div className='flex space-x-4'>
               <a
-                href='#'
+                href='https://instagram.com/marcelacorderomakeup'
+                target='_blank'
+                rel='noopener noreferrer'
                 className='bg-primary-accent hover:bg-opacity-80 p-3 rounded-full transition-colors'
                 aria-label='Instagram'
               >
@@ -136,14 +138,14 @@ export default function Footer() {
               <Mail
                 className='w-5 h-5 text-primary-accent mr-3'
               />
-              <span className='text-gray-300'>marcela@marcelamakeup.com</span>
+              <span className='text-gray-300'>@marcelacorderomakeup</span>
             </div>
 
             <div className='flex items-center justify-center md:justify-start'>
               <Phone
                 className='w-5 h-5 text-primary-accent mr-3'
               />
-              <span className='text-gray-300'>+1 (555) 123-4567</span>
+              <span className='text-gray-300'>+51 989 164 990</span>
             </div>
 
             <div className='flex items-center justify-center md:justify-start'>
@@ -151,7 +153,7 @@ export default function Footer() {
                 className='w-5 h-5 text-primary-accent mr-3'
               />
               <span className='text-gray-300'>
-                Servicio a domicilio disponible
+                Room Studio - Pueblo Libre
               </span>
             </div>
           </div>

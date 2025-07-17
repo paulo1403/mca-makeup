@@ -9,25 +9,25 @@ export default function AboutSection() {
   const achievements = [
     {
       icon: Award,
-      title: '+150 Clientas Satisfechas',
-      description: 'Novias y eventos especiales con resultados excepcionales',
+      title: 'Alumna Destacada',
+      description: 'Graduada de MUS by Christian Matta con reconocimiento especial',
     },
     {
       icon: Camera,
-      title: 'Maquillaje Profesional',
-      description: 'Bodas, sesiones fotográficas y eventos sociales',
+      title: 'Desde 2017',
+      description: 'Experiencia en salón, producciones y servicio independiente',
     },
     {
       icon: Palette,
-      title: 'Belleza Natural',
-      description: 'Especialista en técnicas que resaltan tu esencia',
+      title: 'Capacitación Continua',
+      description: 'Masterclasses con maquilladores internacionales reconocidos',
     },
   ];
 
   const skills = [
     { name: 'Maquillaje de Novia', level: 98, color: 'from-[#D4AF37] to-[#B8941F]' },
     { name: 'Maquillaje Social', level: 95, color: 'from-[#B06579] to-[#8B4A5C]' },
-    { name: 'Sesiones Fotográficas', level: 90, color: 'from-[#D4AF37] to-[#B06579]' },
+    { name: 'Piel Madura', level: 92, color: 'from-[#D4AF37] to-[#B06579]' },
   ];
 
   const ref = useRef(null);
@@ -116,14 +116,16 @@ export default function AboutSection() {
               transition={{ duration: 0.8, delay: 0.6 }}
             >
               <p>
-                Maquilladora profesional especializada en resaltar tu belleza natural. 
-                Con más de 5 años de experiencia, he sido parte de los momentos más 
-                especiales de mis clientas.
+                Conocí el mundo del maquillaje en el 2016 y empecé a hacer mis primeros 
+                trabajos en el 2017. He tenido la oportunidad de trabajar en salón, 
+                para producciones y como maquilladora independiente.
               </p>
 
               <p>
-                Mi filosofía: crear looks que reflejen tu personalidad única y te 
-                hagan sentir segura y hermosa.
+                Estudié la carrera de Maquillaje profesional en MUS by Christian Matta 
+                para seguir puliendo mi técnica y de la cual me gradué como alumna destacada. 
+                Además, me capacito de manera continua asistiendo a Masterclasses de 
+                diferentes maquilladores internacionales.
               </p>
             </motion.div>
 
