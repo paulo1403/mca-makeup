@@ -172,7 +172,7 @@ export default function ContactSection() {
       // Si es un error del servidor con mensaje específico
       if (error instanceof Error && error.message) {
         if (error.message.includes('Teléfono') || error.message.includes('teléfono')) {
-          errorMessage = 'Por favor verifica el formato del teléfono. Ej: +51 999 209 880 o 999 209 880';
+          errorMessage = 'Por favor verifica el formato del teléfono. Ej: +51 989 164 990 o 989 164 990';
         } else if (error.message.includes('Email') || error.message.includes('email')) {
           errorMessage = 'Por favor verifica que el email sea válido.';
         } else if (error.message.includes('fecha') || error.message.includes('hora')) {
@@ -289,11 +289,11 @@ export default function ContactSection() {
                       onChange={handlePhoneChange}
                       required
                       className='w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300'
-                      placeholder='+51 999 209 880 o 999 209 880'
+                      placeholder='+51 989 164 990 o 989 164 990'
                       maxLength={15}
                     />
                     <p className="text-xs text-white/60 mt-1">
-                      📱 Formato: +51 999 209 880 o 999 209 880
+                      📱 Formato: +51 989 164 990 o 989 164 990
                     </p>
                   </div>
                 </div>
@@ -619,7 +619,7 @@ export default function ContactSection() {
                 </motion.a>
 
                 <motion.a
-                  href="tel:+51999209880"
+                  href="tel:+51989164990"
                   whileHover={{ scale: 1.02 }}
                   className='flex items-center p-4 bg-white/5 rounded-2xl border border-white/10 hover:border-primary-accent/30 transition-all duration-300 group'
                 >
@@ -628,7 +628,7 @@ export default function ContactSection() {
                   </div>
                   <div>
                     <div className='font-medium text-white group-hover:text-primary-accent transition-colors'>Reservas</div>
-                    <div className='text-gray-300 text-sm'>+51 999 209 880</div>
+                    <div className='text-gray-300 text-sm'>+51 989 164 990</div>
                   </div>
                 </motion.a>
 

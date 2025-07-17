@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Menu, ChevronDown, CheckCircle, Palette, MessageCircle } from 'lucide-react';
+import { Menu, ChevronDown, CheckCircle, MessageCircle } from 'lucide-react';
 import FadeTransition from './FadeTransition';
 
 export default function HeroSection() {
@@ -21,22 +21,6 @@ export default function HeroSection() {
   };
 
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-    },
-  };
-
-  const imageVariants = {
-    hidden: { scale: 0.8, opacity: 0 },
-    visible: {
-      scale: 1,
-      opacity: 1,
-    },
-  };
-
-  const floatingVariants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
@@ -171,9 +155,9 @@ export default function HeroSection() {
         {/* Main Content */}
         <div className='flex-1 flex items-center'>
           <div className='container mx-auto px-4 sm:px-6 lg:px-12'>
-            <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8 items-center'>
-              {/* Text Content */}
-              <motion.div className='space-y-2 sm:space-y-3 lg:space-y-4 text-center lg:text-left' variants={itemVariants}>
+            <div className='flex justify-center lg:justify-start'>
+              {/* Text Content - Now centered and full width */}
+              <motion.div className='space-y-2 sm:space-y-3 lg:space-y-4 text-center lg:text-left max-w-4xl' variants={itemVariants}>
                 <motion.h1
                   className='text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-playfair font-light leading-tight'
                   variants={itemVariants}
@@ -251,44 +235,6 @@ export default function HeroSection() {
                   </motion.button>
                 </motion.div>
               </motion.div>
-
-              {/* Image */}
-              <motion.div
-                className='relative order-first lg:order-last mt-2 lg:mt-0'
-                variants={imageVariants}
-              >
-                <motion.div
-                  className='relative h-56 sm:h-72 md:h-80 lg:h-[500px] rounded-lg overflow-hidden mx-auto max-w-sm sm:max-w-md lg:max-w-none'
-                  whileHover={{ scale: 1.01 }}
-                  transition={{ duration: 0.4 }}
-                >
-                  {/* Placeholder for hero image */}
-                  <div className='hero-gradient absolute inset-0 z-10'></div>
-                  <div className='absolute inset-0 bg-gradient-to-br from-primary-accent/20 to-secondary-accent/30 flex items-center justify-center'>
-                    <div className='text-center text-white'>
-                      <Palette className='w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 mb-2 mx-auto text-primary-accent' />
-                      <span className='text-sm sm:text-base md:text-lg font-light'>
-                        Imagen de Marcela
-                      </span>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Simplified Floating Element */}
-                <motion.div
-                  className='absolute -top-1 -right-1 sm:-top-3 sm:-right-3 bg-primary-accent text-primary-dark px-3 py-1 sm:px-4 sm:py-2 rounded-full font-medium shadow-lg z-20 text-xs sm:text-sm'
-                  variants={floatingVariants}
-                  whileHover={{
-                    y: -2,
-                    scale: 1.02,
-                    boxShadow: '0 8px 25px rgba(99, 102, 241, 0.4)',
-                  }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <span className='hidden sm:inline'>+200 Clientas</span>
-                  <span className='sm:hidden'>+200</span>
-                </motion.div>
-              </motion.div>
             </div>
           </div>
         </div>
@@ -323,7 +269,7 @@ export default function HeroSection() {
             variants={itemVariants}
           >
             <motion.a
-              href='https://wa.me/51999999999?text=Hola%20Marcela%2C%20me%20interesa%20agendar%20una%20cita%20para%20maquillaje'
+              href='https://wa.me/51989164990?text=Hola%20Marcela%2C%20me%20interesa%20agendar%20una%20cita%20para%20maquillaje'
               className='inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-medium transition-colors duration-200'
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}

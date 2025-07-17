@@ -148,16 +148,15 @@ export default function AboutSection() {
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.4 }}
             >
-              {/* Placeholder for about image */}
-              <div className='absolute inset-0 bg-gradient-to-br from-primary-accent/20 to-secondary-accent/20 flex items-center justify-center'>
-                <div className='text-center'>
-                  <Camera className='w-16 h-16 text-white/60 mx-auto mb-4' />
-                  <span className='text-white/80 text-lg font-playfair'>
-                    Foto Profesional de Marcela
-                  </span>
-                </div>
+              {/* About Me Image */}
+              <div 
+                className='absolute inset-0 bg-cover bg-center bg-no-repeat'
+                style={{
+                  backgroundImage: `url('https://marcelacorderomakeup.my.canva.site/_assets/media/6d0773b57fb0bc5f1db1ada4d9461476.jpg')`
+                }}
+              >
+                <div className='absolute inset-0 bg-gradient-to-t from-black/40 to-transparent'></div>
               </div>
-              <div className='absolute inset-0 bg-gradient-to-t from-black/50 to-transparent'></div>
             </motion.div>
 
             {/* Floating Quote - Redesigned */}

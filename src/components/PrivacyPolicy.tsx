@@ -274,7 +274,7 @@ export default function PrivacyPolicy() {
                 <ul className="list-disc list-inside text-neutral space-y-2 ml-4">
                   <li>Presencial: Durante la prestación del servicio</li>
                   <li>Email: marcela@marcelamakeup.com (indicar &quot;QUEJA&quot; o &quot;RECLAMO&quot; en el asunto)</li>
-                  <li>WhatsApp: +51 999 123 456</li>
+                  <li>WhatsApp: +51 989 164 990</li>
                   <li><a href="/libro-reclamaciones" className="text-primary-accent hover:underline">Libro de Reclamaciones Virtual</a></li>
                 </ul>
               </div>
@@ -325,7 +325,7 @@ export default function PrivacyPolicy() {
                 <div className="space-y-2 text-neutral">
                   <p><strong>Responsable:</strong> Marcela Cordero - Makeup Artist</p>
                   <p><strong>Email:</strong> <span className="text-primary-accent">marcela@marcelamakeup.com</span></p>
-                  <p><strong>Teléfono:</strong> +51 999 123 456</p>
+                  <p><strong>Teléfono:</strong> +51 989 164 990</p>
                   <p><strong>Dirección:</strong> Lima, Perú</p>
                 </div>
                 <p className="text-neutral leading-relaxed mt-4">

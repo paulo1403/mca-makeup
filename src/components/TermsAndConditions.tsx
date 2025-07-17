@@ -269,7 +269,7 @@ export default function TermsAndConditions() {
                 <li><strong>Presencial:</strong> Durante la prestación del servicio</li>
                 <li><strong>Email:</strong> marcela@marcelamakeup.com 
                 (Asunto: &quot;QUEJA&quot; o &quot;RECLAMO&quot; seguido del motivo)</li>
-                <li><strong>WhatsApp:</strong> +51 999 123 456</li>
+                <li><strong>WhatsApp:</strong> +51 989 164 990</li>
                 <li><strong>Libro de Reclamaciones:</strong> Físico durante el servicio presencial</li>
               </ul>
 
@@ -367,7 +367,7 @@ export default function TermsAndConditions() {
                 <div className="space-y-2 text-neutral">
                   <p><strong>Empresa:</strong> Marcela Cordero - Makeup Artist</p>
                   <p><strong>Email:</strong> <span className="text-primary-accent">marcela@marcelamakeup.com</span></p>
-                  <p><strong>WhatsApp:</strong> +51 999 123 456</p>
+                  <p><strong>WhatsApp:</strong> +51 989 164 990</p>
                   <p><strong>Ubicación:</strong> Lima, Perú</p>
                   <p><strong>Horarios de atención:</strong> Lunes a Domingo, 9:00 AM - 8:00 PM</p>
                 </div>

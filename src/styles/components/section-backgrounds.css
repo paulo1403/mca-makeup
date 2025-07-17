@@ -3,15 +3,20 @@
 /* Fondos base con degradados difuminados ultra suaves */
 .section-bg-hero {
   background: 
-    radial-gradient(ellipse at top, rgba(99, 102, 241, 0.03) 0%, transparent 70%),
-    linear-gradient(180deg, 
-      #0A0A0A 0%, 
-      #0F0F0F 25%,
-      #1A1A1A 50%, 
-      #141414 75%, 
-      rgba(18, 18, 18, 0.95) 90%, 
-      rgba(15, 15, 15, 0.8) 100%
-    );
+    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)),
+    url('https://marcelacorderomakeup.my.canva.site/_assets/media/d896d7f1ed2c9864b0567d571abf3c48.jpg');
+  background-size: cover;
+  background-position: center 20%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Responsive adjustments for hero image */
+@media (max-width: 768px) {
+  .section-bg-hero {
+    background-attachment: scroll; /* Better performance on mobile */
+    background-position: center 30%; /* Adjust for mobile viewport */
+  }
 }
 
 .section-bg-services {

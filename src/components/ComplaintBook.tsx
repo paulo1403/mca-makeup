@@ -538,7 +538,7 @@ export default function ComplaintBook() {
                 <p><strong>Dirección:</strong> Lima, Perú</p>
               </div>
               <div>
-                <p><strong>Teléfono:</strong> +51 999 123 456</p>
+                <p><strong>Teléfono:</strong> +51 989 164 990</p>
                 <p><strong>Email:</strong> marcela@marcelamakeup.com</p>
               </div>
             </div>
