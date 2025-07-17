@@ -1,0 +1,39 @@
+/* Variables CSS - Paleta de colores y configuración base */
+:root {
+  /* Custom Color Palette */
+  --primary-dark: #1C1C1C;
+  --light-contrast: #FFFFFF;
+  --primary-accent: #D4AF37;
+  --secondary-accent: #B06579;
+  --neutral: #5A5A5A;
+  --background: #ffffff;
+  --foreground: #1C1C1C;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1C1C1C;
+    --foreground: #ffffff;
+  }
+}
+
+/* Configuración base del body */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-montserrat), Arial, Helvetica, sans-serif;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Tipografía base */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-playfair);
+}
+
+.font-artistic {
+  font-family: var(--font-allura);
+}

@@ -1,0 +1,25 @@
+/* Estilos específicos para AboutSection */
+.personal-touch-section {
+  background: linear-gradient(135deg, #1C1C1C 0%, #B06579 100%) !important;
+  color: white !important;
+}
+
+.personal-touch-section * {
+  color: white !important;
+}
+
+.personal-touch-section h3 {
+  color: white !important;
+}
+
+.personal-touch-section p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.personal-touch-section li {
+  color: white !important;
+}
+
+.personal-touch-section .check-icon {
+  color: #D4AF37 !important;
+}

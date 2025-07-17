@@ -1,0 +1,60 @@
+/* Utilidades de colores */
+.text-accent {
+  color: #D4AF37;
+}
+
+.text-primary-dark {
+  color: #1C1C1C;
+}
+
+.bg-primary-dark {
+  background-color: #1C1C1C;
+}
+
+.text-primary-accent {
+  color: #D4AF37;
+}
+
+.bg-primary-accent {
+  background-color: #D4AF37;
+}
+
+.text-secondary-accent {
+  color: #B06579;
+}
+
+.bg-secondary-accent {
+  background-color: #B06579;
+}
+
+.text-neutral {
+  color: #5A5A5A;
+}
+
+.bg-neutral {
+  background-color: #5A5A5A;
+}
+
+/* Gradientes especiales */
+.hero-gradient {
+  background: linear-gradient(135deg, rgba(28, 28, 28, 0.9) 0%, rgba(176, 101, 121, 0.8) 100%);
+}
+
+/* Clases de fuerza para textos */
+.force-white-text,
+.force-white-text * {
+  color: white !important;
+}
+
+.force-white-text h1,
+.force-white-text h2,
+.force-white-text h3,
+.force-white-text h4,
+.force-white-text h5,
+.force-white-text h6 {
+  color: white !important;
+}
+
+.force-white-text p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}

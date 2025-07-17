@@ -1,0 +1,18 @@
+/* Archivo principal de estilos - Importa todos los módulos */
+
+/* Base y variables */
+@import "./base.css";
+
+/* Utilidades */
+@import "./utils/colors.css";
+@import "./utils/animations.css";
+@import "./utils/scrollbar.css";
+
+/* Componentes */
+@import "./components/buttons.css";
+@import "./components/forms.css";
+@import "./components/datepicker.css";
+@import "./components/about-section.css";
+
+/* Dashboard específico */
+@import "./dashboard.css";
