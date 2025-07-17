@@ -80,15 +80,15 @@ export default function AdminLogin() {
   // Loading states
   if (status === 'loading') {
     return (
-      <div className='min-h-screen bg-gradient-to-br from-[#1C1C1C] via-[#2a2a2a] to-[#1C1C1C] flex items-center justify-center'>
-        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-[#D4AF37]'></div>
+      <div className='min-h-screen bg-gradient-to-br from-primary-dark via-secondary-dark to-primary-dark flex items-center justify-center'>
+        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary-accent'></div>
       </div>
     );
   }
 
   if (status === 'authenticated') {
     return (
-      <div className='min-h-screen bg-gradient-to-br from-[#1C1C1C] via-[#2a2a2a] to-[#1C1C1C] flex items-center justify-center'>
+      <div className='min-h-screen bg-gradient-to-br from-primary-dark via-secondary-dark to-primary-dark flex items-center justify-center'>
         <div className='text-white'>Redirigiendo...</div>
       </div>
     );
@@ -102,12 +102,12 @@ export default function AdminLogin() {
     : null;
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-[#1C1C1C] via-[#2a2a2a] to-[#1C1C1C] flex items-center justify-center px-4'>
+    <div className='min-h-screen bg-gradient-to-br from-primary-dark via-secondary-dark to-primary-dark flex items-center justify-center px-4'>
       <div className='max-w-md w-full space-y-8'>
         {/* Header */}
         <div className='text-center'>
-          <div className='mx-auto h-12 w-12 bg-[#D4AF37] rounded-full flex items-center justify-center'>
-            <Lock className='h-6 w-6 text-[#1C1C1C]' />
+          <div className='mx-auto h-12 w-12 bg-primary-accent rounded-full flex items-center justify-center'>
+            <Lock className='h-6 w-6 text-white' />
           </div>
           <h2 className='mt-6 text-3xl font-bold text-white font-playfair'>
             Panel de Administración

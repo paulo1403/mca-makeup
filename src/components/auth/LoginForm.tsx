@@ -56,7 +56,7 @@ export const LoginForm = ({ onSubmit, onEmailChange, isLoading, rateLimitInfo, c
               type='email'
               autoComplete='email'
               disabled={isBlocked}
-              className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-colors ${
+              className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-accent focus:border-transparent transition-colors ${
                 errors.email 
                   ? 'border-red-500' 
                   : 'border-gray-600'
@@ -86,7 +86,7 @@ export const LoginForm = ({ onSubmit, onEmailChange, isLoading, rateLimitInfo, c
               type={showPassword ? 'text' : 'password'}
               autoComplete='current-password'
               disabled={isBlocked}
-              className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-colors ${
+              className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-accent focus:border-transparent transition-colors ${
                 errors.password 
                   ? 'border-red-500' 
                   : 'border-gray-600'
@@ -118,15 +118,15 @@ export const LoginForm = ({ onSubmit, onEmailChange, isLoading, rateLimitInfo, c
       <button
         type='submit'
         disabled={isLoading || isBlocked}
-        className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-[#1C1C1C] transition-all duration-200 ${
+        className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white transition-all duration-200 ${
           isLoading || isBlocked
             ? 'bg-gray-600 cursor-not-allowed'
-            : 'bg-[#D4AF37] hover:bg-[#B8941F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D4AF37] focus:ring-offset-gray-800'
+            : 'bg-primary-accent hover:bg-primary-accent/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-accent focus:ring-offset-gray-800'
         }`}
       >
         {isLoading ? (
           <div className='flex items-center space-x-2'>
-            <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-[#1C1C1C]'></div>
+            <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white'></div>
             <span>Iniciando sesión...</span>
           </div>
         ) : isBlocked ? (
