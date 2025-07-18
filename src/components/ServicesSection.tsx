@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { MapPin, Clock, Check } from 'lucide-react';
-import FadeTransition from './FadeTransition';
 
 export default function ServicesSection() {
   const services = [
@@ -61,39 +60,29 @@ export default function ServicesSection() {
   };
 
   return (
-    <section id='servicios' className='py-12 sm:py-16 section-bg-services relative overflow-hidden' ref={ref}>
-      {/* Overlays difuminados */}
-      <div className="section-overlay-top" />
-      <div className="section-overlay-bottom" />
-      
-      {/* Efectos de fade adicionales */}
-      <FadeTransition position="both" intensity="medium" height={80} />
-      
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-accent/5 via-transparent to-transparent" />
-      
+    <section id='servicios' className='py-8 sm:py-12 section-bg-services relative overflow-hidden' ref={ref}>
       <div className='container mx-auto px-4 sm:px-6 lg:px-12 relative z-10'>
         {/* Header */}
         <motion.div
-          className='text-center mb-8 sm:mb-12'
+          className='text-center mb-6 sm:mb-8'
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className='text-3xl sm:text-4xl lg:text-5xl font-playfair text-white mb-3 sm:mb-4'>
+          <h2 className='text-3xl sm:text-4xl lg:text-5xl font-playfair text-heading mb-2 sm:mb-3'>
             Mis Servicios
           </h2>
-          <p className='text-base sm:text-lg text-neutral-light max-w-2xl mx-auto mb-2'>
+          <p className='text-base sm:text-lg text-main max-w-2xl mx-auto mb-1'>
             Especialista en sociales, novias y publicidad. Servicios profesionales a domicilio y en locación.
           </p>
-          <p className='text-sm text-neutral'>
+          <p className='text-sm text-main'>
             Toca cualquier servicio para agendar tu cita
           </p>
         </motion.div>
 
         {/* Services Grid */}
         <motion.div
-          className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6'
+          className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4'
           variants={containerVariants}
           initial='hidden'
           animate={isInView ? 'visible' : 'hidden'}
@@ -111,33 +100,33 @@ export default function ServicesSection() {
               onClick={() =>
                 window.open('https://marcelacorderomakeup.my.canva.site/', '_blank')
               }
-              className={`relative p-5 sm:p-6 rounded-xl shadow-lg transition-all duration-300 ${
+              className={`relative p-4 sm:p-5 rounded-xl shadow-lg transition-all duration-300 ${
                 service.popular
-                  ? 'bg-gradient-to-br from-primary-accent/20 to-secondary-accent/20 border-2 border-primary-accent backdrop-blur-md'
-                  : 'bg-white/10 backdrop-blur-md border border-white/20 hover:border-primary-accent/50 hover:bg-white/15'
+                  ? 'bg-gradient-to-br from-accent-secondary/15 to-accent-primary/10 border-2 border-accent-secondary'
+                  : 'bg-white/90 border border-gray-200 hover:border-accent-primary/50 hover:bg-white shadow-md'
               }`}
             >
               {service.popular && (
-                <div className='absolute -top-2 left-4 bg-primary-accent text-white px-3 py-1 rounded-full text-xs sm:text-sm font-medium'>
+                <div className='absolute -top-2 left-4 bg-accent-secondary text-white px-3 py-1 rounded-full text-xs sm:text-sm font-medium'>
                   Más Popular
                 </div>
               )}
 
               <div>
-                <h3 className='text-lg sm:text-xl font-playfair text-white mb-2 text-center'>
+                <h3 className='text-lg sm:text-xl font-playfair text-accent-secondary mb-2 text-center'>
                   {service.title}
                 </h3>
                 
                 <ul className='space-y-1 mb-3'>
                   {service.features.map((feature, idx) => (
-                    <li key={idx} className='flex items-start text-xs sm:text-sm text-neutral-light'>
-                      <Check className='w-3 h-3 sm:w-4 sm:h-4 text-primary-accent mr-2 mt-0.5 flex-shrink-0' />
+                    <li key={idx} className='flex items-start text-xs sm:text-sm text-main'>
+                      <Check className='w-3 h-3 sm:w-4 sm:h-4 text-accent-secondary mr-2 mt-0.5 flex-shrink-0' />
                       <span className='leading-tight'>{feature}</span>
                     </li>
                   ))}
                 </ul>
                 
-                <div className='text-xl sm:text-2xl font-bold text-secondary-accent text-center'>
+                <div className='text-xl sm:text-2xl font-bold text-accent-primary text-center'>
                   {service.price}
                 </div>
               </div>
@@ -147,32 +136,32 @@ export default function ServicesSection() {
 
         {/* Additional Info */}
         <motion.div
-          className='mt-8 sm:mt-12 text-center'
+          className='mt-6 sm:mt-8 text-center'
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8, delay: 0.5 }}
         >
           <motion.div
-            className='bg-white/10 backdrop-blur-md border border-white/20 text-white p-6 sm:p-8 rounded-xl'
+            className='bg-white/95 border border-gray-200 p-4 sm:p-6 rounded-xl shadow-lg'
             whileHover={{
               scale: 1.02,
-              boxShadow: '0 20px 40px rgba(28, 28, 28, 0.3)',
+              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
             }}
             transition={{ duration: 0.3 }}
           >
-            <h3 className='text-xl sm:text-2xl font-playfair mb-3 sm:mb-4'>
+            <h3 className='text-xl sm:text-2xl font-playfair mb-2 sm:mb-3 text-heading'>
               Atención a Domicilio y en Locación
             </h3>
-            <p className='text-sm sm:text-lg mb-4 sm:mb-6'>
+            <p className='text-sm sm:text-lg mb-3 sm:mb-4 text-main'>
               Room Studio en Pueblo Libre o nos desplazamos hasta tu ubicación en Lima.
             </p>
-            <div className='flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center items-center text-sm sm:text-base'>
+            <div className='flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center items-center text-sm sm:text-base text-main'>
               <div className='flex items-center'>
-                <MapPin className='w-5 h-5 sm:w-6 sm:h-6 text-primary-accent mr-2' />
+                <MapPin className='w-5 h-5 sm:w-6 sm:h-6 text-accent-primary mr-2' />
                 <span>Movilidad incluida</span>
               </div>
               <div className='flex items-center'>
-                <Clock className='w-5 h-5 sm:w-6 sm:h-6 text-primary-accent mr-2' />
+                <Clock className='w-5 h-5 sm:w-6 sm:h-6 text-accent-primary mr-2' />
                 <span>Horarios flexibles</span>
               </div>
             </div>

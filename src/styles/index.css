@@ -13,7 +13,7 @@
 @import "./components/forms.css";
 @import "./components/datepicker.css";
 @import "./components/about-section.css";
-@import "./components/section-dividers.css";
+/* @import "./components/section-dividers.css"; */  /* Deshabilitado - SectionTransition removido */
 @import "./components/inner-dividers.css";
 @import "./components/section-backgrounds.css";
 

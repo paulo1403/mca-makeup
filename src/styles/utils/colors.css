@@ -1,10 +1,63 @@
-/* Utilidades de colores - Paleta Modern Dark Mode */
+/* Utilidades de colores - Nueva Paleta Clara y Profesional */
+
+/* === FONDOS === */
+/* Fondo principal de la web */
+.bg-main {
+  background-color: #F8F8F8;
+}
+
+/* Fondo de elementos destacados */
+.bg-subtle {
+  background-color: #F3F3F3;
+}
+
+/* === TEXTOS === */
+/* Texto principal (cuerpos de texto, descripciones) */
+.text-main {
+  color: #4A4A4A;
+}
+
+/* Títulos de secciones y subtítulos */
+.text-heading {
+  color: #333333;
+}
+
+/* Texto en fondos oscuros (Hero) */
+.text-on-dark {
+  color: #FFFFFF;
+}
+
+/* === ACENTOS === */
+/* Acento principal - Lujo y Acción (Dorado Suave) */
+.text-accent-primary {
+  color: #DAA520;
+}
+
+.bg-accent-primary {
+  background-color: #DAA520;
+}
+
+/* Acento secundario - Elegancia Clásica (Burgundy/Vino) */
+.text-accent-secondary {
+  color: #8B0000;
+}
+
+.bg-accent-secondary {
+  background-color: #8B0000;
+}
+
+/* WhatsApp */
+.bg-whatsapp {
+  background-color: #25D366;
+}
+
+/* === COLORES LEGACY (para compatibilidad) === */
 .text-accent {
-  color: #6366F1;
+  color: #DAA520; /* Actualizado al dorado */
 }
 
 .text-primary-dark {
-  color: #0A0A0A;
+  color: #333333; /* Actualizado al heading */
 }
 
 .bg-primary-dark {
@@ -16,19 +69,38 @@
 }
 
 .text-primary-accent {
-  color: #6366F1;
+  color: #DAA520; /* Actualizado al dorado */
 }
 
 .bg-primary-accent {
-  background-color: #6366F1;
+  background-color: #DAA520; /* Actualizado al dorado */
 }
 
 .text-secondary-accent {
-  color: #10B981;
+  color: #8B0000; /* Actualizado al burgundy */
 }
 
 .bg-secondary-accent {
-  background-color: #10B981;
+  background-color: #8B0000; /* Actualizado al burgundy */
+}
+
+/* === NUEVOS COLORES DE LA PALETA ELEGANCIA CLÁSICA === */
+/* Terracota - Para elementos complementarios */
+.text-terracota {
+  color: #CD853F;
+}
+
+.bg-terracota {
+  background-color: #CD853F;
+}
+
+/* Azul Navy - Para acentos adicionales */
+.text-navy {
+  color: #1e3a8a;
+}
+
+.bg-navy {
+  background-color: #1e3a8a;
 }
 
 .text-tertiary-accent {

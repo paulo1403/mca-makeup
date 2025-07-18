@@ -29,7 +29,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section className='relative min-h-[100dvh] section-bg-hero text-white overflow-hidden'>
+        <section className='relative min-h-[100dvh] section-bg-hero text-white overflow-hidden'>
       {/* Overlay difuminado inferior */}
       <div className="section-overlay-bottom" />
       
@@ -177,7 +177,7 @@ export default function HeroSection() {
                 </motion.h1>
 
                 <motion.p
-                  className='text-base sm:text-lg md:text-xl lg:text-2xl font-light text-gray-200 leading-relaxed max-w-2xl mx-auto lg:mx-0'
+                  className='text-base sm:text-lg md:text-xl lg:text-2xl font-light text-white leading-relaxed max-w-2xl mx-auto lg:mx-0'
                   variants={itemVariants}
                 >
                   Especialista en sociales, novias y publicidad. Atención profesional 
@@ -186,7 +186,7 @@ export default function HeroSection() {
 
                 {/* Trust Indicators for Peruvian Market */}
                 <motion.div
-                  className='flex flex-wrap justify-center lg:justify-start gap-4 sm:gap-6 text-sm text-gray-300'
+                  className='flex flex-wrap justify-center lg:justify-start gap-4 sm:gap-6 text-sm text-white'
                   variants={itemVariants}
                 >
                   <div className='flex items-center gap-2'>
@@ -212,7 +212,7 @@ export default function HeroSection() {
                     }
                     whileHover={{
                       scale: 1.02,
-                      boxShadow: '0 8px 20px rgba(99, 102, 241, 0.3)',
+                      boxShadow: '0 8px 20px rgba(218, 165, 32, 0.3)', // Dorado suave
                     }}
                     whileTap={{ scale: 0.98 }}
                     transition={{ duration: 0.2 }}
@@ -226,7 +226,7 @@ export default function HeroSection() {
                     }
                     whileHover={{
                       scale: 1.02,
-                      boxShadow: '0 8px 20px rgba(16, 185, 129, 0.3)',
+                      boxShadow: '0 8px 20px rgba(139, 0, 0, 0.3)', // Burgundy elegante
                     }}
                     whileTap={{ scale: 0.98 }}
                     transition={{ duration: 0.2 }}
@@ -251,15 +251,15 @@ export default function HeroSection() {
           >
             <div className='text-center'>
               <div className='text-lg sm:text-xl lg:text-2xl font-bold text-primary-accent'>5+</div>
-              <div className='text-xs sm:text-sm text-gray-300'>Años experiencia</div>
+              <div className='text-xs sm:text-sm text-white'>Años experiencia</div>
             </div>
             <div className='text-center'>
               <div className='text-lg sm:text-xl lg:text-2xl font-bold text-primary-accent'>200+</div>
-              <div className='text-xs sm:text-sm text-gray-300'>Clientas felices</div>
+              <div className='text-xs sm:text-sm text-white'>Clientas felices</div>
             </div>
             <div className='text-center'>
               <div className='text-lg sm:text-xl lg:text-2xl font-bold text-primary-accent'>24/7</div>
-              <div className='text-xs sm:text-sm text-gray-300'>Disponibilidad</div>
+              <div className='text-xs sm:text-sm text-white'>Disponibilidad</div>
             </div>
           </motion.div>
 
@@ -270,7 +270,7 @@ export default function HeroSection() {
           >
             <motion.a
               href='https://wa.me/51989164990?text=Hola%20Marcela%2C%20me%20interesa%20agendar%20una%20cita%20para%20maquillaje'
-              className='inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-medium transition-colors duration-200'
+              className='inline-flex items-center gap-2 bg-whatsapp hover:bg-green-700 text-white px-6 py-3 rounded-full font-medium transition-colors duration-200'
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -297,7 +297,7 @@ export default function HeroSection() {
           }}
           className='flex flex-col items-center gap-1'
         >
-          <span className='text-xs text-gray-400 hidden sm:block'>Desliza para ver más</span>
+          <span className='text-xs text-white hidden sm:block'>Desliza para ver más</span>
           <ChevronDown className='w-5 h-5 sm:w-6 sm:h-6 text-primary-accent' />
         </motion.div>
       </motion.div>
