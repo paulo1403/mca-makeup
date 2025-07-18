@@ -160,7 +160,19 @@ export const emailTemplates = {
     `,
   }),
 
-  newAppointmentAlert: (clientName: string, serviceType: string, date: string, time: string, clientEmail: string, clientPhone: string) => ({
+  newAppointmentAlert: (
+    clientName: string, 
+    serviceType: string, 
+    date: string, 
+    time: string, 
+    clientEmail: string, 
+    clientPhone: string, 
+    locationType: string, 
+    district?: string, 
+    address?: string, 
+    addressReference?: string, 
+    additionalNotes?: string
+  ) => ({
     subject: 'Nueva cita recibida - Marcela Cordero Makeup',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
@@ -178,6 +190,23 @@ export const emailTemplates = {
               <li><strong>Hora solicitada:</strong> ${time}</li>
             </ul>
           </div>
+
+          <div style="background-color: #f0f7ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #3B82F6;">
+            <h3 style="color: #1C1C1C; margin: 0 0 15px 0;">Detalles del servicio:</h3>
+            <ul style="color: #5A5A5A; margin: 0; padding-left: 20px;">
+              <li><strong>Ubicación:</strong> ${locationType === 'STUDIO' ? 'Room Studio - Pueblo Libre' : 'Servicio a domicilio'}</li>
+              ${locationType === 'HOME' && district ? `<li><strong>Distrito:</strong> ${district}</li>` : ''}
+              ${locationType === 'HOME' && address ? `<li><strong>Dirección:</strong> ${address}</li>` : ''}
+              ${locationType === 'HOME' && addressReference ? `<li><strong>Referencia:</strong> ${addressReference}</li>` : ''}
+            </ul>
+          </div>
+
+          ${additionalNotes ? `
+            <div style="background-color: #fff7ed; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #F59E0B;">
+              <h3 style="color: #1C1C1C; margin: 0 0 15px 0;">Mensaje adicional:</h3>
+              <p style="color: #5A5A5A; margin: 0; font-style: italic;">"${additionalNotes}"</p>
+            </div>
+          ` : ''}
           
           <p style="color: #5A5A5A; font-size: 16px; line-height: 1.6;">
             <strong>Acción requerida:</strong> Ingresa al panel de administración para confirmar o rechazar esta cita.
@@ -195,6 +224,14 @@ export const emailTemplates = {
       - Servicio: ${serviceType}
       - Fecha solicitada: ${date}
       - Hora solicitada: ${time}
+      
+      Detalles del servicio:
+      - Ubicación: ${locationType === 'STUDIO' ? 'Room Studio - Pueblo Libre' : 'Servicio a domicilio'}
+      ${locationType === 'HOME' && district ? `- Distrito: ${district}` : ''}
+      ${locationType === 'HOME' && address ? `- Dirección: ${address}` : ''}
+      ${locationType === 'HOME' && addressReference ? `- Referencia: ${addressReference}` : ''}
+      
+      ${additionalNotes ? `Mensaje adicional: "${additionalNotes}"` : ''}
       
       Acción requerida: Ingresa al panel de administración para confirmar o rechazar esta cita.
     `,

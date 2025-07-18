@@ -124,7 +124,12 @@ export async function POST(request: NextRequest) {
           formatDate(appointment.appointmentDate),
           formatTime(appointment.appointmentTime),
           appointment.clientEmail,
-          appointment.clientPhone
+          appointment.clientPhone,
+          validatedData.locationType,
+          validatedData.district,
+          validatedData.address,
+          validatedData.addressReference,
+          validatedData.additionalNotes
         );
 
         await sendEmail({
