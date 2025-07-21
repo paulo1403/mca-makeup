@@ -16,20 +16,20 @@ async function createAdminUser() {
     }
 
     // Hash the password
-    const hashedPassword = await bcrypt.hash('admin123', 12);
+    const hashedPassword = await bcrypt.hash('marcela21@', 12);
 
     // Create admin user
     const adminUser = await prisma.user.create({
       data: {
-        email: 'admin@marcelacordero.com',
+        email: 'marcelacordero.bookings@gmail.com',
         password: hashedPassword,
         role: 'ADMIN',
       },
     });
 
     console.log('Admin user created successfully:');
-    console.log('Email: admin@marcelacordero.com');
-    console.log('Password: admin123');
+    console.log('Email: marcelacordero.bookings@gmail.com');
+    console.log('Password: marcela21@');
     console.log('Please change the password after first login!');
   } catch (error) {
     console.error('Error creating admin user:', error);
