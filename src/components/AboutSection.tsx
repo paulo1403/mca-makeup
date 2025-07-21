@@ -1,241 +1,162 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { useRef } from 'react';
-import { Heart, Award, Camera, Palette, Calendar, Sparkles } from 'lucide-react';
+import { motion } from "framer-motion";
+import { useInView } from "framer-motion";
+import { useRef } from "react";
+import { Award, Camera, Palette } from "lucide-react";
 
 export default function AboutSection() {
   const achievements = [
     {
       icon: Award,
-      title: 'Alumna Destacada',
-      description: 'Graduada de MUS by Christian Matta con reconocimiento especial',
+      title: "Alumna Destacada",
+      description:
+        "Graduada de MUS by Christian Matta con reconocimiento especial",
     },
     {
       icon: Camera,
-      title: 'Desde 2017',
-      description: 'Experiencia en salón, producciones y servicio independiente',
+      title: "Desde 2017",
+      description:
+        "Experiencia en salón, producciones y servicio independiente",
     },
     {
       icon: Palette,
-      title: 'Capacitación Continua',
-      description: 'Masterclasses con maquilladores internacionales reconocidos',
+      title: "Capacitación Continua",
+      description:
+        "Masterclasses con maquilladores internacionales reconocidos",
     },
   ];
 
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section 
-      id='sobre-mi' 
-      className='py-16 md:py-24 section-bg-about relative overflow-hidden' 
-      ref={ref}
-    >
-      {/* Overlays difuminados */}
-      <div className="section-overlay-top" />
-      <div className="section-overlay-bottom" />
-      
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-accent/5 via-transparent to-transparent" />
-      <div className="absolute top-20 left-10 text-primary-accent/10">
-        <Sparkles className="w-12 h-12" />
-      </div>
-      <div className="absolute bottom-20 right-10 text-primary-accent/10">
-        <Heart className="w-10 h-10" />
-      </div>
+    <section id="sobre-mi" className="py-20 bg-white" ref={ref}>
+      <div className="container mx-auto px-6 lg:px-12 max-w-7xl">
+        {/* Header Section */}
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <h2 className="text-4xl md:text-5xl font-playfair text-heading mb-4">
+            Sobre Mí
+          </h2>
+          <h3 className="text-2xl font-playfair text-accent-primary">
+            Marcela Cordero
+          </h3>
+        </motion.div>
 
-      <div className='container mx-auto px-4 md:px-6 relative z-10 max-w-7xl'>
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center'>
-          {/* Content Side - Now First */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Content Side - Primero en desktop */}
           <motion.div
-            className='space-y-6 sm:space-y-8 order-1'
-            initial={{ opacity: 0, x: -50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
-            transition={{ duration: 0.8 }}
+            className="space-y-6 order-2 lg:order-1"
+            initial={{ opacity: 0, x: -30 }}
+            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
           >
-            {/* Header with elegant styling */}
-            <motion.div
-              className='relative'
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              <div className='flex items-center mb-4'>
-                <div className='w-12 h-px bg-gradient-to-r from-primary-accent to-transparent mr-4'></div>
-                <h2 className='text-3xl sm:text-4xl lg:text-5xl font-playfair text-white'>
-                  Sobre Mí
-                </h2>
-              </div>
-              <h3 className='text-2xl sm:text-3xl font-artistic text-primary-accent mb-6'>
-                Marcela Cordero
-              </h3>
-            </motion.div>
+            {/* Story simple y elegante */}
+            <div className="space-y-6">
+              <p className="text-main text-lg leading-relaxed">
+                Conocí el mundo del maquillaje en el 2016 y empecé a hacer mis
+                primeros trabajos en el 2017. He tenido la oportunidad de
+                trabajar en salón, para producciones y como maquilladora
+                independiente.
+              </p>
 
-            {/* Story Cards */}
-            <motion.div
-              className='space-y-4'
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              <div className='bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6'>
-                <div className='flex items-start space-x-4'>
-                  <div className='bg-primary-accent/20 p-3 rounded-lg flex-shrink-0'>
-                    <Heart className='w-6 h-6 text-primary-accent' />
-                  </div>
-                  <div>
-                    <h4 className='text-lg font-playfair text-white mb-2'>Mi Pasión</h4>
-                    <p className='text-neutral-light leading-relaxed'>
-                      Conocí el mundo del maquillaje en el 2016 y empecé a hacer mis primeros 
-                      trabajos en el 2017. He tenido la oportunidad de trabajar en salón, 
-                      para producciones y como maquilladora independiente.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <p className="text-main text-lg leading-relaxed">
+                Estudié la carrera de Maquillaje profesional en MUS by Christian
+                Matta para seguir puliendo mi técnica y de la cual me gradué
+                como alumna destacada. Además, me capacito de manera continua
+                asistiendo a Masterclasses de diferentes maquilladores
+                internacionales.
+              </p>
+            </div>
 
-              <div className='bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6'>
-                <div className='flex items-start space-x-4'>
-                  <div className='bg-primary-accent/20 p-3 rounded-lg flex-shrink-0'>
-                    <Award className='w-6 h-6 text-primary-accent' />
-                  </div>
-                  <div>
-                    <h4 className='text-lg font-playfair text-white mb-2'>Mi Formación</h4>
-                    <p className='text-neutral-light leading-relaxed'>
-                      Estudié la carrera de Maquillaje profesional en MUS by Christian Matta 
-                      para seguir puliendo mi técnica y de la cual me gradué como alumna destacada. 
-                      Además, me capacito de manera continua asistiendo a Masterclasses de 
-                      diferentes maquilladores internacionales.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* CTA Button */}
+            {/* CTA Button bien posicionado */}
             <motion.div
-              className='flex justify-start'
+              className="pt-6"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
-              <motion.a
-                href='#reservar'
-                className='inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary-accent to-secondary-accent text-white font-montserrat font-medium text-base rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group'
-                whileHover={{ 
-                  scale: 1.05,
-                  boxShadow: '0 15px 35px rgba(99, 102, 241, 0.4)'
-                }}
-                whileTap={{ scale: 0.95 }}
+              <motion.button
+                className="bg-accent-primary text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-accent-primary/90 hover:shadow-lg w-full sm:w-auto"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() =>
+                  window.open(
+                    "https://wa.me/51989164990?text=Hola%2C%20me%20interesa%20agendar%20una%20cita%20de%20maquillaje",
+                    "_blank"
+                  )
+                }
               >
-                <Calendar className='w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300' />
                 Reservar Cita
-              </motion.a>
+              </motion.button>
             </motion.div>
           </motion.div>
 
-          {/* Image Side - Now Second */}
+          {/* Image Side - Segundo en desktop */}
           <motion.div
-            className='relative order-2 px-4 sm:px-0'
-            initial={{ opacity: 0, x: 50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
+            className="relative order-1 lg:order-2"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <motion.div
-              className='relative h-80 sm:h-96 lg:h-[500px] rounded-2xl overflow-hidden mx-auto max-w-md lg:max-w-none mb-8 sm:mb-0'
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.4 }}
-            >
-              {/* About Me Image */}
-              <div 
-                className='absolute inset-0 bg-cover bg-center bg-no-repeat'
+            <div className="relative h-80 sm:h-96 lg:h-[500px] xl:h-[550px] rounded-2xl overflow-hidden mx-auto max-w-sm lg:max-w-md xl:max-w-lg shadow-xl">
+              <div
+                className="absolute inset-0 bg-cover bg-no-repeat"
                 style={{
-                  backgroundImage: `url('https://marcelacorderomakeup.my.canva.site/_assets/media/6d0773b57fb0bc5f1db1ada4d9461476.jpg')`
+                  backgroundImage: `url('https://marcelacorderomakeup.my.canva.site/_assets/media/6d0773b57fb0bc5f1db1ada4d9461476.jpg')`,
+                  backgroundPosition: '50% 40%', // Centra la cara de Marcela
                 }}
               >
-                <div className='absolute inset-0 bg-gradient-to-t from-black/40 to-transparent'></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
               </div>
-            </motion.div>
-
-            {/* Floating Quote - Redesigned */}
-            <motion.div
-              className='absolute -bottom-2 left-2 sm:-bottom-4 sm:-left-4 bg-white/10 backdrop-blur-md border border-white/20 text-white p-4 sm:p-6 rounded-xl shadow-lg max-w-[260px] sm:max-w-[280px] z-10'
-              initial={{ opacity: 0, y: 20, scale: 0.8 }}
-              animate={
-                isInView
-                  ? { opacity: 1, y: 0, scale: 1 }
-                  : { opacity: 0, y: 20, scale: 0.8 }
-              }
-              transition={{ duration: 0.8, delay: 0.7 }}
-              whileHover={{
-                scale: 1.05,
-                boxShadow: '0 15px 35px rgba(255, 255, 255, 0.1)',
-              }}
-              style={{
-                // Ensure it doesn't overflow on mobile
-                left: 'max(8px, -1rem)',
-                bottom: 'max(8px, -1rem)'
-              }}
-            >
-              <div className="text-center">
-                <Sparkles className='w-6 h-6 text-primary-accent mx-auto mb-2' />
-                <p className='font-playfair text-sm italic font-medium text-white leading-relaxed mb-2'>
-                  &ldquo;La belleza comienza en el momento en que decides ser tú misma&rdquo;
-                </p>
-                <p className='font-montserrat text-xs text-neutral-light font-light'>
-                  - Coco Chanel
+              
+              {/* Quote overlay para desktop */}
+              <div className="hidden lg:block absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-sm p-4 rounded-lg">
+                <p className="text-sm italic text-gray-700 text-center">
+                  &ldquo;La belleza comienza cuando decides ser tú misma&rdquo;
                 </p>
               </div>
-            </motion.div>
+            </div>
           </motion.div>
         </div>
 
-        {/* Achievements - Simplified and Elegant */}
+        {/* Logros minimalistas */}
         <motion.div
-          className='mt-16 lg:mt-20'
+          className="mt-20"
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8, delay: 0.8 }}
         >
-          <div className='text-center mb-12'>
-            <div className='flex items-center justify-center mb-4'>
-              <div className='w-12 h-px bg-gradient-to-r from-transparent via-primary-accent to-transparent'></div>
-              <Sparkles className='w-6 h-6 text-primary-accent mx-4' />
-              <div className='w-12 h-px bg-gradient-to-r from-transparent via-primary-accent to-transparent'></div>
-            </div>
-            <h3 className='text-2xl sm:text-3xl font-playfair text-white'>
-              Logros y Certificaciones
+          <div className="text-center mb-12">
+            <h3 className="text-3xl md:text-4xl font-playfair text-heading">
+              Experiencia y Certificaciones
             </h3>
           </div>
 
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto'>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {achievements.map((achievement, index) => (
               <motion.div
                 key={index}
-                className='text-center p-6 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-300 group'
+                className="text-center p-6 bg-light-background rounded-lg border border-gray-100 hover:shadow-lg transition-all duration-300"
                 initial={{ opacity: 0, y: 20 }}
                 animate={
                   isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
                 }
                 transition={{ duration: 0.6, delay: 1 + index * 0.1 }}
-                whileHover={{
-                  y: -5,
-                  boxShadow: '0 15px 35px rgba(255,255,255,0.1)',
-                }}
+                whileHover={{ y: -5 }}
               >
-                <motion.div
-                  className='text-primary-accent mb-4 flex justify-center'
-                  whileHover={{ scale: 1.2, rotate: 10 }}
-                  transition={{ duration: 0.3 }}
-                >
+                <div className="text-accent-primary mb-4 flex justify-center">
                   <achievement.icon className="w-8 h-8" />
-                </motion.div>
-                <h4 className='text-lg font-playfair text-white mb-3 group-hover:text-primary-accent transition-colors duration-300'>
+                </div>
+                <h4 className="text-lg font-playfair text-heading mb-3">
                   {achievement.title}
                 </h4>
-                <p className='text-neutral-light text-sm leading-relaxed'>
+                <p className="text-main text-sm leading-relaxed">
                   {achievement.description}
                 </p>
               </motion.div>

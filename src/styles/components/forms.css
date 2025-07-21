@@ -1,4 +1,4 @@
-/* Estilos de formularios */
+/* Estilos de formularios - Elegancia Clásica */
 input[type="text"],
 input[type="email"],
 input[type="tel"],
@@ -7,6 +7,8 @@ select,
 textarea {
   color: #1C1C1C !important;
   background-color: #ffffff !important;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
 }
 
 input[type="text"]:focus,
@@ -17,6 +19,9 @@ select:focus,
 textarea:focus {
   color: #1C1C1C !important;
   background-color: #ffffff !important;
+  border-color: #DAA520;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(218, 165, 32, 0.2);
 }
 
 /* Placeholder text styling */
@@ -32,7 +37,7 @@ select option {
   background-color: #ffffff !important;
 }
 
-/* Radio button custom styles - Updated for modern theme */
+/* Radio button custom styles - Updated for elegancia clásica theme */
 input[type="radio"] {
   width: 1rem;
   height: 1rem;
@@ -45,11 +50,12 @@ input[type="radio"] {
   -moz-appearance: none;
   position: relative;
   flex-shrink: 0;
+  transition: all 0.3s ease;
 }
 
 input[type="radio"]:checked {
-  border-color: var(--primary-accent);
-  background-color: var(--primary-accent);
+  border-color: #DAA520;
+  background-color: #DAA520;
 }
 
 input[type="radio"]:checked::before {
@@ -65,21 +71,11 @@ input[type="radio"]:checked::before {
 }
 
 input[type="radio"]:focus {
-  outline: 2px solid var(--primary-accent);
+  outline: 2px solid #DAA520;
   outline-offset: 2px;
 }
 
 input[type="radio"]:hover {
-  border-color: var(--primary-accent);
+  border-color: #DAA520;
+  transform: scale(1.05);
 }
-
-/* Force cache refresh for radio buttons */
-.location-radio input[type="radio"] {
-  border-color: var(--primary-accent) !important;
-}
-
-.location-radio input[type="radio"]:checked {
-  border-color: var(--primary-accent) !important;
-  background-color: var(--primary-accent) !important;
-}
-/* Cache buster - 2025-07-17-12-40-28 */
