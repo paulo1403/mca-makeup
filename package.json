@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "postbuild": "prisma generate",
+    "postinstall": "prisma generate",
     "create-admin": "tsx scripts/create-admin.ts",
     "create-notifications": "tsx scripts/create-sample-notifications.ts",
     "test-email": "tsx scripts/test-email.ts",
