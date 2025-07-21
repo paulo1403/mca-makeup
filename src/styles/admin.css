@@ -1,0 +1,118 @@
+/* Animaciones para el admin layout */
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Clases de utilidad */
+.animate-slide-in {
+  animation: slideInFromTop 0.2s ease-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.1s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.1s ease-out;
+}
+
+/* Mejoras para el dropdown */
+.dropdown-enter {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.dropdown-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.1s ease-out, transform 0.1s ease-out;
+}
+
+/* Mejoras para el menú móvil */
+.mobile-menu-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.mobile-menu-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+/* Responsivo mejorado */
+@media (max-width: 640px) {
+  .admin-nav-mobile {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .admin-nav-mobile::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Estados hover mejorados */
+.nav-item {
+  position: relative;
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #D4AF37;
+  transition: all 0.3s ease-in-out;
+  transform: translateX(-50%);
+}
+
+.nav-item.active::after,
+.nav-item:hover::after {
+  width: 80%;
+}
+
+/* Mejoras para notificaciones */
+.notification-badge {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}

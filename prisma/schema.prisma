@@ -79,6 +79,7 @@ model Appointment {
   appointmentDate    DateTime
   appointmentTime    String
   duration           Int               @default(120) // minutes
+  price              Float?            // Precio del servicio
   
   // Información de ubicación
   locationType       LocationType      @default(HOME)

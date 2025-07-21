@@ -10,6 +10,7 @@
     "postinstall": "prisma generate",
     "create-admin": "tsx scripts/create-admin.ts",
     "create-notifications": "tsx scripts/create-sample-notifications.ts",
+    "create-appointments": "tsx scripts/create-sample-appointments.ts",
     "generate-icons": "tsx scripts/generate-icons.ts",
     "test-email": "tsx scripts/test-email.ts",
     "test-phone": "tsx scripts/test-phone-validation.ts"
@@ -34,6 +35,7 @@
     "nodemailer": "^6.10.1",
     "prisma": "^6.11.1",
     "react": "^19.0.0",
+    "react-big-calendar": "^1.19.4",
     "react-datepicker": "^8.4.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.60.0",
@@ -45,6 +47,7 @@
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
+    "@types/react-big-calendar": "^1.16.2",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
