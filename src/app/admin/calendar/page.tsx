@@ -632,6 +632,7 @@ export default function AdminCalendar() {
                 event: 'Evento',
                 noEventsInRange: 'No hay citas en este rango de fechas',
                 showMore: (total) => `+ Ver ${total} más`,
+                work_week: 'Semana Laboral',
               }}
               formats={{
                 dateFormat: 'd',
@@ -665,9 +666,13 @@ export default function AdminCalendar() {
               timeslots={2}
               min={new Date(2025, 1, 1, 8, 0, 0)}
               max={new Date(2025, 1, 1, 20, 0, 0)}
-              scrollToTime={new Date(2025, 1, 1, 8, 0, 0)}
+              scrollToTime={new Date(2025, 1, 1, 9, 0, 0)}
               showMultiDayTimes={true}
               dayLayoutAlgorithm="no-overlap"
+              toolbar={true}
+              showAllEvents={true}
+              doShowMoreDrillDown={false}
+              length={7}
             />
           </div>
         </div>
