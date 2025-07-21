@@ -4,12 +4,12 @@ import { prisma } from '@/lib/prisma';
 // PATCH /api/admin/appointments/[id] - Update appointment status
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const body = await request.json();
     const { status } = body;
-    const appointmentId = params.id;
+    const { id: appointmentId } = await params;
 
     // Validate status
     const validStatuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'];
