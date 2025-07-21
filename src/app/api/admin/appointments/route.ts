@@ -116,6 +116,48 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// PATCH /api/admin/appointments - Update appointment status
+export async function PATCH(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { id, status } = body;
+
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: 'Appointment ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate status
+    const validStatuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'];
+    if (!validStatuses.includes(status)) {
+      return NextResponse.json(
+        { success: false, message: 'Invalid status' },
+        { status: 400 }
+      );
+    }
+
+    // Update appointment status
+    const appointment = await prisma.appointment.update({
+      where: { id },
+      data: { status },
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: appointment,
+      message: 'Appointment status updated successfully',
+    });
+  } catch (error) {
+    console.error('Error updating appointment status:', error);
+    return NextResponse.json(
+      { success: false, message: 'Failed to update appointment status' },
+      { status: 500 }
+    );
+  }
+}
+
 // PUT /api/admin/appointments - Update appointment
 export async function PUT(request: NextRequest) {
   try {

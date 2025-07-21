@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Calendar, Clock, Settings, LucideIcon } from 'lucide-react';
+import { Calendar, Clock, Settings, CalendarDays, LucideIcon } from 'lucide-react';
 
 interface QuickActionProps {
   href: string;
@@ -34,6 +34,14 @@ function QuickActionCard({ href, title, description, icon: Icon, iconColor, icon
 export default function QuickActions() {
   const actions = [
     {
+      href: '/admin/calendar',
+      title: 'Calendario',
+      description: 'Vista de calendario con todas las citas',
+      icon: CalendarDays,
+      iconColor: 'text-purple-600',
+      iconBgColor: 'bg-purple-50',
+    },
+    {
       href: '/admin/appointments',
       title: 'Gestionar Citas',
       description: 'Ver y administrar todas las citas',
@@ -60,7 +68,7 @@ export default function QuickActions() {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 mb-6 sm:mb-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
       {actions.map((action) => (
         <QuickActionCard key={action.href} {...action} />
       ))}

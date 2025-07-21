@@ -39,6 +39,12 @@ export default function AdminLayout({
                 <span className='sm:hidden'>Panel</span>
               </Link>
               <Link
+                href='/admin/calendar'
+                className='text-gray-600 hover:text-gray-900 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium font-montserrat transition-colors'
+              >
+                Calendario
+              </Link>
+              <Link
                 href='/admin/appointments'
                 className='text-gray-600 hover:text-gray-900 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium font-montserrat transition-colors'
               >

@@ -104,7 +104,7 @@ export default function HeroSection() {
               className='bg-accent-primary text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-accent-primary/90 hover:shadow-lg'
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => window.open('https://wa.me/51920406094?text=Hola%2C%20me%20interesa%20agendar%20una%20cita%20de%20maquillaje', '_blank')}
+              onClick={() => window.open('https://wa.me/51989164990?text=Hola%2C%20me%20interesa%20agendar%20una%20cita%20de%20maquillaje', '_blank')}
             >
               Agendar Cita
             </motion.button>
