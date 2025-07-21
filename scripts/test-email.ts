@@ -54,7 +54,12 @@ async function testEmailService() {
       '25 de Julio, 2025',
       '2:00 PM',
       testClientEmail,
-      '+51 999 999 999'
+      '+51 999 999 999',
+      'domicilio', // locationType requerido
+      'San Isidro', // district opcional
+      'Av. Ejemplo 123', // address opcional
+      'Cerca al parque central', // addressReference opcional
+      'Cliente de prueba' // additionalNotes opcional
     );
 
     const adminResult = await sendEmail({
