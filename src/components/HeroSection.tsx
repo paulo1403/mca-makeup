@@ -29,7 +29,7 @@ export default function HeroSection() {
           <a href='#servicios' className='text-main hover:text-accent-primary transition-colors duration-200'>
             Servicios
           </a>
-          <a href='https://marcelacorderomakeup.my.canva.site/' target='_blank' rel='noopener noreferrer' className='text-main hover:text-accent-primary transition-colors duration-200'>
+          <a href='https://www.instagram.com/marcelacorderobeauty/' target='_blank' rel='noopener noreferrer' className='text-main hover:text-accent-primary transition-colors duration-200'>
             Portafolio
           </a>
           <a href='#sobre-mi' className='text-main hover:text-accent-primary transition-colors duration-200'>
@@ -61,7 +61,7 @@ export default function HeroSection() {
           <a href='#servicios' className='text-main hover:text-accent-primary transition-colors py-2' onClick={() => setIsMenuOpen(false)}>
             Servicios
           </a>
-          <a href='https://marcelacorderomakeup.my.canva.site/' target='_blank' rel='noopener noreferrer' className='text-main hover:text-accent-primary transition-colors py-2' onClick={() => setIsMenuOpen(false)}>
+          <a href='https://www.instagram.com/marcelacorderobeauty/' target='_blank' rel='noopener noreferrer' className='text-main hover:text-accent-primary transition-colors py-2' onClick={() => setIsMenuOpen(false)}>
             Portafolio
           </a>
           <a href='#sobre-mi' className='text-main hover:text-accent-primary transition-colors py-2' onClick={() => setIsMenuOpen(false)}>
@@ -91,7 +91,7 @@ export default function HeroSection() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            Makeup Artist especializada en novias y eventos sociales
+            Makeup Artist especializada en maquillaje nupcial y eventos sociales
           </motion.p>
 
           <motion.div
