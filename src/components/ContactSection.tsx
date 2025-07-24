@@ -544,7 +544,7 @@ export default function ContactSection() {
                   </div>
                   <div className='flex justify-between'>
                     <span>Domingos</span>
-                    <span>Solo eventos especiales</span>
+                    <span>Solo eventos sociales</span>
                   </div>
                 </div>
               </div>

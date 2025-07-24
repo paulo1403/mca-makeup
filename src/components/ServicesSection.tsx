@@ -18,7 +18,7 @@ export default function ServicesSection() {
       portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/#page-0'
     },
     {
-      title: 'Eventos Especiales',
+      title: 'Eventos Sociales',
       price: 'Desde S/ 200',
       features: [
         'Maquillaje natural o glamoroso',
@@ -75,7 +75,7 @@ export default function ServicesSection() {
             Servicios
           </h2>
           <p className='text-lg text-main max-w-2xl mx-auto leading-relaxed'>
-            Especialista en maquillaje para novias y eventos especiales
+            Especialista en maquillaje para novias y eventos sociales
           </p>
         </motion.div>
 

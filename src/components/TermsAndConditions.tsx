@@ -51,7 +51,7 @@ export default function TermsAndConditions() {
               </h3>
               <ul className="list-disc list-inside text-neutral space-y-2 mb-4 ml-4">
                 <li>Maquillaje profesional para novias</li>
-                <li>Maquillaje social para eventos especiales</li>
+                <li>Maquillaje social para eventos sociales</li>
                 <li>Maquillaje para sesiones fotográficas</li>
                 <li>Peinado profesional</li>
                 <li>Asesoría de imagen personalizada</li>
@@ -80,7 +80,7 @@ export default function TermsAndConditions() {
                 <li>Las citas deben ser confirmadas con al menos 48 horas de anticipación</li>
                 <li>Se requiere información completa del cliente y del evento</li>
                 <li>La confirmación se realiza vía WhatsApp, email o llamada telefónica</li>
-                <li>Para bodas y eventos especiales, se recomienda reservar con 2-4 semanas de anticipación</li>
+                <li>Para bodas y eventos sociales, se recomienda reservar con 2-4 semanas de anticipación</li>
               </ul>
 
               <h3 className="text-xl font-medium text-primary-dark mb-3">
@@ -132,7 +132,7 @@ export default function TermsAndConditions() {
                 4.3 Adelanto
               </h3>
               <p className="text-neutral leading-relaxed">
-                Para servicios de bodas y eventos especiales, se requiere un adelanto del 50% para 
+                Para servicios de bodas y eventos sociales, se requiere un adelanto del 50% para 
                 confirmar la reserva. El saldo se paga el día del servicio.
               </p>
             </section>

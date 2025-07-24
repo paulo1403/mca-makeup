@@ -159,7 +159,7 @@ export default function AvailabilityPage() {
                 </h2>
               </div>
               <p className='text-xs sm:text-sm text-gray-600'>
-                Días libres, vacaciones, horarios extendidos para eventos especiales, etc.
+                Días libres, vacaciones, horarios extendidos para eventos sociales, etc.
               </p>
             </div>
             <button

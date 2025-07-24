@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     template: '%s | Marcela Cordero - Makeup Artist',
   },
   description:
-    'Servicios profesionales de maquillaje para bodas, eventos especiales y sesiones fotográficas. Reserva tu cita con Marcela Cordero, maquilladora certificada con más de 5 años de experiencia. Disponible en toda la región.',
+    'Servicios profesionales de maquillaje para bodas, eventos sociales y sesiones fotográficas. Reserva tu cita con Marcela Cordero, maquilladora certificada con más de 5 años de experiencia. Disponible en toda la región.',
   keywords: [
     'maquillaje profesional',
     'makeup artist',
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     siteName: 'Marcela Cordero - Makeup Artist',
     title: 'Marcela Cordero - Makeup Artist | Maquillaje Profesional',
     description:
-      'Servicios profesionales de maquillaje para bodas, eventos especiales y sesiones fotográficas. Reserva tu cita con Marcela Cordero, maquilladora certificada.',
+      'Servicios profesionales de maquillaje para bodas, eventos sociales y sesiones fotográficas. Reserva tu cita con Marcela Cordero, maquilladora certificada.',
     images: [
       {
         url: '/images/og-image.jpg',
@@ -136,7 +136,7 @@ export default function RootLayout({
     '@id': 'https://marcelacordero.com/#business',
     name: 'Marcela Cordero - Makeup Artist',
     description:
-      'Servicios profesionales de maquillaje para bodas, eventos especiales y sesiones fotográficas.',
+      'Servicios profesionales de maquillaje para bodas, eventos sociales y sesiones fotográficas.',
     url: 'https://marcelacordero.com',
     telephone: '+51-989-164-990',
     email: 'info@marcelacordero.com',

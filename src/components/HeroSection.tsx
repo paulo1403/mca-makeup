@@ -91,7 +91,7 @@ export default function HeroSection() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            Makeup Artist especializada en novias y eventos especiales
+            Makeup Artist especializada en novias y eventos sociales
           </motion.p>
 
           <motion.div
