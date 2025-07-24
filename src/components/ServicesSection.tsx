@@ -25,7 +25,7 @@ export default function ServicesSection() {
         'Duración 1h30 - 2h',
         'Pestañas incluidas'
       ],
-      portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/#page-0'
+      portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/2/#page-0'
     },
     {
       title: 'Piel Madura',
@@ -35,7 +35,7 @@ export default function ServicesSection() {
         'Acabado natural luminoso',
         'Cuidado personalizado'
       ],
-      portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/#page-2'
+      portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/2/#page-0'
     },
   ];
 
@@ -109,9 +109,18 @@ export default function ServicesSection() {
                   ))}
                 </div>
                 
-                <div className='text-2xl font-light text-accent-primary'>
+                <div className='text-2xl font-light text-accent-primary mb-4'>
                   {service.price}
                 </div>
+
+                {/* Botón para indicar que es clickeable */}
+                <motion.button
+                  className='bg-accent-primary/10 text-accent-primary px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-accent-primary hover:text-white group-hover:bg-accent-primary group-hover:text-white'
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Ver portafolio
+                </motion.button>
               </div>
             </motion.div>
           ))}

@@ -1,6 +1,6 @@
 'use client';
 
-import { signOut, useSession } from 'next-auth/react';
+import { signOut, useSession, SessionProvider } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -10,6 +10,18 @@ import { useClickOutside } from '@/hooks/useClickOutside';
 import '@/styles/admin.css';
 
 export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <SessionProvider>
+      <AdminLayoutContent>{children}</AdminLayoutContent>
+    </SessionProvider>
+  );
+}
+
+function AdminLayoutContent({
   children,
 }: {
   children: React.ReactNode;
