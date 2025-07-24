@@ -15,6 +15,7 @@ export default function ServicesSection() {
         'Maquillaje de larga duración',
         'Peinado profesional'
       ],
+      portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/#page-0'
     },
     {
       title: 'Eventos Especiales',
@@ -24,6 +25,7 @@ export default function ServicesSection() {
         'Duración 1h30 - 2h',
         'Pestañas incluidas'
       ],
+      portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/#page-0'
     },
     {
       title: 'Piel Madura',
@@ -33,6 +35,7 @@ export default function ServicesSection() {
         'Acabado natural luminoso',
         'Cuidado personalizado'
       ],
+      portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/#page-2'
     },
   ];
 
@@ -90,7 +93,7 @@ export default function ServicesSection() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className='text-center group cursor-pointer'
               onClick={() =>
-                window.open('https://marcelacorderomakeup.my.canva.site/', '_blank')
+                window.open(service.portfolioUrl, '_blank')
               }
             >
               <div className='bg-white border border-gray-100 p-8 rounded-lg transition-all duration-300 hover:shadow-md hover:border-accent-primary/20'>

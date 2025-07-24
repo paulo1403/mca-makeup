@@ -13,17 +13,20 @@ export default function PortfolioSection() {
     {
       title: 'Novias',
       description: 'Maquillaje elegante y duradero para el día más especial',
-      count: '120+'
+      count: '120+',
+      url: 'https://marcelacorderomakeup.my.canva.site/#page-0'
     },
     {
-      title: 'Eventos Especiales',
+      title: 'Eventos Sociales',
       description: 'Looks sofisticados para celebraciones importantes',
-      count: '200+'
+      count: '200+',
+      url: 'https://marcelacorderomakeup.my.canva.site/#page-0'
     },
     {
-      title: 'Sesiones Fotográficas',
-      description: 'Maquillaje profesional para producciones y marcas',
-      count: '50+'
+      title: 'Piel Madura',
+      description: 'Maquillaje especializado que realza la belleza natural',
+      count: '50+',
+      url: 'https://marcelacorderomakeup.my.canva.site/#page-2'
     },
   ];
 
@@ -72,7 +75,7 @@ export default function PortfolioSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
-              onClick={() => window.open('https://marcelacorderomakeup.my.canva.site/', '_blank')}
+              onClick={() => window.open(category.url, '_blank')}
             >
               <div className='bg-white border border-gray-100 p-8 rounded-lg transition-all duration-300 hover:shadow-md hover:border-accent-primary/20'>
                 <div className='text-3xl font-light text-accent-primary mb-2'>
