@@ -4,6 +4,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
+import AuthProvider from '@/components/AuthProvider';
 import NotificationCenter from '@/components/NotificationCenter';
 import { LogOut, User, Menu, X, ChevronDown } from 'lucide-react';
 import { useClickOutside } from '@/hooks/useClickOutside';
@@ -14,6 +15,24 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+
+  if (pathname === '/admin/login') {
+    return (
+      <AuthProvider>
+        {children}
+      </AuthProvider>
+    );
+  }
+
+  return (
+    <AuthProvider>
+      <AdminLayoutContent>{children}</AdminLayoutContent>
+    </AuthProvider>
+  );
+}
+
+function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -31,6 +50,7 @@ export default function AdminLayout({
     { href: '/admin', label: 'Dashboard', mobileLabel: 'Panel', priority: 'high' },
     { href: '/admin/calendar', label: 'Calendario', mobileLabel: 'Calendario', priority: 'high' },
     { href: '/admin/appointments', label: 'Citas', mobileLabel: 'Citas', priority: 'high' },
+    { href: '/admin/reviews', label: 'Reseñas', mobileLabel: 'Reseñas', priority: 'high' },
     { href: '/admin/availability', label: 'Disponibilidad', mobileLabel: 'Disponibilidad', priority: 'medium' },
     { href: '/admin/error-reports', label: 'Errores', mobileLabel: 'Errores', priority: 'low' },
     { href: '/admin/change-password', label: 'Contraseña', mobileLabel: 'Contraseña', priority: 'low' },
@@ -39,10 +59,6 @@ export default function AdminLayout({
 
   const highPriorityItems = navItems.filter(item => item.priority === 'high');
   const otherItems = navItems.filter(item => item.priority !== 'high');
-
-  if (pathname === '/admin/login') {
-    return <>{children}</>;
-  }
 
   return (
     <div className='min-h-screen bg-gray-50'>

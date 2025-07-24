@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { Playfair_Display, Allura, Montserrat } from 'next/font/google';
-import AuthProvider from '@/components/AuthProvider';
 import QueryProvider from '@/providers/QueryProvider';
 import './globals.css';
 
@@ -207,11 +206,9 @@ export default function RootLayout({
       <body
         className={`${playfairDisplay.variable} ${allura.variable} ${montserrat.variable} antialiased overflow-x-hidden max-w-full`}
       >
-        <AuthProvider>
-          <QueryProvider>
-            {children}
-          </QueryProvider>
-        </AuthProvider>
+        <QueryProvider>
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );

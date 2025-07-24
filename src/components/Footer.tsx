@@ -126,6 +126,12 @@ export default function Footer() {
 
             <div className='flex gap-4 text-xs'>
               <a
+                href='/reviews'
+                className='text-main hover:text-accent-primary transition-colors'
+              >
+                Reseñas
+              </a>
+              <a
                 href='/politicas-privacidad'
                 className='text-main hover:text-accent-primary transition-colors'
               >

@@ -95,6 +95,9 @@ model Appointment {
 
   // Relación con notificaciones
   notifications Notification[]
+  
+  // Relación con reviews
+  reviews Review[]
 
   @@map("appointments")
 }
@@ -215,6 +218,53 @@ model ErrorReport {
   updatedAt      DateTime    @updatedAt
 
   @@map("error_reports")
+}
+
+model Review {
+  id                String      @id @default(cuid())
+  
+  // Información del cliente
+  clientName        String
+  clientEmail       String?
+  clientPhone       String?
+  
+  // Información del review
+  rating            Int         // 1-5 estrellas
+  comment           String      @db.Text
+  serviceType       String      // Tipo de servicio recibido
+  serviceDate       DateTime?   // Fecha en que recibió el servicio
+  
+  // Aspectos específicos del review (1-5 estrellas cada uno)
+  ratingProfessionalism  Int?    // Profesionalismo
+  ratingPunctuality      Int?    // Puntualidad  
+  ratingQuality          Int?    // Calidad del trabajo
+  ratingCustomerService  Int?    // Atención al cliente
+  ratingValue            Int?    // Relación calidad-precio
+  
+  // Aspectos cualitativos
+  whatLikedMost     String?     @db.Text  // Qué le gustó más
+  suggestedImprovements String? @db.Text  // Sugerencias de mejora
+  wouldRecommend    Boolean     @default(true)
+  
+  // Control de moderación
+  isApproved        Boolean     @default(false) // Para que Marcela apruebe antes de mostrar públicamente
+  isPublic          Boolean     @default(true)  // Si se muestra en la página pública
+  moderationNotes   String?     @db.Text        // Notas internas de Marcela
+  
+  // Relación con cita (opcional)
+  appointmentId     String?
+  appointment       Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+  
+  // Metadata
+  ipAddress         String?
+  userAgent         String?
+  
+  // Timestamps
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  approvedAt        DateTime?   // Cuándo fue aprobado
+  
+  @@map("reviews")
 }
 
 enum Role {
