@@ -61,12 +61,12 @@ export default function Footer() {
               <div className='flex items-center gap-2'>
                 <Instagram className='w-4 h-4 text-accent-primary' />
                 <a 
-                  href='https://instagram.com/marcelacorderomakeup' 
+                  href='https://www.instagram.com/marcelacorderobeauty/' 
                   className='text-main text-sm hover:text-accent-primary transition-colors'
                   target='_blank'
                   rel='noopener noreferrer'
                 >
-                  @marcelacorderomakeup
+                  @marcelacorderobeauty
                 </a>
               </div>
             </div>
@@ -96,7 +96,7 @@ export default function Footer() {
             {/* Social Icons */}
             <div className='flex gap-3 mt-4'>
               <a
-                href='https://instagram.com/marcelacorderomakeup'
+                href='https://www.instagram.com/marcelacorderobeauty/'
                 target='_blank'
                 rel='noopener noreferrer'
                 className='w-8 h-8 bg-gray-100 hover:bg-accent-primary text-accent-primary hover:text-white rounded-full flex items-center justify-center transition-all duration-300'

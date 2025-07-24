@@ -49,7 +49,7 @@ export default function PortfolioSection() {
           
           {/* Botón principal minimalista */}
           <motion.a
-            href='https://marcelacorderomakeup.my.canva.site/'
+            href='https://www.instagram.com/marcelacorderobeauty/'
             target="_blank"
             rel="noopener noreferrer"
             className='inline-flex items-center bg-accent-primary text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-accent-primary/90 hover:shadow-lg'
@@ -84,9 +84,18 @@ export default function PortfolioSection() {
                 <h3 className='text-xl font-playfair text-heading mb-3'>
                   {category.title}
                 </h3>
-                <p className='text-sm text-main leading-relaxed'>
+                <p className='text-sm text-main leading-relaxed mb-4'>
                   {category.description}
                 </p>
+                
+                {/* Botón para indicar que es clickeable */}
+                <motion.button
+                  className='bg-accent-primary/10 text-accent-primary px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-accent-primary hover:text-white group-hover:bg-accent-primary group-hover:text-white'
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Ver ejemplos
+                </motion.button>
               </div>
             </motion.div>
           ))}
@@ -108,7 +117,7 @@ export default function PortfolioSection() {
           
           <div className='mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center'>
             <motion.a
-              href='https://marcelacorderomakeup.my.canva.site/'
+              href='https://www.instagram.com/marcelacorderobeauty/'
               target="_blank"
               rel="noopener noreferrer"
               className='border border-accent-secondary text-accent-secondary px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-accent-secondary hover:text-white text-sm'

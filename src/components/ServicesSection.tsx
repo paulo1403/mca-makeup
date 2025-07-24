@@ -134,7 +134,7 @@ export default function ServicesSection() {
             <div className='flex flex-col sm:flex-row gap-6 justify-center items-center text-sm text-main'>
               <div className='flex items-center'>
                 <MapPin className='w-5 h-5 text-accent-primary mr-2' />
-                <span>Movilidad incluida</span>
+                <span>Servicio a domicilio</span>
               </div>
               <div className='flex items-center'>
                 <Clock className='w-5 h-5 text-accent-primary mr-2' />

@@ -113,9 +113,12 @@ export default function HeroSection() {
               className='border border-accent-secondary text-accent-secondary px-8 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-accent-secondary hover:text-white'
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => window.open('https://marcelacorderomakeup.my.canva.site/', '_blank')}
+              onClick={() => {
+                const serviciosSection = document.getElementById('servicios');
+                serviciosSection?.scrollIntoView({ behavior: 'smooth' });
+              }}
             >
-              Ver Portafolio
+              Servicios
             </motion.button>
           </motion.div>
 

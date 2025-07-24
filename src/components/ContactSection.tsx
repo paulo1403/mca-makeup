@@ -517,12 +517,12 @@ export default function ContactSection() {
                   <div className='flex items-center gap-3'>
                     <Instagram className='w-5 h-5 text-accent-primary' />
                     <a 
-                      href='https://instagram.com/marcelacorderomua' 
+                      href='https://www.instagram.com/marcelacorderobeauty/' 
                       className='text-main hover:text-accent-primary transition-colors'
                       target='_blank'
                       rel='noopener noreferrer'
                     >
-                      @marcelacorderomua
+                      @marcelacorderobeauty
                     </a>
                   </div>
                 </div>

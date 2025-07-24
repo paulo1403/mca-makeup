@@ -185,7 +185,7 @@ export default function RootLayout({
       url: 'https://marcelacordero.com/about',
     },
     sameAs: [
-      'https://www.instagram.com/marcelacordero_mua',
+      'https://www.instagram.com/marcelacorderobeauty/',
       'https://www.facebook.com/marcelacorderomakeup',
       'https://www.tiktok.com/@marcelacordero_mua',
       'https://wa.me/51989164990',
