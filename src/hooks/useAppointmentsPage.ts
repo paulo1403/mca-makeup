@@ -59,13 +59,17 @@ export const useAppointmentsPage = () => {
 
   // Handlers
   const handleSearchChange = (search: string) => {
-    setSearchTerm(search);
-    setCurrentPage(1); // Reset pagination cuando se busca
+    if (searchTerm !== search) {
+      setSearchTerm(search);
+      setCurrentPage(1);
+    }
   };
 
   const handleFilterChange = (newFilter: string) => {
-    setFilter(newFilter);
-    setCurrentPage(1); // Reset pagination cuando se filtra
+    if (filter !== newFilter) {
+      setFilter(newFilter);
+      setCurrentPage(1);
+    }
   };
 
   const handlePageChange = (page: number) => {

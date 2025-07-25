@@ -19,7 +19,7 @@ export default function AppointmentFilters({
   onSearchChange, 
   onFilterChange 
 }: FiltersProps) {
-  const { register, watch } = useForm<FilterForm>({
+  const { register, watch, setValue } = useForm<FilterForm>({
     defaultValues: {
       search: searchTerm,
       status: filter,
@@ -29,18 +29,35 @@ export default function AppointmentFilters({
   const watchedSearch = watch('search');
   const watchedStatus = watch('status');
 
+  // Sincronizar el formulario con las props cuando cambian externamente
+  React.useEffect(() => {
+    if (searchTerm !== watchedSearch) {
+      setValue('search', searchTerm);
+    }
+  }, [searchTerm, setValue, watchedSearch]);
+
+  React.useEffect(() => {
+    if (filter !== watchedStatus) {
+      setValue('status', filter);
+    }
+  }, [filter, setValue, watchedStatus]);
+
   // Debounce search input
   React.useEffect(() => {
-    const timer = setTimeout(() => {
-      onSearchChange(watchedSearch);
-    }, 300);
+    if (watchedSearch !== searchTerm) {
+      const timer = setTimeout(() => {
+        onSearchChange(watchedSearch);
+      }, 300);
 
-    return () => clearTimeout(timer);
-  }, [watchedSearch, onSearchChange]);
+      return () => clearTimeout(timer);
+    }
+  }, [watchedSearch, onSearchChange, searchTerm]);
 
   React.useEffect(() => {
-    onFilterChange(watchedStatus);
-  }, [watchedStatus, onFilterChange]);
+    if (watchedStatus !== filter) {
+      onFilterChange(watchedStatus);
+    }
+  }, [watchedStatus, onFilterChange, filter]);
 
   return (
     <div data-filters className="space-y-4">
@@ -59,7 +76,10 @@ export default function AppointmentFilters({
         />
         {watchedSearch && (
           <button
-            onClick={() => onSearchChange('')}
+            onClick={() => {
+              setValue('search', '');
+              onSearchChange('');
+            }}
             className="absolute inset-y-0 right-0 pr-3 flex items-center"
           >
             <svg className="h-4 w-4 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -80,7 +100,10 @@ export default function AppointmentFilters({
         ].map((option) => (
           <button
             key={option.value}
-            onClick={() => onFilterChange(option.value)}
+            onClick={() => {
+              setValue('status', option.value);
+              onFilterChange(option.value);
+            }}
             className={`flex-shrink-0 inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
               filter === option.value
                 ? 'bg-[#D4AF37] text-white shadow-sm'
@@ -108,6 +131,8 @@ export default function AppointmentFilters({
           </div>
           <button
             onClick={() => {
+              setValue('search', '');
+              setValue('status', 'all');
               onSearchChange('');
               onFilterChange('all');
             }}
