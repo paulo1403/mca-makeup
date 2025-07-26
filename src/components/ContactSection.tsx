@@ -40,7 +40,9 @@ export default function ContactSection() {
   });
 
   const { data: rangesData, isLoading: isLoadingRanges } = useAvailableRanges(
-    formData.date
+    formData.date,
+    formData.service,
+    formData.locationType
   );
 
   useEffect(() => {
@@ -362,27 +364,33 @@ export default function ContactSection() {
                       value={formData.timeRange}
                       onChange={handleTimeRangeChange}
                       required
-                      disabled={!formData.date}
-                      className={`w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300${!formData.date ? " opacity-50 cursor-not-allowed" : ""}`}
+                      disabled={!formData.date || !formData.service}
+                      className={`w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300${!formData.date || !formData.service ? " opacity-50 cursor-not-allowed" : ""}`}
                     >
                       <option value="">Selecciona un horario</option>
                       {isLoadingRanges ? (
                         <option disabled>Cargando horarios...</option>
-                      ) : rangesData?.availableRanges?.length === 0 &&
-                        formData.date ? (
-                        <option disabled>No hay horarios disponibles</option>
+                      ) : rangesData?.availableRanges?.length === 0 && formData.date && formData.service ? (
+                        <option disabled>No hay horarios disponibles para el servicio y fecha seleccionados.</option>
                       ) : (
                         rangesData?.availableRanges?.map(
-                          (range: string, idx: number) => (
-                            <option key={idx} value={range}>
-                              {range}
-                            </option>
-                          )
+                          (range: string, idx: number) => {
+                            // Mostrar duración junto al rango
+                            let duration = '';
+                            if (formData.service.includes('Novia')) duration = ' (2h 30m)';
+                            else if (formData.service.includes('Social') || formData.service.includes('Madura')) duration = ' (1h 30m)';
+                            return (
+                              <option key={idx} value={range}>
+                                {range}{duration}
+                              </option>
+                            );
+                          }
                         )
                       )}
                     </select>
                     <p className="text-xs text-gray-500 mt-2">
-                      * La duración puede variar según el servicio seleccionado.
+                      * Solo se muestran horarios válidos según el servicio y ubicación elegidos.<br />
+                      * La duración se indica junto al horario.
                     </p>
                   </div>
                 </div>

@@ -7,9 +7,11 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const date = searchParams.get('date');
+    const serviceType = searchParams.get('serviceType');
+    const locationType = searchParams.get('locationType');
 
-    if (!date) {
-      return NextResponse.json({ error: 'Fecha requerida' }, { status: 400 });
+    if (!date || !serviceType || !locationType) {
+      return NextResponse.json({ error: 'Fecha, tipo de servicio y ubicación requeridos' }, { status: 400 });
     }
 
     const appointmentDate = new Date(date);
@@ -37,7 +39,7 @@ export async function GET(request: NextRequest) {
       select: {
         appointmentTime: true,
         serviceType: true,
-        clientName: true,
+        locationType: true,
       },
       orderBy: {
         appointmentTime: 'asc',
@@ -57,8 +59,12 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Define default time slots
+    // Define default time slots (start times)
     const defaultTimeSlots = [
+      '05:00',
+      '06:00',
+      '07:00',
+      '08:00',
       '09:00',
       '10:00',
       '11:00',
@@ -72,6 +78,53 @@ export async function GET(request: NextRequest) {
       '19:00',
       '20:00',
     ];
+
+    // Service durations in minutes
+    const serviceDurations: Record<string, number> = {
+      'Maquillaje de Novia - Paquete Básico (S/ 480)': 150,
+      'Maquillaje de Novia - Paquete Clásico (S/ 980)': 150,
+      'Maquillaje Social - Estilo Natural (S/ 200)': 90,
+      'Maquillaje Social - Estilo Glam (S/ 210)': 90,
+      'Maquillaje para Piel Madura (S/ 230)': 90,
+    };
+    const selectedDuration = serviceDurations[serviceType] || 90;
+    // transportTime is not needed, logic is handled inline below
+
+    // Generate available ranges
+    function addMinutes(time: string, mins: number) {
+      const [h, m] = time.split(':').map(Number);
+      const date = new Date(1970, 0, 1, h, m);
+      date.setMinutes(date.getMinutes() + mins);
+      return date.toTimeString().slice(0,5);
+    }
+
+    let availableRanges: string[] = [];
+    for (const slot of defaultTimeSlots) {
+      const end = addMinutes(slot, selectedDuration);
+      availableRanges.push(`${slot} - ${end}`);
+    }
+
+    // Remove ranges that overlap with booked appointments (considering duration and transport)
+    availableRanges = availableRanges.filter((range) => {
+      const [start, end] = range.split(' - ');
+      for (const booked of bookedAppointments) {
+        const bookedStart = booked.appointmentTime.split(' - ')[0];
+        const bookedEnd = booked.appointmentTime.split(' - ')[1];
+        // Calculate block window for booked appointment
+        let bookedBlockStart = bookedStart;
+        let bookedBlockEnd = bookedEnd;
+        if (booked.locationType === 'HOME') {
+          // Block 1h before and after for transport
+          bookedBlockStart = addMinutes(bookedStart, -60);
+          bookedBlockEnd = addMinutes(bookedEnd, 60);
+        }
+        // If new range overlaps with block window, exclude
+        if (!(end <= bookedBlockStart || start >= bookedBlockEnd)) {
+          return false;
+        }
+      }
+      return true;
+    });
 
     // Get custom availability for this date (if any)
     const customAvailability = await prisma.availability.findMany({
@@ -110,12 +163,6 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    // Remove booked slots
-    const bookedSlots = bookedAppointments.map((apt) => apt.appointmentTime);
-    const finalAvailableSlots = availableSlots.filter(
-      (slot) => !bookedSlots.includes(slot)
-    );
-
     // Special handling for same day appointments (can't book within 2 hours)
     const now = new Date();
     const isToday = appointmentDate.getTime() === today.getTime();
@@ -123,16 +170,13 @@ export async function GET(request: NextRequest) {
     if (isToday) {
       const currentHour = now.getHours();
       const cutoffTime = currentHour + 2; // 2 hours notice required
-
-      const filteredSlots = finalAvailableSlots.filter((slot) => {
-        const slotHour = parseInt(slot.split(':')[0]);
+      availableRanges = availableRanges.filter((range) => {
+        const slotHour = parseInt(range.split(' - ')[0].split(':')[0]);
         return slotHour >= cutoffTime;
       });
-
       return NextResponse.json({
         date: date,
-        availableSlots: filteredSlots,
-        bookedSlots: bookedSlots,
+        availableRanges,
         isToday: true,
         message:
           'Para citas del mismo día se requiere al menos 2 horas de anticipación',
@@ -141,10 +185,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       date: date,
-      availableSlots: finalAvailableSlots,
-      bookedSlots: bookedSlots,
-      totalSlots: availableSlots.length,
-      blockedSlots: blockedAvailability.length,
+      availableRanges,
     });
   } catch (error) {
     console.error('Error fetching availability:', error);
