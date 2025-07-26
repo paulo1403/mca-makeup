@@ -39,9 +39,19 @@ export const formatDate = (dateString: string) => {
 };
 
 export const formatTime = (timeString: string) => {
-  return new Date(`1970-01-01T${timeString}`).toLocaleTimeString("es-ES", {
-    hour: "2-digit",
-    minute: "2-digit",
+  // Si es un rango, mostrar ambos extremos formateados
+  if (timeString.includes(' - ')) {
+    const [start, end] = timeString.split(' - ');
+    const format = (t: string) => new Date(`1970-01-01T${t}`).toLocaleTimeString('es-ES', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    return `${format(start)} - ${format(end)}`;
+  }
+  // Si es solo una hora
+  return new Date(`1970-01-01T${timeString}`).toLocaleTimeString('es-ES', {
+    hour: '2-digit',
+    minute: '2-digit',
   });
 };
 

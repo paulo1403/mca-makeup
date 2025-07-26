@@ -1,56 +1,72 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Calendar, 
-  Clock, 
-  MessageSquare, 
-  User, 
+import { useEffect } from "react";
+import { useAvailableRanges } from "@/hooks/useAvailableRanges";
+import { useState, useRef } from "react";
+import { motion } from "framer-motion";
+import { useInView } from "framer-motion";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  Clock,
+  MessageSquare,
+  User,
   Send,
   Home,
-  Instagram
-} from 'lucide-react';
-import DatePicker, { registerLocale } from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { es } from 'date-fns/locale';
-import { format } from 'date-fns';
+  Instagram,
+} from "lucide-react";
+import DatePicker, { registerLocale } from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { es } from "date-fns/locale";
+import { format } from "date-fns";
 
-registerLocale('es', es);
+registerLocale("es", es);
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    service: '',
+    name: "",
+    email: "",
+    phone: "",
+    service: "",
     date: null as Date | null,
-    time: null as Date | null,
-    locationType: 'HOME' as 'STUDIO' | 'HOME',
-    district: '',
-    address: '',
-    addressReference: '',
-    message: '',
+    timeRange: "",
+    locationType: "HOME" as "STUDIO" | "HOME",
+    district: "",
+    address: "",
+    addressReference: "",
+    message: "",
   });
 
+  const { data: rangesData, isLoading: isLoadingRanges } = useAvailableRanges(
+    formData.date
+  );
+
+  useEffect(() => {
+    if (
+      formData.timeRange &&
+      rangesData?.availableRanges &&
+      !rangesData.availableRanges.includes(formData.timeRange)
+    ) {
+      setFormData((prev) => ({ ...prev, timeRange: "" }));
+    }
+  }, [rangesData, formData.timeRange]);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState('');
+  const [submitMessage, setSubmitMessage] = useState("");
 
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   const services = [
-    'Maquillaje de Novia - Paquete Básico (S/ 480)',
-    'Maquillaje de Novia - Paquete Clásico (S/ 980)',
-    'Maquillaje Social - Estilo Natural (S/ 200)',
-    'Maquillaje Social - Estilo Glam (S/ 210)',
-    'Maquillaje para Piel Madura (S/ 230)',
-    'Peinados (desde S/ 65)',
-    'Otro (especificar en mensaje)',
+    "Maquillaje de Novia - Paquete Básico (S/ 480)",
+    "Maquillaje de Novia - Paquete Clásico (S/ 980)",
+    "Maquillaje Social - Estilo Natural (S/ 200)",
+    "Maquillaje Social - Estilo Glam (S/ 210)",
+    "Maquillaje para Piel Madura (S/ 230)",
+    "Peinados (desde S/ 65)",
+    "Otro (especificar en mensaje)",
   ];
 
   const handleInputChange = (
@@ -67,9 +83,9 @@ export default function ContactSection() {
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
-    value = value.replace(/[^\d+]/g, '');
-    
-    if (value.startsWith('+51')) {
+    value = value.replace(/[^\d+]/g, "");
+
+    if (value.startsWith("+51")) {
       const digits = value.substring(3);
       if (digits.length <= 3) {
         value = `+51 ${digits}`;
@@ -78,7 +94,7 @@ export default function ContactSection() {
       } else {
         value = `+51 ${digits.substring(0, 3)} ${digits.substring(3, 6)} ${digits.substring(6, 9)}`;
       }
-    } else if (value.startsWith('9') && !value.startsWith('+')) {
+    } else if (value.startsWith("9") && !value.startsWith("+")) {
       if (value.length <= 3) {
         value = value;
       } else if (value.length <= 6) {
@@ -87,7 +103,7 @@ export default function ContactSection() {
         value = `${value.substring(0, 3)} ${value.substring(3, 6)} ${value.substring(6, 9)}`;
       }
     }
-    
+
     setFormData((prev) => ({
       ...prev,
       phone: value,
@@ -99,33 +115,39 @@ export default function ContactSection() {
       ...prev,
       date: date,
     }));
-  };
-
-  const handleTimeChange = (time: Date | null) => {
     setFormData((prev) => ({
       ...prev,
-      time: time,
+      date: date,
+    }));
+  };
+
+  const handleTimeRangeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      timeRange: e.target.value,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmitMessage('');
+    setSubmitMessage("");
 
     try {
-      const response = await fetch('/api/book-appointment', {
-        method: 'POST',
+      const response = await fetch("/api/book-appointment", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           clientName: formData.name,
           clientEmail: formData.email,
           clientPhone: formData.phone,
           serviceType: formData.service,
-          appointmentDate: formData.date ? format(formData.date, 'yyyy-MM-dd') : '',
-          appointmentTime: formData.time ? format(formData.time, 'HH:mm') : '',
+          appointmentDate: formData.date
+            ? format(formData.date, "yyyy-MM-dd")
+            : "",
+          appointmentTimeRange: formData.timeRange,
           locationType: formData.locationType,
           district: formData.district,
           address: formData.address,
@@ -136,39 +158,53 @@ export default function ContactSection() {
 
       if (response.ok) {
         setSubmitMessage(
-          '¡Solicitud enviada con éxito! Te contactaré pronto para confirmar tu cita.'
+          "¡Solicitud enviada con éxito! Te contactaré pronto para confirmar tu cita."
         );
         setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          service: '',
+          name: "",
+          email: "",
+          phone: "",
+          service: "",
           date: null,
-          time: null,
-          locationType: 'HOME',
-          district: '',
-          address: '',
-          addressReference: '',
-          message: '',
+          timeRange: "",
+          locationType: "HOME",
+          district: "",
+          address: "",
+          addressReference: "",
+          message: "",
         });
       } else {
         const errorData = await response.json().catch(() => null);
-        const errorMessage = errorData?.message || errorData?.error || 'Error al enviar la solicitud';
+        const errorMessage =
+          errorData?.message ||
+          errorData?.error ||
+          "Error al enviar la solicitud";
         throw new Error(errorMessage);
       }
     } catch (error: unknown) {
-      let errorMessage = 'Hubo un error al enviar tu solicitud. Por favor intenta nuevamente.';
-      
+      let errorMessage =
+        "Hubo un error al enviar tu solicitud. Por favor intenta nuevamente.";
+
       if (error instanceof Error && error.message) {
-        if (error.message.includes('Teléfono') || error.message.includes('teléfono')) {
-          errorMessage = 'Por favor verifica el formato del teléfono. Ej: +51 989 164 990 o 989 164 990';
-        } else if (error.message.includes('Email') || error.message.includes('email')) {
-          errorMessage = 'Por favor verifica que el email sea válido.';
-        } else if (error.message.includes('fecha') || error.message.includes('hora')) {
-          errorMessage = 'Por favor selecciona una fecha y hora válidas.';
+        if (
+          error.message.includes("Teléfono") ||
+          error.message.includes("teléfono")
+        ) {
+          errorMessage =
+            "Por favor verifica el formato del teléfono. Ej: +51 989 164 990 o 989 164 990";
+        } else if (
+          error.message.includes("Email") ||
+          error.message.includes("email")
+        ) {
+          errorMessage = "Por favor verifica que el email sea válido.";
+        } else if (
+          error.message.includes("fecha") ||
+          error.message.includes("hora")
+        ) {
+          errorMessage = "Por favor selecciona una fecha y hora válidas.";
         }
       }
-      
+
       setSubmitMessage(errorMessage);
     } finally {
       setIsSubmitting(false);
@@ -176,77 +212,77 @@ export default function ContactSection() {
   };
 
   return (
-    <section id='contacto' className='py-20 bg-white' ref={ref}>
-      <div className='container mx-auto px-6 lg:px-12 max-w-6xl'>
+    <section id="contacto" className="py-20 bg-white" ref={ref}>
+      <div className="container mx-auto px-6 lg:px-12 max-w-6xl">
         {/* Header minimalista */}
         <motion.div
-          className='text-center mb-16'
+          className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className='text-4xl md:text-5xl font-playfair text-heading mb-4'>
+          <h2 className="text-4xl md:text-5xl font-playfair text-heading mb-4">
             Agenda tu Cita
           </h2>
-          <p className='text-main text-lg max-w-2xl mx-auto'>
+          <p className="text-main text-lg max-w-2xl mx-auto">
             ¿Lista para verte hermosa? Completa el formulario y me pondré en
             contacto contigo para confirmar tu cita y todos los detalles.
           </p>
         </motion.div>
 
-        <div className='grid grid-cols-1 lg:grid-cols-3 gap-12'>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Formulario */}
-          <motion.div 
-            className='lg:col-span-2'
+          <motion.div
+            className="lg:col-span-2"
             initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className='bg-light-background rounded-xl p-8 border border-gray-100'>
-              <h3 className='text-2xl font-playfair text-heading mb-6'>
+            <div className="bg-light-background rounded-xl p-8 border border-gray-100">
+              <h3 className="text-2xl font-playfair text-heading mb-6">
                 Información de la Cita
               </h3>
 
-              <form onSubmit={handleSubmit} className='space-y-6'>
+              <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Información Personal */}
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label
-                      htmlFor='name'
-                      className='flex items-center gap-2 text-heading font-medium text-sm'
+                      htmlFor="name"
+                      className="flex items-center gap-2 text-heading font-medium text-sm"
                     >
                       <User className="w-4 h-4 text-accent-primary" />
                       Nombre Completo *
                     </label>
                     <input
-                      type='text'
-                      id='name'
-                      name='name'
+                      type="text"
+                      id="name"
+                      name="name"
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className='w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300'
-                      placeholder='Tu nombre completo'
+                      className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
+                      placeholder="Tu nombre completo"
                     />
                   </div>
 
                   <div className="space-y-2">
                     <label
-                      htmlFor='phone'
-                      className='flex items-center gap-2 text-heading font-medium text-sm'
+                      htmlFor="phone"
+                      className="flex items-center gap-2 text-heading font-medium text-sm"
                     >
                       <Phone className="w-4 h-4 text-accent-primary" />
                       Teléfono *
                     </label>
                     <input
-                      type='tel'
-                      id='phone'
-                      name='phone'
+                      type="tel"
+                      id="phone"
+                      name="phone"
                       value={formData.phone}
                       onChange={handlePhoneChange}
                       required
-                      className='w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300'
-                      placeholder='+51 989 164 990 o 989 164 990'
+                      className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
+                      placeholder="+51 989 164 990 o 989 164 990"
                       maxLength={15}
                     />
                   </div>
@@ -254,41 +290,41 @@ export default function ContactSection() {
 
                 <div className="space-y-2">
                   <label
-                    htmlFor='email'
-                    className='flex items-center gap-2 text-heading font-medium text-sm'
+                    htmlFor="email"
+                    className="flex items-center gap-2 text-heading font-medium text-sm"
                   >
                     <Mail className="w-4 h-4 text-accent-primary" />
                     Email *
                   </label>
                   <input
-                    type='email'
-                    id='email'
-                    name='email'
+                    type="email"
+                    id="email"
+                    name="email"
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className='w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300'
-                    placeholder='tu@email.com'
+                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
+                    placeholder="tu@email.com"
                   />
                 </div>
 
                 <div className="space-y-2">
                   <label
-                    htmlFor='service'
-                    className='flex items-center gap-2 text-heading font-medium text-sm'
+                    htmlFor="service"
+                    className="flex items-center gap-2 text-heading font-medium text-sm"
                   >
                     <MessageSquare className="w-4 h-4 text-accent-primary" />
                     Servicio *
                   </label>
                   <select
-                    id='service'
-                    name='service'
+                    id="service"
+                    name="service"
                     value={formData.service}
                     onChange={handleInputChange}
                     required
-                    className='w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300'
+                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
                   >
-                    <option value=''>Selecciona un servicio</option>
+                    <option value="">Selecciona un servicio</option>
                     {services.map((service, index) => (
                       <option key={index} value={service}>
                         {service}
@@ -298,11 +334,9 @@ export default function ContactSection() {
                 </div>
 
                 {/* Fecha y Hora */}
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label
-                      className='flex items-center gap-2 text-heading font-medium text-sm'
-                    >
+                    <label className="flex items-center gap-2 text-heading font-medium text-sm">
                       <Calendar className="w-4 h-4 text-accent-primary" />
                       Fecha Preferida *
                     </label>
@@ -313,58 +347,73 @@ export default function ContactSection() {
                       minDate={new Date()}
                       dateFormat="dd/MM/yyyy"
                       placeholderText="Selecciona una fecha"
-                      className='w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300'
+                      className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label
-                      className='flex items-center gap-2 text-heading font-medium text-sm'
-                    >
+                    <label className="flex items-center gap-2 text-heading font-medium text-sm">
                       <Clock className="w-4 h-4 text-accent-primary" />
-                      Hora Preferida *
+                      Horario Disponible *
                     </label>
-                    <DatePicker
-                      selected={formData.time}
-                      onChange={handleTimeChange}
-                      showTimeSelect
-                      showTimeSelectOnly
-                      timeIntervals={30}
-                      timeCaption="Hora"
-                      dateFormat="HH:mm"
-                      placeholderText="Selecciona una hora"
-                      className='w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300'
-                    />
+                    <select
+                      id="timeRange"
+                      name="timeRange"
+                      value={formData.timeRange}
+                      onChange={handleTimeRangeChange}
+                      required
+                      disabled={!formData.date}
+                      className={`w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300${!formData.date ? " opacity-50 cursor-not-allowed" : ""}`}
+                    >
+                      <option value="">Selecciona un horario</option>
+                      {isLoadingRanges ? (
+                        <option disabled>Cargando horarios...</option>
+                      ) : rangesData?.availableRanges?.length === 0 &&
+                        formData.date ? (
+                        <option disabled>No hay horarios disponibles</option>
+                      ) : (
+                        rangesData?.availableRanges?.map(
+                          (range: string, idx: number) => (
+                            <option key={idx} value={range}>
+                              {range}
+                            </option>
+                          )
+                        )
+                      )}
+                    </select>
+                    <p className="text-xs text-gray-500 mt-2">
+                      * La duración puede variar según el servicio seleccionado.
+                    </p>
                   </div>
                 </div>
 
                 {/* Ubicación */}
                 <div className="space-y-4">
-                  <label className='flex items-center gap-2 text-heading font-medium text-sm'>
+                  <label className="flex items-center gap-2 text-heading font-medium text-sm">
                     <MapPin className="w-4 h-4 text-accent-primary" />
                     Ubicación del Servicio *
                   </label>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <label className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
                       <input
                         type="radio"
                         name="locationType"
                         value="HOME"
-                        checked={formData.locationType === 'HOME'}
+                        checked={formData.locationType === "HOME"}
                         onChange={handleInputChange}
                         className="text-accent-primary focus:ring-accent-primary"
                       />
                       <Home className="w-5 h-5 text-accent-primary" />
                       <span className="text-heading">A domicilio</span>
                     </label>
-                    
+
                     <label className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
                       <input
                         type="radio"
                         name="locationType"
                         value="STUDIO"
-                        checked={formData.locationType === 'STUDIO'}
+                        checked={formData.locationType === "STUDIO"}
                         onChange={handleInputChange}
                         className="text-accent-primary focus:ring-accent-primary"
                       />
@@ -374,61 +423,61 @@ export default function ContactSection() {
                   </div>
                 </div>
 
-                {formData.locationType === 'HOME' && (
+                {formData.locationType === "HOME" && (
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <label
-                        htmlFor='district'
-                        className='text-heading font-medium text-sm'
+                        htmlFor="district"
+                        className="text-heading font-medium text-sm"
                       >
                         Distrito *
                       </label>
                       <input
-                        type='text'
-                        id='district'
-                        name='district'
+                        type="text"
+                        id="district"
+                        name="district"
                         value={formData.district}
                         onChange={handleInputChange}
-                        required={formData.locationType === 'HOME'}
-                        className='w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300'
-                        placeholder='Ej: San Isidro, Miraflores...'
+                        required={formData.locationType === "HOME"}
+                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
+                        placeholder="Ej: San Isidro, Miraflores..."
                       />
                     </div>
 
                     <div className="space-y-2">
                       <label
-                        htmlFor='address'
-                        className='text-heading font-medium text-sm'
+                        htmlFor="address"
+                        className="text-heading font-medium text-sm"
                       >
                         Dirección *
                       </label>
                       <input
-                        type='text'
-                        id='address'
-                        name='address'
+                        type="text"
+                        id="address"
+                        name="address"
                         value={formData.address}
                         onChange={handleInputChange}
-                        required={formData.locationType === 'HOME'}
-                        className='w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300'
-                        placeholder='Dirección completa'
+                        required={formData.locationType === "HOME"}
+                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
+                        placeholder="Dirección completa"
                       />
                     </div>
 
                     <div className="space-y-2">
                       <label
-                        htmlFor='addressReference'
-                        className='text-heading font-medium text-sm'
+                        htmlFor="addressReference"
+                        className="text-heading font-medium text-sm"
                       >
                         Referencia
                       </label>
                       <input
-                        type='text'
-                        id='addressReference'
-                        name='addressReference'
+                        type="text"
+                        id="addressReference"
+                        name="addressReference"
                         value={formData.addressReference}
                         onChange={handleInputChange}
-                        className='w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300'
-                        placeholder='Referencia de ubicación'
+                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
+                        placeholder="Referencia de ubicación"
                       />
                     </div>
                   </div>
@@ -436,36 +485,38 @@ export default function ContactSection() {
 
                 <div className="space-y-2">
                   <label
-                    htmlFor='message'
-                    className='text-heading font-medium text-sm'
+                    htmlFor="message"
+                    className="text-heading font-medium text-sm"
                   >
                     Mensaje Adicional
                   </label>
                   <textarea
-                    id='message'
-                    name='message'
+                    id="message"
+                    name="message"
                     value={formData.message}
                     onChange={handleInputChange}
                     rows={4}
-                    className='w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300'
-                    placeholder='Detalles adicionales sobre tu evento o preferencias...'
+                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
+                    placeholder="Detalles adicionales sobre tu evento o preferencias..."
                   />
                 </div>
 
                 {submitMessage && (
-                  <div className={`p-4 rounded-lg ${
-                    submitMessage.includes('éxito') 
-                      ? 'bg-green-50 text-green-700 border border-green-200' 
-                      : 'bg-red-50 text-red-700 border border-red-200'
-                  }`}>
+                  <div
+                    className={`p-4 rounded-lg ${
+                      submitMessage.includes("éxito")
+                        ? "bg-green-50 text-green-700 border border-green-200"
+                        : "bg-red-50 text-red-700 border border-red-200"
+                    }`}
+                  >
                     {submitMessage}
                   </div>
                 )}
 
                 <motion.button
-                  type='submit'
+                  type="submit"
                   disabled={isSubmitting}
-                  className='w-full bg-accent-primary text-white py-4 px-6 rounded-lg font-medium text-lg hover:bg-accent-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2'
+                  className="w-full bg-accent-primary text-white py-4 px-6 rounded-lg font-medium text-lg hover:bg-accent-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2"
                   whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -487,40 +538,42 @@ export default function ContactSection() {
 
           {/* Información de Contacto */}
           <motion.div
-            className='lg:col-span-1'
+            className="lg:col-span-1"
             initial={{ opacity: 0, x: 20 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <div className='space-y-8'>
-              <div className='bg-light-background rounded-xl p-6 border border-gray-100'>
-                <h3 className='text-xl font-playfair text-heading mb-4'>
+            <div className="space-y-8">
+              <div className="bg-light-background rounded-xl p-6 border border-gray-100">
+                <h3 className="text-xl font-playfair text-heading mb-4">
                   Información de Contacto
                 </h3>
-                
-                <div className='space-y-4'>
-                  <div className='flex items-center gap-3'>
-                    <Phone className='w-5 h-5 text-accent-primary' />
-                    <span className='text-main'>+51 989 164 990</span>
+
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <Phone className="w-5 h-5 text-accent-primary" />
+                    <span className="text-main">+51 989 164 990</span>
                   </div>
-                  
-                  <div className='flex items-center gap-3'>
-                    <Mail className='w-5 h-5 text-accent-primary' />
-                    <span className='text-main'>contacto@marcelacordero.com</span>
+
+                  <div className="flex items-center gap-3">
+                    <Mail className="w-5 h-5 text-accent-primary" />
+                    <span className="text-main">
+                      contacto@marcelacordero.com
+                    </span>
                   </div>
-                  
-                  <div className='flex items-center gap-3'>
-                    <MapPin className='w-5 h-5 text-accent-primary' />
-                    <span className='text-main'>Pueblo Libre, Lima</span>
+
+                  <div className="flex items-center gap-3">
+                    <MapPin className="w-5 h-5 text-accent-primary" />
+                    <span className="text-main">Pueblo Libre, Lima</span>
                   </div>
-                  
-                  <div className='flex items-center gap-3'>
-                    <Instagram className='w-5 h-5 text-accent-primary' />
-                    <a 
-                      href='https://www.instagram.com/marcelacorderobeauty/' 
-                      className='text-main hover:text-accent-primary transition-colors'
-                      target='_blank'
-                      rel='noopener noreferrer'
+
+                  <div className="flex items-center gap-3">
+                    <Instagram className="w-5 h-5 text-accent-primary" />
+                    <a
+                      href="https://www.instagram.com/marcelacorderobeauty/"
+                      className="text-main hover:text-accent-primary transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
                       @marcelacorderobeauty
                     </a>
@@ -528,21 +581,21 @@ export default function ContactSection() {
                 </div>
               </div>
 
-              <div className='bg-light-background rounded-xl p-6 border border-gray-100'>
-                <h3 className='text-xl font-playfair text-heading mb-4'>
+              <div className="bg-light-background rounded-xl p-6 border border-gray-100">
+                <h3 className="text-xl font-playfair text-heading mb-4">
                   Horarios de Atención
                 </h3>
-                
-                <div className='space-y-3 text-main'>
-                  <div className='flex justify-between'>
+
+                <div className="space-y-3 text-main">
+                  <div className="flex justify-between">
                     <span>Lunes - Viernes</span>
                     <span>9:00 AM - 6:00 PM</span>
                   </div>
-                  <div className='flex justify-between'>
+                  <div className="flex justify-between">
                     <span>Sábados</span>
                     <span>9:00 AM - 4:00 PM</span>
                   </div>
-                  <div className='flex justify-between'>
+                  <div className="flex justify-between">
                     <span>Domingos</span>
                     <span>Solo eventos sociales</span>
                   </div>

@@ -5,7 +5,10 @@ import { scrollToAppointment } from '@/utils/appointmentHelpers';
 
 export const useAppointmentsPage = () => {
   const router = useRouter();
-  const { filter: urlFilter, highlightId, showDetail } = useAppointmentUrlParams();
+  const { filter: urlFilter } = useAppointmentUrlParams();
+  const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : undefined;
+  const highlightId = searchParams?.get('highlightId') || null;
+  const showDetail = searchParams?.get('showDetail') || null;
   
   // Estado local
   const [filter, setFilter] = useState(urlFilter);

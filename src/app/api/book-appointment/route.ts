@@ -20,7 +20,7 @@ const appointmentSchema = z.object({
     }, 'Formato de teléfono inválido. Ej: +51 999 209 880 o 999209880'),
   serviceType: z.string().min(1, 'Tipo de servicio requerido'),
   appointmentDate: z.string().min(1, 'Fecha requerida'),
-  appointmentTime: z.string().min(1, 'Hora requerida'),
+  appointmentTimeRange: z.string().min(1, 'Horario requerido'),
   locationType: z.enum(['STUDIO', 'HOME'], { 
     errorMap: () => ({ message: 'Selecciona una ubicación válida' }) 
   }),
@@ -49,11 +49,11 @@ export async function POST(request: NextRequest) {
     // Parse date
     const appointmentDateTime = new Date(validatedData.appointmentDate);
 
-    // Check if the appointment slot is available
+    // Check if the appointment slot (rango) is available
     const existingAppointment = await prisma.appointment.findFirst({
       where: {
         appointmentDate: appointmentDateTime,
-        appointmentTime: validatedData.appointmentTime,
+        appointmentTime: validatedData.appointmentTimeRange,
         status: {
           in: ['PENDING', 'CONFIRMED'],
         },
@@ -75,12 +75,7 @@ export async function POST(request: NextRequest) {
         clientPhone: validatedData.clientPhone,
         serviceType: validatedData.serviceType,
         appointmentDate: appointmentDateTime,
-        appointmentTime: validatedData.appointmentTime,
-        // TODO: Actualizar cuando el cliente de Prisma se regenere
-        // locationType: validatedData.locationType,
-        // district: validatedData.district || null,
-        // address: validatedData.address || null,
-        // addressReference: validatedData.addressReference || null,
+        appointmentTime: validatedData.appointmentTimeRange,
         additionalNotes: `Ubicación: ${validatedData.locationType === 'STUDIO' ? 'Local en Pueblo Libre' : `Domicilio - ${validatedData.district || ''}, ${validatedData.address || ''}`}${validatedData.addressReference ? ` (Ref: ${validatedData.addressReference})` : ''}${validatedData.additionalNotes ? `\n\nNotas adicionales: ${validatedData.additionalNotes}` : ''}`,
         status: 'PENDING',
       },
@@ -96,10 +91,8 @@ export async function POST(request: NextRequest) {
     };
 
     const formatTime = (time: string) => {
-      return new Date(`1970-01-01T${time}`).toLocaleTimeString('es-ES', {
-        hour: '2-digit',
-        minute: '2-digit',
-      });
+      // Si es un rango, mostrar el rango tal cual
+      return time;
     };
 
     await prisma.notification.create({
@@ -214,32 +207,31 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Define available time slots
-    const allTimeSlots = [
-      '09:00',
-      '10:00',
-      '11:00',
-      '12:00',
-      '13:00',
-      '14:00',
-      '15:00',
-      '16:00',
-      '17:00',
-      '18:00',
-      '19:00',
-      '20:00',
+    // Define available time ranges (rango de 1 hora)
+    const allTimeRanges = [
+      '09:00 - 10:00',
+      '10:00 - 11:00',
+      '11:00 - 12:00',
+      '12:00 - 13:00',
+      '13:00 - 14:00',
+      '14:00 - 15:00',
+      '15:00 - 16:00',
+      '16:00 - 17:00',
+      '17:00 - 18:00',
+      '18:00 - 19:00',
+      '19:00 - 20:00',
     ];
 
-    // Filter out booked slots
-    const bookedSlots = appointments.map((apt) => apt.appointmentTime);
-    const availableSlots = allTimeSlots.filter(
-      (slot) => !bookedSlots.includes(slot)
+    // Filtrar rangos ocupados
+    const bookedRanges = appointments.map((apt) => apt.appointmentTime);
+    const availableRanges = allTimeRanges.filter(
+      (range) => !bookedRanges.includes(range)
     );
 
     return NextResponse.json({
       date: date,
-      availableSlots: availableSlots,
-      bookedSlots: bookedSlots,
+      availableRanges: availableRanges,
+      bookedRanges: bookedRanges,
     });
   } catch (error) {
     console.error('Error fetching availability:', error);
