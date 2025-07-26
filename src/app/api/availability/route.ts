@@ -61,6 +61,8 @@ export async function GET(request: NextRequest) {
 
     // Define default time slots (start times)
     const defaultTimeSlots = [
+      '03:00',
+      '04:00',
       '05:00',
       '06:00',
       '07:00',
