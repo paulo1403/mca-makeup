@@ -86,16 +86,22 @@ export default function AppointmentTable({
               )}
             </div>
 
-            {/* Actions */}
-            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-              <button
-                onClick={() => onViewDetails(appointment)}
-                className="text-[#D4AF37] hover:text-[#B8941F] text-sm font-medium"
-              >
-                Ver detalles
-              </button>
-              
-              <div className="flex items-center space-x-2">
+            {/* Actions - Mejor UX móvil */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-3 border-t border-gray-100 gap-2">
+              <div className="flex gap-2 flex-wrap">
+                <button
+                  onClick={() => onViewDetails(appointment)}
+                  className="text-[#D4AF37] hover:text-[#B8941F] text-sm font-medium"
+                >
+                  Ver detalles
+                </button>
+                <button
+                  onClick={() => handleDelete(appointment.id)}
+                  disabled={deleteMutation.isPending}
+                  className="bg-red-100 text-red-700 px-3 py-1 rounded-lg text-xs font-medium hover:bg-red-200 transition-colors disabled:opacity-50"
+                >
+                  Eliminar
+                </button>
                 {appointment.status === 'PENDING' && (
                   <>
                     <button
