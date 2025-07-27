@@ -60,26 +60,26 @@ export async function GET(request: NextRequest) {
     });
 
     // Define default time slots (start times)
-    const defaultTimeSlots = [
-      '03:00',
-      '04:00',
-      '05:00',
-      '06:00',
-      '07:00',
-      '08:00',
-      '09:00',
-      '10:00',
-      '11:00',
-      '12:00',
-      '13:00',
-      '14:00',
-      '15:00',
-      '16:00',
-      '17:00',
-      '18:00',
-      '19:00',
-      '20:00',
-    ];
+    // Generar slots según tipo de ubicación
+    function generateTimeSlots(start: string, end: string, interval: number) {
+      const slots = [];
+      let [h, m] = start.split(':').map(Number);
+      const [endH, endM] = end.split(':').map(Number);
+      while (h < endH || (h === endH && m <= endM)) {
+        slots.push(`${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`);
+        m += interval;
+        while (m >= 60) { h++; m -= 60; }
+      }
+      return slots;
+    }
+    let defaultTimeSlots: string[] = [];
+    if (locationType === 'STUDIO') {
+      // Estudio: 8:00 a 17:00 (máximo salida 18:30)
+      defaultTimeSlots = generateTimeSlots('08:00', '17:00', 90);
+    } else {
+      // Domicilio: 3:00 a 20:00
+      defaultTimeSlots = generateTimeSlots('03:00', '20:00', 90);
+    }
 
     // Service durations in minutes
     const serviceDurations: Record<string, number> = {

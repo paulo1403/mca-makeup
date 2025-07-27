@@ -335,7 +335,44 @@ export default function ContactSection() {
                   </select>
                 </div>
 
-                {/* Fecha y Hora */}
+
+                {/* Ubicación - MOVER ARRIBA */}
+                <div className="space-y-4">
+                  <label className="flex items-center gap-2 text-heading font-medium text-sm">
+                    <MapPin className="w-4 h-4 text-accent-primary" />
+                    Ubicación del Servicio *
+                  </label>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                      <input
+                        type="radio"
+                        name="locationType"
+                        value="HOME"
+                        checked={formData.locationType === "HOME"}
+                        onChange={handleInputChange}
+                        className="text-accent-primary focus:ring-accent-primary"
+                      />
+                      <Home className="w-5 h-5 text-accent-primary" />
+                      <span className="text-heading">A domicilio</span>
+                    </label>
+
+                    <label className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                      <input
+                        type="radio"
+                        name="locationType"
+                        value="STUDIO"
+                        checked={formData.locationType === "STUDIO"}
+                        onChange={handleInputChange}
+                        className="text-accent-primary focus:ring-accent-primary"
+                      />
+                      <MapPin className="w-5 h-5 text-accent-primary" />
+                      <span className="text-heading">En mi estudio</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Fecha y Hora - MOVER ABAJO */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 text-heading font-medium text-sm">
@@ -392,42 +429,6 @@ export default function ContactSection() {
                       * Solo se muestran horarios válidos según el servicio y ubicación elegidos.<br />
                       * La duración se indica junto al horario.
                     </p>
-                  </div>
-                </div>
-
-                {/* Ubicación */}
-                <div className="space-y-4">
-                  <label className="flex items-center gap-2 text-heading font-medium text-sm">
-                    <MapPin className="w-4 h-4 text-accent-primary" />
-                    Ubicación del Servicio *
-                  </label>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <label className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                      <input
-                        type="radio"
-                        name="locationType"
-                        value="HOME"
-                        checked={formData.locationType === "HOME"}
-                        onChange={handleInputChange}
-                        className="text-accent-primary focus:ring-accent-primary"
-                      />
-                      <Home className="w-5 h-5 text-accent-primary" />
-                      <span className="text-heading">A domicilio</span>
-                    </label>
-
-                    <label className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                      <input
-                        type="radio"
-                        name="locationType"
-                        value="STUDIO"
-                        checked={formData.locationType === "STUDIO"}
-                        onChange={handleInputChange}
-                        className="text-accent-primary focus:ring-accent-primary"
-                      />
-                      <MapPin className="w-5 h-5 text-accent-primary" />
-                      <span className="text-heading">En mi estudio</span>
-                    </label>
                   </div>
                 </div>
 
