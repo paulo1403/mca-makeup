@@ -46,8 +46,15 @@ export async function POST(request: NextRequest) {
     // Validate input
     const validatedData = appointmentSchema.parse(body);
 
-    // Parse date
-    const appointmentDateTime = new Date(validatedData.appointmentDate);
+
+    // Parse date as local (Lima) date, not UTC
+    let appointmentDateTime: Date;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(validatedData.appointmentDate)) {
+      const [year, month, day] = validatedData.appointmentDate.split('-').map(Number);
+      appointmentDateTime = new Date(year, month - 1, day, 0, 0, 0, 0);
+    } else {
+      appointmentDateTime = new Date(validatedData.appointmentDate);
+    }
 
     // Check if the appointment slot (rango) is available
     const existingAppointment = await prisma.appointment.findFirst({

@@ -14,7 +14,17 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Fecha, tipo de servicio y ubicación requeridos' }, { status: 400 });
     }
 
-    const appointmentDate = new Date(date);
+
+    // Parse date as local (Lima) date, not UTC
+    let appointmentDate: Date;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      // If date is in 'YYYY-MM-DD' format, parse as local
+      const [year, month, day] = date.split('-').map(Number);
+      appointmentDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+    } else {
+      // Fallback to default parsing
+      appointmentDate = new Date(date);
+    }
 
     // Validate date (must be today or future)
     const today = new Date();
