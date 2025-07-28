@@ -122,15 +122,20 @@ export async function GET(request: NextRequest) {
       for (const booked of bookedAppointments) {
         const bookedStart = booked.appointmentTime.split(' - ')[0];
         const bookedEnd = booked.appointmentTime.split(' - ')[1];
-        // Calculate block window for booked appointment
         let bookedBlockStart = bookedStart;
         let bookedBlockEnd = bookedEnd;
-        if (booked.locationType === 'HOME') {
-          // Block 1h before and after for transport
+
+        // Si la ubicación es diferente, bloquear 1h antes y después para traslado
+        if (booked.locationType !== locationType) {
+          bookedBlockStart = addMinutes(bookedStart, -60);
+          bookedBlockEnd = addMinutes(bookedEnd, 60);
+        } else if (booked.locationType === 'HOME') {
+          // Si ambas son a domicilio, bloquear 1h antes y después
           bookedBlockStart = addMinutes(bookedStart, -60);
           bookedBlockEnd = addMinutes(bookedEnd, 60);
         }
-        // If new range overlaps with block window, exclude
+
+        // Si el nuevo rango se solapa con la ventana bloqueada, excluir
         if (!(end <= bookedBlockStart || start >= bookedBlockEnd)) {
           return false;
         }
