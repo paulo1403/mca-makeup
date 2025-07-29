@@ -6,6 +6,7 @@ import {
   formatDateForDisplay,
   formatTimeRange,
   debugDate,
+  formatDateForCalendar,
 } from "@/utils/dateUtils";
 
 // GET /api/admin/appointments - Get all appointments
@@ -34,7 +35,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get appointments with pagination
-    const [appointments, total] = await Promise.all([
+    const [rawAppointments, total] = await Promise.all([
       prisma.appointment.findMany({
         where,
         skip: (page - 1) * limit,
@@ -43,6 +44,14 @@ export async function GET(request: NextRequest) {
       }),
       prisma.appointment.count({ where }),
     ]);
+
+    // Format appointments with correct date formatting
+    const appointments = rawAppointments.map((appointment) => ({
+      ...appointment,
+      appointmentDate: formatDateForCalendar(appointment.appointmentDate),
+      createdAt: appointment.createdAt.toISOString(),
+      updatedAt: appointment.updatedAt.toISOString(),
+    }));
 
     return NextResponse.json({
       success: true,
