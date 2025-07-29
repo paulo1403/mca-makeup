@@ -1,8 +1,7 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
-// Set timezone for the entire application using custom variable
-process.env.TZ = process.env.APP_TIMEZONE || "America/Lima";
+// Timezone is configured in next.config.ts
 
 export default withAuth(
   function middleware(req) {
@@ -10,10 +9,7 @@ export default withAuth(
     const response = NextResponse.next();
 
     // Set timezone header for all requests
-    response.headers.set(
-      "X-Timezone",
-      process.env.APP_TIMEZONE || "America/Lima",
-    );
+    response.headers.set("X-Timezone", "America/Lima");
 
     // Headers de seguridad para admin panel
     if (req.nextUrl.pathname.startsWith("/admin")) {
