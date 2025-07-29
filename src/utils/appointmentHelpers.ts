@@ -1,4 +1,5 @@
-import { Appointment } from '@/hooks/useAppointments';
+import { Appointment } from "@/hooks/useAppointments";
+import { formatDateForDisplay, formatTimeRange } from "@/utils/dateUtils";
 
 export const getStatusColor = (status: Appointment["status"]) => {
   switch (status) {
@@ -31,35 +32,19 @@ export const getStatusText = (status: Appointment["status"]) => {
 };
 
 export const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString("es-ES", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const date = new Date(dateString);
+  return formatDateForDisplay(date);
 };
 
 export const formatTime = (timeString: string) => {
-  // Si es un rango, mostrar ambos extremos formateados
-  if (timeString.includes(' - ')) {
-    const [start, end] = timeString.split(' - ');
-    const format = (t: string) => new Date(`1970-01-01T${t}`).toLocaleTimeString('es-ES', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-    return `${format(start)} - ${format(end)}`;
-  }
-  // Si es solo una hora
-  return new Date(`1970-01-01T${timeString}`).toLocaleTimeString('es-ES', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  return formatTimeRange(timeString);
 };
 
 export const scrollToAppointment = (appointmentId: string) => {
   setTimeout(() => {
     const element = document.getElementById(`appointment-${appointmentId}`);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      element.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }, 100);
 };

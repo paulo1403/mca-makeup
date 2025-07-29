@@ -1,5 +1,5 @@
 import { type RecentAppointment } from "@/hooks/useRecentAppointments";
-import { formatTimeRange, toPeruTime } from "@/utils/dateUtils";
+import { formatTimeRange, formatDateForDashboard } from "@/utils/dateUtils";
 
 export const formatDate = (dateString: string): string => {
   try {
@@ -7,12 +7,8 @@ export const formatDate = (dateString: string): string => {
     if (isNaN(date.getTime())) {
       return "Fecha inválida";
     }
-    const peruDate = toPeruTime(date);
-    return peruDate.toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
+    // Use the short date format for dashboard display
+    return formatDateForDashboard(date);
   } catch {
     return "Fecha inválida";
   }

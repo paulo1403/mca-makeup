@@ -78,6 +78,14 @@ export function getPeruDateOnly(date: Date = new Date()): Date {
 }
 
 /**
+ * Formatea una fecha en formato corto para el dashboard (ej: "2 ago 2025")
+ */
+export function formatDateForDashboard(date: Date): string {
+  const peruDate = toPeruTime(date);
+  return format(peruDate, "d MMM yyyy", { locale: es });
+}
+
+/**
  * Convierte un rango de tiempo (ej: "09:00 - 10:00") a formato de 12 horas
  */
 export function formatTimeRange(timeRange: string): string {
