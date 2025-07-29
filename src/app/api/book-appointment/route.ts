@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
         appointmentDate: appointmentDateTime,
         appointmentTime: validatedData.appointmentTimeRange,
         additionalNotes: `Ubicación: ${validatedData.locationType === "STUDIO" ? "Local en Pueblo Libre" : `Domicilio - ${validatedData.district || ""}, ${validatedData.address || ""}`}${validatedData.addressReference ? ` (Ref: ${validatedData.addressReference})` : ""}${validatedData.additionalNotes ? `\n\nNotas adicionales: ${validatedData.additionalNotes}` : ""}`,
-        status: "PENDING",
+        status: "CONFIRMED",
       },
     });
 
@@ -125,8 +125,8 @@ export async function POST(request: NextRequest) {
     await prisma.notification.create({
       data: {
         type: "APPOINTMENT",
-        title: "Nueva cita pendiente",
-        message: `${appointment.clientName} solicita ${appointment.serviceType} para el ${formatDate(appointment.appointmentDate)} a las ${formatTime(appointment.appointmentTime)}`,
+        title: "Nueva cita confirmada",
+        message: `${appointment.clientName} ha reservado ${appointment.serviceType} para el ${formatDate(appointment.appointmentDate)} a las ${formatTime(appointment.appointmentTime)}`,
         link: "/admin/appointments",
         appointmentId: appointment.id,
         read: false,
@@ -160,7 +160,25 @@ export async function POST(request: NextRequest) {
       }
 
       // Send confirmation to client
-      // Note: Solo enviamos confirmación cuando el admin confirme la cita
+      // Send confirmation to client immediately since appointment is auto-confirmed
+      const clientEmailData = emailTemplates.appointmentConfirmed(
+        appointment.clientName,
+        appointment.serviceType,
+        formatDate(appointment.appointmentDate),
+        formatTime(appointment.appointmentTime),
+        validatedData.locationType,
+        validatedData.district,
+        validatedData.address,
+        validatedData.addressReference,
+        validatedData.additionalNotes,
+      );
+
+      await sendEmail({
+        to: appointment.clientEmail,
+        subject: clientEmailData.subject,
+        html: clientEmailData.html,
+        text: clientEmailData.text,
+      });
       console.log("Email notifications sent successfully");
     } catch (emailError) {
       console.error("Error sending email notifications:", emailError);
@@ -169,7 +187,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        message: "Cita solicitada exitosamente",
+        message: "Cita confirmada exitosamente",
         appointmentId: appointment.id,
       },
       { status: 201 },
