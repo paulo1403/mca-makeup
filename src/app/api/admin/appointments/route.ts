@@ -1,29 +1,35 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { sendEmail, emailTemplates } from '@/lib/email';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { sendEmail, emailTemplates } from "@/lib/email";
+import {
+  parseDateFromString,
+  formatDateForDisplay,
+  formatTimeRange,
+  debugDate,
+} from "@/utils/dateUtils";
 
 // GET /api/admin/appointments - Get all appointments
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const status = searchParams.get('status');
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
-    const search = searchParams.get('search');
+    const status = searchParams.get("status");
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
+    const search = searchParams.get("search");
 
     // Build where clause
     const where: Record<string, unknown> = {};
 
-    const validStatuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'];
+    const validStatuses = ["PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"];
     if (status && validStatuses.includes(status)) {
       where.status = status;
     }
 
     if (search) {
       where.OR = [
-        { clientName: { contains: search, mode: 'insensitive' } },
-        { clientEmail: { contains: search, mode: 'insensitive' } },
-        { serviceType: { contains: search, mode: 'insensitive' } },
+        { clientName: { contains: search, mode: "insensitive" } },
+        { clientEmail: { contains: search, mode: "insensitive" } },
+        { serviceType: { contains: search, mode: "insensitive" } },
       ];
     }
 
@@ -33,7 +39,7 @@ export async function GET(request: NextRequest) {
         where,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
       }),
       prisma.appointment.count({ where }),
     ]);
@@ -51,10 +57,10 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Error fetching appointments:', error);
+    console.error("Error fetching appointments:", error);
     return NextResponse.json(
-      { success: false, message: 'Failed to fetch appointments' },
-      { status: 500 }
+      { success: false, message: "Failed to fetch appointments" },
+      { status: 500 },
     );
   }
 }
@@ -71,7 +77,7 @@ export async function POST(request: NextRequest) {
       appointmentDate,
       appointmentTime,
       additionalNotes,
-      status = 'PENDING',
+      status = "PENDING",
     } = body;
 
     // Validate required fields
@@ -84,8 +90,20 @@ export async function POST(request: NextRequest) {
       !appointmentTime
     ) {
       return NextResponse.json(
-        { success: false, message: 'Missing required fields' },
-        { status: 400 }
+        { success: false, message: "Missing required fields" },
+        { status: 400 },
+      );
+    }
+
+    // Parse date correctly in Peru timezone
+    let parsedAppointmentDate: Date;
+    try {
+      parsedAppointmentDate = parseDateFromString(appointmentDate);
+      debugDate(parsedAppointmentDate, "Admin creating appointment date");
+    } catch {
+      return NextResponse.json(
+        { success: false, message: "Invalid date format" },
+        { status: 400 },
       );
     }
 
@@ -96,7 +114,7 @@ export async function POST(request: NextRequest) {
         clientEmail,
         clientPhone,
         serviceType,
-        appointmentDate: new Date(appointmentDate),
+        appointmentDate: parsedAppointmentDate,
         appointmentTime,
         additionalNotes,
         status,
@@ -106,13 +124,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: appointment,
-      message: 'Appointment created successfully',
+      message: "Appointment created successfully",
     });
   } catch (error) {
-    console.error('Error creating appointment:', error);
+    console.error("Error creating appointment:", error);
     return NextResponse.json(
-      { success: false, message: 'Failed to create appointment' },
-      { status: 500 }
+      { success: false, message: "Failed to create appointment" },
+      { status: 500 },
     );
   }
 }
@@ -125,17 +143,17 @@ export async function PATCH(request: NextRequest) {
 
     if (!id) {
       return NextResponse.json(
-        { success: false, message: 'Appointment ID is required' },
-        { status: 400 }
+        { success: false, message: "Appointment ID is required" },
+        { status: 400 },
       );
     }
 
     // Validate status
-    const validStatuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'];
+    const validStatuses = ["PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"];
     if (!validStatuses.includes(status)) {
       return NextResponse.json(
-        { success: false, message: 'Invalid status' },
-        { status: 400 }
+        { success: false, message: "Invalid status" },
+        { status: 400 },
       );
     }
 
@@ -148,13 +166,13 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: appointment,
-      message: 'Appointment status updated successfully',
+      message: "Appointment status updated successfully",
     });
   } catch (error) {
-    console.error('Error updating appointment status:', error);
+    console.error("Error updating appointment status:", error);
     return NextResponse.json(
-      { success: false, message: 'Failed to update appointment status' },
-      { status: 500 }
+      { success: false, message: "Failed to update appointment status" },
+      { status: 500 },
     );
   }
 }
@@ -167,8 +185,8 @@ export async function PUT(request: NextRequest) {
 
     if (!id) {
       return NextResponse.json(
-        { success: false, message: 'Appointment ID is required' },
-        { status: 400 }
+        { success: false, message: "Appointment ID is required" },
+        { status: 400 },
       );
     }
 
@@ -179,8 +197,8 @@ export async function PUT(request: NextRequest) {
 
     if (!currentAppointment) {
       return NextResponse.json(
-        { success: false, message: 'Appointment not found' },
-        { status: 404 }
+        { success: false, message: "Appointment not found" },
+        { status: 404 },
       );
     }
 
@@ -193,27 +211,20 @@ export async function PUT(request: NextRequest) {
     // Send email notifications if status changed
     if (updateData.status && updateData.status !== currentAppointment.status) {
       const formatDate = (date: Date) => {
-        return new Date(date).toLocaleDateString('es-ES', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        });
+        return formatDateForDisplay(date);
       };
 
       const formatTime = (time: string) => {
-        return new Date(`1970-01-01T${time}`).toLocaleTimeString('es-ES', {
-          hour: '2-digit',
-          minute: '2-digit',
-        });
+        return formatTimeRange(time);
       };
 
       try {
-        if (updateData.status === 'CONFIRMED') {
+        if (updateData.status === "CONFIRMED") {
           const emailData = emailTemplates.appointmentConfirmed(
             appointment.clientName,
             appointment.serviceType,
             formatDate(appointment.appointmentDate),
-            formatTime(appointment.appointmentTime)
+            formatTime(appointment.appointmentTime),
           );
 
           await sendEmail({
@@ -222,12 +233,12 @@ export async function PUT(request: NextRequest) {
             html: emailData.html,
             text: emailData.text,
           });
-        } else if (updateData.status === 'CANCELLED') {
+        } else if (updateData.status === "CANCELLED") {
           const emailData = emailTemplates.appointmentCancelled(
             appointment.clientName,
             appointment.serviceType,
             formatDate(appointment.appointmentDate),
-            formatTime(appointment.appointmentTime)
+            formatTime(appointment.appointmentTime),
           );
 
           await sendEmail({
@@ -238,7 +249,7 @@ export async function PUT(request: NextRequest) {
           });
         }
       } catch (emailError) {
-        console.error('Error sending email:', emailError);
+        console.error("Error sending email:", emailError);
         // No fallar la operación si el email falla
       }
     }
@@ -246,13 +257,13 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: appointment,
-      message: 'Appointment updated successfully',
+      message: "Appointment updated successfully",
     });
   } catch (error) {
-    console.error('Error updating appointment:', error);
+    console.error("Error updating appointment:", error);
     return NextResponse.json(
-      { success: false, message: 'Failed to update appointment' },
-      { status: 500 }
+      { success: false, message: "Failed to update appointment" },
+      { status: 500 },
     );
   }
 }
@@ -261,12 +272,12 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const id = searchParams.get('id');
+    const id = searchParams.get("id");
 
     if (!id) {
       return NextResponse.json(
-        { success: false, message: 'Appointment ID is required' },
-        { status: 400 }
+        { success: false, message: "Appointment ID is required" },
+        { status: 400 },
       );
     }
 
@@ -277,13 +288,13 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Appointment deleted successfully',
+      message: "Appointment deleted successfully",
     });
   } catch (error) {
-    console.error('Error deleting appointment:', error);
+    console.error("Error deleting appointment:", error);
     return NextResponse.json(
-      { success: false, message: 'Failed to delete appointment' },
-      { status: 500 }
+      { success: false, message: "Failed to delete appointment" },
+      { status: 500 },
     );
   }
 }

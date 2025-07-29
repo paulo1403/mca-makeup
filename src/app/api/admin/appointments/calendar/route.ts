@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { formatDateForCalendar, formatTimeRange } from "@/utils/dateUtils";
 
 // GET /api/admin/appointments/calendar - Get all appointments for calendar view
 export async function GET() {
@@ -18,18 +19,18 @@ export async function GET() {
         price: true,
       },
       orderBy: {
-        appointmentDate: 'asc',
+        appointmentDate: "asc",
       },
     });
 
     // Transform data for calendar component
-    const calendarAppointments = appointments.map(appointment => ({
+    const calendarAppointments = appointments.map((appointment) => ({
       id: appointment.id,
       clientName: appointment.clientName,
       clientEmail: appointment.clientEmail,
       clientPhone: appointment.clientPhone,
-      date: appointment.appointmentDate.toISOString().split('T')[0], // YYYY-MM-DD format
-      time: appointment.appointmentTime,
+      date: formatDateForCalendar(appointment.appointmentDate), // YYYY-MM-DD format in Peru timezone
+      time: formatTimeRange(appointment.appointmentTime),
       service: appointment.serviceType,
       status: appointment.status,
       notes: appointment.additionalNotes,
@@ -38,10 +39,10 @@ export async function GET() {
 
     return NextResponse.json(calendarAppointments);
   } catch (error) {
-    console.error('Error fetching calendar appointments:', error);
+    console.error("Error fetching calendar appointments:", error);
     return NextResponse.json(
-      { success: false, message: 'Failed to fetch calendar appointments' },
-      { status: 500 }
+      { success: false, message: "Failed to fetch calendar appointments" },
+      { status: 500 },
     );
   }
 }
