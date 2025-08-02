@@ -56,33 +56,6 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Generate time slots based on location type
-    function generateTimeSlots(start: string, end: string, interval: number) {
-      const slots = [];
-      let [h, m] = start.split(":").map(Number);
-      const [endH, endM] = end.split(":").map(Number);
-      while (h < endH || (h === endH && m <= endM)) {
-        slots.push(
-          `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`,
-        );
-        m += interval;
-        while (m >= 60) {
-          h++;
-          m -= 60;
-        }
-      }
-      return slots;
-    }
-
-    let defaultTimeSlots: string[] = [];
-    if (locationType === "STUDIO") {
-      // Studio: 8:00 a 17:00
-      defaultTimeSlots = generateTimeSlots("08:00", "17:00", 90);
-    } else {
-      // Home: 3:00 a 20:00
-      defaultTimeSlots = generateTimeSlots("03:00", "20:00", 90);
-    }
-
     // Service durations in minutes
     const serviceDurations: Record<string, number> = {
       "Maquillaje de Novia - Paquete Básico (S/ 480)": 150,
@@ -93,7 +66,7 @@ export async function GET(request: NextRequest) {
     };
     const selectedDuration = serviceDurations[serviceType] || 90;
 
-    // Generate available ranges
+    // Helper function to add/subtract minutes from time string
     function addMinutes(time: string, mins: number) {
       const [h, m] = time.split(":").map(Number);
       const date = new Date(1970, 0, 1, h, m);
@@ -101,42 +74,86 @@ export async function GET(request: NextRequest) {
       return date.toTimeString().slice(0, 5);
     }
 
-    let availableRanges: string[] = [];
-    for (const slot of defaultTimeSlots) {
-      const end = addMinutes(slot, selectedDuration);
-      availableRanges.push(`${slot} - ${end}`);
+    // Helper function to convert time string to minutes since midnight
+    function timeToMinutes(time: string): number {
+      const [h, m] = time.split(":").map(Number);
+      return h * 60 + m;
     }
 
-    // Remove ranges that overlap with booked appointments (considering transport time)
-    availableRanges = availableRanges.filter((range) => {
-      const [start, end] = range.split(" - ");
+    // Helper function to convert minutes since midnight to time string
+    function minutesToTime(minutes: number): string {
+      const h = Math.floor(minutes / 60);
+      const m = minutes % 60;
+      return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
+    }
 
-      for (const booked of bookedAppointments) {
-        const bookedStart = booked.appointmentTime.split(" - ")[0];
-        const bookedEnd = booked.appointmentTime.split(" - ")[1];
-        let bookedBlockStart = bookedStart;
-        let bookedBlockEnd = bookedEnd;
+    // Generate blocked time ranges from booked appointments
+    const blockedRanges: { start: number; end: number }[] = [];
 
-        // Transport time logic
-        if (booked.locationType !== locationType) {
-          // Different locations: block 1h before and after for transport
-          bookedBlockStart = addMinutes(bookedStart, -60);
-          bookedBlockEnd = addMinutes(bookedEnd, 60);
-        } else if (booked.locationType === "HOME") {
-          // Both home services: block 1h before and after for transport
-          bookedBlockStart = addMinutes(bookedStart, -60);
-          bookedBlockEnd = addMinutes(bookedEnd, 60);
-        }
-        // If same studio location, no extra time needed
+    for (const booked of bookedAppointments) {
+      const bookedStart = booked.appointmentTime.split(" - ")[0];
+      const bookedEnd = booked.appointmentTime.split(" - ")[1];
+      let bookedBlockStart = bookedStart;
+      let bookedBlockEnd = bookedEnd;
 
-        // Check for overlap: if ranges overlap, exclude this slot
-        if (!(end <= bookedBlockStart || start >= bookedBlockEnd)) {
-          return false; // This range overlaps, exclude it
+      // Transport time logic
+      if (booked.locationType !== locationType) {
+        // Different locations: block 1h before and after for transport
+        bookedBlockStart = addMinutes(bookedStart, -60);
+        bookedBlockEnd = addMinutes(bookedEnd, 60);
+      } else if (booked.locationType === "HOME") {
+        // Both home services: block 1h before and after for transport
+        bookedBlockStart = addMinutes(bookedStart, -60);
+        bookedBlockEnd = addMinutes(bookedEnd, 60);
+      }
+      // If same studio location, no extra time needed
+
+      blockedRanges.push({
+        start: timeToMinutes(bookedBlockStart),
+        end: timeToMinutes(bookedBlockEnd),
+      });
+    }
+
+    // Generate available time slots dynamically
+    let availableRanges: string[] = [];
+
+    // Define working hours in minutes
+    let startWorkingHours: number;
+    let endWorkingHours: number;
+
+    if (locationType === "STUDIO") {
+      startWorkingHours = timeToMinutes("08:00"); // 8:00 AM
+      endWorkingHours = timeToMinutes("17:00"); // 5:00 PM
+    } else {
+      startWorkingHours = timeToMinutes("03:00"); // 3:00 AM
+      endWorkingHours = timeToMinutes("20:00"); // 8:00 PM
+    }
+
+    // Generate all possible slots starting every 30 minutes
+    for (
+      let currentTime = startWorkingHours;
+      currentTime + selectedDuration <= endWorkingHours;
+      currentTime += 30
+    ) {
+      const slotStart = currentTime;
+      const slotEnd = currentTime + selectedDuration;
+
+      // Check if this slot conflicts with any blocked range
+      let hasConflict = false;
+      for (const blocked of blockedRanges) {
+        // Check for overlap: if ranges overlap, this slot is not available
+        if (!(slotEnd <= blocked.start || slotStart >= blocked.end)) {
+          hasConflict = true;
+          break;
         }
       }
 
-      return true; // No overlaps, keep this range
-    });
+      if (!hasConflict) {
+        const startTime = minutesToTime(slotStart);
+        const endTime = minutesToTime(slotEnd);
+        availableRanges.push(`${startTime} - ${endTime}`);
+      }
+    }
 
     // Check for blocked availability (custom admin blocks)
     const blockedAvailability = await prisma.availability.findMany({
@@ -152,14 +169,19 @@ export async function GET(request: NextRequest) {
 
     // Remove blocked time slots
     blockedAvailability.forEach((blocked) => {
-      const start = parseInt(blocked.startTime.split(":")[0]);
-      const end = parseInt(blocked.endTime.split(":")[0]);
-      for (let hour = start; hour < end; hour++) {
-        const timeSlot = `${hour.toString().padStart(2, "0")}:00`;
-        availableRanges = availableRanges.filter((range) => {
-          return !range.startsWith(timeSlot);
-        });
-      }
+      const blockedStart = timeToMinutes(blocked.startTime);
+      const blockedEnd = timeToMinutes(blocked.endTime);
+
+      availableRanges = availableRanges.filter((range) => {
+        const [rangeStart, rangeEnd] = range.split(" - ");
+        const rangeStartMinutes = timeToMinutes(rangeStart);
+        const rangeEndMinutes = timeToMinutes(rangeEnd);
+
+        // Check for overlap with blocked time
+        return (
+          rangeEndMinutes <= blockedStart || rangeStartMinutes >= blockedEnd
+        );
+      });
     });
 
     // Special handling for same day appointments (can't book within 2 hours)
@@ -167,18 +189,21 @@ export async function GET(request: NextRequest) {
     const isToday = checkDate.getTime() === today.getTime();
 
     if (isToday) {
-      const currentHour = now.getHours();
-      const cutoffTime = currentHour + 2; // 2 hours notice required
-      availableRanges = availableRanges.filter((range) => {
-        const slotHour = parseInt(range.split(" - ")[0].split(":")[0]);
-        return slotHour >= cutoffTime;
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      const cutoffMinutes = currentMinutes + 120; // 2 hours notice required
+
+      const filteredRanges = availableRanges.filter((range) => {
+        const rangeStart = range.split(" - ")[0];
+        const rangeStartMinutes = timeToMinutes(rangeStart);
+        return rangeStartMinutes >= cutoffMinutes;
       });
 
       return NextResponse.json({
         date: date,
-        availableRanges,
+        availableRanges: filteredRanges,
         isToday: true,
-        message: "Para citas del mismo día se requiere al menos 2 horas de anticipación",
+        message:
+          "Para citas del mismo día se requiere al menos 2 horas de anticipación",
       });
     }
 
