@@ -42,7 +42,7 @@ export default function ContactSection() {
   const { data: rangesData, isLoading: isLoadingRanges } = useAvailableRanges(
     formData.date,
     formData.service,
-    formData.locationType
+    formData.locationType,
   );
 
   useEffect(() => {
@@ -61,20 +61,56 @@ export default function ContactSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
-  const services = [
-    "Maquillaje de Novia - Paquete Básico (S/ 480)",
-    "Maquillaje de Novia - Paquete Clásico (S/ 980)",
-    "Maquillaje Social - Estilo Natural (S/ 200)",
-    "Maquillaje Social - Estilo Glam (S/ 210)",
-    "Maquillaje para Piel Madura (S/ 230)",
-    "Peinados (desde S/ 65)",
-    "Otro (especificar en mensaje)",
-  ];
+  const [services, setServices] = useState<string[]>([]);
+  const [loadingServices, setLoadingServices] = useState(true);
+
+  useEffect(() => {
+    const loadServices = async () => {
+      try {
+        const response = await fetch("/api/services");
+        if (response.ok) {
+          const data = await response.json();
+          const serviceNames = data.services.map(
+            (service: { name: string; price: number }) =>
+              `${service.name} (S/ ${service.price})`,
+          );
+          setServices([...serviceNames, "Otro (especificar en mensaje)"]);
+        } else {
+          // Fallback to default services if API fails
+          setServices([
+            "Maquillaje de Novia - Paquete Básico (S/ 480)",
+            "Maquillaje de Novia - Paquete Clásico (S/ 980)",
+            "Maquillaje Social - Estilo Natural (S/ 200)",
+            "Maquillaje Social - Estilo Glam (S/ 210)",
+            "Maquillaje para Piel Madura (S/ 230)",
+            "Peinados (desde S/ 65)",
+            "Otro (especificar en mensaje)",
+          ]);
+        }
+      } catch (error) {
+        console.error("Error loading services:", error);
+        // Fallback to default services
+        setServices([
+          "Maquillaje de Novia - Paquete Básico (S/ 480)",
+          "Maquillaje de Novia - Paquete Clásico (S/ 980)",
+          "Maquillaje Social - Estilo Natural (S/ 200)",
+          "Maquillaje Social - Estilo Glam (S/ 210)",
+          "Maquillaje para Piel Madura (S/ 230)",
+          "Peinados (desde S/ 65)",
+          "Otro (especificar en mensaje)",
+        ]);
+      } finally {
+        setLoadingServices(false);
+      }
+    };
+
+    loadServices();
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -160,7 +196,7 @@ export default function ContactSection() {
 
       if (response.ok) {
         setSubmitMessage(
-          "¡Solicitud enviada con éxito! Te contactaré pronto para confirmar tu cita."
+          "¡Solicitud enviada con éxito! Te contactaré pronto para confirmar tu cita.",
         );
         setFormData({
           name: "",
@@ -319,14 +355,18 @@ export default function ContactSection() {
                     Servicio *
                   </label>
                   <select
-                    id="service"
                     name="service"
                     value={formData.service}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
+                    disabled={loadingServices}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all disabled:bg-gray-100"
                   >
-                    <option value="">Selecciona un servicio</option>
+                    <option value="">
+                      {loadingServices
+                        ? "Cargando servicios..."
+                        : "Selecciona un servicio"}
+                    </option>
                     {services.map((service, index) => (
                       <option key={index} value={service}>
                         {service}
@@ -334,7 +374,6 @@ export default function ContactSection() {
                     ))}
                   </select>
                 </div>
-
 
                 {/* Ubicación - MOVER ARRIBA */}
                 <div className="space-y-4">
@@ -407,27 +446,39 @@ export default function ContactSection() {
                       <option value="">Selecciona un horario</option>
                       {isLoadingRanges ? (
                         <option disabled>Cargando horarios...</option>
-                      ) : rangesData?.availableRanges?.length === 0 && formData.date && formData.service ? (
-                        <option disabled>No hay horarios disponibles para el servicio y fecha seleccionados.</option>
+                      ) : rangesData?.availableRanges?.length === 0 &&
+                        formData.date &&
+                        formData.service ? (
+                        <option disabled>
+                          No hay horarios disponibles para el servicio y fecha
+                          seleccionados.
+                        </option>
                       ) : (
                         rangesData?.availableRanges?.map(
                           (range: string, idx: number) => {
                             // Mostrar duración junto al rango
-                            let duration = '';
-                            if (formData.service.includes('Novia')) duration = ' (2h 30m)';
-                            else if (formData.service.includes('Social') || formData.service.includes('Madura')) duration = ' (1h 30m)';
+                            let duration = "";
+                            if (formData.service.includes("Novia"))
+                              duration = " (2h 30m)";
+                            else if (
+                              formData.service.includes("Social") ||
+                              formData.service.includes("Madura")
+                            )
+                              duration = " (1h 30m)";
                             return (
                               <option key={idx} value={range}>
-                                {range}{duration}
+                                {range}
+                                {duration}
                               </option>
                             );
-                          }
+                          },
                         )
                       )}
                     </select>
                     <p className="text-xs text-gray-500 mt-2">
-                      * Solo se muestran horarios válidos según el servicio y ubicación elegidos.<br />
-                      * La duración se indica junto al horario.
+                      * Solo se muestran horarios válidos según el servicio y
+                      ubicación elegidos.
+                      <br />* La duración se indica junto al horario.
                     </p>
                   </div>
                 </div>

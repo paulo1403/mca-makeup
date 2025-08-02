@@ -80,16 +80,16 @@ model Appointment {
   appointmentTime    String
   duration           Int               @default(120) // minutes
   price              Float?            // Precio del servicio
-  
+
   // Información de ubicación
   locationType       LocationType      @default(HOME)
   district           String?           // Solo para domicilio
   address            String?           // Solo para domicilio
   addressReference   String?           // Solo para domicilio
-  
+
   additionalNotes    String?
   status             AppointmentStatus @default(PENDING)
-  
+
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
 
@@ -117,34 +117,34 @@ model Complaint {
   id                  String           @id @default(cuid())
   complaintNumber     String           @unique
   submissionDate      DateTime         @default(now())
-  
+
   // Datos del consumidor
   customerName        String
   customerDni         String
   customerAddress     String
   customerPhone       String
   customerEmail       String
-  
+
   // Datos del servicio
   serviceDate         DateTime?
   serviceLocation     String?
   serviceType         String?
   serviceAmount       Float?
-  
+
   // Datos del reclamo
   complaintType       ComplaintType    // QUEJA o RECLAMO
   complaintDetail     String           @db.Text
   customerRequest     String           @db.Text
-  
+
   // Evidencias
   hasEvidence         Boolean          @default(false)
   evidenceDescription String?          @db.Text
-  
+
   // Estado y respuesta
   status              ComplaintStatus  @default(PENDING)
   responseDate        DateTime?
   response            String?          @db.Text
-  
+
   // Metadata
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
@@ -273,4 +273,26 @@ enum ErrorStatus {
   IN_PROGRESS
   RESOLVED
   CLOSED
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  price       Float
+  duration    Int      // minutes
+  category    ServiceCategory
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("services")
+}
+
+enum ServiceCategory {
+  BRIDAL      // Novia
+  SOCIAL      // Social/Eventos
+  MATURE_SKIN // Piel Madura
+  HAIRSTYLE   // Peinados
+  OTHER       // Otros
 }

@@ -56,15 +56,25 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Service durations in minutes
-    const serviceDurations: Record<string, number> = {
-      "Maquillaje de Novia - Paquete Básico (S/ 480)": 150,
-      "Maquillaje de Novia - Paquete Clásico (S/ 980)": 150,
-      "Maquillaje Social - Estilo Natural (S/ 200)": 90,
-      "Maquillaje Social - Estilo Glam (S/ 210)": 90,
-      "Maquillaje para Piel Madura (S/ 230)": 90,
-    };
-    const selectedDuration = serviceDurations[serviceType] || 90;
+    // Get service duration from database
+    const service = await prisma.service.findFirst({
+      where: {
+        name: serviceType,
+        isActive: true,
+      },
+      select: {
+        duration: true,
+      },
+    });
+
+    if (!service) {
+      return NextResponse.json(
+        { error: "Tipo de servicio no encontrado o inactivo" },
+        { status: 400 },
+      );
+    }
+
+    const selectedDuration = service.duration;
 
     // Helper function to add/subtract minutes from time string
     function addMinutes(time: string, mins: number) {
