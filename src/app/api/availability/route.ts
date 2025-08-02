@@ -56,25 +56,49 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Get service duration from database
-    const service = await prisma.service.findFirst({
-      where: {
-        name: serviceType,
-        isActive: true,
-      },
-      select: {
-        duration: true,
-      },
+    // Extract service name from serviceType (remove price if present)
+    // Example: "Maquillaje Social - Estilo Natural (S/ 200)" -> "Maquillaje Social - Estilo Natural"
+    let serviceName = serviceType;
+    if (serviceType.includes("(S/")) {
+      serviceName = serviceType.split(" (S/")[0].trim();
+    }
+
+    // Get all active services for fallback
+    const allServices = await prisma.service.findMany({
+      where: { isActive: true },
+      select: { name: true, duration: true },
     });
 
-    if (!service) {
+    // Try exact match first
+    let matchedService = allServices.find((s) => s.name === serviceName);
+
+    // If no exact match, try partial match
+    if (!matchedService) {
+      matchedService = allServices.find(
+        (s) =>
+          s.name.toLowerCase().includes(serviceName.toLowerCase()) ||
+          serviceName.toLowerCase().includes(s.name.toLowerCase()),
+      );
+    }
+
+    if (!matchedService) {
+      console.error("No service found:", {
+        serviceType,
+        serviceName,
+        availableServices: allServices.map((s) => s.name),
+      });
       return NextResponse.json(
-        { error: "Tipo de servicio no encontrado o inactivo" },
+        {
+          error: "Tipo de servicio no encontrado o inactivo",
+          details: `Servicio buscado: "${serviceName}"`,
+          originalServiceType: serviceType,
+          availableServices: allServices.map((s) => s.name),
+        },
         { status: 400 },
       );
     }
 
-    const selectedDuration = service.duration;
+    const selectedDuration = matchedService.duration;
 
     // Helper function to add/subtract minutes from time string
     function addMinutes(time: string, mins: number) {
