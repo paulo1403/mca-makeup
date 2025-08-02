@@ -7,11 +7,19 @@ const prisma = new PrismaClient();
 
 export async function POST() {
   try {
+    console.log("Iniciando proceso de seed...");
+    console.log(
+      "Database URL presente:",
+      process.env.DATABASE_URL ? "Sí" : "No",
+    );
+
     // Verificar autenticación de admin
     const session = await getServerSession(authOptions);
     if (!session) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 });
     }
+
+    console.log("Usuario autenticado:", session.user?.email);
 
     // Verificar que sea el admin principal (opcional: agregar verificación adicional)
     // if (session.user?.email !== "admin@example.com") {
@@ -105,10 +113,15 @@ export async function POST() {
     });
   } catch (error) {
     console.error("Error ejecutando seed:", error);
+    console.error(
+      "Error stack:",
+      error instanceof Error ? error.stack : "No stack trace",
+    );
     return NextResponse.json(
       {
         error: "Error interno del servidor",
         details: error instanceof Error ? error.message : "Error desconocido",
+        stack: error instanceof Error ? error.stack : "No stack trace",
       },
       { status: 500 },
     );
@@ -120,10 +133,18 @@ export async function POST() {
 // GET endpoint para verificar el estado actual
 export async function GET() {
   try {
+    console.log("Verificando servicios actuales...");
+    console.log(
+      "Database URL presente:",
+      process.env.DATABASE_URL ? "Sí" : "No",
+    );
+
     const session = await getServerSession(authOptions);
     if (!session) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 });
     }
+
+    console.log("Usuario autenticado:", session.user?.email);
 
     const services = await prisma.service.findMany({
       orderBy: [{ category: "asc" }, { name: "asc" }],
@@ -145,8 +166,20 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Error obteniendo servicios:", error);
+    console.error(
+      "Error stack:",
+      error instanceof Error ? error.stack : "No stack trace",
+    );
+    console.error(
+      "Database URL:",
+      process.env.DATABASE_URL ? "Set" : "Not set",
+    );
     return NextResponse.json(
-      { error: "Error interno del servidor" },
+      {
+        error: "Error interno del servidor",
+        details: error instanceof Error ? error.message : "Error desconocido",
+        stack: error instanceof Error ? error.stack : "No stack trace",
+      },
       { status: 500 },
     );
   }
