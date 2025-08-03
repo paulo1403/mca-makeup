@@ -132,15 +132,15 @@ export async function GET(request: NextRequest) {
 
       // Transport time logic
       if (booked.locationType !== locationType) {
-        // Different locations: block 1h before and after for transport
+        // Different locations (STUDIO↔HOME): block 1h before and after for transport
         bookedBlockStart = addMinutes(bookedStart, -60);
         bookedBlockEnd = addMinutes(bookedEnd, 60);
-      } else if (booked.locationType === "HOME") {
-        // Both home services: block 1h before and after for transport
+      } else if (booked.locationType === "HOME" && locationType === "HOME") {
+        // Both home services: block 1h before and after for transport between addresses
         bookedBlockStart = addMinutes(bookedStart, -60);
         bookedBlockEnd = addMinutes(bookedEnd, 60);
       }
-      // If same studio location, no extra time needed
+      // If both are STUDIO: no extra time needed - can be scheduled back-to-back in same location
 
       blockedRanges.push({
         start: timeToMinutes(bookedBlockStart),

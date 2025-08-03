@@ -108,6 +108,15 @@ export async function POST(request: NextRequest) {
         serviceType: validatedData.serviceType,
         appointmentDate: appointmentDateTime,
         appointmentTime: validatedData.appointmentTimeRange,
+        locationType: validatedData.locationType,
+        district:
+          validatedData.locationType === "HOME" ? validatedData.district : null,
+        address:
+          validatedData.locationType === "HOME" ? validatedData.address : null,
+        addressReference:
+          validatedData.locationType === "HOME"
+            ? validatedData.addressReference
+            : null,
         additionalNotes: `Ubicación: ${validatedData.locationType === "STUDIO" ? "Local en Pueblo Libre" : `Domicilio - ${validatedData.district || ""}, ${validatedData.address || ""}`}${validatedData.addressReference ? ` (Ref: ${validatedData.addressReference})` : ""}${validatedData.additionalNotes ? `\n\nNotas adicionales: ${validatedData.additionalNotes}` : ""}`,
         status: "CONFIRMED",
       },
