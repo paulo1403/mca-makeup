@@ -1,5 +1,14 @@
-import { Appointment, useUpdateAppointmentStatus, useDeleteAppointment } from '@/hooks/useAppointments';
-import { getStatusColor, getStatusText, formatDate, formatTime } from '@/utils/appointmentHelpers';
+import {
+  Appointment,
+  useUpdateAppointmentStatus,
+  useDeleteAppointment,
+} from "@/hooks/useAppointments";
+import {
+  getStatusColor,
+  getStatusText,
+  formatDate,
+  formatTime,
+} from "@/utils/appointmentHelpers";
 
 interface AppointmentTableProps {
   appointments: Appointment[];
@@ -7,10 +16,10 @@ interface AppointmentTableProps {
   onViewDetails: (appointment: Appointment) => void;
 }
 
-export default function AppointmentTable({ 
-  appointments, 
-  highlightedId, 
-  onViewDetails 
+export default function AppointmentTable({
+  appointments,
+  highlightedId,
+  onViewDetails,
 }: AppointmentTableProps) {
   const updateStatusMutation = useUpdateAppointmentStatus();
   const deleteMutation = useDeleteAppointment();
@@ -37,9 +46,9 @@ export default function AppointmentTable({
           <div
             key={appointment.id}
             className={`bg-white border rounded-xl p-4 transition-all duration-200 ${
-              highlightedId === appointment.id 
-                ? 'ring-2 ring-[#D4AF37] border-[#D4AF37] shadow-md' 
-                : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
+              highlightedId === appointment.id
+                ? "ring-2 ring-[#D4AF37] border-[#D4AF37] shadow-md"
+                : "border-gray-200 hover:border-gray-300 hover:shadow-sm"
             }`}
           >
             {/* Header with Status */}
@@ -51,11 +60,17 @@ export default function AppointmentTable({
                   </span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 text-sm">{appointment.clientName}</h3>
-                  <p className="text-xs text-gray-500">{appointment.clientEmail}</p>
+                  <h3 className="font-semibold text-gray-900 text-sm">
+                    {appointment.clientName}
+                  </h3>
+                  <p className="text-xs text-gray-500">
+                    {appointment.clientEmail}
+                  </p>
                 </div>
               </div>
-              <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(appointment.status)}`}>
+              <span
+                className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(appointment.status)}`}
+              >
                 {getStatusText(appointment.status)}
               </span>
             </div>
@@ -63,25 +78,60 @@ export default function AppointmentTable({
             {/* Service and Date */}
             <div className="space-y-2 mb-4">
               <div className="flex items-center space-x-2">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 7.586V5L8 4z" />
-                </svg>
-                <span className="text-sm text-gray-700">{appointment.serviceType}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <svg
+                  className="w-4 h-4 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 7.586V5L8 4z"
+                  />
                 </svg>
                 <span className="text-sm text-gray-700">
-                  {formatDate(appointment.appointmentDate)} • {formatTime(appointment.appointmentTime)}
+                  {appointment.serviceType}
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <svg
+                  className="w-4 h-4 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                <span className="text-sm text-gray-700">
+                  {formatDate(appointment.appointmentDate)} •{" "}
+                  {formatTime(appointment.appointmentTime)}
                 </span>
               </div>
               {appointment.additionalNotes && (
                 <div className="flex items-start space-x-2">
-                  <svg className="w-4 h-4 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  <svg
+                    className="w-4 h-4 text-gray-400 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
                   </svg>
-                  <span className="text-xs text-gray-500 flex-1">{appointment.additionalNotes}</span>
+                  <span className="text-xs text-gray-500 flex-1">
+                    {appointment.additionalNotes}
+                  </span>
                 </div>
               )}
             </div>
@@ -102,17 +152,21 @@ export default function AppointmentTable({
                 >
                   Eliminar
                 </button>
-                {appointment.status === 'PENDING' && (
+                {appointment.status === "PENDING" && (
                   <>
                     <button
-                      onClick={() => handleStatusUpdate(appointment.id, 'CONFIRMED')}
+                      onClick={() =>
+                        handleStatusUpdate(appointment.id, "CONFIRMED")
+                      }
                       disabled={updateStatusMutation.isPending}
                       className="bg-green-100 text-green-700 px-3 py-1 rounded-lg text-xs font-medium hover:bg-green-200 transition-colors disabled:opacity-50"
                     >
                       Confirmar
                     </button>
                     <button
-                      onClick={() => handleStatusUpdate(appointment.id, 'CANCELLED')}
+                      onClick={() =>
+                        handleStatusUpdate(appointment.id, "CANCELLED")
+                      }
                       disabled={updateStatusMutation.isPending}
                       className="bg-red-100 text-red-700 px-3 py-1 rounded-lg text-xs font-medium hover:bg-red-200 transition-colors disabled:opacity-50"
                     >
@@ -120,9 +174,11 @@ export default function AppointmentTable({
                     </button>
                   </>
                 )}
-                {appointment.status === 'CONFIRMED' && (
+                {appointment.status === "CONFIRMED" && (
                   <button
-                    onClick={() => handleStatusUpdate(appointment.id, 'COMPLETED')}
+                    onClick={() =>
+                      handleStatusUpdate(appointment.id, "COMPLETED")
+                    }
                     disabled={updateStatusMutation.isPending}
                     className="bg-blue-100 text-blue-700 px-3 py-1 rounded-lg text-xs font-medium hover:bg-blue-200 transition-colors disabled:opacity-50"
                   >
@@ -152,7 +208,7 @@ export default function AppointmentTable({
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Estado
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[200px]">
                 Acciones
               </th>
             </tr>
@@ -200,7 +256,7 @@ function AppointmentRow({
     <tr
       id={`appointment-${appointment.id}`}
       className={`hover:bg-gray-50 transition-colors ${
-        isHighlighted ? 'bg-yellow-50 border-yellow-200 border-2' : ''
+        isHighlighted ? "bg-yellow-50 border-yellow-200 border-2" : ""
       }`}
     >
       <td className="px-6 py-4 whitespace-nowrap">
@@ -234,14 +290,14 @@ function AppointmentRow({
       <td className="px-6 py-4 whitespace-nowrap">
         <span
           className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
-            appointment.status
+            appointment.status,
           )}`}
         >
           {getStatusText(appointment.status)}
         </span>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap gap-2">
           {appointment.status === "PENDING" && (
             <>
               <button

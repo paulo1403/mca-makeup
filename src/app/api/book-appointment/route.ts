@@ -7,7 +7,6 @@ import {
   formatDateForDisplay,
   formatTimeRange,
   debugDate,
-  formatDateForCalendar,
 } from "@/utils/dateUtils";
 
 const prisma = new PrismaClient();
@@ -233,74 +232,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 },
-    );
-  }
-}
-
-export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const date = searchParams.get("date");
-
-    if (!date) {
-      return NextResponse.json({ error: "Fecha requerida" }, { status: 400 });
-    }
-
-    let appointmentDate: Date;
-    try {
-      appointmentDate = parseDateFromString(date);
-      debugDate(appointmentDate, "Checking availability for date");
-    } catch {
-      return NextResponse.json(
-        { error: "Formato de fecha inválido" },
-        { status: 400 },
-      );
-    }
-
-    // Get all appointments for the date
-    const appointments = await prisma.appointment.findMany({
-      where: {
-        appointmentDate: appointmentDate,
-        status: {
-          in: ["PENDING", "CONFIRMED"],
-        },
-      },
-      select: {
-        appointmentTime: true,
-      },
-    });
-
-    // Define available time ranges (rango de 1 hora)
-    const allTimeRanges = [
-      "09:00 - 10:00",
-      "10:00 - 11:00",
-      "11:00 - 12:00",
-      "12:00 - 13:00",
-      "13:00 - 14:00",
-      "14:00 - 15:00",
-      "15:00 - 16:00",
-      "16:00 - 17:00",
-      "17:00 - 18:00",
-      "18:00 - 19:00",
-      "19:00 - 20:00",
-    ];
-
-    // Filtrar rangos ocupados
-    const bookedRanges = appointments.map((apt) => apt.appointmentTime);
-    const availableRanges = allTimeRanges.filter(
-      (range) => !bookedRanges.includes(range),
-    );
-
-    return NextResponse.json({
-      date: formatDateForCalendar(appointmentDate),
-      availableRanges: availableRanges,
-      bookedRanges: bookedRanges,
-    });
-  } catch (error) {
-    console.error("Error fetching availability:", error);
     return NextResponse.json(
       { error: "Error interno del servidor" },
       { status: 500 },

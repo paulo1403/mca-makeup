@@ -124,23 +124,95 @@ export async function GET(request: NextRequest) {
     // Generate blocked time ranges from booked appointments
     const blockedRanges: { start: number; end: number }[] = [];
 
-    for (const booked of bookedAppointments) {
+    // First, separate appointments by location type for optimized blocking
+    const studioAppointments = bookedAppointments.filter(
+      (apt) => apt.locationType === "STUDIO",
+    );
+    const homeAppointments = bookedAppointments.filter(
+      (apt) => apt.locationType === "HOME",
+    );
+
+    // Handle studio appointments - group consecutive ones
+    if (studioAppointments.length > 0) {
+      // Sort by start time
+      const sortedStudio = studioAppointments.sort((a, b) => {
+        const aStart = a.appointmentTime.split(" - ")[0];
+        const bStart = b.appointmentTime.split(" - ")[0];
+        return timeToMinutes(aStart) - timeToMinutes(bStart);
+      });
+
+      // Group consecutive studio appointments
+      const studioGroups: (typeof sortedStudio)[] = [];
+      let currentGroup = [sortedStudio[0]];
+
+      for (let i = 1; i < sortedStudio.length; i++) {
+        const prevEnd =
+          currentGroup[currentGroup.length - 1].appointmentTime.split(" - ")[1];
+        const currentStart = sortedStudio[i].appointmentTime.split(" - ")[0];
+
+        // If appointments are consecutive (within 30 minutes), group them
+        if (timeToMinutes(currentStart) - timeToMinutes(prevEnd) <= 30) {
+          currentGroup.push(sortedStudio[i]);
+        } else {
+          studioGroups.push(currentGroup);
+          currentGroup = [sortedStudio[i]];
+        }
+      }
+      studioGroups.push(currentGroup);
+
+      // For each group of studio appointments, create blocking ranges
+      for (const group of studioGroups) {
+        const groupStart = group[0].appointmentTime.split(" - ")[0];
+        const groupEnd =
+          group[group.length - 1].appointmentTime.split(" - ")[1];
+
+        if (locationType === "STUDIO") {
+          // Same location: no transport time needed
+          blockedRanges.push({
+            start: timeToMinutes(groupStart),
+            end: timeToMinutes(groupEnd),
+          });
+        } else {
+          // Different location (requesting HOME): add transport time
+          const blockedStart = addMinutes(groupStart, -60);
+          const blockedEnd = addMinutes(groupEnd, 60);
+
+          console.log("Blocking studio group:", {
+            originalGroup: `${groupStart} - ${groupEnd}`,
+            blockedRange: `${blockedStart} - ${blockedEnd}`,
+            appointmentCount: group.length,
+          });
+
+          blockedRanges.push({
+            start: timeToMinutes(blockedStart),
+            end: timeToMinutes(blockedEnd),
+          });
+        }
+      }
+    }
+
+    // Handle home appointments individually (each needs transport time)
+    for (const booked of homeAppointments) {
       const bookedStart = booked.appointmentTime.split(" - ")[0];
       const bookedEnd = booked.appointmentTime.split(" - ")[1];
       let bookedBlockStart = bookedStart;
       let bookedBlockEnd = bookedEnd;
 
-      // Transport time logic
-      if (booked.locationType !== locationType) {
-        // Different locations (STUDIO↔HOME): block 1h before and after for transport
+      if (locationType === "STUDIO") {
+        // Different locations (HOME→STUDIO): block 1h before and after for transport
         bookedBlockStart = addMinutes(bookedStart, -60);
         bookedBlockEnd = addMinutes(bookedEnd, 60);
-      } else if (booked.locationType === "HOME" && locationType === "HOME") {
+      } else {
         // Both home services: block 1h before and after for transport between addresses
         bookedBlockStart = addMinutes(bookedStart, -60);
         bookedBlockEnd = addMinutes(bookedEnd, 60);
       }
-      // If both are STUDIO: no extra time needed - can be scheduled back-to-back in same location
+
+      console.log("Blocking home appointment:", {
+        originalBooked: `${bookedStart} - ${bookedEnd}`,
+        blockedRange: `${bookedBlockStart} - ${bookedBlockEnd}`,
+        requestedLocation: locationType,
+      });
 
       blockedRanges.push({
         start: timeToMinutes(bookedBlockStart),
@@ -148,7 +220,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Generate available time slots dynamically
+    // Generate available time slots dynamically with optimized consecutive scheduling
     let availableRanges: string[] = [];
 
     // Define working hours in minutes
@@ -157,37 +229,146 @@ export async function GET(request: NextRequest) {
 
     if (locationType === "STUDIO") {
       startWorkingHours = timeToMinutes("08:00"); // 8:00 AM
-      endWorkingHours = timeToMinutes("17:00"); // 5:00 PM
+      endWorkingHours = timeToMinutes("19:00"); // 7:00 PM
     } else {
-      startWorkingHours = timeToMinutes("03:00"); // 3:00 AM
-      endWorkingHours = timeToMinutes("20:00"); // 8:00 PM
+      // For home services, start earlier to allow appointments before studio services
+      startWorkingHours = timeToMinutes("06:00"); // 6:00 AM
+      endWorkingHours = timeToMinutes("21:00"); // 9:00 PM
     }
 
-    // Generate all possible slots starting every 30 minutes
-    for (
-      let currentTime = startWorkingHours;
-      currentTime + selectedDuration <= endWorkingHours;
-      currentTime += 30
-    ) {
-      const slotStart = currentTime;
-      const slotEnd = currentTime + selectedDuration;
+    console.log("Working hours debug:", {
+      locationType,
+      startWorkingHours: minutesToTime(startWorkingHours),
+      endWorkingHours: minutesToTime(endWorkingHours),
+      selectedDuration,
+      bookedAppointments: bookedAppointments.map((b) => ({
+        time: b.appointmentTime,
+        service: b.serviceType,
+        location: b.locationType,
+      })),
+    });
 
-      // Check if this slot conflicts with any blocked range
-      let hasConflict = false;
+    // Create a list of all blocked time points and sort them
+    const allTimePoints: number[] = [startWorkingHours, endWorkingHours];
+
+    // Add all blocked range boundaries
+    blockedRanges.forEach((blocked) => {
+      allTimePoints.push(blocked.start, blocked.end);
+    });
+
+    // Sort and remove duplicates
+    const uniqueTimePoints = [...new Set(allTimePoints)].sort((a, b) => a - b);
+
+    console.log("Optimized scheduling algorithm:", {
+      location: locationType,
+      duration: selectedDuration,
+      workingHours: `${minutesToTime(startWorkingHours)} - ${minutesToTime(endWorkingHours)}`,
+      blockedRanges: blockedRanges.length,
+    });
+
+    // Generate optimized slots using available gaps
+    for (let i = 0; i < uniqueTimePoints.length - 1; i++) {
+      const gapStart = uniqueTimePoints[i];
+      const gapEnd = uniqueTimePoints[i + 1];
+      const gapDuration = gapEnd - gapStart;
+
+      // Skip if this gap is within working hours constraints
+      if (gapStart < startWorkingHours || gapEnd > endWorkingHours) {
+        continue;
+      }
+
+      // Check if this gap is actually available (not blocked)
+      let isGapBlocked = false;
       for (const blocked of blockedRanges) {
-        // Check for overlap: if ranges overlap, this slot is not available
-        if (!(slotEnd <= blocked.start || slotStart >= blocked.end)) {
-          hasConflict = true;
+        if (gapStart >= blocked.start && gapEnd <= blocked.end) {
+          isGapBlocked = true;
           break;
         }
       }
 
-      if (!hasConflict) {
-        const startTime = minutesToTime(slotStart);
-        const endTime = minutesToTime(slotEnd);
-        availableRanges.push(`${startTime} - ${endTime}`);
+      if (isGapBlocked) {
+        continue;
+      }
+
+      // For studio appointments, prioritize consecutive slots
+      if (locationType === "STUDIO" && gapDuration >= selectedDuration) {
+        // Generate consecutive slots that fill the gap efficiently
+        let currentSlotStart = gapStart;
+
+        while (currentSlotStart + selectedDuration <= gapEnd) {
+          const slotEnd = currentSlotStart + selectedDuration;
+
+          // Verify this slot doesn't conflict with any blocked range
+          let hasConflict = false;
+          for (const blocked of blockedRanges) {
+            if (
+              !(slotEnd <= blocked.start || currentSlotStart >= blocked.end)
+            ) {
+              hasConflict = true;
+              break;
+            }
+          }
+
+          if (!hasConflict) {
+            const startTime = minutesToTime(currentSlotStart);
+            const endTime = minutesToTime(slotEnd);
+            const timeSlot = `${startTime} - ${endTime}`;
+            availableRanges.push(timeSlot);
+          }
+
+          // Move to next consecutive slot (no gap)
+          currentSlotStart = slotEnd;
+        }
+      } else {
+        // For home services or smaller gaps, use traditional 30-minute intervals
+        let currentTime = gapStart;
+
+        // Align to 30-minute boundaries for home services
+        if (locationType === "HOME") {
+          const remainder = currentTime % 30;
+          if (remainder !== 0) {
+            currentTime = currentTime - remainder + 30;
+          }
+        }
+
+        while (currentTime + selectedDuration <= gapEnd) {
+          const slotStart = currentTime;
+          const slotEnd = currentTime + selectedDuration;
+
+          // Check if this slot conflicts with any blocked range
+          let hasConflict = false;
+          for (const blocked of blockedRanges) {
+            if (!(slotEnd <= blocked.start || slotStart >= blocked.end)) {
+              hasConflict = true;
+              break;
+            }
+          }
+
+          if (!hasConflict) {
+            const startTime = minutesToTime(slotStart);
+            const endTime = minutesToTime(slotEnd);
+            const timeSlot = `${startTime} - ${endTime}`;
+            availableRanges.push(timeSlot);
+          }
+
+          // For home services, increment by 30 minutes for flexibility
+          currentTime += locationType === "HOME" ? 30 : selectedDuration;
+        }
       }
     }
+
+    // Remove duplicates and sort
+    availableRanges = [...new Set(availableRanges)].sort((a, b) => {
+      const aStart = timeToMinutes(a.split(" - ")[0]);
+      const bStart = timeToMinutes(b.split(" - ")[0]);
+      return aStart - bStart;
+    });
+
+    console.log("Generated available slots:", {
+      total: availableRanges.length,
+      first: availableRanges.slice(0, 3),
+      location: locationType,
+    });
 
     // Check for blocked availability (custom admin blocks)
     const blockedAvailability = await prisma.availability.findMany({
