@@ -7,13 +7,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate",
-    "create-admin": "tsx scripts/create-admin.ts",
-    "create-notifications": "tsx scripts/create-sample-notifications.ts",
-    "create-appointments": "tsx scripts/create-sample-appointments.ts",
-    "generate-icons": "tsx scripts/generate-icons.ts",
-    "test-email": "tsx scripts/test-email.ts",
-    "test-phone": "tsx scripts/test-phone-validation.ts"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

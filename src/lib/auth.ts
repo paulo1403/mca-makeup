@@ -1,15 +1,15 @@
-import { NextAuthOptions } from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import bcrypt from 'bcryptjs';
-import { prisma } from './prisma';
+import { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
+import { prisma } from "./prisma";
 
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      name: 'credentials',
+      name: "credentials",
       credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
@@ -27,7 +27,7 @@ export const authOptions: NextAuthOptions = {
 
           const isPasswordValid = await bcrypt.compare(
             credentials.password,
-            user.password
+            user.password,
           );
 
           if (!isPasswordValid) {
@@ -41,14 +41,17 @@ export const authOptions: NextAuthOptions = {
           };
           return returnUser;
         } catch (error) {
-          console.error('Auth error:', error);
+          // Log error in development only
+          if (process.env.NODE_ENV === "development") {
+            console.error("Auth error:", error);
+          }
           return null;
         }
       },
     }),
   ],
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
     maxAge: 60 * 60 * 2, // 2 hours - Sesión más corta para mayor seguridad
     updateAge: 60 * 15, // 15 minutes - Actualizar sesión cada 15 minutos si está activa
   },
@@ -68,39 +71,39 @@ export const authOptions: NextAuthOptions = {
       if (!user && !token.sub) {
         // Retornar token mínimo para forzar limpieza
         return {
-          sub: '',
-          role: '',
-          loginTime: 0
+          sub: "",
+          role: "",
+          loginTime: 0,
         };
       }
-      
+
       // Verificar si el token ha expirado (2 horas)
       const now = Date.now();
       const loginTime = token.loginTime || now;
       const maxAge = 2 * 60 * 60 * 1000; // 2 horas en millisegundos
-      
-      if (loginTime && (now - loginTime) > maxAge) {
+
+      if (loginTime && now - loginTime > maxAge) {
         // Retornar token vacío para forzar re-autenticación
         return {
-          sub: '',
-          role: '',
-          loginTime: 0
+          sub: "",
+          role: "",
+          loginTime: 0,
         };
       }
-      
+
       return token;
     },
     async session({ session, token }) {
       if (token && token.sub && session.user) {
         session.user.id = token.sub;
-        session.user.role = token.role || '';
-        
+        session.user.role = token.role || "";
+
         // Agregar información de expiración a la sesión
         const loginTime = token.loginTime || Date.now();
         const now = Date.now();
         const maxAge = 2 * 60 * 60 * 1000; // 2 horas
         const timeLeft = maxAge - (now - loginTime);
-        
+
         session.expiresAt = new Date(now + timeLeft).toISOString();
         session.timeLeft = Math.max(0, Math.floor(timeLeft / 1000)); // en segundos
       } else {
@@ -112,10 +115,10 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: '/admin/login',
-    signOut: '/admin/login',
-    error: '/admin/login',
+    signIn: "/admin/login",
+    signOut: "/admin/login",
+    error: "/admin/login",
   },
-  debug: process.env.NODE_ENV === 'development',
+  debug: process.env.NODE_ENV === "development",
   secret: process.env.NEXTAUTH_SECRET,
 };

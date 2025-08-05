@@ -1,4 +1,4 @@
-import { Resend } from 'resend';
+import { Resend } from "resend";
 
 export interface EmailData {
   to: string;
@@ -7,18 +7,31 @@ export interface EmailData {
   text?: string;
 }
 
-// Configurar Resend
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Configurar Resend - solo inicializar si hay API key
+let resend: Resend | null = null;
+
+const getResendClient = () => {
+  if (!resend && process.env.RESEND_API_KEY) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resend;
+};
 
 export const sendEmail = async (emailData: EmailData): Promise<boolean> => {
   try {
     if (!process.env.RESEND_API_KEY) {
-      console.log('Resend API key not configured, skipping email send');
+      console.log("Resend API key not configured, skipping email send");
       return false;
     }
 
-    const result = await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
+    const resendClient = getResendClient();
+    if (!resendClient) {
+      console.log("Resend client not available, skipping email send");
+      return false;
+    }
+
+    const result = await resendClient.emails.send({
+      from: process.env.EMAIL_FROM || "onboarding@resend.dev",
       to: emailData.to,
       subject: emailData.subject,
       html: emailData.html,
@@ -26,22 +39,37 @@ export const sendEmail = async (emailData: EmailData): Promise<boolean> => {
     });
 
     if (result.error) {
-      console.error('Error sending email with Resend:', result.error);
+      console.error("Error sending email with Resend:", result.error);
       return false;
     }
 
-    console.log('Email sent successfully to:', emailData.to, 'ID:', result.data?.id);
+    console.log(
+      "Email sent successfully to:",
+      emailData.to,
+      "ID:",
+      result.data?.id,
+    );
     return true;
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error("Error sending email:", error);
     return false;
   }
 };
 
 // Templates de email
 export const emailTemplates = {
-  appointmentConfirmed: (clientName: string, serviceType: string, date: string, time: string, locationType?: string, district?: string, address?: string, addressReference?: string, additionalNotes?: string) => ({
-    subject: '¡Tu cita ha sido confirmada! - Marcela Cordero Makeup',
+  appointmentConfirmed: (
+    clientName: string,
+    serviceType: string,
+    date: string,
+    time: string,
+    locationType?: string,
+    district?: string,
+    address?: string,
+    addressReference?: string,
+    additionalNotes?: string,
+  ) => ({
+    subject: "¡Tu cita ha sido confirmada! - Marcela Cordero Makeup",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
         <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
@@ -62,19 +90,23 @@ export const emailTemplates = {
               <li><strong>Servicio:</strong> ${serviceType}</li>
               <li><strong>Fecha:</strong> ${date}</li>
               <li><strong>Hora:</strong> ${time}</li>
-              <li><strong>Ubicación:</strong> ${locationType === 'STUDIO' ? 'Room Studio - Pueblo Libre' : 'A domicilio'}</li>
-              ${locationType === 'HOME' && district ? `<li><strong>Distrito:</strong> ${district}</li>` : ''}
-              ${locationType === 'HOME' && address ? `<li><strong>Dirección:</strong> ${address}</li>` : ''}
-              ${locationType === 'HOME' && addressReference ? `<li><strong>Referencia:</strong> ${addressReference}</li>` : ''}
+              <li><strong>Ubicación:</strong> ${locationType === "STUDIO" ? "Room Studio - Pueblo Libre" : "A domicilio"}</li>
+              ${locationType === "HOME" && district ? `<li><strong>Distrito:</strong> ${district}</li>` : ""}
+              ${locationType === "HOME" && address ? `<li><strong>Dirección:</strong> ${address}</li>` : ""}
+              ${locationType === "HOME" && addressReference ? `<li><strong>Referencia:</strong> ${addressReference}</li>` : ""}
             </ul>
           </div>
 
-          ${additionalNotes ? `
+          ${
+            additionalNotes
+              ? `
           <div style="background-color: #fff7ed; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #F59E0B;">
             <h3 style="color: #1C1C1C; margin: 0 0 15px 0;">Mensaje adicional:</h3>
             <p style="color: #5A5A5A; margin: 0; font-style: italic;">"${additionalNotes}"</p>
           </div>
-          ` : ''}
+          `
+              : ""
+          }
 
           <p style="color: #5A5A5A; font-size: 16px; line-height: 1.6;">
             Estoy muy emocionada de trabajar contigo. Me pondré en contacto contigo 24 horas antes
@@ -101,12 +133,12 @@ export const emailTemplates = {
       - Servicio: ${serviceType}
       - Fecha: ${date}
       - Hora: ${time}
-      - Ubicación: ${locationType === 'STUDIO' ? 'Room Studio - Pueblo Libre' : 'A domicilio'}
-      ${locationType === 'HOME' && district ? `- Distrito: ${district}` : ''}
-      ${locationType === 'HOME' && address ? `- Dirección: ${address}` : ''}
-      ${locationType === 'HOME' && addressReference ? `- Referencia: ${addressReference}` : ''}
+      - Ubicación: ${locationType === "STUDIO" ? "Room Studio - Pueblo Libre" : "A domicilio"}
+      ${locationType === "HOME" && district ? `- Distrito: ${district}` : ""}
+      ${locationType === "HOME" && address ? `- Dirección: ${address}` : ""}
+      ${locationType === "HOME" && addressReference ? `- Referencia: ${addressReference}` : ""}
 
-      ${additionalNotes ? `Mensaje adicional: "${additionalNotes}"` : ''}
+      ${additionalNotes ? `Mensaje adicional: "${additionalNotes}"` : ""}
 
       Estoy muy emocionada de trabajar contigo. Me pondré en contacto contigo 24 horas antes de la cita para confirmar los detalles finales.
 
@@ -117,8 +149,13 @@ export const emailTemplates = {
     `,
   }),
 
-  appointmentCancelled: (clientName: string, serviceType: string, date: string, time: string) => ({
-    subject: 'Cita cancelada - Marcela Cordero Makeup',
+  appointmentCancelled: (
+    clientName: string,
+    serviceType: string,
+    date: string,
+    time: string,
+  ) => ({
+    subject: "Cita cancelada - Marcela Cordero Makeup",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
         <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
@@ -186,9 +223,9 @@ export const emailTemplates = {
     district?: string,
     address?: string,
     addressReference?: string,
-    additionalNotes?: string
+    additionalNotes?: string,
   ) => ({
-    subject: 'Nueva cita confirmada automáticamente - Marcela Cordero Makeup',
+    subject: "Nueva cita confirmada automáticamente - Marcela Cordero Makeup",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
         <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
@@ -209,19 +246,23 @@ export const emailTemplates = {
           <div style="background-color: #f0f7ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #3B82F6;">
             <h3 style="color: #1C1C1C; margin: 0 0 15px 0;">Detalles del servicio:</h3>
             <ul style="color: #5A5A5A; margin: 0; padding-left: 20px;">
-              <li><strong>Ubicación:</strong> ${locationType === 'STUDIO' ? 'Room Studio - Pueblo Libre' : 'Servicio a domicilio'}</li>
-              ${locationType === 'HOME' && district ? `<li><strong>Distrito:</strong> ${district}</li>` : ''}
-              ${locationType === 'HOME' && address ? `<li><strong>Dirección:</strong> ${address}</li>` : ''}
-              ${locationType === 'HOME' && addressReference ? `<li><strong>Referencia:</strong> ${addressReference}</li>` : ''}
+              <li><strong>Ubicación:</strong> ${locationType === "STUDIO" ? "Room Studio - Pueblo Libre" : "Servicio a domicilio"}</li>
+              ${locationType === "HOME" && district ? `<li><strong>Distrito:</strong> ${district}</li>` : ""}
+              ${locationType === "HOME" && address ? `<li><strong>Dirección:</strong> ${address}</li>` : ""}
+              ${locationType === "HOME" && addressReference ? `<li><strong>Referencia:</strong> ${addressReference}</li>` : ""}
             </ul>
           </div>
 
-          ${additionalNotes ? `
+          ${
+            additionalNotes
+              ? `
             <div style="background-color: #fff7ed; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #F59E0B;">
               <h3 style="color: #1C1C1C; margin: 0 0 15px 0;">Mensaje adicional:</h3>
               <p style="color: #5A5A5A; margin: 0; font-style: italic;">"${additionalNotes}"</p>
             </div>
-          ` : ''}
+          `
+              : ""
+          }
 
           <p style="color: #5A5A5A; font-size: 16px; line-height: 1.6;">
             <strong>Estado:</strong> Esta cita ha sido confirmada automáticamente. El cliente ya recibió su confirmación por email.
@@ -242,12 +283,12 @@ export const emailTemplates = {
       - Hora solicitada: ${time}
 
       Detalles del servicio:
-      - Ubicación: ${locationType === 'STUDIO' ? 'Room Studio - Pueblo Libre' : 'Servicio a domicilio'}
-      ${locationType === 'HOME' && district ? `- Distrito: ${district}` : ''}
-      ${locationType === 'HOME' && address ? `- Dirección: ${address}` : ''}
-      ${locationType === 'HOME' && addressReference ? `- Referencia: ${addressReference}` : ''}
+      - Ubicación: ${locationType === "STUDIO" ? "Room Studio - Pueblo Libre" : "Servicio a domicilio"}
+      ${locationType === "HOME" && district ? `- Distrito: ${district}` : ""}
+      ${locationType === "HOME" && address ? `- Dirección: ${address}` : ""}
+      ${locationType === "HOME" && addressReference ? `- Referencia: ${addressReference}` : ""}
 
-      ${additionalNotes ? `Mensaje adicional: "${additionalNotes}"` : ''}
+      ${additionalNotes ? `Mensaje adicional: "${additionalNotes}"` : ""}
 
       Estado: Esta cita ha sido confirmada automáticamente. El cliente ya recibió su confirmación por email.
       Puedes ver los detalles completos en el panel de administración.

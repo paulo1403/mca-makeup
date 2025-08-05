@@ -58,16 +58,23 @@ cp .env.example .env
 
 Edita `.env` con tus configuraciones:
 ```env
-DATABASE_URL="your-postgresql-url"
+# Database
+DATABASE_URL="postgresql://username:password@localhost:5432/mca_makeup"
+
+# NextAuth
 NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-secret-key"
+NEXTAUTH_SECRET="generate-a-secure-random-string-here"
+
+# Email Configuration (opcional)
 EMAIL_SERVER_HOST="smtp.gmail.com"
 EMAIL_SERVER_PORT=587
-EMAIL_SERVER_USER="your-email@gmail.com"
-EMAIL_SERVER_PASSWORD="your-app-password"
-EMAIL_FROM="your-email@gmail.com"
-ADMIN_EMAIL="admin@marcelamakeup.com"
-ADMIN_PASSWORD="admin123"
+EMAIL_SERVER_USER="your-email@domain.com"
+EMAIL_SERVER_PASSWORD="your-app-specific-password"
+EMAIL_FROM="noreply@yourdomain.com"
+
+# Admin Credentials (cambiar en producción)
+ADMIN_EMAIL="admin@yourdomain.com"
+ADMIN_PASSWORD="change-this-secure-password"
 ```
 
 4. **Configurar la base de datos**
@@ -188,21 +195,19 @@ Proyecto: [https://github.com/username/mca-makeup](https://github.com/username/m
 
 ---
 
-**Nota**: Este es un proyecto de demostración. Reemplaza las imágenes placeholder, información de contacto y URLs con datos reales antes del despliegue en producción.
+## 🔒 Seguridad
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Variables de Entorno
+- **NUNCA** commits archivos `.env` con credenciales reales
+- Cambia todas las contraseñas por defecto antes del despliegue
+- Usa secretos seguros para `NEXTAUTH_SECRET` (mínimo 32 caracteres)
+- Configura CORS apropiadamente para APIs
 
-## Learn More
+### Antes del Despliegue
+- [ ] Cambiar todas las credenciales por defecto
+- [ ] Revisar y configurar variables de entorno en producción
+- [ ] Configurar dominio real en `NEXTAUTH_URL`
+- [ ] Configurar email de producción
+- [ ] Revisar permisos de base de datos
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Nota**: Reemplaza las imágenes placeholder, información de contacto y URLs con datos reales antes del despliegue en producción.
