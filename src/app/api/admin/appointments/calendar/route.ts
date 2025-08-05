@@ -16,7 +16,9 @@ export async function GET() {
         serviceType: true,
         status: true,
         additionalNotes: true,
-        price: true,
+        servicePrice: true,
+        transportCost: true,
+        totalPrice: true,
       },
       orderBy: {
         appointmentDate: "asc",
@@ -34,7 +36,7 @@ export async function GET() {
       service: appointment.serviceType,
       status: appointment.status,
       notes: appointment.additionalNotes,
-      price: appointment.price || 0,
+      price: appointment.totalPrice || appointment.servicePrice || 0,
     }));
 
     return NextResponse.json(calendarAppointments);

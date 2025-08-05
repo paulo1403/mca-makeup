@@ -8,6 +8,8 @@ import {
   getStatusText,
   formatDate,
   formatTime,
+  formatPrice,
+  getPriceBreakdown,
 } from "@/utils/appointmentHelpers";
 
 interface AppointmentTableProps {
@@ -114,6 +116,64 @@ export default function AppointmentTable({
                   {formatTime(appointment.appointmentTime)}
                 </span>
               </div>
+              {/* Precios */}
+              {(() => {
+                const priceInfo = getPriceBreakdown(appointment);
+                return (
+                  <div className="flex items-center space-x-2">
+                    <svg
+                      className="w-4 h-4 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                      />
+                    </svg>
+                    <div className="text-sm">
+                      <span className="font-semibold text-[#D4AF37]">
+                        {formatPrice(priceInfo.totalPrice)}
+                      </span>
+                      {priceInfo.hasTransport && (
+                        <span className="text-xs text-gray-500 ml-1">
+                          (Servicio: {formatPrice(priceInfo.servicePrice)} +
+                          Movilidad: {formatPrice(priceInfo.transportCost)})
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+              {appointment.district && (
+                <div className="flex items-center space-x-2">
+                  <svg
+                    className="w-4 h-4 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                  <span className="text-sm text-gray-700">
+                    {appointment.district}
+                  </span>
+                </div>
+              )}
               {appointment.additionalNotes && (
                 <div className="flex items-start space-x-2">
                   <svg
@@ -206,6 +266,9 @@ export default function AppointmentTable({
                 Fecha y Hora
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Precio Total
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Estado
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[200px]">
@@ -286,6 +349,30 @@ function AppointmentRow({
         <div className="text-sm text-gray-500">
           {formatTime(appointment.appointmentTime)}
         </div>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap">
+        {(() => {
+          const priceInfo = getPriceBreakdown(appointment);
+          return (
+            <div>
+              <div className="text-sm font-semibold text-[#D4AF37]">
+                {formatPrice(priceInfo.totalPrice)}
+              </div>
+              {priceInfo.hasTransport && (
+                <div className="text-xs text-gray-500">
+                  Servicio: {formatPrice(priceInfo.servicePrice)}
+                  <br />
+                  Movilidad: {formatPrice(priceInfo.transportCost)}
+                </div>
+              )}
+              {appointment.district && (
+                <div className="text-xs text-gray-500 mt-1">
+                  📍 {appointment.district}
+                </div>
+              )}
+            </div>
+          );
+        })()}
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <span

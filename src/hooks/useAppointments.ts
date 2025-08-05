@@ -1,5 +1,5 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useSearchParams } from 'next/navigation';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 
 export interface Appointment {
   id: string;
@@ -13,6 +13,12 @@ export interface Appointment {
   additionalNotes?: string;
   location?: string;
   duration: number;
+  servicePrice?: number;
+  transportCost?: number;
+  totalPrice?: number;
+  district?: string;
+  address?: string;
+  addressReference?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -36,9 +42,13 @@ interface UseAppointmentsParams {
 }
 
 // Hook para obtener citas
-export const useAppointments = ({ page, filter, searchTerm }: UseAppointmentsParams) => {
+export const useAppointments = ({
+  page,
+  filter,
+  searchTerm,
+}: UseAppointmentsParams) => {
   return useQuery({
-    queryKey: ['appointments', page, filter, searchTerm],
+    queryKey: ["appointments", page, filter, searchTerm],
     queryFn: async (): Promise<AppointmentsResponse> => {
       const params = new URLSearchParams({
         page: page.toString(),
@@ -53,7 +63,7 @@ export const useAppointments = ({ page, filter, searchTerm }: UseAppointmentsPar
       const result = await response.json();
 
       if (!result.success) {
-        throw new Error(result.message || 'Error fetching appointments');
+        throw new Error(result.message || "Error fetching appointments");
       }
 
       return result.data;
@@ -67,7 +77,13 @@ export const useUpdateAppointmentStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: Appointment["status"] }) => {
+    mutationFn: async ({
+      id,
+      status,
+    }: {
+      id: string;
+      status: Appointment["status"];
+    }) => {
       const response = await fetch("/api/admin/appointments", {
         method: "PUT",
         headers: {
@@ -79,14 +95,14 @@ export const useUpdateAppointmentStatus = () => {
       const result = await response.json();
 
       if (!result.success) {
-        throw new Error(result.message || 'Error updating appointment');
+        throw new Error(result.message || "Error updating appointment");
       }
 
       return result.data;
     },
     onSuccess: () => {
       // Invalidar todas las queries de appointments para refrescar los datos
-      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ["appointments"] });
     },
   });
 };
@@ -104,13 +120,13 @@ export const useDeleteAppointment = () => {
       const result = await response.json();
 
       if (!result.success) {
-        throw new Error(result.message || 'Error deleting appointment');
+        throw new Error(result.message || "Error deleting appointment");
       }
 
       return result.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ["appointments"] });
     },
   });
 };
@@ -119,15 +135,17 @@ export const useDeleteAppointment = () => {
 export const useAppointmentUrlParams = () => {
   const searchParams = useSearchParams();
 
-  const filterParam = searchParams.get('filter');
-  const highlightParam = searchParams.get('highlight');
-  const showDetailParam = searchParams.get('showDetail');
+  const filterParam = searchParams.get("filter");
+  const highlightParam = searchParams.get("highlight");
+  const showDetailParam = searchParams.get("showDetail");
 
   return {
-    filter: filterParam && ['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'].includes(filterParam) 
-      ? filterParam 
-      : 'all',
+    filter:
+      filterParam &&
+      ["PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"].includes(filterParam)
+        ? filterParam
+        : "all",
     highlightId: highlightParam,
-    showDetail: showDetailParam === 'true',
+    showDetail: showDetailParam === "true",
   };
 };

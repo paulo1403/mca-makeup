@@ -48,3 +48,26 @@ export const scrollToAppointment = (appointmentId: string) => {
     }
   }, 100);
 };
+
+export const formatPrice = (price?: number) => {
+  if (price === undefined || price === null) {
+    return "No definido";
+  }
+  return new Intl.NumberFormat("es-PE", {
+    style: "currency",
+    currency: "PEN",
+  }).format(price);
+};
+
+export const getPriceBreakdown = (appointment: Appointment) => {
+  const servicePrice = appointment.servicePrice || 0;
+  const transportCost = appointment.transportCost || 0;
+  const totalPrice = appointment.totalPrice || servicePrice + transportCost;
+
+  return {
+    servicePrice,
+    transportCost,
+    totalPrice,
+    hasTransport: transportCost > 0,
+  };
+};

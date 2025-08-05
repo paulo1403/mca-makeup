@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useAvailableRanges } from "@/hooks/useAvailableRanges";
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
@@ -11,7 +11,6 @@ import {
   MapPin,
   Calendar,
   Clock,
-  MessageSquare,
   User,
   Send,
   Home,
@@ -21,6 +20,9 @@ import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { es } from "date-fns/locale";
 import { format } from "date-fns";
+import DistrictSelector from "./DistrictSelector";
+import PricingBreakdown from "./PricingBreakdown";
+import ServiceSelector from "./ServiceSelector";
 
 registerLocale("es", es);
 
@@ -37,6 +39,13 @@ export default function ContactSection() {
     address: "",
     addressReference: "",
     message: "",
+  });
+
+  // Estado para precios calculados
+  const [calculatedPricing, setCalculatedPricing] = useState({
+    servicePrice: 0,
+    transportCost: 0,
+    totalPrice: 0,
   });
 
   const { data: rangesData, isLoading: isLoadingRanges } = useAvailableRanges(
@@ -60,52 +69,6 @@ export default function ContactSection() {
 
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  const [services, setServices] = useState<string[]>([]);
-  const [loadingServices, setLoadingServices] = useState(true);
-
-  useEffect(() => {
-    const loadServices = async () => {
-      try {
-        const response = await fetch("/api/services");
-        if (response.ok) {
-          const data = await response.json();
-          const serviceNames = data.services.map(
-            (service: { name: string; price: number }) =>
-              `${service.name} (S/ ${service.price})`,
-          );
-          setServices([...serviceNames, "Otro (especificar en mensaje)"]);
-        } else {
-          // Fallback to default services if API fails
-          setServices([
-            "Maquillaje de Novia - Paquete Básico (S/ 480)",
-            "Maquillaje de Novia - Paquete Clásico (S/ 980)",
-            "Maquillaje Social - Estilo Natural (S/ 200)",
-            "Maquillaje Social - Estilo Glam (S/ 210)",
-            "Maquillaje para Piel Madura (S/ 230)",
-            "Peinados (desde S/ 65)",
-            "Otro (especificar en mensaje)",
-          ]);
-        }
-      } catch (error) {
-        console.error("Error loading services:", error);
-        // Fallback to default services
-        setServices([
-          "Maquillaje de Novia - Paquete Básico (S/ 480)",
-          "Maquillaje de Novia - Paquete Clásico (S/ 980)",
-          "Maquillaje Social - Estilo Natural (S/ 200)",
-          "Maquillaje Social - Estilo Glam (S/ 210)",
-          "Maquillaje para Piel Madura (S/ 230)",
-          "Peinados (desde S/ 65)",
-          "Otro (especificar en mensaje)",
-        ]);
-      } finally {
-        setLoadingServices(false);
-      }
-    };
-
-    loadServices();
-  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -148,6 +111,18 @@ export default function ContactSection() {
     }));
   };
 
+  // Función para manejar los precios calculados desde PricingBreakdown
+  const handlePriceCalculated = useCallback(
+    (totalPrice: number, servicePrice: number, transportCost: number) => {
+      setCalculatedPricing({
+        servicePrice,
+        transportCost,
+        totalPrice,
+      });
+    },
+    [],
+  );
+
   const handleDateChange = (date: Date | null) => {
     setFormData((prev) => ({
       ...prev,
@@ -171,6 +146,60 @@ export default function ContactSection() {
     setIsSubmitting(true);
     setSubmitMessage("");
 
+    // Validación personalizada completa
+    if (!formData.name) {
+      setSubmitMessage("Por favor ingresa tu nombre completo.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!formData.email) {
+      setSubmitMessage("Por favor ingresa tu email.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!formData.phone) {
+      setSubmitMessage("Por favor ingresa tu teléfono.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!formData.service) {
+      setSubmitMessage("Por favor selecciona un servicio antes de continuar.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!formData.date) {
+      setSubmitMessage("Por favor selecciona una fecha para tu cita.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!formData.timeRange) {
+      setSubmitMessage("Por favor selecciona un horario disponible.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (formData.locationType === "HOME") {
+      if (!formData.district) {
+        setSubmitMessage(
+          "Por favor selecciona tu distrito para el servicio a domicilio.",
+        );
+        setIsSubmitting(false);
+        return;
+      }
+      if (!formData.address) {
+        setSubmitMessage(
+          "Por favor ingresa tu dirección completa para el servicio a domicilio.",
+        );
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
     try {
       const response = await fetch("/api/book-appointment", {
         method: "POST",
@@ -182,6 +211,7 @@ export default function ContactSection() {
           clientEmail: formData.email,
           clientPhone: formData.phone,
           serviceType: formData.service,
+          servicePrice: calculatedPricing.servicePrice,
           appointmentDate: formData.date
             ? format(formData.date, "yyyy-MM-dd")
             : "",
@@ -349,30 +379,19 @@ export default function ContactSection() {
                 <div className="space-y-2">
                   <label
                     htmlFor="service"
-                    className="flex items-center gap-2 text-heading font-medium text-sm"
+                    className="text-heading font-medium text-sm flex items-center gap-1"
                   >
-                    <MessageSquare className="w-4 h-4 text-accent-primary" />
-                    Servicio *
+                    Tipo de Servicio
+                    <span className="text-red-500">*</span>
                   </label>
-                  <select
-                    name="service"
+                  <ServiceSelector
                     value={formData.service}
-                    onChange={handleInputChange}
+                    onChange={(service) =>
+                      setFormData((prev) => ({ ...prev, service }))
+                    }
                     required
-                    disabled={loadingServices}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all disabled:bg-gray-100"
-                  >
-                    <option value="">
-                      {loadingServices
-                        ? "Cargando servicios..."
-                        : "Selecciona un servicio"}
-                    </option>
-                    {services.map((service, index) => (
-                      <option key={index} value={service}>
-                        {service}
-                      </option>
-                    ))}
-                  </select>
+                    placeholder="Busca y selecciona tu servicio..."
+                  />
                 </div>
 
                 {/* Ubicación - MOVER ARRIBA */}
@@ -488,28 +507,28 @@ export default function ContactSection() {
                     <div className="space-y-2">
                       <label
                         htmlFor="district"
-                        className="text-heading font-medium text-sm"
+                        className="text-heading font-medium text-sm flex items-center gap-1"
                       >
-                        Distrito *
+                        Distrito
+                        <span className="text-red-500">*</span>
                       </label>
-                      <input
-                        type="text"
-                        id="district"
-                        name="district"
+                      <DistrictSelector
                         value={formData.district}
-                        onChange={handleInputChange}
+                        onChange={(district) =>
+                          setFormData((prev) => ({ ...prev, district }))
+                        }
                         required={formData.locationType === "HOME"}
-                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
-                        placeholder="Ej: San Isidro, Miraflores..."
+                        placeholder="Busca y selecciona tu distrito..."
                       />
                     </div>
 
                     <div className="space-y-2">
                       <label
                         htmlFor="address"
-                        className="text-heading font-medium text-sm"
+                        className="text-heading font-medium text-sm flex items-center gap-1"
                       >
-                        Dirección *
+                        Dirección
+                        <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -561,6 +580,18 @@ export default function ContactSection() {
                   />
                 </div>
 
+                {/* Desglose de precios */}
+                {formData.service && (
+                  <div className="space-y-2">
+                    <PricingBreakdown
+                      selectedService={formData.service}
+                      locationType={formData.locationType}
+                      district={formData.district}
+                      onPriceCalculated={handlePriceCalculated}
+                    />
+                  </div>
+                )}
+
                 {submitMessage && (
                   <div
                     className={`p-4 rounded-lg ${
@@ -576,7 +607,7 @@ export default function ContactSection() {
                 <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-accent-primary text-white py-4 px-6 rounded-lg font-medium text-lg hover:bg-accent-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2"
+                  className="w-full bg-primary-accent text-white py-4 px-6 rounded-lg font-medium text-lg hover:bg-primary-accent/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2"
                   whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >

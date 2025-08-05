@@ -31,6 +31,7 @@ const appointmentSchema = z
         );
       }, "Formato de teléfono inválido. Ej: +51 999 209 880 o 999209880"),
     serviceType: z.string().min(1, "Tipo de servicio requerido"),
+    servicePrice: z.number().min(0, "Precio del servicio requerido"),
     appointmentDate: z.string().min(1, "Fecha requerida"),
     appointmentTimeRange: z.string().min(1, "Horario requerido"),
     locationType: z.enum(["STUDIO", "HOME"], {
@@ -98,6 +99,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Calcular costo de transporte si es a domicilio
+    let transportCost = 0;
+    let totalPrice = validatedData.servicePrice;
+
+    if (validatedData.locationType === "HOME" && validatedData.district) {
+      const transportCostData = await prisma.transportCost.findFirst({
+        where: {
+          district: {
+            equals: validatedData.district,
+            mode: "insensitive",
+          },
+          isActive: true,
+        },
+      });
+
+      if (transportCostData) {
+        transportCost = transportCostData.cost;
+        totalPrice = validatedData.servicePrice + transportCost;
+      }
+    }
+
     // Create the appointment
     const appointment = await prisma.appointment.create({
       data: {
@@ -105,6 +127,9 @@ export async function POST(request: NextRequest) {
         clientEmail: validatedData.clientEmail,
         clientPhone: validatedData.clientPhone,
         serviceType: validatedData.serviceType,
+        servicePrice: validatedData.servicePrice,
+        transportCost: transportCost > 0 ? transportCost : null,
+        totalPrice: totalPrice,
         appointmentDate: appointmentDateTime,
         appointmentTime: validatedData.appointmentTimeRange,
         locationType: validatedData.locationType,
@@ -197,6 +222,11 @@ export async function POST(request: NextRequest) {
       {
         message: "Cita confirmada exitosamente",
         appointmentId: appointment.id,
+        pricing: {
+          servicePrice: validatedData.servicePrice,
+          transportCost: transportCost,
+          totalPrice: totalPrice,
+        },
       },
       { status: 201 },
     );

@@ -148,3 +148,4 @@ tmp/
 *.cert
 *.crt
 secrets.json
+.env*.local

@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 // PATCH /api/admin/appointments/[id] - Update appointment status
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const body = await request.json();
@@ -12,11 +12,11 @@ export async function PATCH(
     const { id: appointmentId } = await params;
 
     // Validate status
-    const validStatuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'];
+    const validStatuses = ["PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"];
     if (!validStatuses.includes(status)) {
       return NextResponse.json(
-        { success: false, message: 'Invalid status' },
-        { status: 400 }
+        { success: false, message: "Invalid status" },
+        { status: 400 },
       );
     }
 
@@ -34,7 +34,9 @@ export async function PATCH(
         serviceType: true,
         status: true,
         additionalNotes: true,
-        price: true,
+        servicePrice: true,
+        transportCost: true,
+        totalPrice: true,
       },
     });
 
@@ -43,10 +45,10 @@ export async function PATCH(
       data: updatedAppointment,
     });
   } catch (error) {
-    console.error('Error updating appointment:', error);
+    console.error("Error updating appointment:", error);
     return NextResponse.json(
-      { success: false, message: 'Failed to update appointment' },
-      { status: 500 }
+      { success: false, message: "Failed to update appointment" },
+      { status: 500 },
     );
   }
 }

@@ -65,6 +65,12 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
       priority: "high",
     },
     {
+      href: "/admin/transport-costs",
+      label: "Costos Transporte",
+      mobileLabel: "Transporte",
+      priority: "high",
+    },
+    {
       href: "/admin/availability",
       label: "Disponibilidad",
       mobileLabel: "Disponibilidad",
