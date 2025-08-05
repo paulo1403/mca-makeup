@@ -7,9 +7,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate",
-    "setup-prod": "prisma db push && node scripts/seed-transport-costs.js",
-    "postbuild": "node scripts/vercel-postbuild.js"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
