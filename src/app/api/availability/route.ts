@@ -225,7 +225,7 @@ export async function GET(request: NextRequest) {
     const regularAvailability = await prisma.regularAvailability.findMany({
       where: {
         dayOfWeek,
-        locationType,
+        locationType: locationType as "STUDIO" | "HOME",
         isActive: true,
       },
       orderBy: {

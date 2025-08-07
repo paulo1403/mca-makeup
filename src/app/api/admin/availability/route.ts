@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
       const overlapping = await prisma.regularAvailability.findFirst({
         where: {
           dayOfWeek,
-          locationType,
+          locationType: locationType as "STUDIO" | "HOME",
           isActive: true,
           OR: [
             {
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
           dayOfWeek,
           startTime,
           endTime,
-          locationType,
+          locationType: locationType as "STUDIO" | "HOME",
         },
       });
 
