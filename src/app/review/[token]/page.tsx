@@ -134,10 +134,16 @@ export default function ReviewPage() {
     });
   };
 
-  const getServiceNames = (services: any, serviceType: string) => {
+  const getServiceNames = (
+    services: Array<{ name?: string; serviceName?: string }> | null,
+    serviceType: string,
+  ) => {
     if (services && Array.isArray(services) && services.length > 0) {
       return services
-        .map((service: any) => service.name || service.serviceName)
+        .map(
+          (service: { name?: string; serviceName?: string }) =>
+            service.name || service.serviceName,
+        )
         .filter(Boolean)
         .join(", ");
     }
@@ -217,13 +223,13 @@ export default function ReviewPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-gray-600">Fecha</p>
-                  <p className="font-medium">
+                  <p className="font-medium text-gray-900">
                     {formatDate(reviewData.appointment.appointmentDate)}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Servicios</p>
-                  <p className="font-medium">
+                  <p className="font-medium text-gray-900">
                     {getServiceNames(
                       reviewData.appointment.services,
                       reviewData.appointment.serviceType,
