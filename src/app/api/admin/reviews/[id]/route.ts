@@ -1,32 +1,32 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 // DELETE /api/admin/reviews/[id] - Eliminar review específica
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user?.role !== 'ADMIN') {
+    if (!session || session.user?.role !== "ADMIN") {
       return NextResponse.json(
-        { success: false, error: 'No autorizado' },
-        { status: 401 }
+        { success: false, error: "No autorizado" },
+        { status: 401 },
       );
     }
 
-    const { id } = params;
+    const { id } = await params;
 
     if (!id) {
       return NextResponse.json(
         {
           success: false,
-          error: 'ID de reseña requerido'
+          error: "ID de reseña requerido",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -47,9 +47,9 @@ export async function DELETE(
       return NextResponse.json(
         {
           success: false,
-          error: 'Reseña no encontrada'
+          error: "Reseña no encontrada",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -60,16 +60,16 @@ export async function DELETE(
 
     return NextResponse.json({
       success: true,
-      message: 'Reseña eliminada exitosamente',
+      message: "Reseña eliminada exitosamente",
     });
   } catch (error) {
-    console.error('Error deleting review:', error);
+    console.error("Error deleting review:", error);
     return NextResponse.json(
       {
         success: false,
-        error: 'Error al eliminar la reseña'
+        error: "Error al eliminar la reseña",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
