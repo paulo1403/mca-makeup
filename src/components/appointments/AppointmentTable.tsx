@@ -12,6 +12,7 @@ import {
   formatPrice,
   getPriceBreakdown,
 } from "@/utils/appointmentHelpers";
+import { copyReviewLink } from "@/utils/reviewHelpers";
 import { useIsSmallMobile } from "@/hooks/useMediaQuery";
 import {
   Calendar,
@@ -76,13 +77,20 @@ function MobileAppointmentCard({
               <p className="text-sm text-gray-600">{appointment.serviceType}</p>
             </div>
           </div>
-          <span
-            className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
-              appointment.status,
-            )}`}
-          >
-            {getStatusText(appointment.status)}
-          </span>
+          <div className="flex flex-col items-end space-y-1">
+            <span
+              className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
+                appointment.status,
+              )}`}
+            >
+              {getStatusText(appointment.status)}
+            </span>
+            {appointment.status === "COMPLETED" && appointment.review && (
+              <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-purple-100 text-purple-800 rounded-full">
+                ⭐ Review
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
@@ -179,6 +187,22 @@ function MobileAppointmentCard({
               className="w-full bg-sky-400 hover:bg-sky-500 text-white px-3 py-2.5 rounded-lg text-sm disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[40px]"
             >
               Marcar Completada
+            </button>
+          )}
+
+          {/* Review Link for Completed Appointments */}
+          {appointment.status === "COMPLETED" && appointment.review && (
+            <button
+              onClick={(event) => {
+                copyReviewLink(
+                  appointment.review!.reviewToken,
+                  event.target as HTMLButtonElement,
+                );
+              }}
+              className="w-full bg-purple-500 hover:bg-purple-600 text-white px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center justify-center min-h-[40px] space-x-2"
+            >
+              <span>📋</span>
+              <span>Copiar Link Review</span>
             </button>
           )}
 
@@ -284,13 +308,20 @@ function AppointmentRow({
         )}
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
-        <span
-          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
-            appointment.status,
-          )}`}
-        >
-          {getStatusText(appointment.status)}
-        </span>
+        <div className="flex items-center space-x-2">
+          <span
+            className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
+              appointment.status,
+            )}`}
+          >
+            {getStatusText(appointment.status)}
+          </span>
+          {appointment.status === "COMPLETED" && appointment.review && (
+            <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-purple-100 text-purple-800 rounded-full">
+              ⭐ Review
+            </span>
+          )}
+        </div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
         <div className="flex flex-wrap gap-2">
@@ -329,6 +360,20 @@ function AppointmentRow({
           >
             Ver Detalles
           </button>
+
+          {appointment.status === "COMPLETED" && appointment.review && (
+            <button
+              onClick={(event) => {
+                copyReviewLink(
+                  appointment.review!.reviewToken,
+                  event.target as HTMLButtonElement,
+                );
+              }}
+              className="bg-purple-500 text-white px-3 py-2 rounded-lg text-xs hover:bg-purple-600 font-medium transition-colors"
+            >
+              📋 Link Review
+            </button>
+          )}
 
           <button
             onClick={() => onDelete(appointment.id)}

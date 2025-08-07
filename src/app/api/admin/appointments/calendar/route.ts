@@ -46,6 +46,15 @@ export async function GET(request: NextRequest) {
         servicePrice: true,
         transportCost: true,
         totalPrice: true,
+        review: {
+          select: {
+            reviewToken: true,
+            rating: true,
+            reviewText: true,
+            status: true,
+            isPublic: true,
+          },
+        },
       },
       orderBy: {
         appointmentDate: "asc",

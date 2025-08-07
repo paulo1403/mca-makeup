@@ -21,6 +21,13 @@ export interface Appointment {
   addressReference?: string;
   createdAt: string;
   updatedAt: string;
+  review?: {
+    reviewToken: string;
+    rating: number | null;
+    reviewText: string | null;
+    status: "PENDING" | "APPROVED" | "REJECTED";
+    isPublic: boolean;
+  };
 }
 
 export interface PaginationData {

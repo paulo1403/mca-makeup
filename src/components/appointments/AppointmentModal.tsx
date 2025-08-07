@@ -10,6 +10,12 @@ import {
   formatPrice,
   getPriceBreakdown,
 } from "@/utils/appointmentHelpers";
+import {
+  copyReviewLink,
+  getReviewUrl,
+  getReviewStatusColor,
+  getReviewStatusText,
+} from "@/utils/reviewHelpers";
 
 interface AppointmentModalProps {
   appointment: Appointment | null;
@@ -224,6 +230,83 @@ export default function AppointmentModal({
                 {getStatusText(appointment.status)}
               </span>
             </div>
+
+            {/* Review Link Section - Only show if appointment is completed and has review */}
+            {appointment.status === "COMPLETED" && appointment.review && (
+              <div className="bg-[#D4AF37]/5 p-4 rounded-lg border border-[#D4AF37]/20">
+                <h3 className="text-sm font-semibold text-[#1C1C1C] mb-3 flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-[#D4AF37] rounded-full flex-shrink-0"></div>
+                  <span>Link de Reseña</span>
+                </h3>
+                <div className="space-y-3">
+                  <div className="bg-white p-3 rounded-lg border border-[#D4AF37]/30">
+                    <div className="text-xs font-medium text-gray-600 mb-2">
+                      Estado de la reseña
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span
+                        className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getReviewStatusColor(appointment.review.status)}`}
+                      >
+                        {getReviewStatusText(appointment.review.status)}
+                      </span>
+                      {appointment.review.rating && (
+                        <div className="flex items-center space-x-1">
+                          {[...Array(5)].map((_, i) => (
+                            <svg
+                              key={i}
+                              className={`w-4 h-4 ${i < appointment.review!.rating! ? "text-[#D4AF37] fill-current" : "text-gray-300"}`}
+                              viewBox="0 0 20 20"
+                            >
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                          ))}
+                          <span className="text-sm text-gray-600 ml-1">
+                            ({appointment.review.rating}/5)
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="bg-white p-3 rounded-lg border border-[#D4AF37]/30">
+                    <div className="text-xs font-medium text-gray-600 mb-2">
+                      Link para compartir con la clienta
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <div className="flex-1 bg-gray-50 p-2 rounded border text-sm text-gray-700 font-mono break-all">
+                        {getReviewUrl(appointment.review.reviewToken)}
+                      </div>
+                      <button
+                        onClick={(event) => {
+                          copyReviewLink(
+                            appointment.review!.reviewToken,
+                            event.target as HTMLButtonElement,
+                          );
+                        }}
+                        className="px-3 py-2 bg-[#D4AF37] text-white rounded text-sm font-medium hover:bg-[#B8941F] transition-colors whitespace-nowrap"
+                      >
+                        📋 Copiar Link
+                      </button>
+                    </div>
+                    <div className="text-xs text-gray-500 mt-2">
+                      Comparte este link con {appointment.clientName} para que
+                      pueda dejar su reseña del servicio.
+                    </div>
+                  </div>
+
+                  {appointment.review.reviewText && (
+                    <div className="bg-white p-3 rounded-lg border border-[#D4AF37]/30">
+                      <div className="text-xs font-medium text-gray-600 mb-2">
+                        Comentario de la clienta
+                      </div>
+                      <p className="text-sm text-gray-700 italic">
+                        &ldquo;{appointment.review.reviewText}&rdquo;
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className="text-xs sm:text-sm text-gray-500 pt-3 border-t border-gray-200 space-y-2 bg-white sm:bg-gray-50 p-3 rounded-lg">
               <div className="flex items-center space-x-2">

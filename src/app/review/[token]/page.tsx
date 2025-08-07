@@ -134,13 +134,14 @@ export default function ReviewPage() {
     });
   };
 
-  const getServiceNames = (
-    services: Array<{ name?: string; serviceName?: string }> | null,
-  ) => {
-    if (!services || !Array.isArray(services)) return "Servicio de maquillaje";
-    return services
-      .map((service) => service.name || service.serviceName)
-      .join(", ");
+  const getServiceNames = (services: any, serviceType: string) => {
+    if (services && Array.isArray(services) && services.length > 0) {
+      return services
+        .map((service: any) => service.name || service.serviceName)
+        .filter(Boolean)
+        .join(", ");
+    }
+    return serviceType || "Servicio de maquillaje";
   };
 
   if (loading) {
@@ -223,7 +224,10 @@ export default function ReviewPage() {
                 <div>
                   <p className="text-sm text-gray-600">Servicios</p>
                   <p className="font-medium">
-                    {getServiceNames(reviewData.appointment.services)}
+                    {getServiceNames(
+                      reviewData.appointment.services,
+                      reviewData.appointment.serviceType,
+                    )}
                   </p>
                 </div>
               </div>

@@ -60,6 +60,15 @@ export async function GET(request: NextRequest) {
           totalPrice: true,
           createdAt: true,
           updatedAt: true,
+          review: {
+            select: {
+              reviewToken: true,
+              rating: true,
+              reviewText: true,
+              status: true,
+              isPublic: true,
+            },
+          },
         },
       }),
       prisma.appointment.count({ where }),
