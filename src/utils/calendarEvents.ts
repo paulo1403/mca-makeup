@@ -1,4 +1,4 @@
-import { parseAppointmentTime } from './dateRange';
+import { parseAppointmentTime } from "./dateRange";
 export interface CalendarEvent {
   id: string;
   title: string;
@@ -10,7 +10,7 @@ export interface CalendarEvent {
     clientPhone: string;
     clientEmail: string;
     service: string;
-    status: 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED';
+    status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
     notes?: string;
     price: number;
   };
@@ -26,37 +26,50 @@ export type Appointment = {
   serviceType: string;
   status: string;
   additionalNotes?: string;
-  price?: number;
+  servicePrice?: number;
+  transportCost?: number;
+  totalPrice?: number;
   duration?: number;
 };
 
-export function mapAppointmentsToEvents(appointments: Appointment[]): CalendarEvent[] {
-  return appointments.map((appointment) => {
-    try {
-      const { start, end } = parseAppointmentTime(
-        appointment.appointmentDate,
-        appointment.appointmentTime,
-        appointment.duration
-      );
-      return {
-        id: appointment.id,
-        title: `${appointment.clientName} - ${appointment.serviceType}`,
-        start,
-        end,
-        resource: {
+export function mapAppointmentsToEvents(
+  appointments: Appointment[],
+): CalendarEvent[] {
+  return appointments
+    .map((appointment) => {
+      try {
+        const { start, end } = parseAppointmentTime(
+          appointment.appointmentDate,
+          appointment.appointmentTime,
+          appointment.duration,
+        );
+        const serviceType =
+          appointment.serviceType || "Servicio no especificado";
+
+        return {
           id: appointment.id,
-          clientName: appointment.clientName,
-          clientEmail: appointment.clientEmail,
-          clientPhone: appointment.clientPhone,
-          service: appointment.serviceType,
-          status: appointment.status as 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED',
-          notes: appointment.additionalNotes,
-          price: appointment.price || 0,
-        },
-      };
-    } catch (error) {
-      console.error(`Error processing appointment ${appointment.id}:`, error);
-      return null;
-    }
-  }).filter(Boolean) as CalendarEvent[];
+          title: `${appointment.clientName} - ${serviceType}`,
+          start,
+          end,
+          resource: {
+            id: appointment.id,
+            clientName: appointment.clientName,
+            clientEmail: appointment.clientEmail,
+            clientPhone: appointment.clientPhone,
+            service: serviceType,
+            status: appointment.status as
+              | "PENDING"
+              | "CONFIRMED"
+              | "COMPLETED"
+              | "CANCELLED",
+            notes: appointment.additionalNotes,
+            price: appointment.totalPrice || appointment.servicePrice || 0,
+          },
+        };
+      } catch (error) {
+        console.error(`Error processing appointment ${appointment.id}:`, error);
+        return null;
+      }
+    })
+    .filter(Boolean) as CalendarEvent[];
 }
