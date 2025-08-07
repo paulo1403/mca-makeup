@@ -1,21 +1,21 @@
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import { PrismaClient, ServiceCategory, LocationType } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function resetProductionDB() {
   try {
-    console.log('🚨 RESETEANDO BASE DE DATOS DE PRODUCCIÓN...');
-    console.log('⚠️  ESTO ELIMINARÁ TODOS LOS DATOS EXISTENTES');
+    console.log("🚨 RESETEANDO BASE DE DATOS DE PRODUCCIÓN...");
+    console.log("⚠️  ESTO ELIMINARÁ TODOS LOS DATOS EXISTENTES");
 
     // Confirmar que estamos en producción
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('❌ Este script solo debe ejecutarse en producción');
+    if (process.env.NODE_ENV !== "production") {
+      console.log("❌ Este script solo debe ejecutarse en producción");
       process.exit(1);
     }
 
     // Verificar variables de entorno requeridas
-    const requiredEnvs = ['DATABASE_URL', 'ADMIN_EMAIL', 'ADMIN_PASSWORD'];
+    const requiredEnvs = ["DATABASE_URL", "ADMIN_EMAIL", "ADMIN_PASSWORD"];
     for (const env of requiredEnvs) {
       if (!process.env[env]) {
         console.log(`❌ Variable de entorno requerida: ${env}`);
@@ -23,26 +23,31 @@ async function resetProductionDB() {
       }
     }
 
-    console.log('🗑️  Limpiando tablas...');
+    console.log("🗑️  Limpiando tablas...");
 
     // Limpiar todas las tablas en orden correcto (por dependencias)
     await prisma.review.deleteMany({});
     await prisma.appointment.deleteMany({});
-    await prisma.specialAvailability.deleteMany({});
+    await prisma.notification.deleteMany({});
+    await prisma.specialDate.deleteMany({});
     await prisma.regularAvailability.deleteMany({});
+    await prisma.availability.deleteMany({});
     await prisma.transportCost.deleteMany({});
     await prisma.service.deleteMany({});
     await prisma.errorReport.deleteMany({});
+    await prisma.complaint.deleteMany({});
+    await prisma.systemSettings.deleteMany({});
+    await prisma.session.deleteMany({});
+    await prisma.account.deleteMany({});
     await prisma.user.deleteMany({});
-    await prisma.appSetting.deleteMany({});
 
-    console.log('✅ Tablas limpiadas');
+    console.log("✅ Tablas limpiadas");
 
     // 1. Crear Usuario Administrador
-    console.log('👤 Creando usuario administrador...');
+    console.log("👤 Creando usuario administrador...");
     const adminEmail = process.env.ADMIN_EMAIL!;
     const adminPassword = process.env.ADMIN_PASSWORD!;
-    const adminName = process.env.ADMIN_NAME || 'Marcela Cordero';
+    const adminName = process.env.ADMIN_NAME || "Marcela Cordero";
 
     const hashedPassword = await bcrypt.hash(adminPassword, 12);
 
@@ -51,76 +56,83 @@ async function resetProductionDB() {
         email: adminEmail,
         password: hashedPassword,
         name: adminName,
-        role: 'ADMIN',
+        role: "ADMIN",
       },
     });
 
     console.log(`✅ Usuario administrador creado: ${adminEmail}`);
 
     // 2. Crear Servicios
-    console.log('💄 Creando servicios...');
+    console.log("💄 Creando servicios...");
     const services = [
       // Servicios de Novia
       {
-        name: 'Maquillaje de Novia - Paquete Básico',
+        name: "Maquillaje de Novia - Paquete Básico",
         price: 480.0,
         duration: 180,
-        category: 'BRIDAL',
-        description: 'Maquillaje completo para el día más especial. Incluye: maquillaje base, ojos, labios y fijación.',
+        category: ServiceCategory.BRIDAL,
+        description:
+          "Maquillaje completo para el día más especial. Incluye: maquillaje base, ojos, labios y fijación.",
         isActive: true,
       },
       {
-        name: 'Maquillaje de Novia - Paquete Clásico',
+        name: "Maquillaje de Novia - Paquete Clásico",
         price: 980.0,
         duration: 240,
-        category: 'BRIDAL',
-        description: 'Incluye prueba previa (1 hora) + maquillaje del día de la boda (4 horas) + retoque.',
+        category: ServiceCategory.BRIDAL,
+        description:
+          "Incluye prueba previa (1 hora) + maquillaje del día de la boda (4 horas) + retoque.",
         isActive: true,
       },
 
       // Servicios Sociales
       {
-        name: 'Maquillaje Social - Estilo Natural',
+        name: "Maquillaje Social - Estilo Natural",
         price: 200.0,
         duration: 120,
-        category: 'SOCIAL',
-        description: 'Look natural y fresco para eventos del día. Perfecto para graduaciones, bautizos, etc.',
+        category: ServiceCategory.SOCIAL,
+        description:
+          "Look natural y fresco para eventos del día. Perfecto para graduaciones, bautizos, etc.",
         isActive: true,
       },
       {
-        name: 'Maquillaje Social - Estilo Glam',
+        name: "Maquillaje Social - Estilo Glam",
         price: 210.0,
         duration: 130,
-        category: 'SOCIAL',
-        description: 'Look glamoroso para eventos de noche. Incluye maquillaje intenso y duradero.',
+        category: ServiceCategory.SOCIAL,
+        description:
+          "Look glamoroso para eventos de noche. Incluye maquillaje intenso y duradero.",
         isActive: true,
       },
 
       // Servicios para Piel Madura
       {
-        name: 'Maquillaje Piel Madura - Natural',
+        name: "Maquillaje Piel Madura - Natural",
         price: 250.0,
         duration: 150,
-        category: 'MATURE_SKIN',
-        description: 'Técnicas especializadas para piel madura. Realza la belleza natural con productos específicos.',
+        category: ServiceCategory.MATURE_SKIN,
+        description:
+          "Técnicas especializadas para piel madura. Realza la belleza natural con productos específicos.",
         isActive: true,
       },
 
       // Servicios de Peinado
       {
-        name: 'Peinado Simple',
+        name: "Peinado Simple",
         price: 80.0,
         duration: 60,
-        category: 'HAIRSTYLE',
-        description: 'Peinado básico y elegante. Perfecto para complementar el maquillaje.',
+        category: ServiceCategory.HAIRSTYLE,
+        description:
+          "Peinado básico y elegante. Perfecto para complementar el maquillaje.",
         isActive: true,
       },
       {
-        name: 'Peinado Elaborado',
+        name: "Peinado Elaborado",
         price: 120.0,
         duration: 90,
-        category: 'HAIRSTYLE',
-        description: 'Peinado sofisticado con técnicas avanzadas. Ideal para eventos especiales.',
+        category: ServiceCategory.HAIRSTYLE,
+        description:
+          "Peinado sofisticado con técnicas avanzadas. Ideal para eventos especiales.",
         isActive: true,
       },
     ];
@@ -132,9 +144,13 @@ async function resetProductionDB() {
     console.log(`✅ ${services.length} servicios creados`);
 
     // 3. Crear Costos de Transporte
-    console.log('🚗 Creando costos de transporte...');
+    console.log("🚗 Creando costos de transporte...");
     const transportCosts = [
-      { district: "Pueblo Libre", cost: 0.0, notes: "Ubicación del estudio - Av. Bolívar 1073" },
+      {
+        district: "Pueblo Libre",
+        cost: 0.0,
+        notes: "Ubicación del estudio - Av. Bolívar 1073",
+      },
       { district: "Magdalena del Mar", cost: 15.0 },
       { district: "San Miguel", cost: 15.0 },
       { district: "Jesús María", cost: 20.0 },
@@ -171,45 +187,124 @@ async function resetProductionDB() {
     console.log(`✅ ${transportCosts.length} costos de transporte creados`);
 
     // 4. Crear Disponibilidad Regular
-    console.log('📅 Creando disponibilidad regular...');
-    const { LocationType } = await import('@prisma/client');
+    console.log("📅 Creando disponibilidad regular...");
 
     const regularAvailability = [
       // Martes - STUDIO
-      { dayOfWeek: 2, startTime: "09:00", endTime: "13:00", locationType: LocationType.STUDIO },
-      { dayOfWeek: 2, startTime: "14:00", endTime: "18:00", locationType: LocationType.STUDIO },
+      {
+        dayOfWeek: 2,
+        startTime: "09:00",
+        endTime: "13:00",
+        locationType: LocationType.STUDIO,
+      },
+      {
+        dayOfWeek: 2,
+        startTime: "14:00",
+        endTime: "18:00",
+        locationType: LocationType.STUDIO,
+      },
 
       // Martes - HOME
-      { dayOfWeek: 2, startTime: "10:00", endTime: "16:00", locationType: LocationType.HOME },
+      {
+        dayOfWeek: 2,
+        startTime: "10:00",
+        endTime: "16:00",
+        locationType: LocationType.HOME,
+      },
 
       // Miércoles - STUDIO
-      { dayOfWeek: 3, startTime: "09:00", endTime: "13:00", locationType: LocationType.STUDIO },
-      { dayOfWeek: 3, startTime: "14:00", endTime: "18:00", locationType: LocationType.STUDIO },
+      {
+        dayOfWeek: 3,
+        startTime: "09:00",
+        endTime: "13:00",
+        locationType: LocationType.STUDIO,
+      },
+      {
+        dayOfWeek: 3,
+        startTime: "14:00",
+        endTime: "18:00",
+        locationType: LocationType.STUDIO,
+      },
 
       // Miércoles - HOME
-      { dayOfWeek: 3, startTime: "10:00", endTime: "16:00", locationType: LocationType.HOME },
+      {
+        dayOfWeek: 3,
+        startTime: "10:00",
+        endTime: "16:00",
+        locationType: LocationType.HOME,
+      },
 
       // Jueves - STUDIO
-      { dayOfWeek: 4, startTime: "09:00", endTime: "13:00", locationType: LocationType.STUDIO },
-      { dayOfWeek: 4, startTime: "14:00", endTime: "18:00", locationType: LocationType.STUDIO },
+      {
+        dayOfWeek: 4,
+        startTime: "09:00",
+        endTime: "13:00",
+        locationType: LocationType.STUDIO,
+      },
+      {
+        dayOfWeek: 4,
+        startTime: "14:00",
+        endTime: "18:00",
+        locationType: LocationType.STUDIO,
+      },
 
       // Jueves - HOME
-      { dayOfWeek: 4, startTime: "10:00", endTime: "16:00", locationType: LocationType.HOME },
+      {
+        dayOfWeek: 4,
+        startTime: "10:00",
+        endTime: "16:00",
+        locationType: LocationType.HOME,
+      },
 
       // Viernes - STUDIO
-      { dayOfWeek: 5, startTime: "09:00", endTime: "13:00", locationType: LocationType.STUDIO },
-      { dayOfWeek: 5, startTime: "14:00", endTime: "18:00", locationType: LocationType.STUDIO },
+      {
+        dayOfWeek: 5,
+        startTime: "09:00",
+        endTime: "13:00",
+        locationType: LocationType.STUDIO,
+      },
+      {
+        dayOfWeek: 5,
+        startTime: "14:00",
+        endTime: "18:00",
+        locationType: LocationType.STUDIO,
+      },
 
       // Viernes - HOME
-      { dayOfWeek: 5, startTime: "10:00", endTime: "16:00", locationType: LocationType.HOME },
+      {
+        dayOfWeek: 5,
+        startTime: "10:00",
+        endTime: "16:00",
+        locationType: LocationType.HOME,
+      },
 
       // Sábado - STUDIO (horario extendido)
-      { dayOfWeek: 6, startTime: "08:00", endTime: "12:00", locationType: LocationType.STUDIO },
-      { dayOfWeek: 6, startTime: "13:00", endTime: "17:00", locationType: LocationType.STUDIO },
-      { dayOfWeek: 6, startTime: "18:00", endTime: "21:00", locationType: LocationType.STUDIO },
+      {
+        dayOfWeek: 6,
+        startTime: "08:00",
+        endTime: "12:00",
+        locationType: LocationType.STUDIO,
+      },
+      {
+        dayOfWeek: 6,
+        startTime: "13:00",
+        endTime: "17:00",
+        locationType: LocationType.STUDIO,
+      },
+      {
+        dayOfWeek: 6,
+        startTime: "18:00",
+        endTime: "21:00",
+        locationType: LocationType.STUDIO,
+      },
 
       // Sábado - HOME
-      { dayOfWeek: 6, startTime: "09:00", endTime: "17:00", locationType: LocationType.HOME },
+      {
+        dayOfWeek: 6,
+        startTime: "09:00",
+        endTime: "17:00",
+        locationType: LocationType.HOME,
+      },
     ];
 
     for (const availability of regularAvailability) {
@@ -219,7 +314,7 @@ async function resetProductionDB() {
     console.log(`✅ ${regularAvailability.length} horarios regulares creados`);
 
     // 5. Crear Configuraciones de la App
-    console.log('⚙️  Creando configuraciones de la app...');
+    console.log("⚙️  Creando configuraciones de la app...");
     const appSettings = [
       {
         key: "site_title",
@@ -233,7 +328,7 @@ async function resetProductionDB() {
       },
       {
         key: "contact_email",
-        value: process.env.ADMIN_EMAIL,
+        value: process.env.ADMIN_EMAIL || "marcela@marcelacorderomakeup.com",
         description: "Email de contacto principal",
       },
       {
@@ -259,26 +354,25 @@ async function resetProductionDB() {
     ];
 
     for (const setting of appSettings) {
-      await prisma.appSetting.create({ data: setting });
+      await prisma.systemSettings.create({ data: setting });
     }
 
     console.log(`✅ ${appSettings.length} configuraciones creadas`);
 
-    console.log('\n🎉 ¡Base de datos de producción reseteada exitosamente!');
-    console.log('\n📊 Resumen:');
+    console.log("\n🎉 ¡Base de datos de producción reseteada exitosamente!");
+    console.log("\n📊 Resumen:");
     console.log(`   👤 1 usuario administrador`);
     console.log(`   💄 ${services.length} servicios`);
     console.log(`   🚗 ${transportCosts.length} costos de transporte`);
     console.log(`   📅 ${regularAvailability.length} horarios regulares`);
     console.log(`   ⚙️  ${appSettings.length} configuraciones`);
-    console.log('\n💡 Próximos pasos:');
-    console.log('   1. Verificar que el sitio web esté funcionando');
-    console.log('   2. Probar el sistema de reservas');
-    console.log('   3. Verificar el panel de administración');
-    console.log('   4. Configurar horarios específicos si es necesario');
-
+    console.log("\n💡 Próximos pasos:");
+    console.log("   1. Verificar que el sitio web esté funcionando");
+    console.log("   2. Probar el sistema de reservas");
+    console.log("   3. Verificar el panel de administración");
+    console.log("   4. Configurar horarios específicos si es necesario");
   } catch (error) {
-    console.error('❌ Error durante el reset:', error);
+    console.error("❌ Error durante el reset:", error);
     process.exit(1);
   } finally {
     await prisma.$disconnect();
