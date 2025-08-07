@@ -14,12 +14,12 @@ interface Service {
 
 interface ServiceSelectorProps {
   value: string[];
-  onChange: (services: string[]) => void;
+  onChangeAction: (services: string[]) => void;
   required?: boolean;
   disabled?: boolean;
   placeholder?: string;
   className?: string;
-  onLoadingChange?: (loading: boolean) => void;
+  onLoadingChangeAction?: (loading: boolean) => void;
 }
 
 const CATEGORY_LABELS = {
@@ -40,12 +40,12 @@ const CATEGORY_COLORS = {
 
 export default function ServiceSelector({
   value,
-  onChange,
+  onChangeAction,
   required = false,
   disabled = false,
   placeholder = "Selecciona servicios...",
   className = "",
-  onLoadingChange,
+  onLoadingChangeAction,
 }: ServiceSelectorProps) {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(false);
@@ -61,7 +61,7 @@ export default function ServiceSelector({
     const loadServices = async () => {
       try {
         setLoading(true);
-        onLoadingChange?.(true);
+        onLoadingChangeAction?.(true);
         const response = await fetch("/api/services");
 
         if (response.ok) {
@@ -125,12 +125,12 @@ export default function ServiceSelector({
         console.error("Error loading services:", error);
       } finally {
         setLoading(false);
-        onLoadingChange?.(false);
+        onLoadingChangeAction?.(false);
       }
     };
 
     loadServices();
-  }, [onLoadingChange]);
+  }, [onLoadingChangeAction]);
 
   // Cerrar dropdown al hacer clic fuera
   useEffect(() => {
@@ -240,7 +240,7 @@ export default function ServiceSelector({
 
     // Si no hay error o si estamos deseleccionando, aplicar cambio
     if (!error || isSelected) {
-      onChange(newSelection);
+      onChangeAction(newSelection);
       if (isSelected) setValidationError("");
     }
   };

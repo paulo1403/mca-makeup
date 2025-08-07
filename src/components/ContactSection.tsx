@@ -413,7 +413,7 @@ export default function ContactSection() {
                   </label>
                   <ServiceSelector
                     value={formData.service}
-                    onChange={(services) =>
+                    onChangeAction={(services) =>
                       setFormData((prev) => ({ ...prev, service: services }))
                     }
                     required
