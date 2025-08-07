@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Appointment,
   useUpdateAppointmentStatus,
@@ -11,291 +12,200 @@ import {
   formatPrice,
   getPriceBreakdown,
 } from "@/utils/appointmentHelpers";
+import { useIsSmallMobile } from "@/hooks/useMediaQuery";
+import {
+  Calendar,
+  Clock,
+  User,
+  MapPin,
+  DollarSign,
+  Phone,
+  Mail,
+} from "lucide-react";
 
 interface AppointmentTableProps {
   appointments: Appointment[];
-  highlightedId: string | null;
+  highlightedId?: string;
   onViewDetails: (appointment: Appointment) => void;
 }
 
-export default function AppointmentTable({
-  appointments,
-  highlightedId,
+// Mobile Card Component
+interface MobileAppointmentCardProps {
+  appointment: Appointment;
+  isHighlighted: boolean;
+  onStatusUpdate: (id: string, status: Appointment["status"]) => void;
+  onDelete: (id: string) => void;
+  onViewDetails: (appointment: Appointment) => void;
+  isUpdating: boolean;
+  isDeleting: boolean;
+}
+
+function MobileAppointmentCard({
+  appointment,
+  isHighlighted,
+  onStatusUpdate,
+  onDelete,
   onViewDetails,
-}: AppointmentTableProps) {
-  const updateStatusMutation = useUpdateAppointmentStatus();
-  const deleteMutation = useDeleteAppointment();
-
-  const handleStatusUpdate = (id: string, status: Appointment["status"]) => {
-    updateStatusMutation.mutate({ id, status });
-  };
-
-  const handleDelete = (id: string) => {
-    if (confirm("¿Estás segura de que quieres eliminar esta cita?")) {
-      deleteMutation.mutate(id);
-    }
-  };
-
-  if (appointments.length === 0) {
-    return null; // El estado vacío se maneja en el componente padre
-  }
+  isUpdating,
+  isDeleting,
+}: MobileAppointmentCardProps) {
+  const priceInfo = getPriceBreakdown(appointment);
 
   return (
-    <>
-      {/* Mobile View */}
-      <div className="block lg:hidden space-y-3">
-        {appointments.map((appointment) => (
-          <div
-            key={appointment.id}
-            className={`bg-white border rounded-xl p-4 transition-all duration-200 ${
-              highlightedId === appointment.id
-                ? "ring-2 ring-[#D4AF37] border-[#D4AF37] shadow-md"
-                : "border-gray-200 hover:border-gray-300 hover:shadow-sm"
-            }`}
-          >
-            {/* Header with Status */}
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center space-x-2">
-                <div className="w-10 h-10 bg-[#D4AF37] rounded-full flex items-center justify-center">
-                  <span className="text-white font-semibold text-sm">
-                    {appointment.clientName.charAt(0).toUpperCase()}
-                  </span>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 text-sm">
-                    {appointment.clientName}
-                  </h3>
-                  <p className="text-xs text-gray-500">
-                    {appointment.clientEmail}
-                  </p>
-                </div>
-              </div>
-              <span
-                className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(appointment.status)}`}
-              >
-                {getStatusText(appointment.status)}
-              </span>
+    <div
+      className={`bg-white rounded-lg border shadow-sm hover:shadow-md transition-all duration-200 ${
+        isHighlighted ? "border-[#D4AF37]/40 bg-[#D4AF37]/5" : "border-gray-200"
+      }`}
+    >
+      {/* Header */}
+      <div className="p-4 border-b border-gray-100">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-[#D4AF37]/15 rounded-full flex items-center justify-center">
+              <User className="w-5 h-5 text-[#D4AF37]" />
             </div>
-
-            {/* Service and Date */}
-            <div className="space-y-2 mb-4">
-              <div className="flex items-center space-x-2">
-                <svg
-                  className="w-4 h-4 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 7.586V5L8 4z"
-                  />
-                </svg>
-                <span className="text-sm text-gray-700">
-                  {appointment.serviceType}
-                </span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <svg
-                  className="w-4 h-4 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-                <span className="text-sm text-gray-700">
-                  {formatDate(appointment.appointmentDate)} •{" "}
-                  {formatTime(appointment.appointmentTime)}
-                </span>
-              </div>
-              {/* Precios */}
-              {(() => {
-                const priceInfo = getPriceBreakdown(appointment);
-                return (
-                  <div className="flex items-center space-x-2">
-                    <svg
-                      className="w-4 h-4 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-                      />
-                    </svg>
-                    <div className="text-sm">
-                      <span className="font-semibold text-[#D4AF37]">
-                        {formatPrice(priceInfo.totalPrice)}
-                      </span>
-                      {priceInfo.hasTransport && (
-                        <span className="text-xs text-gray-500 ml-1">
-                          (Servicio: {formatPrice(priceInfo.servicePrice)} +
-                          Movilidad: {formatPrice(priceInfo.transportCost)})
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                );
-              })()}
-              {appointment.district && (
-                <div className="flex items-center space-x-2">
-                  <svg
-                    className="w-4 h-4 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                  <span className="text-sm text-gray-700">
-                    {appointment.district}
+            <div>
+              <h3 className="font-semibold text-gray-900 text-base">
+                {appointment.clientName}
+                {isHighlighted && (
+                  <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#D4AF37]/20 text-[#B8941F]">
+                    Destacada
                   </span>
-                </div>
-              )}
-              {appointment.additionalNotes && (
-                <div className="flex items-start space-x-2">
-                  <svg
-                    className="w-4 h-4 text-gray-400 mt-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                  <span className="text-xs text-gray-500 flex-1">
-                    {appointment.additionalNotes}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* Actions - Mejor UX móvil */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-3 border-t border-gray-100 gap-2">
-              <div className="flex gap-2 flex-wrap">
-                <button
-                  onClick={() => onViewDetails(appointment)}
-                  className="text-[#D4AF37] hover:text-[#B8941F] text-sm font-medium"
-                >
-                  Ver detalles
-                </button>
-                <button
-                  onClick={() => handleDelete(appointment.id)}
-                  disabled={deleteMutation.isPending}
-                  className="bg-red-100 text-red-700 px-3 py-1 rounded-lg text-xs font-medium hover:bg-red-200 transition-colors disabled:opacity-50"
-                >
-                  Eliminar
-                </button>
-                {appointment.status === "PENDING" && (
-                  <>
-                    <button
-                      onClick={() =>
-                        handleStatusUpdate(appointment.id, "CONFIRMED")
-                      }
-                      disabled={updateStatusMutation.isPending}
-                      className="bg-green-100 text-green-700 px-3 py-1 rounded-lg text-xs font-medium hover:bg-green-200 transition-colors disabled:opacity-50"
-                    >
-                      Confirmar
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleStatusUpdate(appointment.id, "CANCELLED")
-                      }
-                      disabled={updateStatusMutation.isPending}
-                      className="bg-red-100 text-red-700 px-3 py-1 rounded-lg text-xs font-medium hover:bg-red-200 transition-colors disabled:opacity-50"
-                    >
-                      Cancelar
-                    </button>
-                  </>
                 )}
-                {appointment.status === "CONFIRMED" && (
-                  <button
-                    onClick={() =>
-                      handleStatusUpdate(appointment.id, "COMPLETED")
-                    }
-                    disabled={updateStatusMutation.isPending}
-                    className="bg-blue-100 text-blue-700 px-3 py-1 rounded-lg text-xs font-medium hover:bg-blue-200 transition-colors disabled:opacity-50"
-                  >
-                    Completar
-                  </button>
-                )}
-              </div>
+              </h3>
+              <p className="text-sm text-gray-600">{appointment.serviceType}</p>
             </div>
           </div>
-        ))}
+          <span
+            className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
+              appointment.status,
+            )}`}
+          >
+            {getStatusText(appointment.status)}
+          </span>
+        </div>
       </div>
 
-      {/* Desktop View */}
-      <div className="hidden lg:block overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Cliente
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Servicio
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Fecha y Hora
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Precio Total
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Estado
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[200px]">
-                Acciones
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {appointments.map((appointment) => (
-              <AppointmentRow
-                key={appointment.id}
-                appointment={appointment}
-                isHighlighted={highlightedId === appointment.id}
-                onStatusUpdate={handleStatusUpdate}
-                onDelete={handleDelete}
-                onViewDetails={onViewDetails}
-                isUpdating={updateStatusMutation.isPending}
-                isDeleting={deleteMutation.isPending}
-              />
-            ))}
-          </tbody>
-        </table>
+      {/* Details */}
+      <div className="p-4 space-y-3">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="flex items-center space-x-2">
+            <Calendar className="w-4 h-4 text-[#D4AF37]/70" />
+            <span className="text-sm text-gray-600">
+              {formatDate(appointment.appointmentDate)}
+            </span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Clock className="w-4 h-4 text-[#D4AF37]/70" />
+            <span className="text-sm text-gray-600">
+              {formatTime(appointment.appointmentTime)}
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Mail className="w-4 h-4 text-[#D4AF37]/70" />
+          <span className="text-sm text-gray-600 truncate">
+            {appointment.clientEmail}
+          </span>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Phone className="w-4 h-4 text-[#D4AF37]/70" />
+          <span className="text-sm text-gray-600">
+            {appointment.clientPhone}
+          </span>
+        </div>
+
+        {appointment.district && (
+          <div className="flex items-center space-x-2">
+            <MapPin className="w-4 h-4 text-[#D4AF37]/70" />
+            <span className="text-sm text-gray-600">
+              {appointment.district}
+            </span>
+          </div>
+        )}
+
+        {priceInfo.totalPrice > 0 && (
+          <div className="bg-[#D4AF37]/10 rounded-lg p-3 border border-[#D4AF37]/20">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <DollarSign className="w-4 h-4 text-[#D4AF37]" />
+                <span className="text-sm font-medium text-gray-700">
+                  Total:
+                </span>
+              </div>
+              <span className="text-lg font-bold text-[#D4AF37]">
+                {formatPrice(priceInfo.totalPrice)}
+              </span>
+            </div>
+            {priceInfo.hasTransport && (
+              <div className="text-xs text-gray-600 mt-1">
+                Servicio: {formatPrice(priceInfo.servicePrice)} + Movilidad:{" "}
+                {formatPrice(priceInfo.transportCost)}
+              </div>
+            )}
+          </div>
+        )}
       </div>
-    </>
+
+      {/* Actions */}
+      <div className="p-4 bg-gray-50/50 rounded-b-lg">
+        <div className="space-y-2">
+          {/* Primary Actions */}
+          {appointment.status === "PENDING" && (
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
+                disabled={isUpdating}
+                className="bg-emerald-400 hover:bg-emerald-500 text-white px-3 py-2.5 rounded-lg text-sm disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[40px]"
+              >
+                Confirmar
+              </button>
+              <button
+                onClick={() => onStatusUpdate(appointment.id, "CANCELLED")}
+                disabled={isUpdating}
+                className="bg-rose-400 hover:bg-rose-500 text-white px-3 py-2.5 rounded-lg text-sm disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[40px]"
+              >
+                Cancelar
+              </button>
+            </div>
+          )}
+
+          {appointment.status === "CONFIRMED" && (
+            <button
+              onClick={() => onStatusUpdate(appointment.id, "COMPLETED")}
+              disabled={isUpdating}
+              className="w-full bg-sky-400 hover:bg-sky-500 text-white px-3 py-2.5 rounded-lg text-sm disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[40px]"
+            >
+              Marcar Completada
+            </button>
+          )}
+
+          {/* Secondary Actions */}
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={() => onViewDetails(appointment)}
+              className="bg-[#D4AF37] hover:bg-[#B8941F] text-white px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center justify-center min-h-[40px]"
+            >
+              Ver Detalles
+            </button>
+
+            <button
+              onClick={() => onDelete(appointment.id)}
+              disabled={isDeleting}
+              className="bg-slate-400 hover:bg-slate-500 text-white px-3 py-2.5 rounded-lg text-sm disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[40px]"
+            >
+              Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
+// Desktop Row Component
 interface AppointmentRowProps {
   appointment: Appointment;
   isHighlighted: boolean;
@@ -315,6 +225,8 @@ function AppointmentRow({
   isUpdating,
   isDeleting,
 }: AppointmentRowProps) {
+  const priceInfo = getPriceBreakdown(appointment);
+
   return (
     <tr
       id={`appointment-${appointment.id}`}
@@ -338,9 +250,7 @@ function AppointmentRow({
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <div className="text-sm text-gray-900">{appointment.serviceType}</div>
-        <div className="text-sm text-gray-500">
-          {appointment.duration} min • {appointment.location || "A domicilio"}
-        </div>
+        <div className="text-sm text-gray-500">{appointment.duration} min</div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <div className="text-sm text-gray-900">
@@ -351,28 +261,27 @@ function AppointmentRow({
         </div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
-        {(() => {
-          const priceInfo = getPriceBreakdown(appointment);
-          return (
-            <div>
-              <div className="text-sm font-semibold text-[#D4AF37]">
-                {formatPrice(priceInfo.totalPrice)}
-              </div>
-              {priceInfo.hasTransport && (
-                <div className="text-xs text-gray-500">
-                  Servicio: {formatPrice(priceInfo.servicePrice)}
-                  <br />
-                  Movilidad: {formatPrice(priceInfo.transportCost)}
-                </div>
-              )}
-              {appointment.district && (
-                <div className="text-xs text-gray-500 mt-1">
-                  📍 {appointment.district}
-                </div>
-              )}
+        {priceInfo.totalPrice > 0 ? (
+          <div>
+            <div className="text-sm font-semibold text-[#D4AF37]">
+              {formatPrice(priceInfo.totalPrice)}
             </div>
-          );
-        })()}
+            {priceInfo.hasTransport && (
+              <div className="text-xs text-gray-500">
+                Servicio: {formatPrice(priceInfo.servicePrice)}
+                <br />
+                Movilidad: {formatPrice(priceInfo.transportCost)}
+              </div>
+            )}
+            {appointment.district && (
+              <div className="text-xs text-gray-500 mt-1">
+                📍 {appointment.district}
+              </div>
+            )}
+          </div>
+        ) : (
+          <span className="text-sm text-gray-400">No definido</span>
+        )}
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <span
@@ -390,14 +299,14 @@ function AppointmentRow({
               <button
                 onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
                 disabled={isUpdating}
-                className="bg-green-600 text-white px-3 py-1 rounded text-xs hover:bg-green-700 disabled:opacity-50"
+                className="bg-emerald-400 text-white px-3 py-2 rounded-lg text-xs hover:bg-emerald-500 disabled:opacity-50 font-medium transition-colors"
               >
                 Confirmar
               </button>
               <button
                 onClick={() => onStatusUpdate(appointment.id, "CANCELLED")}
                 disabled={isUpdating}
-                className="bg-red-600 text-white px-3 py-1 rounded text-xs hover:bg-red-700 disabled:opacity-50"
+                className="bg-rose-400 text-white px-3 py-2 rounded-lg text-xs hover:bg-rose-500 disabled:opacity-50 font-medium transition-colors"
               >
                 Cancelar
               </button>
@@ -408,7 +317,7 @@ function AppointmentRow({
             <button
               onClick={() => onStatusUpdate(appointment.id, "COMPLETED")}
               disabled={isUpdating}
-              className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 disabled:opacity-50"
+              className="bg-sky-400 text-white px-3 py-2 rounded-lg text-xs hover:bg-sky-500 disabled:opacity-50 font-medium transition-colors"
             >
               Completar
             </button>
@@ -416,7 +325,7 @@ function AppointmentRow({
 
           <button
             onClick={() => onViewDetails(appointment)}
-            className="bg-[#D4AF37] text-white px-3 py-1 rounded text-xs hover:bg-[#B8941F]"
+            className="bg-[#D4AF37] text-white px-3 py-2 rounded-lg text-xs hover:bg-[#B8941F] font-medium transition-colors"
           >
             Ver Detalles
           </button>
@@ -424,12 +333,101 @@ function AppointmentRow({
           <button
             onClick={() => onDelete(appointment.id)}
             disabled={isDeleting}
-            className="bg-red-600 text-white px-3 py-1 rounded text-xs hover:bg-red-700 disabled:opacity-50"
+            className="bg-slate-400 text-white px-3 py-2 rounded-lg text-xs hover:bg-slate-500 disabled:opacity-50 font-medium transition-colors"
           >
             Eliminar
           </button>
         </div>
       </td>
     </tr>
+  );
+}
+
+// Main Component
+export default function AppointmentTable({
+  appointments,
+  highlightedId,
+  onViewDetails,
+}: AppointmentTableProps) {
+  const updateStatusMutation = useUpdateAppointmentStatus();
+  const deleteMutation = useDeleteAppointment();
+  const isMobile = useIsSmallMobile();
+
+  const handleStatusUpdate = (id: string, status: Appointment["status"]) => {
+    updateStatusMutation.mutate({ id, status });
+  };
+
+  const handleDelete = (id: string) => {
+    if (confirm("¿Estás segura de que quieres eliminar esta cita?")) {
+      deleteMutation.mutate(id);
+    }
+  };
+
+  if (appointments.length === 0) {
+    return null; // El estado vacío se maneja en el componente padre
+  }
+
+  // Mobile View
+  if (isMobile) {
+    return (
+      <div className="space-y-4 p-4">
+        {appointments.map((appointment) => (
+          <MobileAppointmentCard
+            key={appointment.id}
+            appointment={appointment}
+            isHighlighted={appointment.id === highlightedId}
+            onStatusUpdate={handleStatusUpdate}
+            onDelete={handleDelete}
+            onViewDetails={onViewDetails}
+            isUpdating={updateStatusMutation.isPending}
+            isDeleting={deleteMutation.isPending}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  // Desktop View
+  return (
+    <div className="overflow-x-auto bg-white">
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className="bg-gray-50">
+          <tr>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Cliente
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Servicio
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Fecha & Hora
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Precio
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Estado
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {appointments.map((appointment) => (
+            <AppointmentRow
+              key={appointment.id}
+              appointment={appointment}
+              isHighlighted={appointment.id === highlightedId}
+              onStatusUpdate={handleStatusUpdate}
+              onDelete={handleDelete}
+              onViewDetails={onViewDetails}
+              isUpdating={updateStatusMutation.isPending}
+              isDeleting={deleteMutation.isPending}
+            />
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
