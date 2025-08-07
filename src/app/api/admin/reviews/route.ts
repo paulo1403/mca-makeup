@@ -1,12 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
-import { z } from 'zod';
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { z } from "zod";
+import { ReviewStatus } from "@prisma/client";
 
 const updateReviewSchema = z.object({
   id: z.string(),
-  status: z.enum(['PENDING', 'APPROVED', 'REJECTED']),
+  status: z.enum(["PENDING", "APPROVED", "REJECTED"]),
   isPublic: z.boolean().optional(),
   adminResponse: z.string().optional(),
 });
@@ -16,22 +17,25 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user?.role !== 'ADMIN') {
+    if (!session || session.user?.role !== "ADMIN") {
       return NextResponse.json(
-        { success: false, error: 'No autorizado' },
-        { status: 401 }
+        { success: false, error: "No autorizado" },
+        { status: 401 },
       );
     }
 
     const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status');
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
+    const status = searchParams.get("status");
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
     const skip = (page - 1) * limit;
 
-    const where: any = {};
-    if (status && ['PENDING', 'APPROVED', 'REJECTED'].includes(status)) {
-      where.status = status;
+    const where: {
+      status?: ReviewStatus;
+      rating?: { not: null };
+    } = {};
+    if (status && ["PENDING", "APPROVED", "REJECTED"].includes(status)) {
+      where.status = status as ReviewStatus;
     }
 
     // Solo mostrar reviews que tienen rating (fueron completadas por el cliente)
@@ -55,7 +59,7 @@ export async function GET(request: NextRequest) {
           },
         },
         orderBy: {
-          createdAt: 'desc',
+          createdAt: "desc",
         },
         skip,
         take: limit,
@@ -74,13 +78,13 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Error fetching admin reviews:', error);
+    console.error("Error fetching admin reviews:", error);
     return NextResponse.json(
       {
         success: false,
-        error: 'Error al cargar las reseñas'
+        error: "Error al cargar las reseñas",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -90,18 +94,24 @@ export async function PUT(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || session.user?.role !== 'ADMIN') {
+    if (!session || session.user?.role !== "ADMIN") {
       return NextResponse.json(
-        { success: false, error: 'No autorizado' },
-        { status: 401 }
+        { success: false, error: "No autorizado" },
+        { status: 401 },
       );
     }
 
     const body = await request.json();
     const validatedData = updateReviewSchema.parse(body);
 
-    const updateData: any = {
-      status: validatedData.status,
+    const updateData: {
+      status: ReviewStatus;
+      updatedAt: Date;
+      isPublic?: boolean;
+      adminResponse?: string;
+      respondedAt?: Date;
+    } = {
+      status: validatedData.status as ReviewStatus,
       updatedAt: new Date(),
     };
 
@@ -133,7 +143,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Reseña actualizada exitosamente',
+      message: "Reseña actualizada exitosamente",
       review: updatedReview,
     });
   } catch (error) {
@@ -141,20 +151,20 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Datos inválidos',
+          error: "Datos inválidos",
           details: error.errors,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    console.error('Error updating review:', error);
+    console.error("Error updating review:", error);
     return NextResponse.json(
       {
         success: false,
-        error: 'Error al actualizar la reseña'
+        error: "Error al actualizar la reseña",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

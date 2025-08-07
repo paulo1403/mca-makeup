@@ -67,8 +67,16 @@ export async function PATCH(
         try {
           const serviceNames =
             appointmentData.services && Array.isArray(appointmentData.services)
-              ? appointmentData.services
-                  .map((service: any) => service.name || service.serviceName)
+              ? (
+                  appointmentData.services as Array<{
+                    name?: string;
+                    serviceName?: string;
+                  }>
+                )
+                  .map(
+                    (service) =>
+                      service.name || service.serviceName || "Servicio",
+                  )
                   .join(", ")
               : appointmentData.serviceType || "Servicio de maquillaje";
 

@@ -10,7 +10,12 @@ export async function GET(request: NextRequest) {
     const endDate = searchParams.get("endDate");
 
     // Build date filter if provided
-    const dateFilter: any = {};
+    const dateFilter: {
+      appointmentDate?: {
+        gte?: Date;
+        lte?: Date;
+      };
+    } = {};
     if (startDate && endDate) {
       dateFilter.appointmentDate = {
         gte: new Date(startDate),

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Star, Send, CheckCircle, AlertCircle } from "lucide-react";
 
@@ -17,7 +17,7 @@ interface ReviewData {
     clientName: string;
     serviceType: string;
     appointmentDate: string;
-    services: any;
+    services: Array<{ name?: string; serviceName?: string }> | null;
   };
 }
 
@@ -41,11 +41,7 @@ export default function ReviewPage() {
 
   const [hoveredRating, setHoveredRating] = useState(0);
 
-  useEffect(() => {
-    fetchReviewData();
-  }, [token]);
-
-  const fetchReviewData = async () => {
+  const fetchReviewData = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/reviews/${token}`);
@@ -71,12 +67,16 @@ export default function ReviewPage() {
       if (data.review.isCompleted) {
         setSuccess(true);
       }
-    } catch (err) {
+    } catch {
       setError("Error de conexión. Por favor, intente nuevamente.");
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    fetchReviewData();
+  }, [fetchReviewData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,7 +119,7 @@ export default function ReviewPage() {
       }
 
       setSuccess(true);
-    } catch (err) {
+    } catch {
       setError("Error de conexión. Por favor, intente nuevamente.");
     } finally {
       setSubmitting(false);
@@ -134,10 +134,12 @@ export default function ReviewPage() {
     });
   };
 
-  const getServiceNames = (services: any) => {
+  const getServiceNames = (
+    services: Array<{ name?: string; serviceName?: string }> | null,
+  ) => {
     if (!services || !Array.isArray(services)) return "Servicio de maquillaje";
     return services
-      .map((service: any) => service.name || service.serviceName)
+      .map((service) => service.name || service.serviceName)
       .join(", ");
   };
 

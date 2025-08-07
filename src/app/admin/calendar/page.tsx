@@ -138,20 +138,33 @@ export default function AdminCalendar() {
   const events: CalendarEvent[] = useMemo(() => {
     const appointments = appointmentsResponse || [];
     // Mapear desde el formato de la API de calendario
-    const formattedAppointments = appointments.map((apt: any) => ({
-      id: apt.id,
-      clientName: apt.clientName,
-      clientEmail: apt.clientEmail,
-      clientPhone: apt.clientPhone,
-      serviceType: apt.service,
-      appointmentDate: apt.date,
-      appointmentTime: apt.time,
-      status: apt.status,
-      additionalNotes: apt.notes,
-      totalPrice: apt.price,
-      servicePrice: apt.price,
-      duration: 120, // Default duration
-    }));
+    const formattedAppointments = appointments.map(
+      (apt: {
+        id: string;
+        clientName: string;
+        clientEmail: string;
+        clientPhone: string;
+        date: string;
+        time: string;
+        service: string;
+        status: string;
+        notes: string;
+        price: number;
+      }) => ({
+        id: apt.id,
+        clientName: apt.clientName,
+        clientEmail: apt.clientEmail,
+        clientPhone: apt.clientPhone,
+        serviceType: apt.service,
+        appointmentDate: apt.date,
+        appointmentTime: apt.time,
+        status: apt.status,
+        additionalNotes: apt.notes,
+        totalPrice: apt.price,
+        servicePrice: apt.price,
+        duration: 120, // Default duration
+      }),
+    );
     return mapAppointmentsToEvents(formattedAppointments);
   }, [appointmentsResponse]);
 
