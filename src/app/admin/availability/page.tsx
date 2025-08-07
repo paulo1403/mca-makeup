@@ -21,6 +21,10 @@ export default function AvailabilityPage() {
   const [editingSlot, setEditingSlot] = useState<string | null>(null);
   const [editingSpecialDate, setEditingSpecialDate] =
     useState<SpecialDate | null>(null);
+  const [preselectedDay, setPreselectedDay] = useState<number | null>(null);
+  const [preselectedLocation, setPreselectedLocation] = useState<
+    "STUDIO" | "HOME" | null
+  >(null);
 
   const {
     timeSlots,
@@ -39,6 +43,21 @@ export default function AvailabilityPage() {
     deleteSpecialDate,
     message,
   } = useAvailability();
+
+  const handleAddFromDay = (
+    dayOfWeek: number,
+    locationType: "STUDIO" | "HOME",
+  ) => {
+    setPreselectedDay(dayOfWeek);
+    setPreselectedLocation(locationType);
+    setShowAddSlot(true);
+  };
+
+  const handleCloseAddSlot = () => {
+    setShowAddSlot(false);
+    setPreselectedDay(null);
+    setPreselectedLocation(null);
+  };
 
   if (isLoading) {
     return (
@@ -147,6 +166,7 @@ export default function AvailabilityPage() {
             }}
             onEditAction={(slot: TimeSlot) => setEditingSlot(slot.id)}
             onDeleteAction={deleteTimeSlot}
+            onAddAction={handleAddFromDay}
           />
 
           {timeSlots.length === 0 && (
@@ -213,9 +233,11 @@ export default function AvailabilityPage() {
       {/* Modales */}
       <AddTimeSlotModal
         isOpen={showAddSlot}
-        onClose={() => setShowAddSlot(false)}
+        onClose={handleCloseAddSlot}
         onSubmit={createTimeSlot}
         isLoading={isCreatingTimeSlot}
+        preselectedDay={preselectedDay}
+        preselectedLocation={preselectedLocation}
       />
 
       <EditTimeSlotModal

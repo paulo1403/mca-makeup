@@ -31,6 +31,7 @@ interface TimeSlotListProps {
   onToggleAction: (id: string) => void;
   onDeleteAction: (id: string) => void;
   onEditAction?: (slot: TimeSlot) => void;
+  onAddAction?: (dayOfWeek: number, locationType: "STUDIO" | "HOME") => void;
   isLoading?: boolean;
 }
 
@@ -39,6 +40,7 @@ export default function TimeSlotList({
   onToggleAction,
   onDeleteAction,
   onEditAction,
+  onAddAction,
   isLoading = false,
 }: TimeSlotListProps) {
   const [activeTab, setActiveTab] = useState<"STUDIO" | "HOME">("STUDIO");
@@ -312,7 +314,10 @@ export default function TimeSlotList({
                         <p className="text-xs text-gray-600 mb-2">
                           Sin horarios
                         </p>
-                        <button className="inline-flex items-center space-x-1 text-xs text-blue-600 hover:text-blue-800 font-medium">
+                        <button
+                          onClick={() => onAddAction?.(dayIndex, activeTab)}
+                          className="inline-flex items-center space-x-1 text-xs text-blue-600 hover:text-blue-800 font-medium"
+                        >
                           <Plus className="h-3 w-3" />
                           <span>Agregar</span>
                         </button>

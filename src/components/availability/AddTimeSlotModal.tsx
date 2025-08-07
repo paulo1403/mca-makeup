@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -39,6 +40,8 @@ interface AddTimeSlotModalProps {
     locationType: "STUDIO" | "HOME";
   }) => void;
   isLoading: boolean;
+  preselectedDay?: number | null;
+  preselectedLocation?: "STUDIO" | "HOME" | null;
 }
 
 export default function AddTimeSlotModal({
@@ -46,24 +49,37 @@ export default function AddTimeSlotModal({
   onClose,
   onSubmit,
   isLoading,
+  preselectedDay = null,
+  preselectedLocation = null,
 }: AddTimeSlotModalProps) {
   const {
     register,
     handleSubmit,
     reset,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<TimeSlotFormData>({
     resolver: zodResolver(timeSlotSchema),
     defaultValues: {
-      dayOfWeek: 1,
+      dayOfWeek: preselectedDay ?? 1,
       startTime: "09:00",
       endTime: "17:00",
-      locationType: "STUDIO",
+      locationType: preselectedLocation ?? "STUDIO",
     },
   });
 
   const selectedLocationType = watch("locationType");
+
+  // Update form values when preselected values change
+  useEffect(() => {
+    if (isOpen && preselectedDay !== null) {
+      setValue("dayOfWeek", preselectedDay);
+    }
+    if (isOpen && preselectedLocation !== null) {
+      setValue("locationType", preselectedLocation);
+    }
+  }, [isOpen, preselectedDay, preselectedLocation, setValue]);
 
   const handleClose = () => {
     reset();
@@ -73,6 +89,7 @@ export default function AddTimeSlotModal({
   const onFormSubmit = (data: TimeSlotFormData) => {
     onSubmit(data);
     reset();
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -143,7 +160,6 @@ export default function AddTimeSlotModal({
               {...register("dayOfWeek", { valueAsNumber: true })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="">Selecciona un día</option>
               {DAYS_OF_WEEK.map((day, index) => (
                 <option key={index} value={index}>
                   {day}
