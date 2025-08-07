@@ -10,7 +10,8 @@
     "postinstall": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
     "db:reset": "prisma db push --force-reset && npm run db:seed",
-    "db:admin": "tsx prisma/seed-admin.ts"
+    "db:admin": "tsx prisma/seed-admin.ts",
+    "db:production-reset": "tsx scripts/production-reset.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
