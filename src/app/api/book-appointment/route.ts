@@ -270,7 +270,7 @@ export async function POST(request: NextRequest) {
             ? validatedData.addressReference
             : null,
         additionalNotes: `Servicios: ${serviceTypeString}\nUbicación: ${validatedData.locationType === "STUDIO" ? "Local en Pueblo Libre" : `Domicilio - ${validatedData.district || ""}, ${validatedData.address || ""}`}${validatedData.addressReference ? ` (Ref: ${validatedData.addressReference})` : ""}${validatedData.additionalNotes ? `\n\nNotas adicionales: ${validatedData.additionalNotes}` : ""}`,
-        status: "CONFIRMED",
+        status: "PENDING",
       },
     });
 
@@ -286,8 +286,8 @@ export async function POST(request: NextRequest) {
     await prisma.notification.create({
       data: {
         type: "APPOINTMENT",
-        title: "Nueva cita confirmada",
-        message: `${appointment.clientName} ha reservado ${serviceTypeString} para el ${formatDate(appointment.appointmentDate)} a las ${formatTime(appointment.appointmentTime)}`,
+        title: "Nueva cita pendiente",
+        message: `${appointment.clientName} ha solicitado ${serviceTypeString} para el ${formatDate(appointment.appointmentDate)} a las ${formatTime(appointment.appointmentTime)}`,
         link: "/admin/appointments",
         appointmentId: appointment.id,
         read: false,
@@ -320,9 +320,8 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      // Send confirmation to client
-      // Send confirmation to client immediately since appointment is auto-confirmed
-      const clientEmailData = emailTemplates.appointmentConfirmed(
+      // Send pending confirmation to client
+      const clientEmailData = emailTemplates.appointmentPending(
         appointment.clientName,
         serviceTypeString,
         formatDate(appointment.appointmentDate),
@@ -348,7 +347,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        message: "Cita confirmada exitosamente",
+        message:
+          "Cita enviada exitosamente. Te contactaremos pronto para confirmar.",
         appointmentId: appointment.id,
         pricing: {
           servicePrice: calculatedServicePrice,
