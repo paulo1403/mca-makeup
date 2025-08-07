@@ -238,7 +238,7 @@ export default function PricingBreakdown({
           <MapPin className="h-3 w-3 mt-0.5 flex-shrink-0" />
           <span className="leading-relaxed">
             {locationType === "STUDIO"
-              ? "Servicio en local (Pueblo Libre)"
+              ? "Servicio en local (Av. Bolívar 1073, Pueblo Libre)"
               : `Servicio a domicilio${district ? ` - ${district}` : ""}`}
           </span>
         </div>

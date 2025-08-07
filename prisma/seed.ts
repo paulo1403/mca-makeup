@@ -395,7 +395,7 @@ async function main() {
     },
     {
       key: "studio_address",
-      value: "Room Studio, Pueblo Libre, Lima",
+      value: "Av. Bolívar 1073, Pueblo Libre, Lima",
       description: "Dirección del estudio",
     },
     {

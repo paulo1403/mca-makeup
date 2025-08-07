@@ -108,7 +108,7 @@ export default function AppointmentModal({
                   <p className="text-sm sm:text-base text-gray-900 font-medium mb-2">
                     {appointment.location &&
                     appointment.location.includes("Studio")
-                      ? "En estudio - Room Studio, Pueblo Libre"
+                      ? "En estudio - Av. Bolívar 1073, Pueblo Libre"
                       : "Servicio a domicilio"}
                   </p>
                   {appointment.address && (

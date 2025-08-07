@@ -301,7 +301,7 @@ export default function ServiceSelector({
               value={searchTerm}
               onChange={handleSearchChange}
               disabled={disabled}
-              className="w-full border-none outline-none bg-transparent text-sm placeholder-gray-500"
+              className="w-full border-none outline-none bg-transparent text-sm placeholder-gray-500 service-selector-input"
               required={required && selectedServices.length === 0}
             />
 

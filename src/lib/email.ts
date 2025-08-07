@@ -90,7 +90,7 @@ export const emailTemplates = {
               <li><strong>Servicio:</strong> ${serviceType}</li>
               <li><strong>Fecha:</strong> ${date}</li>
               <li><strong>Hora:</strong> ${time}</li>
-              <li><strong>Ubicación:</strong> ${locationType === "STUDIO" ? "Room Studio - Pueblo Libre" : "A domicilio"}</li>
+              <li><strong>Ubicación:</strong> ${locationType === "STUDIO" ? "Av. Bolívar 1073, Pueblo Libre" : "A domicilio"}</li>
               ${locationType === "HOME" && district ? `<li><strong>Distrito:</strong> ${district}</li>` : ""}
               ${locationType === "HOME" && address ? `<li><strong>Dirección:</strong> ${address}</li>` : ""}
               ${locationType === "HOME" && addressReference ? `<li><strong>Referencia:</strong> ${addressReference}</li>` : ""}
@@ -133,7 +133,7 @@ export const emailTemplates = {
       - Servicio: ${serviceType}
       - Fecha: ${date}
       - Hora: ${time}
-      - Ubicación: ${locationType === "STUDIO" ? "Room Studio - Pueblo Libre" : "A domicilio"}
+      - Ubicación: ${locationType === "STUDIO" ? "Av. Bolívar 1073, Pueblo Libre" : "A domicilio"}
       ${locationType === "HOME" && district ? `- Distrito: ${district}` : ""}
       ${locationType === "HOME" && address ? `- Dirección: ${address}` : ""}
       ${locationType === "HOME" && addressReference ? `- Referencia: ${addressReference}` : ""}
@@ -246,7 +246,7 @@ export const emailTemplates = {
           <div style="background-color: #f0f7ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #3B82F6;">
             <h3 style="color: #1C1C1C; margin: 0 0 15px 0;">Detalles del servicio:</h3>
             <ul style="color: #5A5A5A; margin: 0; padding-left: 20px;">
-              <li><strong>Ubicación:</strong> ${locationType === "STUDIO" ? "Room Studio - Pueblo Libre" : "Servicio a domicilio"}</li>
+              <li><strong>Ubicación:</strong> ${locationType === "STUDIO" ? "Av. Bolívar 1073, Pueblo Libre" : "Servicio a domicilio"}</li>
               ${locationType === "HOME" && district ? `<li><strong>Distrito:</strong> ${district}</li>` : ""}
               ${locationType === "HOME" && address ? `<li><strong>Dirección:</strong> ${address}</li>` : ""}
               ${locationType === "HOME" && addressReference ? `<li><strong>Referencia:</strong> ${addressReference}</li>` : ""}
@@ -283,7 +283,7 @@ export const emailTemplates = {
       - Hora solicitada: ${time}
 
       Detalles del servicio:
-      - Ubicación: ${locationType === "STUDIO" ? "Room Studio - Pueblo Libre" : "Servicio a domicilio"}
+      - Ubicación: ${locationType === "STUDIO" ? "Av. Bolívar 1073, Pueblo Libre" : "Servicio a domicilio"}
       ${locationType === "HOME" && district ? `- Distrito: ${district}` : ""}
       ${locationType === "HOME" && address ? `- Dirección: ${address}` : ""}
       ${locationType === "HOME" && addressReference ? `- Referencia: ${addressReference}` : ""}
@@ -328,7 +328,7 @@ export const emailTemplates = {
               <li><strong>Servicio:</strong> ${serviceType}</li>
               <li><strong>Fecha solicitada:</strong> ${date}</li>
               <li><strong>Hora solicitada:</strong> ${time}</li>
-              <li><strong>Ubicación:</strong> ${locationType === "STUDIO" ? "Room Studio - Pueblo Libre" : "A domicilio"}</li>
+              <li><strong>Ubicación:</strong> ${locationType === "STUDIO" ? "Av. Bolívar 1073, Pueblo Libre" : "A domicilio"}</li>
               ${locationType === "HOME" && district ? `<li><strong>Distrito:</strong> ${district}</li>` : ""}
               ${locationType === "HOME" && address ? `<li><strong>Dirección:</strong> ${address}</li>` : ""}
               ${locationType === "HOME" && addressReference ? `<li><strong>Referencia:</strong> ${addressReference}</li>` : ""}
@@ -375,7 +375,7 @@ export const emailTemplates = {
       - Servicio: ${serviceType}
       - Fecha solicitada: ${date}
       - Hora solicitada: ${time}
-      - Ubicación: ${locationType === "STUDIO" ? "Room Studio - Pueblo Libre" : "A domicilio"}
+      - Ubicación: ${locationType === "STUDIO" ? "Av. Bolívar 1073, Pueblo Libre" : "A domicilio"}
       ${locationType === "HOME" && district ? `- Distrito: ${district}` : ""}
       ${locationType === "HOME" && address ? `- Dirección: ${address}` : ""}
       ${locationType === "HOME" && addressReference ? `- Referencia: ${addressReference}` : ""}

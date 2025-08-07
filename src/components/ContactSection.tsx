@@ -757,7 +757,7 @@ export default function ContactSection() {
                   <div className="flex items-center gap-2 sm:gap-3">
                     <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-accent-primary flex-shrink-0" />
                     <span className="text-main text-sm sm:text-base">
-                      Pueblo Libre, Lima
+                      Av. Bolívar 1073, Pueblo Libre, Lima
                     </span>
                   </div>
 

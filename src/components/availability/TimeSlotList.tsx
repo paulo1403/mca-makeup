@@ -209,7 +209,7 @@ export default function TimeSlotList({
           </div>
           <p className="text-sm text-gray-600">
             {activeTab === "STUDIO"
-              ? "Horarios para clientes que vienen al estudio en Pueblo Libre"
+              ? "Horarios para clientes que vienen al estudio en Av. Bolívar 1073, Pueblo Libre"
               : "Horarios para servicios a domicilio (incluye tiempo de traslado)"}
           </p>
         </div>
