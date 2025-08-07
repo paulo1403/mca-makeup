@@ -84,6 +84,7 @@ model Appointment {
   services         Json?
   totalDuration    Int?
   notifications    Notification[]
+  review           Review?
 
   @@map("appointments")
 }
@@ -287,10 +288,35 @@ enum ErrorStatus {
   CLOSED
 }
 
+model Review {
+  id            String       @id @default(cuid())
+  appointmentId String       @unique
+  appointment   Appointment  @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  reviewToken   String       @unique
+  rating        Int?
+  reviewText    String?
+  reviewerName  String
+  reviewerEmail String
+  isPublic      Boolean      @default(false)
+  status        ReviewStatus @default(PENDING)
+  adminResponse String?
+  respondedAt   DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@map("reviews")
+}
+
 enum ServiceCategory {
   BRIDAL
   SOCIAL
   MATURE_SKIN
   HAIRSTYLE
   OTHER
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }

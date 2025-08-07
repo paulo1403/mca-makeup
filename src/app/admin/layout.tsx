@@ -71,6 +71,12 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
       priority: "high",
     },
     {
+      href: "/admin/reviews",
+      label: "Reseñas",
+      mobileLabel: "Reseñas",
+      priority: "high",
+    },
+    {
       href: "/admin/availability",
       label: "Disponibilidad",
       mobileLabel: "Disponibilidad",

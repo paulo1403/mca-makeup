@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { randomUUID } from "crypto";
+import { sendEmail, emailTemplates } from "@/lib/email";
+import { formatDateForDisplay } from "@/utils/dateUtils";
 
 // PATCH /api/admin/appointments/[id] - Update appointment status
 export async function PATCH(
@@ -20,6 +23,81 @@ export async function PATCH(
       );
     }
 
+    // Get appointment data before update for email
+    const appointmentData = await prisma.appointment.findUnique({
+      where: { id: appointmentId },
+      select: {
+        clientName: true,
+        clientEmail: true,
+        serviceType: true,
+        appointmentDate: true,
+        status: true,
+        services: true,
+      },
+    });
+
+    if (!appointmentData) {
+      return NextResponse.json(
+        { success: false, message: "Appointment not found" },
+        { status: 404 },
+      );
+    }
+
+    // If marking as completed, generate review token
+    let reviewToken = null;
+    if (status === "COMPLETED" && appointmentData.status !== "COMPLETED") {
+      // Check if review token already exists
+      const existingReview = await prisma.review.findUnique({
+        where: { appointmentId },
+      });
+
+      if (!existingReview) {
+        reviewToken = randomUUID();
+        await prisma.review.create({
+          data: {
+            appointmentId,
+            reviewToken,
+            reviewerName: "", // Will be filled by client
+            reviewerEmail: "", // Will be filled by client
+            rating: null, // Will be set when client submits review
+          },
+        });
+
+        // Send review request email
+        try {
+          const serviceNames =
+            appointmentData.services && Array.isArray(appointmentData.services)
+              ? appointmentData.services
+                  .map((service: any) => service.name || service.serviceName)
+                  .join(", ")
+              : appointmentData.serviceType || "Servicio de maquillaje";
+
+          const emailData = emailTemplates.reviewRequest(
+            appointmentData.clientName,
+            serviceNames,
+            formatDateForDisplay(appointmentData.appointmentDate),
+            reviewToken,
+          );
+
+          await sendEmail({
+            to: appointmentData.clientEmail,
+            subject: emailData.subject,
+            html: emailData.html,
+            text: emailData.text,
+          });
+
+          console.log(
+            `Review request email sent to ${appointmentData.clientEmail}`,
+          );
+        } catch (emailError) {
+          console.error("Error sending review request email:", emailError);
+          // Don't fail the appointment update if email fails
+        }
+      } else {
+        reviewToken = existingReview.reviewToken;
+      }
+    }
+
     // Update appointment
     const updatedAppointment = await prisma.appointment.update({
       where: { id: appointmentId },
@@ -37,12 +115,18 @@ export async function PATCH(
         servicePrice: true,
         transportCost: true,
         totalPrice: true,
+        review: {
+          select: {
+            reviewToken: true,
+          },
+        },
       },
     });
 
     return NextResponse.json({
       success: true,
       data: updatedAppointment,
+      reviewToken: reviewToken || updatedAppointment.review?.reviewToken,
     });
   } catch (error) {
     console.error("Error updating appointment:", error);

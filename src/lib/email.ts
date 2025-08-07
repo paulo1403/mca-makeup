@@ -391,4 +391,83 @@ export const emailTemplates = {
       Marcela Cordero
     `,
   }),
+
+  reviewRequest: (
+    clientName: string,
+    serviceType: string,
+    date: string,
+    reviewToken: string,
+  ) => ({
+    subject: "¡Comparte tu experiencia! - Marcela Cordero Makeup",
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
+        <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #1C1C1C; margin: 0; font-size: 28px;">Marcela Cordero</h1>
+            <p style="color: #D4AF37; margin: 5px 0; font-style: italic;">Makeup Artist</p>
+          </div>
+
+          <h2 style="color: #1C1C1C; margin-bottom: 20px;">¡Hola ${clientName}!</h2>
+
+          <p style="color: #5A5A5A; font-size: 16px; line-height: 1.6;">
+            Espero que hayas disfrutado tu experiencia con mi servicio de <strong>${serviceType}</strong>
+            el día <strong>${date}</strong>.
+          </p>
+
+          <p style="color: #5A5A5A; font-size: 16px; line-height: 1.6;">
+            Tu opinión es muy importante para mí y me ayuda a seguir mejorando mis servicios.
+            ¿Te gustaría compartir tu experiencia?
+          </p>
+
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${process.env.NEXTAUTH_URL || "https://marcelacorderomakeup.com"}/review/${reviewToken}"
+               style="display: inline-block; background-color: #D4AF37; color: white; padding: 15px 30px;
+                      text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold;
+                      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);">
+              ⭐ Escribir mi reseña
+            </a>
+          </div>
+
+          <div style="background-color: #f8f8f8; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #D4AF37;">
+            <h3 style="color: #1C1C1C; margin: 0 0 15px 0;">¿Por qué tu reseña es importante?</h3>
+            <ul style="color: #5A5A5A; margin: 0; padding-left: 20px; line-height: 1.6;">
+              <li>Me ayuda a mejorar continuamente mis servicios</li>
+              <li>Ayuda a otras clientas a conocer sobre mi trabajo</li>
+              <li>Solo toma unos minutos de tu tiempo</li>
+            </ul>
+          </div>
+
+          <p style="color: #5A5A5A; font-size: 14px; line-height: 1.6; font-style: italic;">
+            <strong>Nota:</strong> Tu reseña será revisada antes de ser publicada.
+            Si prefieres mantenerla privada, también puedes indicarlo en el formulario.
+          </p>
+
+          <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+            <p style="color: #D4AF37; font-size: 18px; margin: 0;"><strong>¡Gracias por elegirme!</strong></p>
+            <p style="color: #5A5A5A; margin: 10px 0;">Marcela Cordero</p>
+          </div>
+        </div>
+      </div>
+    `,
+    text: `
+      ¡Hola ${clientName}!
+
+      Espero que hayas disfrutado tu experiencia con mi servicio de ${serviceType} el día ${date}.
+
+      Tu opinión es muy importante para mí y me ayuda a seguir mejorando mis servicios. ¿Te gustaría compartir tu experiencia?
+
+      Puedes escribir tu reseña en el siguiente enlace:
+      ${process.env.NEXTAUTH_URL || "https://marcelacorderomakeup.com"}/review/${reviewToken}
+
+      ¿Por qué tu reseña es importante?
+      - Me ayuda a mejorar continuamente mis servicios
+      - Ayuda a otras clientas a conocer sobre mi trabajo
+      - Solo toma unos minutos de tu tiempo
+
+      Nota: Tu reseña será revisada antes de ser publicada. Si prefieres mantenerla privada, también puedes indicarlo en el formulario.
+
+      ¡Gracias por elegirme!
+      Marcela Cordero
+    `,
+  }),
 };
