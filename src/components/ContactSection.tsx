@@ -33,7 +33,7 @@ export default function ContactSection() {
     name: "",
     email: "",
     phone: "",
-    service: "",
+    service: [] as string[],
     date: null as Date | null,
     timeRange: "",
     locationType: "HOME" as "STUDIO" | "HOME",
@@ -237,7 +237,7 @@ export default function ContactSection() {
           clientName: formData.name,
           clientEmail: formData.email,
           clientPhone: formData.phone,
-          serviceType: formData.service,
+          services: formData.service,
           servicePrice: calculatedPricing.servicePrice,
           appointmentDate: formData.date
             ? format(formData.date, "yyyy-MM-dd")
@@ -259,7 +259,7 @@ export default function ContactSection() {
           name: "",
           email: "",
           phone: "",
-          service: "",
+          service: [],
           date: null,
           timeRange: "",
           locationType: "HOME",
@@ -413,8 +413,8 @@ export default function ContactSection() {
                   </label>
                   <ServiceSelector
                     value={formData.service}
-                    onChange={(service) =>
-                      setFormData((prev) => ({ ...prev, service }))
+                    onChange={(services) =>
+                      setFormData((prev) => ({ ...prev, service: services }))
                     }
                     required
                     placeholder="Busca y selecciona tu servicio..."
@@ -615,7 +615,7 @@ export default function ContactSection() {
                 {formData.service && (
                   <div className="space-y-4">
                     <PricingBreakdown
-                      selectedService={formData.service}
+                      selectedServices={formData.service}
                       locationType={formData.locationType}
                       district={formData.district}
                       onPriceCalculated={handlePriceCalculated}

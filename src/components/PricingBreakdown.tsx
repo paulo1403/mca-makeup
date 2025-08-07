@@ -5,7 +5,7 @@ import { useTransportCost } from "@/hooks/useTransportCost";
 import { Calculator, MapPin, Truck, AlertCircle } from "lucide-react";
 
 interface PricingBreakdownProps {
-  selectedService: string;
+  selectedServices: string[];
   locationType: "STUDIO" | "HOME";
   district?: string;
   onPriceCalculated?: (
@@ -15,14 +15,19 @@ interface PricingBreakdownProps {
   ) => void;
 }
 
+interface ParsedService {
+  name: string;
+  price: number;
+}
+
 export default function PricingBreakdown({
-  selectedService,
+  selectedServices,
   locationType,
   district,
   onPriceCalculated,
 }: PricingBreakdownProps) {
-  const [servicePrice, setServicePrice] = useState<number>(0);
-  const [serviceName, setServiceName] = useState<string>("");
+  const [parsedServices, setParsedServices] = useState<ParsedService[]>([]);
+  const [totalServicePrice, setTotalServicePrice] = useState<number>(0);
   const {
     transportCost,
     loading,
@@ -41,26 +46,31 @@ export default function PricingBreakdown({
   // Debounce para evitar cálculos excesivos
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Extraer precio del servicio seleccionado
+  // Parsear servicios seleccionados
   useEffect(() => {
-    if (!selectedService) {
-      setServicePrice(0);
-      setServiceName("");
+    if (!selectedServices || selectedServices.length === 0) {
+      setParsedServices([]);
+      setTotalServicePrice(0);
       return;
     }
 
-    // Buscar precio en el texto del servicio (formato: "Nombre (S/ 200)")
-    const priceMatch = selectedService.match(/\(S\/\s*(\d+(?:\.\d{2})?)\)/);
-    if (priceMatch) {
-      const price = parseFloat(priceMatch[1]);
-      setServicePrice(price);
-      setServiceName(selectedService.replace(/\s*\(S\/.*\)/, ""));
-    } else {
-      // Si no hay precio en el texto, podría ser "Otro"
-      setServicePrice(0);
-      setServiceName(selectedService);
-    }
-  }, [selectedService]);
+    const parsed: ParsedService[] = [];
+    let total = 0;
+
+    selectedServices.forEach((serviceString) => {
+      // Buscar precio en el texto del servicio (formato: "Nombre (S/ 200)")
+      const priceMatch = serviceString.match(/\(S\/\s*(\d+(?:\.\d{2})?)\)/);
+      if (priceMatch) {
+        const price = parseFloat(priceMatch[1]);
+        const name = serviceString.replace(/\s*\(S\/.*\)/, "");
+        parsed.push({ name, price });
+        total += price;
+      }
+    });
+
+    setParsedServices(parsed);
+    setTotalServicePrice(total);
+  }, [selectedServices]);
 
   // Obtener costo de transporte cuando cambia el distrito
   useEffect(() => {
@@ -75,23 +85,23 @@ export default function PricingBreakdown({
   const debouncedPriceCalculation = useCallback(() => {
     const currentTransportCost =
       locationType === "HOME" && transportCost ? transportCost.cost : 0;
-    const totalPrice = servicePrice + currentTransportCost;
+    const totalPrice = totalServicePrice + currentTransportCost;
 
     // Solo llamar onPriceCalculated si los valores cambiaron
     const lastCalculated = lastCalculatedRef.current;
     if (
       lastCalculated.totalPrice !== totalPrice ||
-      lastCalculated.servicePrice !== servicePrice ||
+      lastCalculated.servicePrice !== totalServicePrice ||
       lastCalculated.transportCost !== currentTransportCost
     ) {
       lastCalculatedRef.current = {
         totalPrice,
-        servicePrice,
+        servicePrice: totalServicePrice,
         transportCost: currentTransportCost,
       };
-      onPriceCalculated?.(totalPrice, servicePrice, currentTransportCost);
+      onPriceCalculated?.(totalPrice, totalServicePrice, currentTransportCost);
     }
-  }, [servicePrice, transportCost, locationType, onPriceCalculated]);
+  }, [totalServicePrice, transportCost, locationType, onPriceCalculated]);
 
   // Calcular precio total y notificar al componente padre con debounce
   useEffect(() => {
@@ -113,14 +123,18 @@ export default function PricingBreakdown({
     };
   }, [debouncedPriceCalculation]);
 
-  // No mostrar nada si no hay servicio seleccionado
-  if (!selectedService || servicePrice === 0) {
+  // No mostrar nada si no hay servicios seleccionados
+  if (
+    !selectedServices ||
+    selectedServices.length === 0 ||
+    totalServicePrice === 0
+  ) {
     return null;
   }
 
   const currentTransportCost =
     locationType === "HOME" && transportCost ? transportCost.cost : 0;
-  const totalPrice = servicePrice + currentTransportCost;
+  const totalPrice = totalServicePrice + currentTransportCost;
 
   return (
     <div className="bg-gradient-to-r from-[#D4AF37]/10 to-[#B06579]/10 rounded-lg p-3 sm:p-4 border border-[#D4AF37]/20">
@@ -132,16 +146,37 @@ export default function PricingBreakdown({
       </div>
 
       <div className="space-y-3">
-        {/* Precio del servicio */}
-        <div className="flex justify-between items-start sm:items-center gap-2">
-          <div className="flex-1 min-w-0">
-            <span className="text-xs sm:text-sm text-gray-600 break-words">
-              {serviceName}
-            </span>
-          </div>
-          <span className="font-medium text-gray-900 text-sm sm:text-base flex-shrink-0">
-            S/ {servicePrice.toFixed(2)}
-          </span>
+        {/* Servicios seleccionados */}
+        <div className="space-y-2">
+          {parsedServices.map((service, index) => (
+            <div
+              key={index}
+              className="flex justify-between items-start sm:items-center gap-2"
+            >
+              <div className="flex-1 min-w-0">
+                <span className="text-xs sm:text-sm text-gray-600 break-words">
+                  {service.name}
+                </span>
+              </div>
+              <span className="font-medium text-gray-900 text-sm sm:text-base flex-shrink-0">
+                S/ {service.price.toFixed(2)}
+              </span>
+            </div>
+          ))}
+
+          {/* Subtotal de servicios si hay más de uno */}
+          {parsedServices.length > 1 && (
+            <div className="border-t border-gray-200 pt-2">
+              <div className="flex justify-between items-center gap-2">
+                <span className="text-sm font-medium text-gray-700">
+                  Subtotal servicios:
+                </span>
+                <span className="font-semibold text-gray-900 text-sm sm:text-base">
+                  S/ {totalServicePrice.toFixed(2)}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Costo de transporte */}
@@ -233,6 +268,11 @@ export default function PricingBreakdown({
                 <li>• El costo final se confirmará durante la consulta</li>
                 {locationType === "HOME" && (
                   <li>• El transporte incluye ida y vuelta</li>
+                )}
+                {parsedServices.length > 1 && (
+                  <li>
+                    • Los servicios múltiples se realizan en la misma sesión
+                  </li>
                 )}
               </ul>
             </div>

@@ -66,7 +66,7 @@ model Appointment {
   clientName       String
   clientEmail      String
   clientPhone      String
-  serviceType      String
+  serviceType      String?
   appointmentDate  DateTime
   appointmentTime  String
   duration         Int               @default(120)
@@ -81,6 +81,8 @@ model Appointment {
   servicePrice     Float?
   totalPrice       Float?
   transportCost    Float?
+  services         Json?
+  totalDuration    Int?
   notifications    Notification[]
 
   @@map("appointments")

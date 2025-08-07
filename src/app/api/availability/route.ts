@@ -7,12 +7,12 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const date = searchParams.get("date");
-    const serviceType = searchParams.get("serviceType");
+    const serviceTypes = searchParams.get("serviceTypes");
     const locationType = searchParams.get("locationType");
 
-    if (!date || !serviceType || !locationType) {
+    if (!date || !serviceTypes || !locationType) {
       return NextResponse.json(
-        { error: "Fecha, tipo de servicio y ubicación requeridos" },
+        { error: "Fecha, tipos de servicio y ubicación requeridos" },
         { status: 400 },
       );
     }
@@ -56,49 +56,71 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Extract service name from serviceType (remove price if present)
-    // Example: "Maquillaje Social - Estilo Natural (S/ 200)" -> "Maquillaje Social - Estilo Natural"
-    let serviceName = serviceType;
-    if (serviceType.includes("(S/")) {
-      serviceName = serviceType.split(" (S/")[0].trim();
+    // Parse multiple service types from comma-separated string
+    const serviceTypeArray = serviceTypes
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+
+    if (serviceTypeArray.length === 0) {
+      return NextResponse.json(
+        { error: "Al menos un tipo de servicio es requerido" },
+        { status: 400 },
+      );
     }
 
-    // Get all active services for fallback
+    // Get all active services for matching
     const allServices = await prisma.service.findMany({
       where: { isActive: true },
       select: { name: true, duration: true },
     });
 
-    // Try exact match first
-    let matchedService = allServices.find((s) => s.name === serviceName);
+    // Match and calculate total duration for all selected services
+    let totalDuration = 0;
+    const matchedServices = [];
 
-    // If no exact match, try partial match
-    if (!matchedService) {
-      matchedService = allServices.find(
-        (s) =>
-          s.name.toLowerCase().includes(serviceName.toLowerCase()) ||
-          serviceName.toLowerCase().includes(s.name.toLowerCase()),
-      );
-    }
+    for (const serviceType of serviceTypeArray) {
+      // Extract service name from serviceType (remove price if present)
+      // Example: "Maquillaje Social - Estilo Natural (S/ 200)" -> "Maquillaje Social - Estilo Natural"
+      let serviceName = serviceType;
+      if (serviceType.includes("(S/")) {
+        serviceName = serviceType.split(" (S/")[0].trim();
+      }
 
-    if (!matchedService) {
-      console.error("No service found:", {
-        serviceType,
-        serviceName,
-        availableServices: allServices.map((s) => s.name),
-      });
-      return NextResponse.json(
-        {
-          error: "Tipo de servicio no encontrado o inactivo",
-          details: `Servicio buscado: "${serviceName}"`,
-          originalServiceType: serviceType,
+      // Try exact match first
+      let matchedService = allServices.find((s) => s.name === serviceName);
+
+      // If no exact match, try partial match
+      if (!matchedService) {
+        matchedService = allServices.find(
+          (s) =>
+            s.name.toLowerCase().includes(serviceName.toLowerCase()) ||
+            serviceName.toLowerCase().includes(s.name.toLowerCase()),
+        );
+      }
+
+      if (!matchedService) {
+        console.error("No service found:", {
+          serviceType,
+          serviceName,
           availableServices: allServices.map((s) => s.name),
-        },
-        { status: 400 },
-      );
+        });
+        return NextResponse.json(
+          {
+            error: "Tipo de servicio no encontrado o inactivo",
+            details: `Servicio buscado: "${serviceName}"`,
+            originalServiceType: serviceType,
+            availableServices: allServices.map((s) => s.name),
+          },
+          { status: 400 },
+        );
+      }
+
+      matchedServices.push(matchedService);
+      totalDuration += matchedService.duration;
     }
 
-    const selectedDuration = matchedService.duration;
+    const selectedDuration = totalDuration;
 
     // Helper function to add/subtract minutes from time string
     function addMinutes(time: string, mins: number) {
@@ -256,6 +278,11 @@ export async function GET(request: NextRequest) {
         (p) => `${minutesToTime(p.start)} - ${minutesToTime(p.end)}`,
       ),
       selectedDuration,
+      totalServices: matchedServices.length,
+      serviceDetails: matchedServices.map((s) => ({
+        name: s.name,
+        duration: s.duration,
+      })),
       bookedAppointments: bookedAppointments.map((b) => ({
         time: b.appointmentTime,
         service: b.serviceType,
@@ -384,6 +411,7 @@ export async function GET(request: NextRequest) {
     console.log("Optimized scheduling algorithm:", {
       location: locationType,
       duration: selectedDuration,
+      totalServices: matchedServices.length,
       workingPeriods: workingPeriods.length,
       blockedRanges: blockedRanges.length,
     });
