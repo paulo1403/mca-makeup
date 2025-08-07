@@ -15,6 +15,8 @@ import {
   Send,
   Home,
   Instagram,
+  Copy,
+  Check,
 } from "lucide-react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -66,6 +68,7 @@ export default function ContactSection() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -122,6 +125,30 @@ export default function ContactSection() {
     },
     [],
   );
+
+  // Función para copiar número al portapapeles
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback para navegadores que no soportan clipboard API
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand("copy");
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (fallbackErr) {
+        console.error("No se pudo copiar el texto:", fallbackErr);
+      }
+      document.body.removeChild(textArea);
+    }
+  };
 
   const handleDateChange = (date: Date | null) => {
     setFormData((prev) => ({
@@ -306,14 +333,14 @@ export default function ContactSection() {
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className="bg-light-background rounded-xl p-8 border border-gray-100">
-              <h3 className="text-2xl font-playfair text-heading mb-6">
+            <div className="bg-light-background rounded-xl p-0 md:p-2 border border-gray-100">
+              <h3 className="text-xl sm:text-2xl font-playfair text-heading mb-4 sm:mb-6">
                 Información de la Cita
               </h3>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Información Personal */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div className="space-y-2">
                     <label
                       htmlFor="name"
@@ -329,7 +356,7 @@ export default function ContactSection() {
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                       placeholder="Tu nombre completo"
                     />
                   </div>
@@ -349,7 +376,7 @@ export default function ContactSection() {
                       value={formData.phone}
                       onChange={handlePhoneChange}
                       required
-                      className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                       placeholder="+51 989 164 990 o 989 164 990"
                       maxLength={15}
                     />
@@ -371,7 +398,7 @@ export default function ContactSection() {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
+                    className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                     placeholder="tu@email.com"
                   />
                 </div>
@@ -401,8 +428,8 @@ export default function ContactSection() {
                     Ubicación del Servicio *
                   </label>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <label className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    <label className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
                       <input
                         type="radio"
                         name="locationType"
@@ -412,10 +439,12 @@ export default function ContactSection() {
                         className="text-accent-primary focus:ring-accent-primary"
                       />
                       <Home className="w-5 h-5 text-accent-primary" />
-                      <span className="text-heading">A domicilio</span>
+                      <span className="text-heading text-sm sm:text-base">
+                        A domicilio
+                      </span>
                     </label>
 
-                    <label className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                    <label className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
                       <input
                         type="radio"
                         name="locationType"
@@ -425,13 +454,15 @@ export default function ContactSection() {
                         className="text-accent-primary focus:ring-accent-primary"
                       />
                       <MapPin className="w-5 h-5 text-accent-primary" />
-                      <span className="text-heading">En mi estudio</span>
+                      <span className="text-heading text-sm sm:text-base">
+                        En mi estudio
+                      </span>
                     </label>
                   </div>
                 </div>
 
-                {/* Fecha y Hora - MOVER ABAJO */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Fecha y Hora */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 text-heading font-medium text-sm">
                       <Calendar className="w-4 h-4 text-accent-primary" />
@@ -444,7 +475,7 @@ export default function ContactSection() {
                       minDate={new Date()}
                       dateFormat="dd/MM/yyyy"
                       placeholderText="Selecciona una fecha"
-                      className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                     />
                   </div>
 
@@ -460,7 +491,7 @@ export default function ContactSection() {
                       onChange={handleTimeRangeChange}
                       required
                       disabled={!formData.date || !formData.service}
-                      className={`w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300${!formData.date || !formData.service ? " opacity-50 cursor-not-allowed" : ""}`}
+                      className={`w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-200 rounded-lg text-heading focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-sm sm:text-base${!formData.date || !formData.service ? " opacity-50 cursor-not-allowed" : ""}`}
                     >
                       <option value="">Selecciona un horario</option>
                       {isLoadingRanges ? (
@@ -537,7 +568,7 @@ export default function ContactSection() {
                         value={formData.address}
                         onChange={handleInputChange}
                         required={formData.locationType === "HOME"}
-                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
+                        className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                         placeholder="Dirección completa"
                       />
                     </div>
@@ -555,7 +586,7 @@ export default function ContactSection() {
                         name="addressReference"
                         value={formData.addressReference}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
+                        className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-sm sm:text-base resize-none"
                         placeholder="Referencia de ubicación"
                       />
                     </div>
@@ -575,20 +606,88 @@ export default function ContactSection() {
                     value={formData.message}
                     onChange={handleInputChange}
                     rows={4}
-                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300"
+                    className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                     placeholder="Detalles adicionales sobre tu evento o preferencias..."
                   />
                 </div>
 
                 {/* Desglose de precios */}
                 {formData.service && (
-                  <div className="space-y-2">
+                  <div className="space-y-4">
                     <PricingBreakdown
                       selectedService={formData.service}
                       locationType={formData.locationType}
                       district={formData.district}
                       onPriceCalculated={handlePriceCalculated}
                     />
+
+                    {/* Información de depósito PLIN */}
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 sm:p-6 border border-blue-200">
+                      <div className="flex items-start gap-3">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-blue-900 mb-2 text-sm sm:text-base">
+                            💳 Información de Pago - Depósito Requerido
+                          </h4>
+                          <div className="space-y-2 text-xs sm:text-sm text-blue-800">
+                            <p className="leading-relaxed">
+                              <span className="font-medium">
+                                Para confirmar tu cita:
+                              </span>{" "}
+                              Se requiere un depósito de{" "}
+                              <span className="font-bold text-blue-900">
+                                S/ 150
+                              </span>
+                            </p>
+                            <div className="bg-white rounded-md p-3 border border-blue-100">
+                              <p className="font-medium text-blue-900 mb-2">
+                                Datos para PLIN:
+                              </p>
+                              <div className="flex items-center gap-2 bg-blue-50 rounded-md p-2 border border-blue-200">
+                                <span className="font-mono text-sm font-bold text-blue-900 flex-1">
+                                  📱 +51999209880
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    copyToClipboard("+51999209880")
+                                  }
+                                  className="flex items-center gap-1 px-2 py-1 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700 transition-colors touch-manipulation"
+                                >
+                                  {copied ? (
+                                    <>
+                                      <Check className="h-3 w-3" />
+                                      <span>¡Copiado!</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Copy className="h-3 w-3" />
+                                      <span>Copiar</span>
+                                    </>
+                                  )}
+                                </button>
+                              </div>
+                              <p className="text-xs text-blue-700 mt-2">
+                                💡 Haz clic en &quot;Copiar&quot; para guardar
+                                el número en el portapapeles
+                              </p>
+                            </div>
+                            <div className="text-xs text-blue-700 space-y-1">
+                              <p>
+                                • El saldo restante se paga el día de la cita
+                              </p>
+                              <p>
+                                • Te contactaré para coordinar el depósito
+                                después de enviar este formulario
+                              </p>
+                              <p>
+                                • Una vez confirmado el pago, tu cita quedará
+                                reservada
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
 
@@ -607,7 +706,7 @@ export default function ContactSection() {
                 <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-primary-accent text-white py-4 px-6 rounded-lg font-medium text-lg hover:bg-primary-accent/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2"
+                  className="w-full bg-primary-accent text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg font-medium text-base sm:text-lg hover:bg-primary-accent/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 touch-manipulation"
                   whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -629,40 +728,44 @@ export default function ContactSection() {
 
           {/* Información de Contacto */}
           <motion.div
-            className="lg:col-span-1"
+            className="lg:col-span-1 order-first lg:order-last"
             initial={{ opacity: 0, x: 20 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
             <div className="space-y-8">
-              <div className="bg-light-background rounded-xl p-6 border border-gray-100">
-                <h3 className="text-xl font-playfair text-heading mb-4">
+              <div className="bg-light-background rounded-xl p-4 sm:p-6 border border-gray-100">
+                <h3 className="text-lg sm:text-xl font-playfair text-heading mb-3 sm:mb-4">
                   Información de Contacto
                 </h3>
 
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <Phone className="w-5 h-5 text-accent-primary" />
-                    <span className="text-main">+51 989 164 990</span>
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-accent-primary flex-shrink-0" />
+                    <span className="text-main text-sm sm:text-base">
+                      +51 989 164 990
+                    </span>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <Mail className="w-5 h-5 text-accent-primary" />
-                    <span className="text-main">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-accent-primary flex-shrink-0" />
+                    <span className="text-main text-sm sm:text-base break-all">
                       contacto@marcelacordero.com
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <MapPin className="w-5 h-5 text-accent-primary" />
-                    <span className="text-main">Pueblo Libre, Lima</span>
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-accent-primary flex-shrink-0" />
+                    <span className="text-main text-sm sm:text-base">
+                      Pueblo Libre, Lima
+                    </span>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <Instagram className="w-5 h-5 text-accent-primary" />
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <Instagram className="w-4 h-4 sm:w-5 sm:h-5 text-accent-primary flex-shrink-0" />
                     <a
                       href="https://www.instagram.com/marcelacorderobeauty/"
-                      className="text-main hover:text-accent-primary transition-colors"
+                      className="text-main hover:text-accent-primary transition-colors text-sm sm:text-base break-all"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -672,12 +775,12 @@ export default function ContactSection() {
                 </div>
               </div>
 
-              <div className="bg-light-background rounded-xl p-6 border border-gray-100">
-                <h3 className="text-xl font-playfair text-heading mb-4">
+              <div className="bg-light-background rounded-xl p-4 sm:p-6 border border-gray-100">
+                <h3 className="text-lg sm:text-xl font-playfair text-heading mb-3 sm:mb-4">
                   Horarios de Atención
                 </h3>
 
-                <div className="space-y-3 text-main">
+                <div className="space-y-2 sm:space-y-3 text-main text-sm sm:text-base">
                   <div className="flex justify-between">
                     <span>Lunes - Viernes</span>
                     <span>9:00 AM - 6:00 PM</span>

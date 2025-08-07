@@ -129,7 +129,7 @@ export default function ServiceSelector({
     };
 
     loadServices();
-  }, []);
+  }, [onLoadingChange]);
 
   // Cerrar dropdown al hacer clic fuera
   useEffect(() => {

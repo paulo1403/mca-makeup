@@ -123,19 +123,23 @@ export default function PricingBreakdown({
   const totalPrice = servicePrice + currentTransportCost;
 
   return (
-    <div className="bg-gradient-to-r from-[#D4AF37]/10 to-[#B06579]/10 rounded-lg p-4 border border-[#D4AF37]/20">
+    <div className="bg-gradient-to-r from-[#D4AF37]/10 to-[#B06579]/10 rounded-lg p-3 sm:p-4 border border-[#D4AF37]/20">
       <div className="flex items-center gap-2 mb-3">
-        <Calculator className="h-5 w-5 text-[#D4AF37]" />
-        <h3 className="font-semibold text-gray-900">Resumen de Precios</h3>
+        <Calculator className="h-4 w-4 sm:h-5 sm:w-5 text-[#D4AF37]" />
+        <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
+          Detalle de Costos
+        </h3>
       </div>
 
       <div className="space-y-3">
         {/* Precio del servicio */}
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">{serviceName}</span>
+        <div className="flex justify-between items-start sm:items-center gap-2">
+          <div className="flex-1 min-w-0">
+            <span className="text-xs sm:text-sm text-gray-600 break-words">
+              {serviceName}
+            </span>
           </div>
-          <span className="font-medium text-gray-900">
+          <span className="font-medium text-gray-900 text-sm sm:text-base flex-shrink-0">
             S/ {servicePrice.toFixed(2)}
           </span>
         </div>
@@ -143,33 +147,37 @@ export default function PricingBreakdown({
         {/* Costo de transporte */}
         {locationType === "HOME" && (
           <div className="border-t border-gray-200 pt-2">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <Truck className="h-4 w-4 text-[#B06579]" />
-                <span className="text-sm text-gray-600">
+            <div className="flex justify-between items-start sm:items-center gap-2">
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                <Truck className="h-3 w-3 sm:h-4 sm:w-4 text-[#B06579] flex-shrink-0" />
+                <span className="text-xs sm:text-sm text-gray-600 break-words">
                   Transporte {district && `(${district})`}
                 </span>
               </div>
-              <div className="text-right">
+              <div className="text-right flex-shrink-0">
                 {loading ? (
-                  <span className="text-sm text-gray-500">Calculando...</span>
+                  <span className="text-xs sm:text-sm text-gray-500">
+                    Calculando...
+                  </span>
                 ) : error ? (
-                  <span className="text-sm text-red-600">Error</span>
+                  <span className="text-xs sm:text-sm text-red-600">Error</span>
                 ) : transportCost?.hasTransportCost ? (
-                  <span className="font-medium text-gray-900">
+                  <span className="font-medium text-gray-900 text-sm sm:text-base">
                     S/ {transportCost.cost.toFixed(2)}
                   </span>
                 ) : (
-                  <span className="text-sm text-gray-500">No disponible</span>
+                  <span className="text-xs sm:text-sm text-gray-500">
+                    No disponible
+                  </span>
                 )}
               </div>
             </div>
 
             {/* Notas sobre el transporte */}
             {transportCost?.notes && (
-              <div className="flex items-start gap-2 mt-1">
+              <div className="flex items-start gap-2 mt-2">
                 <AlertCircle className="h-3 w-3 text-blue-500 mt-0.5 flex-shrink-0" />
-                <span className="text-xs text-blue-600">
+                <span className="text-xs text-blue-600 leading-relaxed">
                   {transportCost.notes}
                 </span>
               </div>
@@ -180,9 +188,9 @@ export default function PricingBreakdown({
               district &&
               !loading &&
               !transportCost?.hasTransportCost && (
-                <div className="flex items-start gap-2 mt-1">
+                <div className="flex items-start gap-2 mt-2">
                   <MapPin className="h-3 w-3 text-amber-500 mt-0.5 flex-shrink-0" />
-                  <span className="text-xs text-amber-600">
+                  <span className="text-xs text-amber-600 leading-relaxed">
                     Costo de transporte a coordinar
                   </span>
                 </div>
@@ -191,30 +199,34 @@ export default function PricingBreakdown({
         )}
 
         {/* Ubicación del servicio */}
-        <div className="text-xs text-gray-500 flex items-center gap-1">
-          <MapPin className="h-3 w-3" />
-          {locationType === "STUDIO"
-            ? "Servicio en local (Pueblo Libre)"
-            : `Servicio a domicilio${district ? ` - ${district}` : ""}`}
+        <div className="text-xs text-gray-500 flex items-start gap-1 py-1">
+          <MapPin className="h-3 w-3 mt-0.5 flex-shrink-0" />
+          <span className="leading-relaxed">
+            {locationType === "STUDIO"
+              ? "Servicio en local (Pueblo Libre)"
+              : `Servicio a domicilio${district ? ` - ${district}` : ""}`}
+          </span>
         </div>
 
         {/* Total */}
-        <div className="border-t border-[#D4AF37]/30 pt-2">
+        <div className="border-t border-[#D4AF37]/30 pt-3">
           <div className="flex justify-between items-center">
-            <span className="font-bold text-gray-900">Total estimado:</span>
-            <span className="font-bold text-lg text-[#D4AF37]">
+            <span className="font-bold text-gray-900 text-sm sm:text-base">
+              Total estimado:
+            </span>
+            <span className="font-bold text-base sm:text-lg text-[#D4AF37]">
               S/ {totalPrice.toFixed(2)}
             </span>
           </div>
         </div>
 
         {/* Nota importante */}
-        <div className="bg-blue-50 border border-blue-200 rounded-md p-2 mt-3">
+        <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mt-3">
           <div className="flex items-start gap-2">
             <AlertCircle className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
             <div className="text-xs text-blue-700">
-              <p className="font-medium mb-1">Información importante:</p>
-              <ul className="space-y-1 text-xs">
+              <p className="font-medium mb-2">💡 Información importante:</p>
+              <ul className="space-y-1.5 text-xs leading-relaxed">
                 <li>
                   • Los precios pueden variar según requerimientos específicos
                 </li>
