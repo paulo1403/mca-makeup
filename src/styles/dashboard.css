@@ -5,29 +5,29 @@
     padding-left: 0.75rem;
     padding-right: 0.75rem;
   }
-  
+
   /* Better touch targets */
   .touch-target {
     min-height: 44px;
     min-width: 44px;
   }
-  
+
   /* Improve text readability on small screens */
   .mobile-text {
     font-size: 0.875rem;
     line-height: 1.25rem;
   }
-  
+
   /* Stack cards more tightly on mobile */
   .mobile-grid {
     gap: 0.75rem;
   }
-  
+
   /* Better mobile table styles */
   .mobile-table {
     font-size: 0.875rem;
   }
-  
+
   .mobile-table th,
   .mobile-table td {
     padding: 0.5rem;
@@ -44,7 +44,7 @@
 }
 
 .dashboard-scroll::-webkit-scrollbar-thumb {
-  background: #D4AF37;
+  background: #d4af37;
   border-radius: 1px;
 }
 
@@ -55,7 +55,7 @@
 
 /* Focus states for accessibility */
 .focus-ring:focus {
-  outline: 2px solid #D4AF37;
+  outline: 2px solid #d4af37;
   outline-offset: 2px;
 }
 
@@ -79,6 +79,34 @@
 @media (hover: hover) {
   .hover-lift:hover {
     transform: translateY(-1px);
+  }
+}
+
+/* Mobile Recent Appointments Styles */
+@media (max-width: 640px) {
+  .recent-appointments-mobile {
+    gap: 0.5rem;
+  }
+
+  .appointment-card-mobile {
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
+  }
+
+  .appointment-card-mobile:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  .appointment-details-mobile {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+
+  .appointment-button-mobile {
+    min-height: 36px;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
   }
 }
 
