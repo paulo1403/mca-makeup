@@ -188,7 +188,7 @@ function AppointmentsContent() {
           ) : (
             <AppointmentTable
               appointments={appointments}
-              highlightedId={highlightedId}
+              highlightedId={highlightedId || undefined}
               onViewDetails={handleViewDetails}
             />
           )}

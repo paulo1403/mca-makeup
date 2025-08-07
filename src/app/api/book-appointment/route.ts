@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 import { z } from "zod";
 import { sendEmail, emailTemplates } from "@/lib/email";
 import {
@@ -30,7 +30,9 @@ const appointmentSchema = z
           /^\d+$/.test(cleanPhone)
         );
       }, "Formato de teléfono inválido. Ej: +51 999 209 880 o 999209880"),
-    serviceType: z.string().min(1, "Tipo de servicio requerido"),
+    services: z
+      .array(z.string().min(1, "Servicio inválido"))
+      .min(1, "Debe seleccionar al menos un servicio"),
     servicePrice: z.number().min(0, "Precio del servicio requerido"),
     appointmentDate: z.string().min(1, "Fecha requerida"),
     appointmentTimeRange: z.string().min(1, "Horario requerido"),
@@ -60,6 +62,20 @@ const appointmentSchema = z
         "Para servicios a domicilio, distrito y dirección son requeridos",
       path: ["address"],
     },
+  )
+  .refine(
+    (data) => {
+      // Validar combinaciones de servicios permitidas
+      if (data.services.length === 0) return true;
+
+      // Obtener servicios desde la base de datos para validar categorías
+      // Esta validación se hará en el endpoint después de parsear los servicios
+      return true;
+    },
+    {
+      message: "Combinación de servicios no válida",
+      path: ["services"],
+    },
   );
 
 export async function POST(request: NextRequest) {
@@ -68,6 +84,103 @@ export async function POST(request: NextRequest) {
 
     // Validate input
     const validatedData = appointmentSchema.parse(body);
+
+    // Parse and validate services
+    const allServices = await prisma.service.findMany({
+      where: { isActive: true },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        duration: true,
+        category: true,
+      },
+    });
+
+    const parsedServices = [];
+    let totalDuration = 0;
+    let calculatedServicePrice = 0;
+
+    for (const serviceString of validatedData.services) {
+      // Extract service name from string (formato: "Nombre (S/ 200)")
+      let serviceName = serviceString;
+      if (serviceString.includes("(S/")) {
+        serviceName = serviceString.split(" (S/")[0].trim();
+      }
+
+      // Find matching service in database
+      const matchedService = allServices.find(
+        (s) =>
+          s.name === serviceName ||
+          s.name.toLowerCase().includes(serviceName.toLowerCase()) ||
+          serviceName.toLowerCase().includes(s.name.toLowerCase()),
+      );
+
+      if (!matchedService) {
+        return NextResponse.json(
+          { error: `Servicio no encontrado: ${serviceName}` },
+          { status: 400 },
+        );
+      }
+
+      parsedServices.push(matchedService);
+      totalDuration += matchedService.duration;
+      calculatedServicePrice += matchedService.price;
+    }
+
+    // Validar combinaciones de servicios
+    const categories = parsedServices.map((s) => s.category);
+    const uniqueCategories = [...new Set(categories)];
+
+    // No permitir solo peinado
+    if (uniqueCategories.length === 1 && uniqueCategories[0] === "HAIRSTYLE") {
+      return NextResponse.json(
+        {
+          error:
+            "No se puede reservar solo peinado. Debe incluir un servicio de maquillaje.",
+        },
+        { status: 400 },
+      );
+    }
+
+    // No permitir combinar novia con social/piel madura
+    const hasNovia = categories.includes("BRIDAL");
+    const hasSocial =
+      categories.includes("SOCIAL") || categories.includes("MATURE_SKIN");
+
+    if (hasNovia && hasSocial) {
+      return NextResponse.json(
+        {
+          error:
+            "No se pueden combinar servicios de novia con servicios sociales o de piel madura.",
+        },
+        { status: 400 },
+      );
+    }
+
+    // Solo permitir máximo 2 tipos de servicios
+    if (uniqueCategories.length > 2) {
+      return NextResponse.json(
+        { error: "Solo se pueden combinar máximo 2 tipos de servicios." },
+        { status: 400 },
+      );
+    }
+
+    // Si hay 2 categorías, debe ser maquillaje + peinado
+    if (uniqueCategories.length === 2) {
+      const hasHairstyle = categories.includes("HAIRSTYLE");
+      const hasMakeup =
+        categories.includes("SOCIAL") ||
+        categories.includes("MATURE_SKIN") ||
+        categories.includes("BRIDAL");
+
+      if (!(hasHairstyle && hasMakeup)) {
+        return NextResponse.json(
+          { error: "Solo se puede combinar maquillaje con peinado." },
+          { status: 400 },
+        );
+      }
+    }
 
     // Parse date correctly in Peru timezone
     let appointmentDateTime: Date;
@@ -101,7 +214,7 @@ export async function POST(request: NextRequest) {
 
     // Calcular costo de transporte si es a domicilio
     let transportCost = 0;
-    let totalPrice = validatedData.servicePrice;
+    let totalPrice = calculatedServicePrice;
 
     if (validatedData.locationType === "HOME" && validatedData.district) {
       const transportCostData = await prisma.transportCost.findFirst({
@@ -116,9 +229,21 @@ export async function POST(request: NextRequest) {
 
       if (transportCostData) {
         transportCost = transportCostData.cost;
-        totalPrice = validatedData.servicePrice + transportCost;
+        totalPrice = calculatedServicePrice + transportCost;
       }
     }
+
+    // Crear string de servicios para serviceType (mantener compatibilidad)
+    const serviceTypeString = parsedServices.map((s) => s.name).join(" + ");
+
+    // Crear objeto de servicios para almacenar en JSON
+    const servicesJson = parsedServices.map((s) => ({
+      id: s.id,
+      name: s.name,
+      price: s.price,
+      duration: s.duration,
+      category: s.category,
+    }));
 
     // Create the appointment
     const appointment = await prisma.appointment.create({
@@ -126,10 +251,13 @@ export async function POST(request: NextRequest) {
         clientName: validatedData.clientName,
         clientEmail: validatedData.clientEmail,
         clientPhone: validatedData.clientPhone,
-        serviceType: validatedData.serviceType,
-        servicePrice: validatedData.servicePrice,
+        serviceType: serviceTypeString,
+        services: servicesJson as Prisma.InputJsonValue,
+        servicePrice: calculatedServicePrice,
         transportCost: transportCost > 0 ? transportCost : null,
         totalPrice: totalPrice,
+        duration: totalDuration,
+        totalDuration: totalDuration,
         appointmentDate: appointmentDateTime,
         appointmentTime: validatedData.appointmentTimeRange,
         locationType: validatedData.locationType,
@@ -141,8 +269,8 @@ export async function POST(request: NextRequest) {
           validatedData.locationType === "HOME"
             ? validatedData.addressReference
             : null,
-        additionalNotes: `Ubicación: ${validatedData.locationType === "STUDIO" ? "Local en Pueblo Libre" : `Domicilio - ${validatedData.district || ""}, ${validatedData.address || ""}`}${validatedData.addressReference ? ` (Ref: ${validatedData.addressReference})` : ""}${validatedData.additionalNotes ? `\n\nNotas adicionales: ${validatedData.additionalNotes}` : ""}`,
-        status: "CONFIRMED",
+        additionalNotes: `Servicios: ${serviceTypeString}\nUbicación: ${validatedData.locationType === "STUDIO" ? "Local en Av. Bolívar 1073, Pueblo Libre" : `Domicilio - ${validatedData.district || ""}, ${validatedData.address || ""}`}${validatedData.addressReference ? ` (Ref: ${validatedData.addressReference})` : ""}${validatedData.additionalNotes ? `\n\nNotas adicionales: ${validatedData.additionalNotes}` : ""}`,
+        status: "PENDING",
       },
     });
 
@@ -158,8 +286,8 @@ export async function POST(request: NextRequest) {
     await prisma.notification.create({
       data: {
         type: "APPOINTMENT",
-        title: "Nueva cita confirmada",
-        message: `${appointment.clientName} ha reservado ${appointment.serviceType} para el ${formatDate(appointment.appointmentDate)} a las ${formatTime(appointment.appointmentTime)}`,
+        title: "Nueva cita pendiente",
+        message: `${appointment.clientName} ha solicitado ${serviceTypeString} para el ${formatDate(appointment.appointmentDate)} a las ${formatTime(appointment.appointmentTime)}`,
         link: "/admin/appointments",
         appointmentId: appointment.id,
         read: false,
@@ -172,7 +300,7 @@ export async function POST(request: NextRequest) {
       if (process.env.ADMIN_EMAIL) {
         const adminEmailData = emailTemplates.newAppointmentAlert(
           appointment.clientName,
-          appointment.serviceType,
+          serviceTypeString,
           formatDate(appointment.appointmentDate),
           formatTime(appointment.appointmentTime),
           appointment.clientEmail,
@@ -192,11 +320,10 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      // Send confirmation to client
-      // Send confirmation to client immediately since appointment is auto-confirmed
-      const clientEmailData = emailTemplates.appointmentConfirmed(
+      // Send pending confirmation to client
+      const clientEmailData = emailTemplates.appointmentPending(
         appointment.clientName,
-        appointment.serviceType,
+        serviceTypeString,
         formatDate(appointment.appointmentDate),
         formatTime(appointment.appointmentTime),
         validatedData.locationType,
@@ -220,13 +347,16 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        message: "Cita confirmada exitosamente",
+        message:
+          "Cita enviada exitosamente. Te contactaremos pronto para confirmar.",
         appointmentId: appointment.id,
         pricing: {
-          servicePrice: validatedData.servicePrice,
+          servicePrice: calculatedServicePrice,
           transportCost: transportCost,
           totalPrice: totalPrice,
         },
+        services: servicesJson,
+        totalDuration: totalDuration,
       },
       { status: 201 },
     );

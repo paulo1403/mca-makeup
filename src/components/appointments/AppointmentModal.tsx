@@ -10,6 +10,12 @@ import {
   formatPrice,
   getPriceBreakdown,
 } from "@/utils/appointmentHelpers";
+import {
+  copyReviewLink,
+  getReviewUrl,
+  getReviewStatusColor,
+  getReviewStatusText,
+} from "@/utils/reviewHelpers";
 
 interface AppointmentModalProps {
   appointment: Appointment | null;
@@ -35,16 +41,16 @@ export default function AppointmentModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
-      <div className="bg-white rounded-t-xl sm:rounded-lg max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] flex flex-col">
+      <div className="bg-white rounded-t-2xl sm:rounded-xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] flex flex-col shadow-2xl">
         {/* Mobile Header */}
-        <div className="sticky top-0 bg-white p-4 sm:p-6 border-b sm:border-b-0">
+        <div className="sticky top-0 bg-white p-4 sm:p-6 border-b border-gray-200 rounded-t-2xl sm:rounded-t-xl">
           <div className="flex justify-between items-center">
-            <h2 className="text-lg sm:text-2xl font-bold text-[#1C1C1C]">
+            <h2 className="text-lg sm:text-2xl font-bold text-[#1C1C1C] font-playfair">
               Detalles de la Cita
             </h2>
             <button
               onClick={onClose}
-              className="text-gray-500 hover:text-gray-700 p-2 -m-2 rounded-full hover:bg-gray-100"
+              className="text-gray-500 hover:text-[#D4AF37] p-2 -m-2 rounded-full hover:bg-[#D4AF37]/5 transition-colors"
             >
               <svg
                 className="w-5 h-5 sm:w-6 sm:h-6"
@@ -63,7 +69,7 @@ export default function AppointmentModal({
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50 sm:bg-white">
           <div className="space-y-4 sm:space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <AppointmentDetailField
@@ -95,26 +101,32 @@ export default function AppointmentModal({
                 value={`${appointment.duration} minutos`}
               />
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-600 mb-1">
+                <div className="block text-xs sm:text-sm font-medium text-gray-600 mb-1">
                   Ubicación
-                </label>
-                <div className="bg-gray-50 p-3 rounded-lg">
+                </div>
+                <div className="bg-white sm:bg-gray-50 p-4 rounded-lg border border-gray-200">
                   <p className="text-sm sm:text-base text-gray-900 font-medium mb-2">
-                    {appointment.location || "A domicilio"}
+                    {appointment.location &&
+                    appointment.location.includes("Studio")
+                      ? "En estudio - Av. Bolívar 1073, Pueblo Libre"
+                      : "Servicio a domicilio"}
                   </p>
                   {appointment.address && (
-                    <div className="space-y-2">
-                      <p className="text-sm text-gray-700">
-                        📍 {appointment.address}
-                        {appointment.addressReference &&
-                          ` (${appointment.addressReference})`}
+                    <div className="space-y-3">
+                      <p className="text-sm text-gray-700 flex items-start space-x-2">
+                        <span className="w-2 h-2 bg-[#D4AF37] rounded-full mt-2 flex-shrink-0"></span>
+                        <span>
+                          {appointment.address}
+                          {appointment.addressReference &&
+                            ` (${appointment.addressReference})`}
+                          {appointment.district && `, ${appointment.district}`}
+                        </span>
                       </p>
-                      <div className="flex flex-col sm:flex-row gap-2">
+                      <div className="grid grid-cols-2 gap-2">
                         <button
                           onClick={(event) => {
                             const fullAddress = `${appointment.address}${appointment.district ? `, ${appointment.district}` : ""}, Lima, Perú`;
                             navigator.clipboard.writeText(fullAddress);
-                            // Mostrar feedback visual (opcional)
                             const btn = event.target as HTMLButtonElement;
                             const originalText = btn.textContent;
                             btn.textContent = "✅ Copiado!";
@@ -122,9 +134,9 @@ export default function AppointmentModal({
                               btn.textContent = originalText;
                             }, 2000);
                           }}
-                          className="flex items-center justify-center gap-2 bg-blue-100 text-blue-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors"
+                          className="flex items-center justify-center gap-2 bg-[#D4AF37]/20 text-[#B8941F] px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-[#D4AF37]/30 transition-colors border border-[#D4AF37]/30"
                         >
-                          📋 Copiar Dirección
+                          Copiar Dirección
                         </button>
                         <button
                           onClick={() => {
@@ -132,9 +144,9 @@ export default function AppointmentModal({
                             const mapsUrl = `https://maps.google.com/maps?q=${encodeURIComponent(fullAddress)}`;
                             window.open(mapsUrl, "_blank");
                           }}
-                          className="flex items-center justify-center gap-2 bg-green-100 text-green-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-green-200 transition-colors"
+                          className="flex items-center justify-center gap-2 bg-emerald-400 text-white px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-emerald-500 transition-colors"
                         >
-                          🗺️ Abrir en Google Maps
+                          Abrir en Maps
                         </button>
                       </div>
                     </div>
@@ -148,39 +160,41 @@ export default function AppointmentModal({
               const priceInfo = getPriceBreakdown(appointment);
               if (priceInfo.totalPrice > 0) {
                 return (
-                  <div className="bg-[#D4AF37]/10 p-4 rounded-lg">
-                    <h3 className="text-sm font-medium text-gray-700 mb-3">
-                      Información de Precios
+                  <div className="bg-[#D4AF37]/5 p-4 rounded-lg border border-[#D4AF37]/20">
+                    <h3 className="text-sm font-semibold text-[#1C1C1C] mb-3 flex items-center space-x-2">
+                      <div className="w-4 h-4 bg-[#D4AF37] rounded-full flex-shrink-0"></div>
+                      <span>Información de Precios</span>
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div className="bg-white p-3 rounded-lg">
+                        <div className="block text-xs font-medium text-gray-600 mb-1">
                           Servicio
-                        </label>
-                        <p className="text-lg font-semibold text-gray-900">
+                        </div>
+                        <p className="text-base sm:text-lg font-semibold text-gray-900">
                           {formatPrice(priceInfo.servicePrice)}
                         </p>
                       </div>
                       {priceInfo.hasTransport && (
-                        <div>
-                          <label className="block text-xs font-medium text-gray-600 mb-1">
+                        <div className="bg-white p-3 rounded-lg">
+                          <div className="block text-xs font-medium text-gray-600 mb-1">
                             Movilidad
-                          </label>
-                          <p className="text-lg font-semibold text-gray-900">
+                          </div>
+                          <p className="text-base sm:text-lg font-semibold text-gray-900">
                             {formatPrice(priceInfo.transportCost)}
                           </p>
                           {appointment.district && (
-                            <p className="text-xs text-gray-500 mt-1">
-                              📍 {appointment.district}
-                            </p>
+                            <div className="text-xs text-gray-500 mt-1 flex items-center space-x-1">
+                              <div className="w-2 h-2 bg-[#D4AF37] rounded-full flex-shrink-0"></div>
+                              <span>{appointment.district}</span>
+                            </div>
                           )}
                         </div>
                       )}
-                      <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1">
+                      <div className="bg-[#D4AF37] text-white p-3 rounded-lg">
+                        <div className="block text-xs font-medium text-white/80 mb-1">
                           Total
-                        </label>
-                        <p className="text-xl font-bold text-[#D4AF37]">
+                        </div>
+                        <p className="text-lg sm:text-xl font-bold">
                           {formatPrice(priceInfo.totalPrice)}
                         </p>
                       </div>
@@ -193,19 +207,23 @@ export default function AppointmentModal({
 
             {appointment.additionalNotes && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Notas Adicionales
-                </label>
-                <p className="text-sm sm:text-base text-gray-900 bg-gray-50 p-3 sm:p-4 rounded-lg leading-relaxed">
+                <div className="text-sm font-semibold text-[#1C1C1C] mb-2 flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-[#D4AF37]/70 rounded flex-shrink-0"></div>
+                  <span>Notas Adicionales</span>
+                </div>
+                <p className="text-sm sm:text-base text-gray-900 bg-white sm:bg-gray-50 p-4 rounded-lg leading-relaxed border border-gray-200">
                   {appointment.additionalNotes}
                 </p>
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 pt-4 border-t">
-              <span className="text-sm font-medium text-gray-700">Estado:</span>
+            <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 pt-4 border-t border-gray-200">
+              <div className="text-sm font-semibold text-[#1C1C1C] flex items-center space-x-2">
+                <div className="w-3 h-3 bg-[#D4AF37] rounded-full flex-shrink-0"></div>
+                <span>Estado actual:</span>
+              </div>
               <span
-                className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${getStatusColor(
+                className={`inline-flex px-3 py-2 text-sm font-semibold rounded-full ${getStatusColor(
                   appointment.status,
                 )}`}
               >
@@ -213,55 +231,141 @@ export default function AppointmentModal({
               </span>
             </div>
 
-            <div className="text-xs sm:text-sm text-gray-500 pt-3 border-t space-y-1">
-              <p>
-                📅 Creada:{" "}
-                {new Date(appointment.createdAt).toLocaleString("es-ES")}
-              </p>
-              <p>
-                🔄 Actualizada:{" "}
-                {new Date(appointment.updatedAt).toLocaleString("es-ES")}
-              </p>
+            {/* Review Link Section - Only show if appointment is completed and has review */}
+            {appointment.status === "COMPLETED" && appointment.review && (
+              <div className="bg-[#D4AF37]/5 p-4 rounded-lg border border-[#D4AF37]/20">
+                <h3 className="text-sm font-semibold text-[#1C1C1C] mb-3 flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-[#D4AF37] rounded-full flex-shrink-0"></div>
+                  <span>Link de Reseña</span>
+                </h3>
+                <div className="space-y-3">
+                  <div className="bg-white p-3 rounded-lg border border-[#D4AF37]/30">
+                    <div className="text-xs font-medium text-gray-600 mb-2">
+                      Estado de la reseña
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span
+                        className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getReviewStatusColor(appointment.review.status)}`}
+                      >
+                        {getReviewStatusText(appointment.review.status)}
+                      </span>
+                      {appointment.review.rating && (
+                        <div className="flex items-center space-x-1">
+                          {[...Array(5)].map((_, i) => (
+                            <svg
+                              key={i}
+                              className={`w-4 h-4 ${i < appointment.review!.rating! ? "text-[#D4AF37] fill-current" : "text-gray-300"}`}
+                              viewBox="0 0 20 20"
+                            >
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                          ))}
+                          <span className="text-sm text-gray-600 ml-1">
+                            ({appointment.review.rating}/5)
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="bg-white p-3 rounded-lg border border-[#D4AF37]/30">
+                    <div className="text-xs font-medium text-gray-600 mb-2">
+                      Link para compartir con la clienta
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <div className="flex-1 bg-gray-50 p-2 rounded border text-sm text-gray-700 font-mono break-all">
+                        {getReviewUrl(appointment.review.reviewToken)}
+                      </div>
+                      <button
+                        onClick={(event) => {
+                          copyReviewLink(
+                            appointment.review!.reviewToken,
+                            event.target as HTMLButtonElement,
+                          );
+                        }}
+                        className="px-3 py-2 bg-[#D4AF37] text-white rounded text-sm font-medium hover:bg-[#B8941F] transition-colors whitespace-nowrap"
+                      >
+                        📋 Copiar Link
+                      </button>
+                    </div>
+                    <div className="text-xs text-gray-500 mt-2">
+                      Comparte este link con {appointment.clientName} para que
+                      pueda dejar su reseña del servicio.
+                    </div>
+                  </div>
+
+                  {appointment.review.reviewText && (
+                    <div className="bg-white p-3 rounded-lg border border-[#D4AF37]/30">
+                      <div className="text-xs font-medium text-gray-600 mb-2">
+                        Comentario de la clienta
+                      </div>
+                      <p className="text-sm text-gray-700 italic">
+                        &ldquo;{appointment.review.reviewText}&rdquo;
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div className="text-xs sm:text-sm text-gray-500 pt-3 border-t border-gray-200 space-y-2 bg-white sm:bg-gray-50 p-3 rounded-lg">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-[#D4AF37]/70 rounded-full flex-shrink-0 mt-1"></div>
+                <span>
+                  <strong>Creada:</strong>{" "}
+                  {new Date(appointment.createdAt).toLocaleString("es-ES")}
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-[#D4AF37]/70 rounded-full flex-shrink-0 mt-1"></div>
+                <span>
+                  <strong>Actualizada:</strong>{" "}
+                  {new Date(appointment.updatedAt).toLocaleString("es-ES")}
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Bottom Actions */}
-        <div className="border-t bg-white p-4 sm:p-6">
-          <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
-            <button
-              onClick={onClose}
-              className="px-4 py-3 sm:py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 font-medium"
-            >
-              Cerrar
-            </button>
+        <div className="border-t border-gray-200 bg-white p-4 sm:p-6 rounded-b-2xl sm:rounded-b-xl">
+          <div className="space-y-3">
+            {/* Primary Actions */}
             {appointment.status === "PENDING" && (
-              <>
+              <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => handleStatusUpdate("CONFIRMED")}
                   disabled={updateStatusMutation.isPending}
-                  className="px-4 py-3 sm:py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 font-medium"
+                  className="px-4 py-3 bg-emerald-400 text-white rounded-lg hover:bg-emerald-500 disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[44px]"
                 >
-                  ✅ Confirmar Cita
+                  Confirmar Cita
                 </button>
                 <button
                   onClick={() => handleStatusUpdate("CANCELLED")}
                   disabled={updateStatusMutation.isPending}
-                  className="px-4 py-3 sm:py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 font-medium"
+                  className="px-4 py-3 bg-rose-400 text-white rounded-lg hover:bg-rose-500 disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[44px]"
                 >
-                  ❌ Cancelar Cita
+                  Cancelar Cita
                 </button>
-              </>
+              </div>
             )}
             {appointment.status === "CONFIRMED" && (
               <button
                 onClick={() => handleStatusUpdate("COMPLETED")}
                 disabled={updateStatusMutation.isPending}
-                className="px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium"
+                className="w-full px-4 py-3 bg-sky-400 text-white rounded-lg hover:bg-sky-500 disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[44px]"
               >
-                ✅ Marcar como Completada
+                Marcar como Completada
               </button>
             )}
+
+            {/* Secondary Action */}
+            <button
+              onClick={onClose}
+              className="w-full px-4 py-3 text-[#1C1C1C] bg-gray-200 rounded-lg hover:bg-gray-300 font-medium transition-colors min-h-[44px]"
+            >
+              Cerrar
+            </button>
           </div>
         </div>
       </div>
@@ -276,11 +380,11 @@ interface AppointmentDetailFieldProps {
 
 function AppointmentDetailField({ label, value }: AppointmentDetailFieldProps) {
   return (
-    <div className="bg-gray-50 p-3 rounded-lg">
-      <label className="block text-xs sm:text-sm font-medium text-gray-600 mb-1">
+    <div className="bg-white sm:bg-gray-50 p-3 rounded-lg border border-gray-200 sm:border-none">
+      <div className="block text-xs sm:text-sm font-medium text-gray-600 mb-1">
         {label}
-      </label>
-      <p className="text-sm sm:text-base text-gray-900 font-medium">{value}</p>
+      </div>
+      <p className="text-sm sm:text-base text-[#1C1C1C] font-medium">{value}</p>
     </div>
   );
 }

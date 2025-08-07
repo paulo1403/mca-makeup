@@ -60,6 +60,15 @@ export async function GET(request: NextRequest) {
           totalPrice: true,
           createdAt: true,
           updatedAt: true,
+          review: {
+            select: {
+              reviewToken: true,
+              rating: true,
+              reviewText: true,
+              status: true,
+              isPublic: true,
+            },
+          },
         },
       }),
       prisma.appointment.count({ where }),
@@ -251,7 +260,7 @@ export async function PUT(request: NextRequest) {
         if (updateData.status === "CONFIRMED") {
           const emailData = emailTemplates.appointmentConfirmed(
             appointment.clientName,
-            appointment.serviceType,
+            appointment.serviceType || "Servicio no especificado",
             formatDate(appointment.appointmentDate),
             formatTime(appointment.appointmentTime),
           );
@@ -265,7 +274,7 @@ export async function PUT(request: NextRequest) {
         } else if (updateData.status === "CANCELLED") {
           const emailData = emailTemplates.appointmentCancelled(
             appointment.clientName,
-            appointment.serviceType,
+            appointment.serviceType || "Servicio no especificado",
             formatDate(appointment.appointmentDate),
             formatTime(appointment.appointmentTime),
           );

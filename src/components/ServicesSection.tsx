@@ -296,8 +296,8 @@ export default function ServicesSection() {
               Atención Personalizada
             </h3>
             <p className="text-main mb-6 leading-relaxed">
-              Servicios profesionales en nuestro estudio en Pueblo Libre o en la
-              ubicación de tu preferencia
+              Servicios profesionales en nuestro estudio en Av. Bolívar 1073,
+              Pueblo Libre o en la ubicación de tu preferencia
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center text-sm text-main">
               <div className="flex items-center">

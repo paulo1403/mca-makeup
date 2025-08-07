@@ -5,7 +5,7 @@ import { useTransportCost } from "@/hooks/useTransportCost";
 import { Calculator, MapPin, Truck, AlertCircle } from "lucide-react";
 
 interface PricingBreakdownProps {
-  selectedService: string;
+  selectedServices: string[];
   locationType: "STUDIO" | "HOME";
   district?: string;
   onPriceCalculated?: (
@@ -15,14 +15,19 @@ interface PricingBreakdownProps {
   ) => void;
 }
 
+interface ParsedService {
+  name: string;
+  price: number;
+}
+
 export default function PricingBreakdown({
-  selectedService,
+  selectedServices,
   locationType,
   district,
   onPriceCalculated,
 }: PricingBreakdownProps) {
-  const [servicePrice, setServicePrice] = useState<number>(0);
-  const [serviceName, setServiceName] = useState<string>("");
+  const [parsedServices, setParsedServices] = useState<ParsedService[]>([]);
+  const [totalServicePrice, setTotalServicePrice] = useState<number>(0);
   const {
     transportCost,
     loading,
@@ -41,26 +46,31 @@ export default function PricingBreakdown({
   // Debounce para evitar cálculos excesivos
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Extraer precio del servicio seleccionado
+  // Parsear servicios seleccionados
   useEffect(() => {
-    if (!selectedService) {
-      setServicePrice(0);
-      setServiceName("");
+    if (!selectedServices || selectedServices.length === 0) {
+      setParsedServices([]);
+      setTotalServicePrice(0);
       return;
     }
 
-    // Buscar precio en el texto del servicio (formato: "Nombre (S/ 200)")
-    const priceMatch = selectedService.match(/\(S\/\s*(\d+(?:\.\d{2})?)\)/);
-    if (priceMatch) {
-      const price = parseFloat(priceMatch[1]);
-      setServicePrice(price);
-      setServiceName(selectedService.replace(/\s*\(S\/.*\)/, ""));
-    } else {
-      // Si no hay precio en el texto, podría ser "Otro"
-      setServicePrice(0);
-      setServiceName(selectedService);
-    }
-  }, [selectedService]);
+    const parsed: ParsedService[] = [];
+    let total = 0;
+
+    selectedServices.forEach((serviceString) => {
+      // Buscar precio en el texto del servicio (formato: "Nombre (S/ 200)")
+      const priceMatch = serviceString.match(/\(S\/\s*(\d+(?:\.\d{2})?)\)/);
+      if (priceMatch) {
+        const price = parseFloat(priceMatch[1]);
+        const name = serviceString.replace(/\s*\(S\/.*\)/, "");
+        parsed.push({ name, price });
+        total += price;
+      }
+    });
+
+    setParsedServices(parsed);
+    setTotalServicePrice(total);
+  }, [selectedServices]);
 
   // Obtener costo de transporte cuando cambia el distrito
   useEffect(() => {
@@ -75,23 +85,23 @@ export default function PricingBreakdown({
   const debouncedPriceCalculation = useCallback(() => {
     const currentTransportCost =
       locationType === "HOME" && transportCost ? transportCost.cost : 0;
-    const totalPrice = servicePrice + currentTransportCost;
+    const totalPrice = totalServicePrice + currentTransportCost;
 
     // Solo llamar onPriceCalculated si los valores cambiaron
     const lastCalculated = lastCalculatedRef.current;
     if (
       lastCalculated.totalPrice !== totalPrice ||
-      lastCalculated.servicePrice !== servicePrice ||
+      lastCalculated.servicePrice !== totalServicePrice ||
       lastCalculated.transportCost !== currentTransportCost
     ) {
       lastCalculatedRef.current = {
         totalPrice,
-        servicePrice,
+        servicePrice: totalServicePrice,
         transportCost: currentTransportCost,
       };
-      onPriceCalculated?.(totalPrice, servicePrice, currentTransportCost);
+      onPriceCalculated?.(totalPrice, totalServicePrice, currentTransportCost);
     }
-  }, [servicePrice, transportCost, locationType, onPriceCalculated]);
+  }, [totalServicePrice, transportCost, locationType, onPriceCalculated]);
 
   // Calcular precio total y notificar al componente padre con debounce
   useEffect(() => {
@@ -113,63 +123,96 @@ export default function PricingBreakdown({
     };
   }, [debouncedPriceCalculation]);
 
-  // No mostrar nada si no hay servicio seleccionado
-  if (!selectedService || servicePrice === 0) {
+  // No mostrar nada si no hay servicios seleccionados
+  if (
+    !selectedServices ||
+    selectedServices.length === 0 ||
+    totalServicePrice === 0
+  ) {
     return null;
   }
 
   const currentTransportCost =
     locationType === "HOME" && transportCost ? transportCost.cost : 0;
-  const totalPrice = servicePrice + currentTransportCost;
+  const totalPrice = totalServicePrice + currentTransportCost;
 
   return (
-    <div className="bg-gradient-to-r from-[#D4AF37]/10 to-[#B06579]/10 rounded-lg p-4 border border-[#D4AF37]/20">
+    <div className="bg-gradient-to-r from-[#D4AF37]/10 to-[#B06579]/10 rounded-lg p-3 sm:p-4 border border-[#D4AF37]/20">
       <div className="flex items-center gap-2 mb-3">
-        <Calculator className="h-5 w-5 text-[#D4AF37]" />
-        <h3 className="font-semibold text-gray-900">Resumen de Precios</h3>
+        <Calculator className="h-4 w-4 sm:h-5 sm:w-5 text-[#D4AF37]" />
+        <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
+          Detalle de Costos
+        </h3>
       </div>
 
       <div className="space-y-3">
-        {/* Precio del servicio */}
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">{serviceName}</span>
-          </div>
-          <span className="font-medium text-gray-900">
-            S/ {servicePrice.toFixed(2)}
-          </span>
+        {/* Servicios seleccionados */}
+        <div className="space-y-2">
+          {parsedServices.map((service, index) => (
+            <div
+              key={index}
+              className="flex justify-between items-start sm:items-center gap-2"
+            >
+              <div className="flex-1 min-w-0">
+                <span className="text-xs sm:text-sm text-gray-600 break-words">
+                  {service.name}
+                </span>
+              </div>
+              <span className="font-medium text-gray-900 text-sm sm:text-base flex-shrink-0">
+                S/ {service.price.toFixed(2)}
+              </span>
+            </div>
+          ))}
+
+          {/* Subtotal de servicios si hay más de uno */}
+          {parsedServices.length > 1 && (
+            <div className="border-t border-gray-200 pt-2">
+              <div className="flex justify-between items-center gap-2">
+                <span className="text-sm font-medium text-gray-700">
+                  Subtotal servicios:
+                </span>
+                <span className="font-semibold text-gray-900 text-sm sm:text-base">
+                  S/ {totalServicePrice.toFixed(2)}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Costo de transporte */}
         {locationType === "HOME" && (
           <div className="border-t border-gray-200 pt-2">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <Truck className="h-4 w-4 text-[#B06579]" />
-                <span className="text-sm text-gray-600">
+            <div className="flex justify-between items-start sm:items-center gap-2">
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                <Truck className="h-3 w-3 sm:h-4 sm:w-4 text-[#B06579] flex-shrink-0" />
+                <span className="text-xs sm:text-sm text-gray-600 break-words">
                   Transporte {district && `(${district})`}
                 </span>
               </div>
-              <div className="text-right">
+              <div className="text-right flex-shrink-0">
                 {loading ? (
-                  <span className="text-sm text-gray-500">Calculando...</span>
+                  <span className="text-xs sm:text-sm text-gray-500">
+                    Calculando...
+                  </span>
                 ) : error ? (
-                  <span className="text-sm text-red-600">Error</span>
+                  <span className="text-xs sm:text-sm text-red-600">Error</span>
                 ) : transportCost?.hasTransportCost ? (
-                  <span className="font-medium text-gray-900">
+                  <span className="font-medium text-gray-900 text-sm sm:text-base">
                     S/ {transportCost.cost.toFixed(2)}
                   </span>
                 ) : (
-                  <span className="text-sm text-gray-500">No disponible</span>
+                  <span className="text-xs sm:text-sm text-gray-500">
+                    No disponible
+                  </span>
                 )}
               </div>
             </div>
 
             {/* Notas sobre el transporte */}
             {transportCost?.notes && (
-              <div className="flex items-start gap-2 mt-1">
+              <div className="flex items-start gap-2 mt-2">
                 <AlertCircle className="h-3 w-3 text-blue-500 mt-0.5 flex-shrink-0" />
-                <span className="text-xs text-blue-600">
+                <span className="text-xs text-blue-600 leading-relaxed">
                   {transportCost.notes}
                 </span>
               </div>
@@ -180,9 +223,9 @@ export default function PricingBreakdown({
               district &&
               !loading &&
               !transportCost?.hasTransportCost && (
-                <div className="flex items-start gap-2 mt-1">
+                <div className="flex items-start gap-2 mt-2">
                   <MapPin className="h-3 w-3 text-amber-500 mt-0.5 flex-shrink-0" />
-                  <span className="text-xs text-amber-600">
+                  <span className="text-xs text-amber-600 leading-relaxed">
                     Costo de transporte a coordinar
                   </span>
                 </div>
@@ -191,36 +234,45 @@ export default function PricingBreakdown({
         )}
 
         {/* Ubicación del servicio */}
-        <div className="text-xs text-gray-500 flex items-center gap-1">
-          <MapPin className="h-3 w-3" />
-          {locationType === "STUDIO"
-            ? "Servicio en local (Pueblo Libre)"
-            : `Servicio a domicilio${district ? ` - ${district}` : ""}`}
+        <div className="text-xs text-gray-500 flex items-start gap-1 py-1">
+          <MapPin className="h-3 w-3 mt-0.5 flex-shrink-0" />
+          <span className="leading-relaxed">
+            {locationType === "STUDIO"
+              ? "Servicio en local (Av. Bolívar 1073, Pueblo Libre)"
+              : `Servicio a domicilio${district ? ` - ${district}` : ""}`}
+          </span>
         </div>
 
         {/* Total */}
-        <div className="border-t border-[#D4AF37]/30 pt-2">
+        <div className="border-t border-[#D4AF37]/30 pt-3">
           <div className="flex justify-between items-center">
-            <span className="font-bold text-gray-900">Total estimado:</span>
-            <span className="font-bold text-lg text-[#D4AF37]">
+            <span className="font-bold text-gray-900 text-sm sm:text-base">
+              Total estimado:
+            </span>
+            <span className="font-bold text-base sm:text-lg text-[#D4AF37]">
               S/ {totalPrice.toFixed(2)}
             </span>
           </div>
         </div>
 
         {/* Nota importante */}
-        <div className="bg-blue-50 border border-blue-200 rounded-md p-2 mt-3">
+        <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mt-3">
           <div className="flex items-start gap-2">
             <AlertCircle className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
             <div className="text-xs text-blue-700">
-              <p className="font-medium mb-1">Información importante:</p>
-              <ul className="space-y-1 text-xs">
+              <p className="font-medium mb-2">💡 Información importante:</p>
+              <ul className="space-y-1.5 text-xs leading-relaxed">
                 <li>
                   • Los precios pueden variar según requerimientos específicos
                 </li>
                 <li>• El costo final se confirmará durante la consulta</li>
                 {locationType === "HOME" && (
                   <li>• El transporte incluye ida y vuelta</li>
+                )}
+                {parsedServices.length > 1 && (
+                  <li>
+                    • Los servicios múltiples se realizan en la misma sesión
+                  </li>
                 )}
               </ul>
             </div>

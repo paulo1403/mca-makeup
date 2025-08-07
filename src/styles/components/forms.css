@@ -1,40 +1,87 @@
 /* Estilos de formularios - Elegancia Clásica */
-input[type="text"],
-input[type="email"],
-input[type="tel"],
-input[type="date"],
-select,
-textarea {
-  color: #1C1C1C !important;
-  background-color: #ffffff !important;
+/* Solo aplicar a inputs que NO estén en componentes personalizados */
+form
+  input[type="text"]:not([class*="service-selector"]):not(
+    [class*="custom"]
+  ):not(.service-selector-input),
+form
+  input[type="email"]:not([class*="service-selector"]):not(
+    [class*="custom"]
+  ):not(.service-selector-input),
+form
+  input[type="tel"]:not([class*="service-selector"]):not([class*="custom"]):not(
+    .service-selector-input
+  ),
+form
+  input[type="date"]:not([class*="service-selector"]):not(
+    [class*="custom"]
+  ):not(.service-selector-input),
+form
+  select:not([class*="service-selector"]):not([class*="custom"]):not(
+    .service-selector-input
+  ),
+form
+  textarea:not([class*="service-selector"]):not([class*="custom"]):not(
+    .service-selector-input
+  ) {
+  color: #1c1c1c;
+  background-color: #ffffff;
   border: 1px solid #e5e7eb;
   transition: all 0.3s ease;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="tel"]:focus,
-input[type="date"]:focus,
-select:focus,
-textarea:focus {
-  color: #1C1C1C !important;
-  background-color: #ffffff !important;
-  border-color: #DAA520;
+form
+  input[type="text"]:not([class*="service-selector"]):not(
+    [class*="custom"]
+  ):not(.service-selector-input):focus,
+form
+  input[type="email"]:not([class*="service-selector"]):not(
+    [class*="custom"]
+  ):not(.service-selector-input):focus,
+form
+  input[type="tel"]:not([class*="service-selector"]):not([class*="custom"]):not(
+    .service-selector-input
+  ):focus,
+form
+  input[type="date"]:not([class*="service-selector"]):not(
+    [class*="custom"]
+  ):not(.service-selector-input):focus,
+form
+  select:not([class*="service-selector"]):not([class*="custom"]):not(
+    .service-selector-input
+  ):focus,
+form
+  textarea:not([class*="service-selector"]):not([class*="custom"]):not(
+    .service-selector-input
+  ):focus {
+  color: #1c1c1c;
+  background-color: #ffffff;
+  border-color: #daa520;
   outline: none;
   box-shadow: 0 0 0 2px rgba(218, 165, 32, 0.2);
 }
 
-/* Placeholder text styling */
-input::placeholder,
-textarea::placeholder {
-  color: #5A5A5A !important;
+/* Placeholder text styling - solo para inputs básicos */
+form
+  input:not([class*="service-selector"]):not([class*="custom"]):not(
+    .service-selector-input
+  )::placeholder,
+form
+  textarea:not([class*="service-selector"]):not([class*="custom"]):not(
+    .service-selector-input
+  )::placeholder {
+  color: #5a5a5a;
   opacity: 0.7;
 }
 
-/* Select option styling */
-select option {
-  color: #1C1C1C !important;
-  background-color: #ffffff !important;
+/* Select option styling - solo para selects básicos */
+form
+  select:not([class*="service-selector"]):not([class*="custom"]):not(
+    .service-selector-input
+  )
+  option {
+  color: #1c1c1c;
+  background-color: #ffffff;
 }
 
 /* Radio button custom styles - Updated for elegancia clásica theme */
@@ -54,12 +101,12 @@ input[type="radio"] {
 }
 
 input[type="radio"]:checked {
-  border-color: #DAA520;
-  background-color: #DAA520;
+  border-color: #daa520;
+  background-color: #daa520;
 }
 
 input[type="radio"]:checked::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -71,11 +118,11 @@ input[type="radio"]:checked::before {
 }
 
 input[type="radio"]:focus {
-  outline: 2px solid #DAA520;
+  outline: 2px solid #daa520;
   outline-offset: 2px;
 }
 
 input[type="radio"]:hover {
-  border-color: #DAA520;
+  border-color: #daa520;
   transform: scale(1.05);
 }

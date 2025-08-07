@@ -1,13 +1,14 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export interface TimeSlot {
   id: string;
   dayOfWeek: number;
   startTime: string;
   endTime: string;
+  locationType: "STUDIO" | "HOME";
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -31,9 +32,9 @@ interface AvailabilityData {
 
 // Funciones de API
 const fetchAvailability = async (): Promise<AvailabilityData> => {
-  const response = await fetch('/api/admin/availability');
+  const response = await fetch("/api/admin/availability");
   if (!response.ok) {
-    throw new Error('Error al cargar la disponibilidad');
+    throw new Error("Error al cargar la disponibilidad");
   }
   return response.json();
 };
@@ -42,84 +43,98 @@ const createTimeSlot = async (data: {
   dayOfWeek: number;
   startTime: string;
   endTime: string;
+  locationType: "STUDIO" | "HOME";
 }): Promise<TimeSlot> => {
-  const response = await fetch('/api/admin/availability', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  const response = await fetch("/api/admin/availability", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      type: 'timeSlot',
+      type: "timeSlot",
       ...data,
     }),
   });
-  
+
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.message || 'Error al crear el horario');
+    throw new Error(errorData.message || "Error al crear el horario");
   }
-  
+
   return response.json();
 };
 
-const updateTimeSlot = async ({ id, isActive }: { id: string; isActive: boolean }): Promise<TimeSlot> => {
-  const response = await fetch(`/api/admin/availability/${id}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ isActive }),
-  });
-  
-  if (!response.ok) {
-    throw new Error('Error al actualizar el horario');
-  }
-  
-  return response.json();
-};
-
-const editTimeSlot = async (id: string, data: {
-  dayOfWeek: number;
-  startTime: string;
-  endTime: string;
+const updateTimeSlot = async ({
+  id,
+  isActive,
+}: {
+  id: string;
+  isActive: boolean;
 }): Promise<TimeSlot> => {
   const response = await fetch(`/api/admin/availability/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ isActive }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Error al actualizar el horario");
+  }
+
+  return response.json();
+};
+
+const editTimeSlot = async (
+  id: string,
+  data: {
+    dayOfWeek: number;
+    startTime: string;
+    endTime: string;
+    locationType: "STUDIO" | "HOME";
+  },
+): Promise<TimeSlot> => {
+  const response = await fetch(`/api/admin/availability/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
-  
+
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.message || 'Error al editar el horario');
+    throw new Error(errorData.message || "Error al editar el horario");
   }
-  
+
   return response.json();
 };
 
 const deleteTimeSlot = async (id: string): Promise<void> => {
   const response = await fetch(`/api/admin/availability/${id}`, {
-    method: 'DELETE',
+    method: "DELETE",
   });
-  
+
   if (!response.ok) {
-    throw new Error('Error al eliminar el horario');
+    throw new Error("Error al eliminar el horario");
   }
 };
 
-const editSpecialDate = async (id: string, data: {
-  date: string;
-  isAvailable: boolean;
-  customHours?: { startTime: string; endTime: string };
-  note?: string;
-}): Promise<SpecialDate> => {
+const editSpecialDate = async (
+  id: string,
+  data: {
+    date: string;
+    isAvailable: boolean;
+    customHours?: { startTime: string; endTime: string };
+    note?: string;
+  },
+): Promise<SpecialDate> => {
   const response = await fetch(`/api/admin/availability/special/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
-  
+
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.message || 'Error al editar la fecha especial');
+    throw new Error(errorData.message || "Error al editar la fecha especial");
   }
-  
+
   return response.json();
 };
 
@@ -129,49 +144,45 @@ const createSpecialDate = async (data: {
   customHours?: { startTime: string; endTime: string };
   note?: string;
 }): Promise<SpecialDate> => {
-  const response = await fetch('/api/admin/availability', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  const response = await fetch("/api/admin/availability", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      type: 'specialDate',
+      type: "specialDate",
       ...data,
     }),
   });
-  
+
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.message || 'Error al crear la fecha especial');
+    throw new Error(errorData.message || "Error al crear la fecha especial");
   }
-  
+
   return response.json();
 };
 
 const deleteSpecialDate = async (id: string): Promise<void> => {
   const response = await fetch(`/api/admin/availability/special/${id}`, {
-    method: 'DELETE',
+    method: "DELETE",
   });
-  
+
   if (!response.ok) {
-    throw new Error('Error al eliminar la fecha especial');
+    throw new Error("Error al eliminar la fecha especial");
   }
 };
 
 export const useAvailability = () => {
   const queryClient = useQueryClient();
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const showMessage = (text: string) => {
     setMessage(text);
-    setTimeout(() => setMessage(''), 3000);
+    setTimeout(() => setMessage(""), 3000);
   };
 
   // Query para obtener disponibilidad
-  const {
-    data,
-    isLoading,
-    error
-  } = useQuery({
-    queryKey: ['availability'],
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["availability"],
     queryFn: fetchAvailability,
     staleTime: 5 * 60 * 1000, // 5 minutos
     gcTime: 10 * 60 * 1000, // 10 minutos
@@ -181,8 +192,8 @@ export const useAvailability = () => {
   const createTimeSlotMutation = useMutation({
     mutationFn: createTimeSlot,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['availability'] });
-      showMessage('Horario agregado exitosamente');
+      queryClient.invalidateQueries({ queryKey: ["availability"] });
+      showMessage("Horario agregado exitosamente");
     },
     onError: (error: Error) => {
       showMessage(`❌ ${error.message}`);
@@ -193,8 +204,8 @@ export const useAvailability = () => {
   const updateTimeSlotMutation = useMutation({
     mutationFn: updateTimeSlot,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['availability'] });
-      showMessage('Horario actualizado exitosamente');
+      queryClient.invalidateQueries({ queryKey: ["availability"] });
+      showMessage("Horario actualizado exitosamente");
     },
     onError: (error: Error) => {
       showMessage(`❌ ${error.message}`);
@@ -203,11 +214,21 @@ export const useAvailability = () => {
 
   // Mutación para editar horario completo
   const editTimeSlotMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: { dayOfWeek: number; startTime: string; endTime: string } }) => 
-      editTimeSlot(id, data),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: {
+        dayOfWeek: number;
+        startTime: string;
+        endTime: string;
+        locationType: "STUDIO" | "HOME";
+      };
+    }) => editTimeSlot(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['availability'] });
-      showMessage('Horario editado exitosamente');
+      queryClient.invalidateQueries({ queryKey: ["availability"] });
+      showMessage("Horario editado exitosamente");
     },
     onError: (error: Error) => {
       showMessage(`❌ ${error.message}`);
@@ -218,8 +239,8 @@ export const useAvailability = () => {
   const deleteTimeSlotMutation = useMutation({
     mutationFn: deleteTimeSlot,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['availability'] });
-      showMessage('Horario eliminado exitosamente');
+      queryClient.invalidateQueries({ queryKey: ["availability"] });
+      showMessage("Horario eliminado exitosamente");
     },
     onError: (error: Error) => {
       showMessage(`❌ ${error.message}`);
@@ -230,8 +251,8 @@ export const useAvailability = () => {
   const createSpecialDateMutation = useMutation({
     mutationFn: createSpecialDate,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['availability'] });
-      showMessage('Fecha especial agregada exitosamente');
+      queryClient.invalidateQueries({ queryKey: ["availability"] });
+      showMessage("Fecha especial agregada exitosamente");
     },
     onError: (error: Error) => {
       showMessage(`❌ ${error.message}`);
@@ -242,8 +263,8 @@ export const useAvailability = () => {
   const deleteSpecialDateMutation = useMutation({
     mutationFn: deleteSpecialDate,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['availability'] });
-      showMessage('Fecha especial eliminada exitosamente');
+      queryClient.invalidateQueries({ queryKey: ["availability"] });
+      showMessage("Fecha especial eliminada exitosamente");
     },
     onError: (error: Error) => {
       showMessage(`❌ ${error.message}`);
@@ -252,11 +273,21 @@ export const useAvailability = () => {
 
   // Mutación para editar fecha especial
   const editSpecialDateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: { date: string; isAvailable: boolean; customHours?: { startTime: string; endTime: string }; note?: string } }) => 
-      editSpecialDate(id, data),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: {
+        date: string;
+        isAvailable: boolean;
+        customHours?: { startTime: string; endTime: string };
+        note?: string;
+      };
+    }) => editSpecialDate(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['availability'] });
-      showMessage('Fecha especial editada exitosamente');
+      queryClient.invalidateQueries({ queryKey: ["availability"] });
+      showMessage("Fecha especial editada exitosamente");
     },
     onError: (error: Error) => {
       showMessage(`❌ ${error.message}`);
@@ -267,7 +298,7 @@ export const useAvailability = () => {
     // Data
     timeSlots: data?.timeSlots ?? [],
     specialDates: data?.specialDates ?? [],
-    
+
     // Loading states
     isLoading,
     isCreatingTimeSlot: createTimeSlotMutation.isPending,
@@ -277,7 +308,7 @@ export const useAvailability = () => {
     isCreatingSpecialDate: createSpecialDateMutation.isPending,
     isEditingSpecialDate: editSpecialDateMutation.isPending,
     isDeletingSpecialDate: deleteSpecialDateMutation.isPending,
-    
+
     // Actions
     createTimeSlot: createTimeSlotMutation.mutate,
     updateTimeSlot: updateTimeSlotMutation.mutate,
@@ -286,7 +317,7 @@ export const useAvailability = () => {
     createSpecialDate: createSpecialDateMutation.mutate,
     editSpecialDate: editSpecialDateMutation.mutate,
     deleteSpecialDate: deleteSpecialDateMutation.mutate,
-    
+
     // UI
     message,
     error,

@@ -21,6 +21,13 @@ export interface Appointment {
   addressReference?: string;
   createdAt: string;
   updatedAt: string;
+  review?: {
+    reviewToken: string;
+    rating: number | null;
+    reviewText: string | null;
+    status: "PENDING" | "APPROVED" | "REJECTED";
+    isPublic: boolean;
+  };
 }
 
 export interface PaginationData {
@@ -84,12 +91,12 @@ export const useUpdateAppointmentStatus = () => {
       id: string;
       status: Appointment["status"];
     }) => {
-      const response = await fetch("/api/admin/appointments", {
-        method: "PUT",
+      const response = await fetch(`/api/admin/appointments/${id}`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id, status }),
+        body: JSON.stringify({ status }),
       });
 
       const result = await response.json();

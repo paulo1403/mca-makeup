@@ -35,7 +35,7 @@ export default function AdminCalendar() {
   const [currentView, setCurrentView] = useState<View>(Views.MONTH);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
-    null
+    null,
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -68,30 +68,104 @@ export default function AdminCalendar() {
     return () => window.removeEventListener("resize", checkIsMobile);
   }, [currentView]);
 
-  // Obtener citas
+  // Obtener rango de fechas del calendario
+  const getCalendarDateRange = useCallback(() => {
+    const startOfMonth = new Date(currentDate);
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    const endOfMonth = new Date(currentDate);
+    endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+    endOfMonth.setDate(0);
+    endOfMonth.setHours(23, 59, 59, 999);
+
+    // Para vista de semana o día, usar un rango más pequeño
+    if (currentView === Views.WEEK) {
+      const startOfWeek = new Date(currentDate);
+      const day = startOfWeek.getDay();
+      const diff = startOfWeek.getDate() - day;
+      startOfWeek.setDate(diff);
+      startOfWeek.setHours(0, 0, 0, 0);
+
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
+      endOfWeek.setHours(23, 59, 59, 999);
+
+      return { start: startOfWeek, end: endOfWeek };
+    } else if (currentView === Views.DAY) {
+      const startOfDay = new Date(currentDate);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(currentDate);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      return { start: startOfDay, end: endOfDay };
+    }
+
+    return { start: startOfMonth, end: endOfMonth };
+  }, [currentDate, currentView]);
+
+  // Obtener citas optimizadas por rango de fechas
   const {
     data: appointmentsResponse,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["appointments"],
+    queryKey: ["calendar-appointments", currentDate, currentView],
     queryFn: async () => {
-      const response = await fetch("/api/admin/appointments?limit=1000");
+      const { start, end } = getCalendarDateRange();
+
+      // Formatear fechas para la API
+      const startDateStr = start.toISOString().split("T")[0];
+      const endDateStr = end.toISOString().split("T")[0];
+
+      // Usar la API de calendario optimizada con filtros de fecha
+      const response = await fetch(
+        `/api/admin/appointments/calendar?startDate=${startDateStr}&endDate=${endDateStr}`,
+      );
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Error al cargar las citas");
       }
-      const result = await response.json();
-      return result.data?.appointments || [];
+      const appointments = await response.json();
+      return appointments;
     },
     retry: 2,
-    staleTime: 5 * 60 * 1000, // 5 minutos
+    staleTime: 3 * 60 * 1000, // 3 minutos para calendarios optimizados
   });
 
   // Convertir citas a eventos del calendario
   const events: CalendarEvent[] = useMemo(() => {
     const appointments = appointmentsResponse || [];
-    return mapAppointmentsToEvents(appointments);
+    // Mapear desde el formato de la API de calendario
+    const formattedAppointments = appointments.map(
+      (apt: {
+        id: string;
+        clientName: string;
+        clientEmail: string;
+        clientPhone: string;
+        date: string;
+        time: string;
+        service: string;
+        status: string;
+        notes: string;
+        price: number;
+      }) => ({
+        id: apt.id,
+        clientName: apt.clientName,
+        clientEmail: apt.clientEmail,
+        clientPhone: apt.clientPhone,
+        serviceType: apt.service,
+        appointmentDate: apt.date,
+        appointmentTime: apt.time,
+        status: apt.status,
+        additionalNotes: apt.notes,
+        totalPrice: apt.price,
+        servicePrice: apt.price,
+        duration: 120, // Default duration
+      }),
+    );
+    return mapAppointmentsToEvents(formattedAppointments);
   }, [appointmentsResponse]);
 
   // Mutación para actualizar estado de cita
@@ -116,7 +190,7 @@ export default function AdminCalendar() {
       setSelectedEvent(null);
       showNotification(
         "Estado de la cita actualizado correctamente",
-        "success"
+        "success",
       );
     },
     onError: (error) => {
@@ -135,7 +209,7 @@ export default function AdminCalendar() {
     (id: string, status: string) => {
       updateStatusMutation.mutate({ id, status });
     },
-    [updateStatusMutation]
+    [updateStatusMutation],
   );
 
   // Personalización de colores según estado (más sutiles para agenda)
@@ -277,7 +351,7 @@ export default function AdminCalendar() {
                   localizer?.format(
                     date,
                     isMobile ? "EEE d/M" : "EEEE d/M",
-                    culture
+                    culture,
                   ) || "",
                 monthHeaderFormat: (date, culture, localizer) =>
                   localizer?.format(date, "MMMM yyyy", culture) || "",
@@ -287,7 +361,7 @@ export default function AdminCalendar() {
                   localizer?.format(
                     date,
                     isMobile ? "EEE d MMM" : "EEEE d MMMM",
-                    culture
+                    culture,
                   ) || "",
                 agendaTimeFormat: (date, culture, localizer) =>
                   localizer?.format(date, "HH:mm", culture) || "",

@@ -1,11 +1,38 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { formatDateForCalendar, formatTimeRange } from "@/utils/dateUtils";
 
-// GET /api/admin/appointments/calendar - Get all appointments for calendar view
-export async function GET() {
+// GET /api/admin/appointments/calendar - Get appointments for calendar view with optional date filtering
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const startDate = searchParams.get("startDate");
+    const endDate = searchParams.get("endDate");
+
+    // Build date filter if provided
+    const dateFilter: {
+      appointmentDate?: {
+        gte?: Date;
+        lte?: Date;
+      };
+    } = {};
+    if (startDate && endDate) {
+      dateFilter.appointmentDate = {
+        gte: new Date(startDate),
+        lte: new Date(endDate),
+      };
+    } else if (startDate) {
+      dateFilter.appointmentDate = {
+        gte: new Date(startDate),
+      };
+    } else if (endDate) {
+      dateFilter.appointmentDate = {
+        lte: new Date(endDate),
+      };
+    }
+
     const appointments = await prisma.appointment.findMany({
+      where: dateFilter,
       select: {
         id: true,
         clientName: true,
@@ -19,6 +46,15 @@ export async function GET() {
         servicePrice: true,
         transportCost: true,
         totalPrice: true,
+        review: {
+          select: {
+            reviewToken: true,
+            rating: true,
+            reviewText: true,
+            status: true,
+            isPublic: true,
+          },
+        },
       },
       orderBy: {
         appointmentDate: "asc",

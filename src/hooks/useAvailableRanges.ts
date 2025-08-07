@@ -3,19 +3,25 @@ import { format } from "date-fns";
 
 export function useAvailableRanges(
   date: Date | null,
-  serviceType: string,
+  serviceTypes: string[],
   locationType: "STUDIO" | "HOME",
 ) {
   const formattedDate = date ? format(date, "yyyy-MM-dd") : "";
+  const serviceTypesString = serviceTypes.join(",");
 
   return useQuery({
-    queryKey: ["availableRanges", formattedDate, serviceType, locationType],
+    queryKey: [
+      "availableRanges",
+      formattedDate,
+      serviceTypesString,
+      locationType,
+    ],
     queryFn: async () => {
-      if (!formattedDate || !serviceType || !locationType)
+      if (!formattedDate || !serviceTypes.length || !locationType)
         return { availableRanges: [] };
       const params = new URLSearchParams({
         date: formattedDate,
-        serviceType,
+        serviceTypes: serviceTypesString,
         locationType,
       });
 
@@ -23,6 +29,6 @@ export function useAvailableRanges(
       if (!res.ok) throw new Error("Error al obtener horarios");
       return res.json();
     },
-    enabled: !!formattedDate && !!serviceType && !!locationType,
+    enabled: !!formattedDate && serviceTypes.length > 0 && !!locationType,
   });
 }

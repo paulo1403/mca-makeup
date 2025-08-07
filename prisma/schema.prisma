@@ -66,7 +66,7 @@ model Appointment {
   clientName       String
   clientEmail      String
   clientPhone      String
-  serviceType      String
+  serviceType      String?
   appointmentDate  DateTime
   appointmentTime  String
   duration         Int               @default(120)
@@ -81,7 +81,10 @@ model Appointment {
   servicePrice     Float?
   totalPrice       Float?
   transportCost    Float?
+  services         Json?
+  totalDuration    Int?
   notifications    Notification[]
+  review           Review?
 
   @@map("appointments")
 }
@@ -128,15 +131,16 @@ model Complaint {
 }
 
 model RegularAvailability {
-  id        String   @id @default(cuid())
-  dayOfWeek Int
-  startTime String
-  endTime   String
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String       @id @default(cuid())
+  dayOfWeek    Int
+  startTime    String
+  endTime      String
+  isActive     Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  locationType LocationType @default(STUDIO)
 
-  @@unique([dayOfWeek, startTime, endTime])
+  @@unique([dayOfWeek, startTime, endTime, locationType])
   @@map("regular_availability")
 }
 
@@ -284,10 +288,35 @@ enum ErrorStatus {
   CLOSED
 }
 
+model Review {
+  id            String       @id @default(cuid())
+  appointmentId String       @unique
+  appointment   Appointment  @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  reviewToken   String       @unique
+  rating        Int?
+  reviewText    String?
+  reviewerName  String
+  reviewerEmail String
+  isPublic      Boolean      @default(false)
+  status        ReviewStatus @default(PENDING)
+  adminResponse String?
+  respondedAt   DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@map("reviews")
+}
+
 enum ServiceCategory {
   BRIDAL
   SOCIAL
   MATURE_SKIN
   HAIRSTYLE
   OTHER
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }

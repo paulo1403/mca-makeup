@@ -99,7 +99,11 @@ export default function TransportCostsPage() {
   };
 
   const handleDelete = async (id: string, district: string) => {
-    if (!confirm(`¿Estás segura de que quieres eliminar el costo de transporte para ${district}?`)) {
+    if (
+      !confirm(
+        `¿Estás segura de que quieres eliminar el costo de transporte para ${district}?`,
+      )
+    ) {
       return;
     }
 
@@ -215,7 +219,10 @@ export default function TransportCostsPage() {
               <tbody className="bg-white divide-y divide-gray-200">
                 {transportCosts.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                    <td
+                      colSpan={5}
+                      className="px-6 py-12 text-center text-gray-500"
+                    >
                       No hay costos de transporte configurados
                     </td>
                   </tr>
@@ -276,7 +283,9 @@ export default function TransportCostsPage() {
             <div className="bg-white rounded-lg max-w-md w-full p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold text-gray-900">
-                  {editingCost ? "Editar Costo de Transporte" : "Nuevo Costo de Transporte"}
+                  {editingCost
+                    ? "Editar Costo de Transporte"
+                    : "Nuevo Costo de Transporte"}
                 </h2>
                 <button
                   onClick={handleCloseModal}
@@ -297,7 +306,7 @@ export default function TransportCostsPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, district: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#D4AF37] bg-white text-gray-900 placeholder-gray-500"
                     required
                     placeholder="Ej: San Miguel, La Molina, Miraflores"
                   />
@@ -315,7 +324,7 @@ export default function TransportCostsPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, cost: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#D4AF37] bg-white text-gray-900 placeholder-gray-500"
                     required
                     placeholder="25.00"
                   />
@@ -330,7 +339,7 @@ export default function TransportCostsPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, notes: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#D4AF37] bg-white text-gray-900 placeholder-gray-500"
                     rows={3}
                     placeholder="Ej: Incluye peaje, zona de difícil acceso, etc."
                   />
@@ -346,7 +355,10 @@ export default function TransportCostsPage() {
                     }
                     className="rounded border-gray-300 text-[#D4AF37] focus:ring-[#D4AF37]"
                   />
-                  <label htmlFor="isActive" className="ml-2 text-sm text-gray-700">
+                  <label
+                    htmlFor="isActive"
+                    className="ml-2 text-sm text-gray-700"
+                  >
                     Activo
                   </label>
                 </div>

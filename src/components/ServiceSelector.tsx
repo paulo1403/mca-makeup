@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { ChevronDown, Check, Sparkles, Clock, Tag } from "lucide-react";
+import { ChevronDown, Sparkles, Clock, AlertTriangle } from "lucide-react";
 
 interface Service {
   id: string;
@@ -13,13 +13,13 @@ interface Service {
 }
 
 interface ServiceSelectorProps {
-  value: string;
-  onChange: (service: string) => void;
+  value: string[];
+  onChangeAction: (services: string[]) => void;
   required?: boolean;
   disabled?: boolean;
   placeholder?: string;
   className?: string;
-  onLoadingChange?: (loading: boolean) => void;
+  onLoadingChangeAction?: (loading: boolean) => void;
 }
 
 const CATEGORY_LABELS = {
@@ -40,17 +40,18 @@ const CATEGORY_COLORS = {
 
 export default function ServiceSelector({
   value,
-  onChange,
+  onChangeAction,
   required = false,
   disabled = false,
-  placeholder = "Selecciona un servicio...",
+  placeholder = "Selecciona servicios...",
   className = "",
-  onLoadingChange,
+  onLoadingChangeAction,
 }: ServiceSelectorProps) {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [validationError, setValidationError] = useState("");
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -60,7 +61,7 @@ export default function ServiceSelector({
     const loadServices = async () => {
       try {
         setLoading(true);
-        onLoadingChange?.(true);
+        onLoadingChangeAction?.(true);
         const response = await fetch("/api/services");
 
         if (response.ok) {
@@ -124,12 +125,12 @@ export default function ServiceSelector({
         console.error("Error loading services:", error);
       } finally {
         setLoading(false);
-        onLoadingChange?.(false);
+        onLoadingChangeAction?.(false);
       }
     };
 
     loadServices();
-  }, []);
+  }, [onLoadingChangeAction]);
 
   // Cerrar dropdown al hacer clic fuera
   useEffect(() => {
@@ -146,6 +147,54 @@ export default function ServiceSelector({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Validación de combinaciones permitidas
+  const validateServiceCombination = (selectedServices: string[]): string => {
+    if (selectedServices.length === 0) return "";
+
+    const selectedServiceObjects = services.filter((service) =>
+      selectedServices.includes(`${service.name} (S/ ${service.price})`),
+    );
+
+    const categories = selectedServiceObjects.map(
+      (service) => service.category,
+    );
+    const uniqueCategories = [...new Set(categories)];
+
+    // No permitir solo peinado
+    if (uniqueCategories.length === 1 && uniqueCategories[0] === "HAIRSTYLE") {
+      return "No se puede reservar solo peinado. Debe incluir un servicio de maquillaje.";
+    }
+
+    // No permitir combinar novia con social/piel madura
+    const hasNovia = categories.includes("BRIDAL");
+    const hasSocial =
+      categories.includes("SOCIAL") || categories.includes("MATURE_SKIN");
+
+    if (hasNovia && hasSocial) {
+      return "No se pueden combinar servicios de novia con servicios sociales o de piel madura.";
+    }
+
+    // Si hay más de una categoría, verificar que sean combinaciones válidas
+    if (uniqueCategories.length > 2) {
+      return "Solo se pueden combinar máximo 2 tipos de servicios.";
+    }
+
+    if (uniqueCategories.length === 2) {
+      // Solo permitir maquillaje + peinado
+      const hasHairstyle = categories.includes("HAIRSTYLE");
+      const hasMakeup =
+        categories.includes("SOCIAL") ||
+        categories.includes("MATURE_SKIN") ||
+        categories.includes("BRIDAL");
+
+      if (!(hasHairstyle && hasMakeup)) {
+        return "Solo se puede combinar maquillaje con peinado.";
+      }
+    }
+
+    return "";
+  };
 
   // Filtrar servicios por búsqueda
   const filteredServices = services.filter((service) => {
@@ -170,14 +219,30 @@ export default function ServiceSelector({
     {} as Record<keyof typeof CATEGORY_LABELS, Service[]>,
   );
 
-  const selectedService = services.find(
-    (s) => `${s.name} (S/ ${s.price})` === value,
+  const selectedServices = services.filter((service) =>
+    value.includes(`${service.name} (S/ ${service.price})`),
   );
 
-  const handleSelectService = (service: Service) => {
-    onChange(`${service.name} (S/ ${service.price})`);
-    setIsOpen(false);
-    setSearchTerm("");
+  const handleToggleService = (service: Service) => {
+    const serviceKey = `${service.name} (S/ ${service.price})`;
+    const isSelected = value.includes(serviceKey);
+
+    let newSelection: string[];
+    if (isSelected) {
+      newSelection = value.filter((s) => s !== serviceKey);
+    } else {
+      newSelection = [...value, serviceKey];
+    }
+
+    // Validar nueva selección
+    const error = validateServiceCombination(newSelection);
+    setValidationError(error);
+
+    // Si no hay error o si estamos deseleccionando, aplicar cambio
+    if (!error || isSelected) {
+      onChangeAction(newSelection);
+      if (isSelected) setValidationError("");
+    }
   };
 
   const handleInputClick = () => {
@@ -199,366 +264,221 @@ export default function ServiceSelector({
     return `${minutes}min`;
   };
 
-  return (
-    <div className={`relative ${className}`} ref={dropdownRef}>
-      {/* Input principal */}
-      <div className="relative">
-        {loading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-lg z-10 border border-gray-200">
-            <div className="flex flex-col items-center gap-2 text-center p-4">
-              <div className="animate-spin rounded-full h-6 w-6 border-2 border-gray-200 border-t-primary-accent"></div>
-              <span className="text-sm text-gray-600 font-medium">
-                Cargando servicios...
-              </span>
-              <span className="text-xs text-gray-500">
-                Obteniendo catálogo actualizado
-              </span>
-            </div>
-          </div>
-        )}
+  const getTotalDuration = () => {
+    return selectedServices.reduce(
+      (total, service) => total + service.duration,
+      0,
+    );
+  };
 
-        <div className="relative">
-          {/* Texto truncado en móvil */}
-          <div
-            className={`w-full px-4 py-3 pr-20 bg-white border border-gray-200 rounded-lg focus-within:ring-2 focus-within:ring-primary-accent focus-within:border-transparent transition-all duration-300 ${
-              disabled || loading
-                ? "bg-gray-50 cursor-not-allowed"
-                : "cursor-pointer"
-            }`}
-            onClick={!disabled && !loading ? handleInputClick : undefined}
-          >
-            {/* Input oculto para funcionalidad */}
+  const getTotalPrice = () => {
+    return selectedServices.reduce(
+      (total, service) => total + service.price,
+      0,
+    );
+  };
+
+  return (
+    <div className={`relative w-full ${className}`} ref={dropdownRef}>
+      {/* Campo de entrada */}
+      <div
+        className={`
+          min-h-[2.75rem] w-full px-3 py-2 border border-gray-300 rounded-lg
+          bg-white cursor-pointer transition-all duration-200
+          hover:border-primary-accent focus-within:border-primary-accent focus-within:ring-2 focus-within:ring-primary-accent/20
+          ${disabled ? "opacity-50 cursor-not-allowed" : ""}
+          ${validationError ? "border-red-300 focus-within:border-red-500 focus-within:ring-red-500/20" : ""}
+        `}
+        onClick={handleInputClick}
+      >
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex-1 min-w-0">
+            {/* Input para búsqueda */}
             <input
               ref={inputRef}
               type="text"
-              value={isOpen ? searchTerm : ""}
+              placeholder={selectedServices.length > 0 ? "" : placeholder}
+              value={searchTerm}
               onChange={handleSearchChange}
-              required={false}
-              disabled={disabled || loading}
-              className="sr-only"
-              autoComplete="off"
+              disabled={disabled}
+              className="w-full border-none outline-none bg-transparent text-sm placeholder-gray-500 service-selector-input"
+              required={required && selectedServices.length === 0}
             />
 
-            {/* Select hidden para validación del form */}
-            <select
-              name="service"
-              value={
-                selectedService
-                  ? `${selectedService.name} (S/ ${selectedService.price})`
-                  : ""
-              }
-              onChange={() => {}} // Controlado por el componente
-              required={required}
-              disabled={disabled || loading}
-              className="sr-only absolute -z-10"
-              tabIndex={-1}
-            >
-              <option value="">Selecciona un servicio</option>
-              {services.map((service) => (
-                <option
-                  key={service.id}
-                  value={`${service.name} (S/ ${service.price})`}
-                >
-                  {service.name} (S/ {service.price})
-                </option>
-              ))}
-            </select>
-
-            {/* Display del servicio seleccionado */}
-            <div className="min-h-[1.5rem] flex items-center">
-              {selectedService ? (
-                <div className="w-full">
-                  {/* Móvil: Texto truncado con precio */}
-                  <div className="sm:hidden">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-gray-900 truncate font-medium text-sm">
-                        {selectedService.name}
-                      </span>
-                      <span className="text-primary-accent font-bold text-sm flex-shrink-0">
-                        S/ {selectedService.price}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Desktop: Texto completo */}
-                  <div className="hidden sm:block">
-                    <span className="text-gray-900 font-medium">
-                      {selectedService.name}
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                <span className="text-gray-400">{placeholder}</span>
-              )}
-            </div>
+            {/* Servicios seleccionados */}
+            {selectedServices.length > 0 && !searchTerm && (
+              <div className="flex flex-wrap gap-1 mt-1">
+                {selectedServices.map((service, index) => (
+                  <span
+                    key={index}
+                    className="inline-flex items-center gap-1 px-2 py-1 bg-primary-accent/10 text-primary-accent text-xs rounded-md"
+                  >
+                    {service.name}
+                    <span className="font-semibold">S/ {service.price}</span>
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Ícono dropdown */}
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-            <ChevronDown
-              className={`h-4 w-4 text-gray-400 transition-transform ${
-                isOpen ? "rotate-180" : ""
-              }`}
-            />
+          {/* Loading spinner o chevron */}
+          <div className="flex items-center gap-2">
+            {selectedServices.length > 0 && (
+              <span className="text-xs text-gray-500 whitespace-nowrap">
+                {selectedServices.length} seleccionado
+                {selectedServices.length > 1 ? "s" : ""}
+              </span>
+            )}
+            {loading ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-accent"></div>
+            ) : (
+              <ChevronDown
+                className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${
+                  isOpen ? "rotate-180" : ""
+                }`}
+              />
+            )}
           </div>
         </div>
       </div>
 
-      {/* Información del servicio seleccionado */}
-      {selectedService && !isOpen && !loading && (
-        <>
-          {/* Móvil: Card compacta */}
-          <div className="mt-2 sm:hidden bg-gradient-to-r from-primary-accent/5 to-secondary-accent/5 border border-primary-accent/20 rounded-md p-3">
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-2">
-                  <span
-                    className={`px-2 py-0.5 text-xs rounded-full border flex-shrink-0 ${
-                      CATEGORY_COLORS[
-                        selectedService.category as keyof typeof CATEGORY_COLORS
-                      ]
-                    }`}
-                  >
-                    {
-                      CATEGORY_LABELS[
-                        selectedService.category as keyof typeof CATEGORY_LABELS
-                      ]
-                    }
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
-                  <div className="flex items-center gap-1">
-                    <Clock className="h-3 w-3 flex-shrink-0" />
-                    <span>{formatDuration(selectedService.duration)}</span>
-                  </div>
-                  <div className="flex items-center gap-1 justify-end">
-                    <Tag className="h-3 w-3 flex-shrink-0" />
-                    <span className="font-bold text-primary-accent">
-                      S/ {selectedService.price}
-                    </span>
-                  </div>
-                </div>
-                {selectedService.description && (
-                  <p className="text-xs text-gray-500 mt-2 leading-relaxed">
-                    {selectedService.description}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Desktop: Card expandida */}
-          <div className="mt-2 hidden sm:flex items-center gap-3 px-3 py-2 bg-gradient-to-r from-primary-accent/5 to-secondary-accent/5 border border-primary-accent/20 rounded-md">
-            <Sparkles className="h-4 w-4 text-primary-accent flex-shrink-0" />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-sm font-medium text-gray-900">
-                  {selectedService.name}
-                </span>
-                <span
-                  className={`px-2 py-0.5 text-xs rounded-full border ${
-                    CATEGORY_COLORS[
-                      selectedService.category as keyof typeof CATEGORY_COLORS
-                    ]
-                  }`}
-                >
-                  {
-                    CATEGORY_LABELS[
-                      selectedService.category as keyof typeof CATEGORY_LABELS
-                    ]
-                  }
-                </span>
-              </div>
-              <div className="flex items-center gap-4 text-xs text-gray-600">
-                <div className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  <span>{formatDuration(selectedService.duration)}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Tag className="h-3 w-3" />
-                  <span className="font-semibold text-primary-accent">
-                    S/ {selectedService.price}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
+      {/* Error de validación */}
+      {validationError && (
+        <div className="mt-2 flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <AlertTriangle className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
+          <span className="text-sm text-red-700">{validationError}</span>
+        </div>
       )}
 
-      {/* Dropdown de servicios */}
-      {isOpen && !loading && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-96 overflow-y-auto">
-          {/* Campo de búsqueda móvil */}
-          <div className="sticky top-0 bg-white border-b border-gray-100 p-3 sm:hidden">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={handleSearchChange}
-              placeholder="Buscar servicio..."
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:ring-2 focus:ring-primary-accent focus:border-transparent"
-              autoFocus
-            />
+      {/* Resumen de servicios seleccionados */}
+      {selectedServices.length > 0 && !isOpen && !loading && (
+        <div className="mt-3 p-3 bg-gradient-to-r from-primary-accent/5 to-secondary-accent/5 rounded-lg border border-primary-accent/20">
+          <div className="flex justify-between items-center mb-2">
+            <span className="font-medium text-gray-900 text-sm">
+              Servicios seleccionados:
+            </span>
+            <div className="text-right">
+              <div className="text-lg font-bold text-primary-accent">
+                S/ {getTotalPrice()}
+              </div>
+              <div className="text-xs text-gray-500 flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                {formatDuration(getTotalDuration())}
+              </div>
+            </div>
           </div>
 
-          {Object.keys(servicesByCategory).length === 0 ? (
-            <div className="px-4 py-6 text-center">
-              <Sparkles className="h-8 w-8 mx-auto mb-2 text-gray-300" />
-              <p className="text-sm text-gray-500">
-                {searchTerm
-                  ? `No se encontraron servicios para "${searchTerm}"`
-                  : "No hay servicios disponibles"}
-              </p>
+          <div className="space-y-2">
+            {selectedServices.map((service, index) => (
+              <div
+                key={index}
+                className="flex justify-between items-center text-sm"
+              >
+                <span className="text-gray-700">{service.name}</span>
+                <span className="font-medium">S/ {service.price}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Dropdown */}
+      {isOpen && (
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-50 max-h-80 overflow-hidden">
+          {loading ? (
+            <div className="p-4 text-center">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-accent mx-auto mb-2"></div>
+              <span className="text-sm text-gray-500">
+                Cargando servicios...
+              </span>
+            </div>
+          ) : filteredServices.length === 0 ? (
+            <div className="p-4 text-center text-gray-500 text-sm">
+              {searchTerm
+                ? "No se encontraron servicios"
+                : "No hay servicios disponibles"}
             </div>
           ) : (
-            <>
-              {/* Header con contador - solo desktop */}
-              <div className="hidden sm:block px-4 py-3 border-b border-gray-100 bg-gray-50 sticky top-0">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-primary-accent" />
-                    <span className="text-sm font-medium text-gray-900">
-                      Servicios Disponibles
-                    </span>
-                  </div>
-                  <span className="text-xs text-gray-500">
-                    {filteredServices.length}{" "}
-                    {filteredServices.length === 1 ? "servicio" : "servicios"}
-                  </span>
-                </div>
-              </div>
-
-              {/* Campo de búsqueda desktop */}
-              <div className="hidden sm:block px-4 py-3 border-b border-gray-100 bg-white sticky top-12">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                  placeholder="Buscar servicio..."
-                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:ring-2 focus:ring-primary-accent focus:border-transparent"
-                  autoFocus
-                />
-              </div>
-
-              {/* Servicios agrupados por categoría */}
+            <div className="max-h-80 overflow-y-auto">
               {Object.entries(servicesByCategory).map(
                 ([category, categoryServices]) => (
-                  <div key={category}>
+                  <div
+                    key={category}
+                    className="border-b border-gray-100 last:border-b-0"
+                  >
                     {/* Header de categoría */}
-                    <div className="px-4 py-2 bg-gray-25 border-b border-gray-50">
-                      <span
-                        className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${
-                          CATEGORY_COLORS[
-                            category as keyof typeof CATEGORY_COLORS
-                          ]
-                        }`}
-                      >
+                    <div
+                      className={`px-3 py-2 text-xs font-medium border-l-4 ${CATEGORY_COLORS[category as keyof typeof CATEGORY_COLORS]}`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="h-3 w-3" />
                         {
                           CATEGORY_LABELS[
                             category as keyof typeof CATEGORY_LABELS
                           ]
                         }
-                      </span>
+                      </div>
                     </div>
 
-                    {/* Servicios */}
-                    {categoryServices.map((service) => (
-                      <button
-                        key={service.id}
-                        type="button"
-                        onClick={() => handleSelectService(service)}
-                        className={`w-full text-left hover:bg-gray-50 active:bg-gray-100 transition-colors border-b border-gray-50 last:border-b-0 ${
-                          selectedService?.id === service.id
-                            ? "bg-primary-accent/5 border-primary-accent/20"
-                            : ""
-                        }`}
-                      >
-                        {/* Móvil: Layout compacto */}
-                        <div className="sm:hidden px-3 py-3">
-                          <div className="flex items-start justify-between gap-2 mb-1">
-                            <h4 className="font-medium text-gray-900 text-sm leading-tight flex-1">
-                              {service.name}
-                            </h4>
-                            <div className="flex items-center gap-1 flex-shrink-0">
-                              {selectedService?.id === service.id && (
-                                <Check className="h-4 w-4 text-primary-accent" />
-                              )}
-                            </div>
+                    {/* Servicios de la categoría */}
+                    {categoryServices.map((service) => {
+                      const serviceKey = `${service.name} (S/ ${service.price})`;
+                      const isSelected = value.includes(serviceKey);
+
+                      return (
+                        <label
+                          key={service.id}
+                          className={`
+                          flex items-start gap-3 p-3 cursor-pointer transition-colors duration-150
+                          hover:bg-gray-50 border-l-4 border-transparent
+                          ${isSelected ? "bg-primary-accent/5 border-l-primary-accent" : ""}
+                        `}
+                        >
+                          {/* Checkbox */}
+                          <div className="flex items-center mt-1">
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => handleToggleService(service)}
+                              className="rounded border-gray-300 text-primary-accent focus:ring-primary-accent focus:ring-2"
+                            />
                           </div>
 
-                          <div className="flex items-center justify-between mt-2">
-                            <div className="flex items-center gap-2 text-xs text-gray-500">
-                              <Clock className="h-3 w-3" />
-                              <span>{formatDuration(service.duration)}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Tag className="h-3 w-3 text-primary-accent" />
-                              <span className="font-bold text-primary-accent text-sm">
-                                S/ {service.price}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Desktop: Layout expandido */}
-                        <div className="hidden sm:block px-4 py-4">
-                          <div className="flex items-start justify-between gap-3">
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-start justify-between gap-2 mb-2">
+                          {/* Información del servicio */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex justify-between items-start gap-2">
+                              <div className="flex-1 min-w-0">
                                 <h4 className="font-medium text-gray-900 text-sm leading-tight">
                                   {service.name}
                                 </h4>
-                                {selectedService?.id === service.id && (
-                                  <Check className="h-4 w-4 text-primary-accent flex-shrink-0 mt-0.5" />
+                                {service.description && (
+                                  <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                                    {service.description}
+                                  </p>
                                 )}
                               </div>
+                              <div className="text-right flex-shrink-0">
+                                <span className="font-bold text-primary-accent">
+                                  S/ {service.price}
+                                </span>
+                              </div>
+                            </div>
 
-                              {service.description && (
-                                <p
-                                  className="text-xs text-gray-600 mb-2"
-                                  style={{
-                                    display: "-webkit-box",
-                                    WebkitLineClamp: 2,
-                                    WebkitBoxOrient: "vertical",
-                                    overflow: "hidden",
-                                  }}
-                                >
-                                  {service.description}
-                                </p>
-                              )}
-
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3 text-xs text-gray-500">
-                                  <div className="flex items-center gap-1">
-                                    <Clock className="h-3 w-3" />
-                                    <span>
-                                      {formatDuration(service.duration)}
-                                    </span>
-                                  </div>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <Tag className="h-3 w-3 text-primary-accent" />
-                                  <span className="font-bold text-primary-accent">
-                                    S/ {service.price}
-                                  </span>
-                                </div>
+                            {/* Duración y categoría */}
+                            <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                              <div className="flex items-center gap-1">
+                                <Clock className="h-3 w-3" />
+                                <span>{formatDuration(service.duration)}</span>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </button>
-                    ))}
+                        </label>
+                      );
+                    })}
                   </div>
                 ),
               )}
-
-              {/* Footer informativo */}
-              <div className="px-4 py-3 border-t border-gray-100 bg-gray-50">
-                <p className="text-xs text-gray-500 text-center">
-                  Los precios pueden variar según requerimientos específicos
-                </p>
-              </div>
-            </>
+            </div>
           )}
         </div>
       )}

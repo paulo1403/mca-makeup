@@ -7,12 +7,12 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const date = searchParams.get("date");
-    const serviceType = searchParams.get("serviceType");
+    const serviceTypes = searchParams.get("serviceTypes");
     const locationType = searchParams.get("locationType");
 
-    if (!date || !serviceType || !locationType) {
+    if (!date || !serviceTypes || !locationType) {
       return NextResponse.json(
-        { error: "Fecha, tipo de servicio y ubicación requeridos" },
+        { error: "Fecha, tipos de servicio y ubicación requeridos" },
         { status: 400 },
       );
     }
@@ -56,49 +56,71 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Extract service name from serviceType (remove price if present)
-    // Example: "Maquillaje Social - Estilo Natural (S/ 200)" -> "Maquillaje Social - Estilo Natural"
-    let serviceName = serviceType;
-    if (serviceType.includes("(S/")) {
-      serviceName = serviceType.split(" (S/")[0].trim();
+    // Parse multiple service types from comma-separated string
+    const serviceTypeArray = serviceTypes
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+
+    if (serviceTypeArray.length === 0) {
+      return NextResponse.json(
+        { error: "Al menos un tipo de servicio es requerido" },
+        { status: 400 },
+      );
     }
 
-    // Get all active services for fallback
+    // Get all active services for matching
     const allServices = await prisma.service.findMany({
       where: { isActive: true },
       select: { name: true, duration: true },
     });
 
-    // Try exact match first
-    let matchedService = allServices.find((s) => s.name === serviceName);
+    // Match and calculate total duration for all selected services
+    let totalDuration = 0;
+    const matchedServices = [];
 
-    // If no exact match, try partial match
-    if (!matchedService) {
-      matchedService = allServices.find(
-        (s) =>
-          s.name.toLowerCase().includes(serviceName.toLowerCase()) ||
-          serviceName.toLowerCase().includes(s.name.toLowerCase()),
-      );
-    }
+    for (const serviceType of serviceTypeArray) {
+      // Extract service name from serviceType (remove price if present)
+      // Example: "Maquillaje Social - Estilo Natural (S/ 200)" -> "Maquillaje Social - Estilo Natural"
+      let serviceName = serviceType;
+      if (serviceType.includes("(S/")) {
+        serviceName = serviceType.split(" (S/")[0].trim();
+      }
 
-    if (!matchedService) {
-      console.error("No service found:", {
-        serviceType,
-        serviceName,
-        availableServices: allServices.map((s) => s.name),
-      });
-      return NextResponse.json(
-        {
-          error: "Tipo de servicio no encontrado o inactivo",
-          details: `Servicio buscado: "${serviceName}"`,
-          originalServiceType: serviceType,
+      // Try exact match first
+      let matchedService = allServices.find((s) => s.name === serviceName);
+
+      // If no exact match, try partial match
+      if (!matchedService) {
+        matchedService = allServices.find(
+          (s) =>
+            s.name.toLowerCase().includes(serviceName.toLowerCase()) ||
+            serviceName.toLowerCase().includes(s.name.toLowerCase()),
+        );
+      }
+
+      if (!matchedService) {
+        console.error("No service found:", {
+          serviceType,
+          serviceName,
           availableServices: allServices.map((s) => s.name),
-        },
-        { status: 400 },
-      );
+        });
+        return NextResponse.json(
+          {
+            error: "Tipo de servicio no encontrado o inactivo",
+            details: `Servicio buscado: "${serviceName}"`,
+            originalServiceType: serviceType,
+            availableServices: allServices.map((s) => s.name),
+          },
+          { status: 400 },
+        );
+      }
+
+      matchedServices.push(matchedService);
+      totalDuration += matchedService.duration;
     }
 
-    const selectedDuration = matchedService.duration;
+    const selectedDuration = totalDuration;
 
     // Helper function to add/subtract minutes from time string
     function addMinutes(time: string, mins: number) {
@@ -220,27 +242,47 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    // Get configured working hours from database
+    const dayOfWeek = appointmentDate.getDay();
+    const regularAvailability = await prisma.regularAvailability.findMany({
+      where: {
+        dayOfWeek,
+        locationType: locationType as "STUDIO" | "HOME",
+        isActive: true,
+      },
+      orderBy: {
+        startTime: "asc",
+      },
+    });
+
+    if (regularAvailability.length === 0) {
+      return NextResponse.json({
+        date: date,
+        availableRanges: [],
+        message: `No hay horarios configurados para ${locationType === "STUDIO" ? "estudio" : "domicilio"} en este día`,
+      });
+    }
+
     // Generate available time slots dynamically with optimized consecutive scheduling
     let availableRanges: string[] = [];
 
-    // Define working hours in minutes
-    let startWorkingHours: number;
-    let endWorkingHours: number;
-
-    if (locationType === "STUDIO") {
-      startWorkingHours = timeToMinutes("08:00"); // 8:00 AM
-      endWorkingHours = timeToMinutes("19:00"); // 7:00 PM
-    } else {
-      // For home services, start earlier to allow appointments before studio services
-      startWorkingHours = timeToMinutes("06:00"); // 6:00 AM
-      endWorkingHours = timeToMinutes("21:00"); // 9:00 PM
-    }
+    // Define working hours in minutes using configured availability
+    const workingPeriods = regularAvailability.map((slot) => ({
+      start: timeToMinutes(slot.startTime),
+      end: timeToMinutes(slot.endTime),
+    }));
 
     console.log("Working hours debug:", {
       locationType,
-      startWorkingHours: minutesToTime(startWorkingHours),
-      endWorkingHours: minutesToTime(endWorkingHours),
+      workingPeriods: workingPeriods.map(
+        (p) => `${minutesToTime(p.start)} - ${minutesToTime(p.end)}`,
+      ),
       selectedDuration,
+      totalServices: matchedServices.length,
+      serviceDetails: matchedServices.map((s) => ({
+        name: s.name,
+        duration: s.duration,
+      })),
       bookedAppointments: bookedAppointments.map((b) => ({
         time: b.appointmentTime,
         service: b.serviceType,
@@ -248,114 +290,131 @@ export async function GET(request: NextRequest) {
       })),
     });
 
-    // Create a list of all blocked time points and sort them
-    const allTimePoints: number[] = [startWorkingHours, endWorkingHours];
+    // Process each working period separately
+    for (const workingPeriod of workingPeriods) {
+      const startWorkingHours = workingPeriod.start;
+      const endWorkingHours = workingPeriod.end;
 
-    // Add all blocked range boundaries
-    blockedRanges.forEach((blocked) => {
-      allTimePoints.push(blocked.start, blocked.end);
-    });
+      // Create a list of all blocked time points for this period
+      const allTimePoints: number[] = [startWorkingHours, endWorkingHours];
 
-    // Sort and remove duplicates
-    const uniqueTimePoints = [...new Set(allTimePoints)].sort((a, b) => a - b);
+      // Add all blocked range boundaries that intersect with this working period
+      blockedRanges.forEach((blocked) => {
+        if (
+          blocked.start < endWorkingHours &&
+          blocked.end > startWorkingHours
+        ) {
+          allTimePoints.push(
+            Math.max(blocked.start, startWorkingHours),
+            Math.min(blocked.end, endWorkingHours),
+          );
+        }
+      });
+
+      // Sort and remove duplicates
+      const uniqueTimePoints = [...new Set(allTimePoints)].sort(
+        (a, b) => a - b,
+      );
+
+      // Generate optimized slots using available gaps within this working period
+      for (let i = 0; i < uniqueTimePoints.length - 1; i++) {
+        const gapStart = uniqueTimePoints[i];
+        const gapEnd = uniqueTimePoints[i + 1];
+        const gapDuration = gapEnd - gapStart;
+
+        // Skip if this gap is outside working hours constraints
+        if (gapStart < startWorkingHours || gapEnd > endWorkingHours) {
+          continue;
+        }
+
+        // Check if this gap is actually available (not blocked)
+        let isGapBlocked = false;
+        for (const blocked of blockedRanges) {
+          if (gapStart >= blocked.start && gapEnd <= blocked.end) {
+            isGapBlocked = true;
+            break;
+          }
+        }
+
+        if (isGapBlocked) {
+          continue;
+        }
+
+        // For studio appointments, prioritize consecutive slots
+        if (locationType === "STUDIO" && gapDuration >= selectedDuration) {
+          // Generate consecutive slots that fill the gap efficiently
+          let currentSlotStart = gapStart;
+
+          while (currentSlotStart + selectedDuration <= gapEnd) {
+            const slotEnd = currentSlotStart + selectedDuration;
+
+            // Verify this slot doesn't conflict with any blocked range
+            let hasConflict = false;
+            for (const blocked of blockedRanges) {
+              if (
+                !(slotEnd <= blocked.start || currentSlotStart >= blocked.end)
+              ) {
+                hasConflict = true;
+                break;
+              }
+            }
+
+            if (!hasConflict) {
+              const startTime = minutesToTime(currentSlotStart);
+              const endTime = minutesToTime(slotEnd);
+              const timeSlot = `${startTime} - ${endTime}`;
+              availableRanges.push(timeSlot);
+            }
+
+            // Move to next consecutive slot (no gap)
+            currentSlotStart = slotEnd;
+          }
+        } else {
+          // For home services or smaller gaps, use traditional 30-minute intervals
+          let currentTime = gapStart;
+
+          // Align to 30-minute boundaries for home services
+          if (locationType === "HOME") {
+            const remainder = currentTime % 30;
+            if (remainder !== 0) {
+              currentTime = currentTime - remainder + 30;
+            }
+          }
+
+          while (currentTime + selectedDuration <= gapEnd) {
+            const slotStart = currentTime;
+            const slotEnd = currentTime + selectedDuration;
+
+            // Check if this slot conflicts with any blocked range
+            let hasConflict = false;
+            for (const blocked of blockedRanges) {
+              if (!(slotEnd <= blocked.start || slotStart >= blocked.end)) {
+                hasConflict = true;
+                break;
+              }
+            }
+
+            if (!hasConflict) {
+              const startTime = minutesToTime(slotStart);
+              const endTime = minutesToTime(slotEnd);
+              const timeSlot = `${startTime} - ${endTime}`;
+              availableRanges.push(timeSlot);
+            }
+
+            // For home services, increment by 30 minutes for flexibility
+            currentTime += locationType === "HOME" ? 30 : selectedDuration;
+          }
+        }
+      }
+    }
 
     console.log("Optimized scheduling algorithm:", {
       location: locationType,
       duration: selectedDuration,
-      workingHours: `${minutesToTime(startWorkingHours)} - ${minutesToTime(endWorkingHours)}`,
+      totalServices: matchedServices.length,
+      workingPeriods: workingPeriods.length,
       blockedRanges: blockedRanges.length,
     });
-
-    // Generate optimized slots using available gaps
-    for (let i = 0; i < uniqueTimePoints.length - 1; i++) {
-      const gapStart = uniqueTimePoints[i];
-      const gapEnd = uniqueTimePoints[i + 1];
-      const gapDuration = gapEnd - gapStart;
-
-      // Skip if this gap is within working hours constraints
-      if (gapStart < startWorkingHours || gapEnd > endWorkingHours) {
-        continue;
-      }
-
-      // Check if this gap is actually available (not blocked)
-      let isGapBlocked = false;
-      for (const blocked of blockedRanges) {
-        if (gapStart >= blocked.start && gapEnd <= blocked.end) {
-          isGapBlocked = true;
-          break;
-        }
-      }
-
-      if (isGapBlocked) {
-        continue;
-      }
-
-      // For studio appointments, prioritize consecutive slots
-      if (locationType === "STUDIO" && gapDuration >= selectedDuration) {
-        // Generate consecutive slots that fill the gap efficiently
-        let currentSlotStart = gapStart;
-
-        while (currentSlotStart + selectedDuration <= gapEnd) {
-          const slotEnd = currentSlotStart + selectedDuration;
-
-          // Verify this slot doesn't conflict with any blocked range
-          let hasConflict = false;
-          for (const blocked of blockedRanges) {
-            if (
-              !(slotEnd <= blocked.start || currentSlotStart >= blocked.end)
-            ) {
-              hasConflict = true;
-              break;
-            }
-          }
-
-          if (!hasConflict) {
-            const startTime = minutesToTime(currentSlotStart);
-            const endTime = minutesToTime(slotEnd);
-            const timeSlot = `${startTime} - ${endTime}`;
-            availableRanges.push(timeSlot);
-          }
-
-          // Move to next consecutive slot (no gap)
-          currentSlotStart = slotEnd;
-        }
-      } else {
-        // For home services or smaller gaps, use traditional 30-minute intervals
-        let currentTime = gapStart;
-
-        // Align to 30-minute boundaries for home services
-        if (locationType === "HOME") {
-          const remainder = currentTime % 30;
-          if (remainder !== 0) {
-            currentTime = currentTime - remainder + 30;
-          }
-        }
-
-        while (currentTime + selectedDuration <= gapEnd) {
-          const slotStart = currentTime;
-          const slotEnd = currentTime + selectedDuration;
-
-          // Check if this slot conflicts with any blocked range
-          let hasConflict = false;
-          for (const blocked of blockedRanges) {
-            if (!(slotEnd <= blocked.start || slotStart >= blocked.end)) {
-              hasConflict = true;
-              break;
-            }
-          }
-
-          if (!hasConflict) {
-            const startTime = minutesToTime(slotStart);
-            const endTime = minutesToTime(slotEnd);
-            const timeSlot = `${startTime} - ${endTime}`;
-            availableRanges.push(timeSlot);
-          }
-
-          // For home services, increment by 30 minutes for flexibility
-          currentTime += locationType === "HOME" ? 30 : selectedDuration;
-        }
-      }
-    }
 
     // Remove duplicates and sort
     availableRanges = [...new Set(availableRanges)].sort((a, b) => {
