@@ -34,7 +34,14 @@ export async function POST(request: NextRequest) {
     const { name, description, price, duration, category, isActive } = body;
 
     // Validaciones
-    if (!name || !price || !duration || !category) {
+    if (
+      !name ||
+      price === undefined ||
+      price === null ||
+      price === "" ||
+      !duration ||
+      !category
+    ) {
       return NextResponse.json(
         { error: "Nombre, precio, duración y categoría son requeridos" },
         { status: 400 },

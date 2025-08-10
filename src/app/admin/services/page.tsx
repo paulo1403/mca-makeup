@@ -31,7 +31,10 @@ export default function ServicesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
+  const [viewingService, setViewingService] = useState<Service | null>(null);
 
   // Form states
   const [formData, setFormData] = useState({
@@ -115,6 +118,11 @@ export default function ServicesPage() {
     setShowModal(true);
   };
 
+  const handleView = (service: Service) => {
+    setViewingService(service);
+    setShowViewModal(true);
+  };
+
   const handleDelete = async (id: string) => {
     if (!confirm("¿Estás segura de que quieres eliminar este servicio?")) {
       return;
@@ -192,9 +200,10 @@ export default function ServicesPage() {
   return (
     <div className="space-y-6">
       {/* Mobile Header */}
-      <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 font-playfair">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#1C1C1C] font-playfair">
             Gestión de Servicios
           </h1>
           <div className="flex items-center space-x-4 mt-1">
@@ -211,6 +220,28 @@ export default function ServicesPage() {
                 {services.filter((s) => s.isActive).length} activos
               </span>
             </div>
+            <button
+              onClick={() => setShowInfoModal(true)}
+              className="flex items-center space-x-1 text-blue-600 hover:text-blue-800 text-xs hover:bg-blue-50 px-2 py-1 rounded-md transition-colors"
+            >
+              <svg
+                className="w-3 h-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span className="hidden sm:inline">
+                ¿Cómo funcionan las combinaciones?
+              </span>
+              <span className="sm:hidden">Info</span>
+            </button>
           </div>
         </div>
         <button
@@ -462,79 +493,142 @@ export default function ServicesPage() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/3 min-w-[200px]">
                     Servicio
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell w-24">
                     Categoría
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
                     Precio
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell w-20">
                     Duración
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
                     Estado
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
                     Acciones
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {services.map((service) => (
-                  <tr key={service.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">
+                  <tr key={service.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-4">
+                      <div className="max-w-xs">
+                        <div className="text-sm font-medium text-gray-900 truncate">
                           {service.name}
                         </div>
+                        <div className="text-xs text-gray-500 sm:hidden">
+                          {
+                            SERVICE_CATEGORIES[
+                              service.category as keyof typeof SERVICE_CATEGORIES
+                            ]
+                          }
+                        </div>
+                        <div className="text-xs text-gray-500 md:hidden">
+                          {service.duration} min
+                        </div>
                         {service.description && (
-                          <div className="text-sm text-gray-500">
+                          <div className="text-xs text-gray-400 truncate mt-1">
                             {service.description}
                           </div>
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {
-                        SERVICE_CATEGORIES[
-                          service.category as keyof typeof SERVICE_CATEGORIES
-                        ]
-                      }
+                    <td className="px-3 py-4 text-sm text-gray-900 hidden sm:table-cell">
+                      <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">
+                        {
+                          SERVICE_CATEGORIES[
+                            service.category as keyof typeof SERVICE_CATEGORIES
+                          ]
+                        }
+                      </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      S/ {service.price}
+                    <td className="px-3 py-4 text-sm text-gray-900">
+                      <span className="font-medium">S/ {service.price}</span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-3 py-4 text-sm text-gray-900 hidden md:table-cell">
                       {service.duration} min
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 py-4">
                       <button
                         onClick={() => toggleActive(service)}
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        className={`px-2 py-1 text-xs font-semibold rounded-full transition-colors ${
                           service.isActive
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
+                            ? "bg-green-100 text-green-800 hover:bg-green-200"
+                            : "bg-red-100 text-red-800 hover:bg-red-200"
                         }`}
                       >
-                        {service.isActive ? "Activo" : "Inactivo"}
+                        {service.isActive ? "✓" : "✗"}
                       </button>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-2">
+                    <td className="px-3 py-4 text-sm font-medium">
+                      <div className="flex space-x-1">
+                        <button
+                          onClick={() => handleView(service)}
+                          className="text-blue-600 hover:text-blue-800 p-1 rounded hover:bg-blue-50 transition-colors"
+                          title="Ver detalles completos"
+                        >
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                            />
+                          </svg>
+                        </button>
                         <button
                           onClick={() => handleEdit(service)}
-                          className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md text-xs font-medium transition-colors"
+                          className="text-[#D4AF37] hover:text-[#B8941F] p-1 rounded hover:bg-[#D4AF37]/10 transition-colors"
+                          title="Editar servicio"
                         >
-                          Editar
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                            />
+                          </svg>
                         </button>
                         <button
                           onClick={() => handleDelete(service.id)}
-                          className="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-md text-xs font-medium transition-colors"
+                          className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50 transition-colors"
+                          title="Eliminar servicio"
                         >
-                          Eliminar
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
                         </button>
                       </div>
                     </td>
@@ -610,6 +704,12 @@ export default function ServicesPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Precio (S/) *
+                    {formData.category === "HAIRSTYLE" && (
+                      <span className="ml-2 text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                        💡 Tip: Los peinados suelen ser S/ 0 (servicio
+                        complementario)
+                      </span>
+                    )}
                   </label>
                   <input
                     type="number"
@@ -621,8 +721,28 @@ export default function ServicesPage() {
                       setFormData({ ...formData, price: e.target.value })
                     }
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent text-gray-900 text-base"
-                    placeholder="150.00"
+                    placeholder={
+                      formData.category === "HAIRSTYLE" ? "0.00" : "150.00"
+                    }
                   />
+                  {formData.category === "HAIRSTYLE" &&
+                    formData.price === "0" && (
+                      <p className="text-xs text-green-600 mt-1 flex items-center">
+                        <svg
+                          className="w-3 h-3 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        Perfecto! Los clientes solo podrán reservar este peinado
+                        junto con maquillaje.
+                      </p>
+                    )}
                 </div>
 
                 <div>
@@ -697,6 +817,539 @@ export default function ServicesPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de información sobre combinaciones de servicios */}
+      {showInfoModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Header del modal */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-xl font-bold text-gray-900 flex items-center">
+                <svg
+                  className="w-5 h-5 text-blue-600 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                ¿Cómo Funcionan las Combinaciones de Servicios?
+              </h2>
+              <button
+                onClick={() => setShowInfoModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Contenido del modal */}
+            <div className="p-6 space-y-6">
+              {/* Combinaciones permitidas vs no permitidas */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h3 className="font-semibold text-green-800 mb-3 flex items-center">
+                    <span className="w-4 h-4 bg-green-500 rounded-full mr-2"></span>
+                    ✅ Combinaciones Permitidas
+                  </h3>
+                  <ul className="text-sm text-green-700 space-y-2">
+                    <li className="flex items-start">
+                      <span className="mr-2">•</span>
+                      <span>
+                        <strong>Solo Maquillaje:</strong> Cualquier categoría
+                        (Novia, Social, Piel Madura)
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="mr-2">•</span>
+                      <span>
+                        <strong>Maquillaje + Peinado:</strong> La combinación
+                        perfecta
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="mr-2">•</span>
+                      <span>
+                        <strong>Máximo:</strong> 2 tipos de servicios diferentes
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <h3 className="font-semibold text-red-800 mb-3 flex items-center">
+                    <span className="w-4 h-4 bg-red-500 rounded-full mr-2"></span>
+                    ❌ No Permitido
+                  </h3>
+                  <ul className="text-sm text-red-700 space-y-2">
+                    <li className="flex items-start">
+                      <span className="mr-2">•</span>
+                      <span>
+                        <strong>Solo Peinado:</strong> Debe incluir maquillaje
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="mr-2">•</span>
+                      <span>
+                        <strong>Novia + Social:</strong> No se pueden mezclar
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="mr-2">•</span>
+                      <span>
+                        <strong>3+ categorías:</strong> Demasiadas opciones
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Estrategia de precios */}
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-5">
+                <h3 className="font-semibold text-amber-800 mb-3 flex items-center">
+                  <span className="text-lg mr-2">💰</span>
+                  Estrategia de Precios: ¿Por qué Peinados en S/ 0?
+                </h3>
+
+                <div className="space-y-3">
+                  <p className="text-sm text-amber-700">
+                    Los peinados tienen precio 0 porque son{" "}
+                    <strong>servicios complementarios</strong> que:
+                  </p>
+
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <h4 className="font-medium text-amber-800 mb-2">
+                        🎯 Beneficios Comerciales:
+                      </h4>
+                      <ul className="text-sm text-amber-700 space-y-1">
+                        <li>
+                          • Aumenta ventas al parecer &quot;incluido&quot;
+                        </li>
+                        <li>• Los clientes perciben mayor valor</li>
+                        <li>• Incentiva paquetes completos</li>
+                        <li>• Diferenciación competitiva</li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h4 className="font-medium text-amber-800 mb-2">
+                        ⚙️ Funcionamiento Técnico:
+                      </h4>
+                      <ul className="text-sm text-amber-700 space-y-1">
+                        <li>• Solo se reservan con maquillaje</li>
+                        <li>• Sistema valida automáticamente</li>
+                        <li>• Precio final = Precio maquillaje</li>
+                        <li>• Duración se suma correctamente</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 p-3 bg-amber-100 rounded-lg">
+                  <h4 className="text-sm font-medium text-amber-800 mb-1">
+                    📝 Ejemplos Prácticos:
+                  </h4>
+                  <div className="text-xs text-amber-700 space-y-1">
+                    <div>
+                      • <strong>Cliente selecciona:</strong> &quot;Maquillaje
+                      Social (S/ 150) + Peinado (S/ 0)&quot;
+                    </div>
+                    <div>
+                      • <strong>Total que paga:</strong> S/ 150
+                    </div>
+                    <div>
+                      • <strong>Duración total:</strong> 90 min + 60 min = 2h
+                      30min
+                    </div>
+                    <div>
+                      • <strong>Percepción del cliente:</strong> &quot;¡El
+                      peinado está incluido!&quot;
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Flujo del cliente */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-5">
+                <h3 className="font-semibold text-blue-800 mb-3 flex items-center">
+                  <span className="mr-2">👤</span>
+                  ¿Qué Ve el Cliente Durante la Reserva?
+                </h3>
+
+                <div className="space-y-3 text-sm text-blue-700">
+                  <div className="flex items-start space-x-2">
+                    <span className="flex-shrink-0 w-5 h-5 bg-blue-200 text-blue-800 rounded-full flex items-center justify-center text-xs font-bold">
+                      1
+                    </span>
+                    <span>
+                      Ve todos los servicios organizados por categoría
+                    </span>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <span className="flex-shrink-0 w-5 h-5 bg-blue-200 text-blue-800 rounded-full flex items-center justify-center text-xs font-bold">
+                      2
+                    </span>
+                    <span>
+                      Puede seleccionar múltiples servicios con checkboxes
+                    </span>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <span className="flex-shrink-0 w-5 h-5 bg-blue-200 text-blue-800 rounded-full flex items-center justify-center text-xs font-bold">
+                      3
+                    </span>
+                    <span>Ve precio total y duración en tiempo real</span>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <span className="flex-shrink-0 w-5 h-5 bg-blue-200 text-blue-800 rounded-full flex items-center justify-center text-xs font-bold">
+                      4
+                    </span>
+                    <span>
+                      Sistema valida automáticamente las combinaciones
+                    </span>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <span className="flex-shrink-0 w-5 h-5 bg-blue-200 text-blue-800 rounded-full flex items-center justify-center text-xs font-bold">
+                      5
+                    </span>
+                    <span>
+                      Si selecciona solo peinado, aparece mensaje explicativo
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tips para Marcela */}
+              <div className="bg-purple-50 border border-purple-200 rounded-lg p-5">
+                <h3 className="font-semibold text-purple-800 mb-3 flex items-center">
+                  <span className="mr-2">💡</span>
+                  Tips para Gestionar Servicios
+                </h3>
+
+                <div className="grid md:grid-cols-2 gap-4 text-sm text-purple-700">
+                  <div>
+                    <h4 className="font-medium mb-2">✨ Creando Servicios:</h4>
+                    <ul className="space-y-1">
+                      <li>• Peinados siempre en S/ 0</li>
+                      <li>• Maquillajes con precio real</li>
+                      <li>• Duraciones realistas</li>
+                      <li>• Categorías apropiadas</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-medium mb-2">
+                      🎨 Estrategias Avanzadas:
+                    </h4>
+                    <ul className="space-y-1">
+                      <li>• &quot;Maquillaje Social Premium&quot;</li>
+                      <li>• &quot;Peinado de Gala&quot; (S/ 0)</li>
+                      <li>• Paquetes por temporada</li>
+                      <li>• Ofertas especiales</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer del modal */}
+            <div className="p-6 border-t border-gray-200 bg-gray-50 rounded-b-xl">
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setShowInfoModal(false)}
+                  className="px-6 py-2 bg-[#D4AF37] text-white rounded-lg hover:bg-[#B8941F] transition-colors font-medium"
+                >
+                  ¡Entendido!
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de ver detalles del servicio */}
+      {showViewModal && viewingService && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Header del modal */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-xl font-bold text-gray-900 flex items-center">
+                <svg
+                  className="w-5 h-5 text-blue-600 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+                Detalles del Servicio
+              </h2>
+              <button
+                onClick={() => setShowViewModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Contenido del modal */}
+            <div className="p-6">
+              {/* Nombre del servicio */}
+              <div className="mb-6">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  {viewingService.name}
+                </h3>
+                <div className="flex items-center space-x-3">
+                  <span
+                    className={`px-3 py-1 text-sm font-medium rounded-full ${
+                      viewingService.isActive
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {viewingService.isActive ? "✓ Activo" : "✗ Inactivo"}
+                  </span>
+                  <span className="text-sm bg-gray-100 px-3 py-1 rounded-full text-gray-700">
+                    {
+                      SERVICE_CATEGORIES[
+                        viewingService.category as keyof typeof SERVICE_CATEGORIES
+                      ]
+                    }
+                  </span>
+                </div>
+              </div>
+
+              {/* Grid de información */}
+              <div className="grid md:grid-cols-2 gap-6 mb-6">
+                {/* Información básica */}
+                <div className="space-y-4">
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+                      <svg
+                        className="w-4 h-4 mr-2 text-gray-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      Información Básica
+                    </h4>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-sm font-medium text-gray-500">
+                          Precio
+                        </label>
+                        <div className="text-2xl font-bold text-[#D4AF37]">
+                          S/ {viewingService.price}
+                          {viewingService.price === 0 && (
+                            <span className="text-sm font-normal text-green-600 ml-2">
+                              (Servicio complementario)
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-500">
+                          Duración
+                        </label>
+                        <div className="text-lg font-semibold text-gray-900">
+                          {viewingService.duration} minutos
+                          <span className="text-sm font-normal text-gray-500 ml-2">
+                            ({Math.floor(viewingService.duration / 60)}h{" "}
+                            {viewingService.duration % 60}min)
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Fechas */}
+                <div className="space-y-4">
+                  <div className="bg-blue-50 rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+                      <svg
+                        className="w-4 h-4 mr-2 text-blue-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                      Fechas
+                    </h4>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-sm font-medium text-gray-500">
+                          Creado
+                        </label>
+                        <div className="text-sm text-gray-900">
+                          {new Date(
+                            viewingService.createdAt,
+                          ).toLocaleDateString("es-PE", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-500">
+                          Última actualización
+                        </label>
+                        <div className="text-sm text-gray-900">
+                          {new Date(
+                            viewingService.updatedAt,
+                          ).toLocaleDateString("es-PE", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Descripción */}
+              {viewingService.description && (
+                <div className="mb-6">
+                  <div className="bg-amber-50 rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+                      <svg
+                        className="w-4 h-4 mr-2 text-amber-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 6h16M4 12h16M4 18h7"
+                        />
+                      </svg>
+                      Descripción
+                    </h4>
+                    <p className="text-gray-700 leading-relaxed">
+                      {viewingService.description}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Información adicional según categoría */}
+              {viewingService.category === "HAIRSTYLE" && (
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-purple-800 mb-2 flex items-center">
+                    <span className="mr-2">💡</span>
+                    Información Especial: Peinados
+                  </h4>
+                  <p className="text-sm text-purple-700">
+                    Este servicio de peinado solo puede ser reservado junto con
+                    un servicio de maquillaje. Los clientes verán el peinado
+                    como un valor agregado a su servicio principal.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Footer del modal */}
+            <div className="p-6 border-t border-gray-200 bg-gray-50 rounded-b-xl">
+              <div className="flex justify-between">
+                <div className="text-xs text-gray-500">
+                  ID: {viewingService.id}
+                </div>
+                <div className="flex space-x-3">
+                  <button
+                    onClick={() => {
+                      setShowViewModal(false);
+                      handleEdit(viewingService);
+                    }}
+                    className="px-4 py-2 bg-[#D4AF37] text-white rounded-lg hover:bg-[#B8941F] transition-colors font-medium flex items-center space-x-2"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                      />
+                    </svg>
+                    <span>Editar</span>
+                  </button>
+                  <button
+                    onClick={() => setShowViewModal(false)}
+                    className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium"
+                  >
+                    Cerrar
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
