@@ -59,7 +59,7 @@ export default function PricingBreakdown({
 
     selectedServices.forEach((serviceString) => {
       // Buscar precio en el texto del servicio (formato: "Nombre (S/ 200)")
-      const priceMatch = serviceString.match(/\(S\/\s*(\d+(?:\.\d{2})?)\)/);
+      const priceMatch = serviceString.match(/\(S\/\s*(\d+(?:\.\d+)?)\)/);
       if (priceMatch) {
         const price = parseFloat(priceMatch[1]);
         const name = serviceString.replace(/\s*\(S\/.*\)/, "");

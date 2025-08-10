@@ -62,7 +62,11 @@ export const formatPrice = (price?: number) => {
 export const getPriceBreakdown = (appointment: Appointment) => {
   const servicePrice = appointment.servicePrice || 0;
   const transportCost = appointment.transportCost || 0;
-  const totalPrice = appointment.totalPrice || servicePrice + transportCost;
+  // Usar totalPrice de la DB si existe (incluso si es 0), sino calcular como fallback
+  const totalPrice =
+    appointment.totalPrice !== null && appointment.totalPrice !== undefined
+      ? appointment.totalPrice
+      : servicePrice + transportCost;
 
   return {
     servicePrice,

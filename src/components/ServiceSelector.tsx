@@ -68,58 +68,9 @@ export default function ServiceSelector({
           const data = await response.json();
           setServices(data.services || []);
         } else {
-          // Fallback services
-          const fallbackServices = [
-            {
-              id: "1",
-              name: "Maquillaje de Novia - Paquete Básico",
-              price: 480,
-              duration: 180,
-              category: "BRIDAL",
-              description: "Maquillaje completo para el día más especial",
-            },
-            {
-              id: "2",
-              name: "Maquillaje de Novia - Paquete Clásico",
-              price: 980,
-              duration: 240,
-              category: "BRIDAL",
-              description: "Incluye prueba previa y retoque",
-            },
-            {
-              id: "3",
-              name: "Maquillaje Social - Estilo Natural",
-              price: 200,
-              duration: 120,
-              category: "SOCIAL",
-              description: "Look natural para eventos del día",
-            },
-            {
-              id: "4",
-              name: "Maquillaje Social - Estilo Glam",
-              price: 210,
-              duration: 120,
-              category: "SOCIAL",
-              description: "Look sofisticado para eventos de noche",
-            },
-            {
-              id: "5",
-              name: "Maquillaje para Piel Madura",
-              price: 230,
-              duration: 150,
-              category: "MATURE_SKIN",
-              description: "Técnicas especializadas para piel madura",
-            },
-            {
-              id: "6",
-              name: "Peinados Elegantes",
-              price: 65,
-              duration: 90,
-              category: "HAIRSTYLE",
-              description: "Peinados para complementar tu look",
-            },
-          ];
-          setServices(fallbackServices);
+          // No usar fallback para evitar inconsistencias con la BD
+          console.error("No se pudieron cargar los servicios");
+          setServices([]);
         }
       } catch (error) {
         console.error("Error loading services:", error);
@@ -234,15 +185,12 @@ export default function ServiceSelector({
       newSelection = [...value, serviceKey];
     }
 
-    // Validar nueva selección
+    // Siempre aplicar el cambio para evitar comportamiento confuso
+    onChangeAction(newSelection);
+
+    // Validar nueva selección y mostrar error si existe
     const error = validateServiceCombination(newSelection);
     setValidationError(error);
-
-    // Si no hay error o si estamos deseleccionando, aplicar cambio
-    if (!error || isSelected) {
-      onChangeAction(newSelection);
-      if (isSelected) setValidationError("");
-    }
   };
 
   const handleInputClick = () => {
@@ -344,9 +292,18 @@ export default function ServiceSelector({
 
       {/* Error de validación */}
       {validationError && (
-        <div className="mt-2 flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <AlertTriangle className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
-          <span className="text-sm text-red-700">{validationError}</span>
+        <div className="mt-2 flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+          <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
+          <div className="flex-1">
+            <span className="text-sm text-amber-800 font-medium">
+              Combinación no válida:
+            </span>
+            <p className="text-sm text-amber-700 mt-1">{validationError}</p>
+            <p className="text-xs text-amber-600 mt-2">
+              💡 Puedes seguir seleccionando servicios, pero esta combinación no
+              podrá ser enviada.
+            </p>
+          </div>
         </div>
       )}
 

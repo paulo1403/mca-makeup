@@ -206,14 +206,109 @@ export default function AppointmentModal({
             })()}
 
             {appointment.additionalNotes && (
-              <div>
-                <div className="text-sm font-semibold text-[#1C1C1C] mb-2 flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-[#D4AF37]/70 rounded flex-shrink-0"></div>
-                  <span>Notas Adicionales</span>
-                </div>
-                <p className="text-sm sm:text-base text-gray-900 bg-white sm:bg-gray-50 p-4 rounded-lg leading-relaxed border border-gray-200">
-                  {appointment.additionalNotes}
-                </p>
+              <div className="space-y-3">
+                {appointment.additionalNotes
+                  .split("\n")
+                  .filter((line) => line.trim() !== "")
+                  .map((line, index) => {
+                    // Detectar si la línea parece ser un título o encabezado
+                    const isHeader =
+                      line.includes(":") && line.split(":")[1].trim() !== "";
+                    const isServiceInfo =
+                      line.toLowerCase().includes("servicio") ||
+                      line.toLowerCase().includes("maquillaje") ||
+                      line.toLowerCase().includes("peinado");
+                    const isLocationInfo =
+                      line.toLowerCase().includes("ubicación") ||
+                      line.toLowerCase().includes("dirección") ||
+                      line.toLowerCase().includes("local");
+
+                    if (isHeader) {
+                      const [label, ...valueParts] = line.split(":");
+                      const value = valueParts.join(":").trim();
+
+                      return (
+                        <div
+                          key={index}
+                          className="flex items-start space-x-3 p-4 bg-white rounded-lg border border-gray-200 shadow-sm"
+                        >
+                          <div className="flex items-center space-x-2 min-w-0">
+                            {isServiceInfo && (
+                              <svg
+                                className="w-4 h-4 text-[#D4AF37] flex-shrink-0"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                                />
+                              </svg>
+                            )}
+                            {isLocationInfo && (
+                              <svg
+                                className="w-4 h-4 text-[#D4AF37] flex-shrink-0"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                                />
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                                />
+                              </svg>
+                            )}
+                            {!isServiceInfo && !isLocationInfo && (
+                              <svg
+                                className="w-4 h-4 text-[#D4AF37] flex-shrink-0"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                              </svg>
+                            )}
+                            <span className="text-sm font-medium text-gray-600">
+                              {label.trim()}
+                            </span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm text-gray-900 leading-relaxed break-words">
+                              {value}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div
+                          key={index}
+                          className="flex items-start space-x-3 p-4 bg-white rounded-lg border border-gray-200 shadow-sm"
+                        >
+                          <div className="w-2 h-2 bg-[#D4AF37] rounded-full mt-2 flex-shrink-0"></div>
+                          <p className="text-sm text-gray-700 leading-relaxed flex-1">
+                            {line.trim()}
+                          </p>
+                        </div>
+                      );
+                    }
+                  })}
               </div>
             )}
 

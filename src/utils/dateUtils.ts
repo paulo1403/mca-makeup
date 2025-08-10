@@ -86,24 +86,67 @@ export function formatDateForDashboard(date: Date): string {
 }
 
 /**
- * Convierte un rango de tiempo (ej: "09:00 - 10:00") a formato de 12 horas
+ * Convierte un rango de tiempo (ej: "09:00 - 10:00" o "9:00 AM - 10:00 AM") a formato de 12 horas
  */
 export function formatTimeRange(timeRange: string): string {
+  if (!timeRange || typeof timeRange !== "string") {
+    return "Horario no disponible";
+  }
+
   if (!timeRange.includes(" - ")) {
     return timeRange;
   }
 
-  const [startTime, endTime] = timeRange.split(" - ");
+  try {
+    const [startTime, endTime] = timeRange.split(" - ");
 
-  const formatTime = (time: string): string => {
-    const [hours, minutes] = time.split(":").map(Number);
-    const date = new Date();
-    date.setHours(hours, minutes, 0, 0);
+    const formatTime = (time: string): string => {
+      if (!time || typeof time !== "string") {
+        return "00:00";
+      }
 
-    return format(date, "h:mm a", { locale: es });
-  };
+      const trimmedTime = time.trim();
 
-  return `${formatTime(startTime)} - ${formatTime(endTime)}`;
+      // Si ya está en formato 12 horas (contiene AM/PM), devolverlo como está
+      if (trimmedTime.includes("AM") || trimmedTime.includes("PM")) {
+        return trimmedTime;
+      }
+
+      // Si está en formato 24 horas, convertir
+      const timeParts = trimmedTime.split(":");
+      if (timeParts.length !== 2) {
+        console.warn(`Invalid time format: ${trimmedTime}`);
+        return trimmedTime;
+      }
+
+      const hours = parseInt(timeParts[0], 10);
+      const minutes = parseInt(timeParts[1], 10);
+
+      if (
+        isNaN(hours) ||
+        isNaN(minutes) ||
+        hours < 0 ||
+        hours > 23 ||
+        minutes < 0 ||
+        minutes > 59
+      ) {
+        console.warn(`Invalid time values: ${trimmedTime}`);
+        return trimmedTime;
+      }
+
+      // Convertir a formato 12 horas
+      const period = hours >= 12 ? "PM" : "AM";
+      const displayHour = hours > 12 ? hours - 12 : hours === 0 ? 12 : hours;
+      const formattedMinutes = minutes.toString().padStart(2, "0");
+
+      return `${displayHour}:${formattedMinutes} ${period}`;
+    };
+
+    return `${formatTime(startTime)} - ${formatTime(endTime)}`;
+  } catch (error) {
+    console.error("Error formatting time range:", error);
+    return timeRange;
+  }
 }
 
 /**

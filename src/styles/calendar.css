@@ -102,6 +102,104 @@
   display: none;
 }
 
+/* Eventos en vista de mes - MEJORADA PARA MÁXIMA VISIBILIDAD */
+.rbc-month-view .rbc-event {
+  background: #d4af37 !important;
+  border: 1px solid #b8941f !important;
+  padding: 3px 6px !important;
+  margin: 2px 1px !important;
+  font-size: 11px !important;
+  line-height: 1.3 !important;
+  overflow: visible !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) !important;
+  height: auto !important;
+  min-height: 20px !important;
+  max-height: none !important;
+  border-radius: 4px !important;
+  color: white !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  z-index: 100 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  cursor: pointer !important;
+  width: auto !important;
+  transform: none !important;
+}
+
+/* FORZAR renderizado de componentes internos */
+.rbc-month-view .rbc-event > div,
+.rbc-month-view .rbc-event > div > div,
+.rbc-month-view .rbc-event * {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  background: transparent !important;
+  color: white !important;
+  position: static !important;
+  z-index: auto !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+.rbc-month-view .rbc-row-content {
+  overflow: visible !important;
+  height: auto !important;
+  min-height: 40px !important;
+  position: relative !important;
+  z-index: 1 !important;
+  padding: 2px !important;
+}
+
+.rbc-month-view .rbc-row {
+  min-height: 100px !important;
+  height: auto !important;
+  overflow: visible !important;
+  padding: 2px 0 !important;
+}
+
+.rbc-month-view .rbc-event:hover {
+  transform: translateY(-1px) !important;
+  background: #b8941f !important;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3) !important;
+}
+
+/* FORZAR estilos específicos para el contenedor de eventos */
+.rbc-month-view .rbc-row-content .rbc-row .rbc-row-segment {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* Asegurar que no hay overlays ocultando eventos */
+.rbc-month-view .rbc-overlay {
+  display: none !important;
+}
+
+/* Estilos adicionales para garantizar visibilidad */
+.rbc-month-view .rbc-event-content {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Debug: agregar bordes visibles temporalmente */
+.rbc-month-view .rbc-event {
+  border: 2px solid red !important;
+}
+
+/* Permitir que los componentes personalizados manejen su propio hover */
+.rbc-month-view .rbc-event:hover > div {
+  transform: translateY(-1px);
+  transition: transform 0.2s ease;
+}
+
 /* Slot de tiempo */
 .rbc-time-slot {
   border-top: 1px solid #e5e7eb;
@@ -393,7 +491,8 @@
 .rbc-month-view {
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  overflow: hidden;
+  overflow: visible;
+  background: white;
 }
 
 .rbc-month-row {
@@ -840,4 +939,107 @@
 
 .rbc-time-content::-webkit-scrollbar-thumb:hover {
   background: #b8941f;
+}
+
+/* Componente personalizado para eventos mensuales */
+.rbc-month-view .rbc-event .month-event-component {
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 4px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+.rbc-month-view .rbc-event .month-event-component .event-title {
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.rbc-month-view .rbc-event .month-event-component .event-details {
+  font-size: 10px !important;
+  line-height: 1.1 !important;
+  opacity: 0.9 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Asegurar que las celdas del mes tengan altura suficiente */
+.rbc-month-view .rbc-date-cell {
+  min-height: 100px !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* Mejorar la visibilidad de las fechas */
+.rbc-month-view .rbc-date-cell button {
+  font-weight: 600 !important;
+  color: #1f2937 !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+  transition: all 0.2s ease !important;
+}
+
+.rbc-month-view .rbc-date-cell button:hover {
+  background-color: #f3f4f6 !important;
+  color: #d4af37 !important;
+}
+
+/* Eventos con estado específico */
+.rbc-month-view .rbc-event.event-pending {
+  background: #fbbf24 !important;
+  border-color: #f59e0b !important;
+}
+
+.rbc-month-view .rbc-event.event-confirmed {
+  background: #3b82f6 !important;
+  border-color: #2563eb !important;
+}
+
+.rbc-month-view .rbc-event.event-completed {
+  background: #10b981 !important;
+  border-color: #059669 !important;
+}
+
+.rbc-month-view .rbc-event.event-cancelled {
+  background: #ef4444 !important;
+  border-color: #dc2626 !important;
+  opacity: 0.8 !important;
+}
+
+/* Asegurar que los eventos sean clickeables */
+.rbc-month-view .rbc-event {
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.rbc-month-view .rbc-event:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+  z-index: 200 !important;
+}
+
+/* Forzar renderizado correcto en navegadores */
+.rbc-month-view .rbc-row-segment {
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+.rbc-month-view .rbc-event-content {
+  width: 100% !important;
+  height: 100% !important;
+  position: relative !important;
+  z-index: 15 !important;
 }
