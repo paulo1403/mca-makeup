@@ -643,9 +643,26 @@ export default function ServicesPage() {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 p-4">
-          <div className="relative top-4 sm:top-20 mx-auto p-4 sm:p-5 border w-full max-w-md sm:w-96 shadow-lg rounded-xl bg-white">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-gray-900">
+          <div className="relative top-4 sm:top-20 mx-auto p-4 sm:p-6 border w-full max-w-md sm:max-w-2xl lg:max-w-3xl shadow-lg rounded-xl bg-white">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 flex items-center">
+                <svg
+                  className="w-6 h-6 text-[#D4AF37] mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d={
+                      editingService
+                        ? "M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        : "M12 6v6m0 0v6m0-6h6m-6 0H6"
+                    }
+                  />
+                </svg>
                 {editingService ? "Editar Servicio" : "Nuevo Servicio"}
               </h3>
               <button
@@ -668,48 +685,46 @@ export default function ServicesPage() {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Nombre del Servicio *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent text-gray-900 text-base"
-                  placeholder="Ej: Maquillaje de Novia - Paquete Básico"
-                />
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Información básica */}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nombre del Servicio *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent text-gray-900 text-base"
+                    placeholder="Ej: Maquillaje de Novia - Paquete Básico"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Descripción
+                  </label>
+                  <textarea
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
+                    rows={3}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent text-gray-900 text-base resize-none"
+                    placeholder="Describe brevemente el servicio..."
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Descripción
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                  rows={3}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent text-gray-900 text-base resize-none"
-                  placeholder="Describe brevemente el servicio..."
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              {/* Detalles del servicio */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Precio (S/) *
-                    {formData.category === "HAIRSTYLE" && (
-                      <span className="ml-2 text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
-                        💡 Tip: Los peinados suelen ser S/ 0 (servicio
-                        complementario)
-                      </span>
-                    )}
                   </label>
                   <input
                     type="number"
@@ -721,28 +736,8 @@ export default function ServicesPage() {
                       setFormData({ ...formData, price: e.target.value })
                     }
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent text-gray-900 text-base"
-                    placeholder={
-                      formData.category === "HAIRSTYLE" ? "0.00" : "150.00"
-                    }
+                    placeholder="150.00"
                   />
-                  {formData.category === "HAIRSTYLE" &&
-                    formData.price === "0" && (
-                      <p className="text-xs text-green-600 mt-1 flex items-center">
-                        <svg
-                          className="w-3 h-3 mr-1"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        Perfecto! Los clientes solo podrán reservar este peinado
-                        junto con maquillaje.
-                      </p>
-                    )}
                 </div>
 
                 <div>
@@ -752,38 +747,55 @@ export default function ServicesPage() {
                   <input
                     type="number"
                     required
-                    min="1"
+                    min="0"
                     value={formData.duration}
                     onChange={(e) =>
                       setFormData({ ...formData, duration: e.target.value })
                     }
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent text-gray-900 text-base"
-                    placeholder="90"
+                    placeholder={formData.category === "HAIRSTYLE" ? "0" : "90"}
                   />
+                  {formData.duration === "0" && (
+                    <p className="text-xs text-blue-600 mt-1 flex items-center">
+                      <svg
+                        className="w-3 h-3 mr-1"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      ⚡ Duración 0: Se realizará simultáneamente con el
+                      maquillaje (no suma tiempo total)
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Categoría *
+                  </label>
+                  <select
+                    required
+                    value={formData.category}
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent text-gray-900 text-base bg-white"
+                  >
+                    {Object.entries(SERVICE_CATEGORIES).map(([key, label]) => (
+                      <option key={key} value={key}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Categoría *
-                </label>
-                <select
-                  required
-                  value={formData.category}
-                  onChange={(e) =>
-                    setFormData({ ...formData, category: e.target.value })
-                  }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent text-gray-900 text-base bg-white"
-                >
-                  {Object.entries(SERVICE_CATEGORIES).map(([key, label]) => (
-                    <option key={key} value={key}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+              {/* Estado del servicio */}
+              <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
                 <input
                   type="checkbox"
                   id="isActive"
@@ -801,17 +813,18 @@ export default function ServicesPage() {
                 </label>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-100">
+              {/* Botones de acción */}
+              <div className="flex flex-row justify-end gap-4 pt-6 border-t border-gray-200">
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="flex-1 px-4 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors"
+                  className="px-6 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors min-w-[120px]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-3 bg-[#D4AF37] text-white rounded-lg hover:bg-[#B8941F] font-medium transition-colors shadow-md hover:shadow-lg active:scale-95"
+                  className="px-6 py-3 bg-[#D4AF37] text-white rounded-lg hover:bg-[#B8941F] font-medium transition-colors shadow-md hover:shadow-lg active:scale-95 min-w-[140px]"
                 >
                   {editingService ? "Actualizar Servicio" : "Crear Servicio"}
                 </button>
@@ -928,13 +941,13 @@ export default function ServicesPage() {
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-5">
                 <h3 className="font-semibold text-amber-800 mb-3 flex items-center">
                   <span className="text-lg mr-2">💰</span>
-                  Estrategia de Precios: ¿Por qué Peinados en S/ 0?
+                  Estrategia de Peinados: Servicios Complementarios
                 </h3>
 
                 <div className="space-y-3">
                   <p className="text-sm text-amber-700">
-                    Los peinados tienen precio 0 porque son{" "}
-                    <strong>servicios complementarios</strong> que:
+                    Los peinados son <strong>servicios complementarios</strong>{" "}
+                    que:
                   </p>
 
                   <div className="grid md:grid-cols-2 gap-4">
@@ -959,8 +972,10 @@ export default function ServicesPage() {
                       <ul className="text-sm text-amber-700 space-y-1">
                         <li>• Solo se reservan con maquillaje</li>
                         <li>• Sistema valida automáticamente</li>
-                        <li>• Precio final = Precio maquillaje</li>
-                        <li>• Duración se suma correctamente</li>
+                        <li>• Precio: puede variar (S/ 50, S/ 80, etc.)</li>
+                        <li>
+                          • Duración: 0 min = simultáneo, {">"} 0 min = se suma
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -973,18 +988,18 @@ export default function ServicesPage() {
                   <div className="text-xs text-amber-700 space-y-1">
                     <div>
                       • <strong>Cliente selecciona:</strong> &quot;Maquillaje
-                      Social (S/ 150) + Peinado (S/ 0)&quot;
+                      Social (S/ 150) + Peinado (S/ 50, 0min)&quot;
                     </div>
                     <div>
-                      • <strong>Total que paga:</strong> S/ 150
+                      • <strong>Total que paga:</strong> S/ 200
                     </div>
                     <div>
-                      • <strong>Duración total:</strong> 90 min + 60 min = 2h
-                      30min
+                      • <strong>Duración total:</strong> 150 min + 0 min = 2h
+                      30min (peinado simultáneo)
                     </div>
                     <div>
                       • <strong>Percepción del cliente:</strong> &quot;¡El
-                      peinado está incluido!&quot;
+                      peinado no suma tiempo extra!&quot;
                     </div>
                   </div>
                 </div>
@@ -1050,9 +1065,9 @@ export default function ServicesPage() {
                   <div>
                     <h4 className="font-medium mb-2">✨ Creando Servicios:</h4>
                     <ul className="space-y-1">
-                      <li>• Peinados siempre en S/ 0</li>
+                      <li>• Peinados con precio variable</li>
                       <li>• Maquillajes con precio real</li>
-                      <li>• Duraciones realistas</li>
+                      <li>• Duración 0 = simultáneo, {">"} 0 = secuencial</li>
                       <li>• Categorías apropiadas</li>
                     </ul>
                   </div>
@@ -1062,7 +1077,7 @@ export default function ServicesPage() {
                     </h4>
                     <ul className="space-y-1">
                       <li>• &quot;Maquillaje Social Premium&quot;</li>
-                      <li>• &quot;Peinado de Gala&quot; (S/ 0)</li>
+                      <li>• &quot;Peinado de Gala&quot; (S/ 80, 0min)</li>
                       <li>• Paquetes por temporada</li>
                       <li>• Ofertas especiales</li>
                     </ul>

@@ -48,11 +48,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (price < 0 || duration <= 0) {
+    if (price < 0 || duration < 0) {
       return NextResponse.json(
         {
           error:
-            "Precio debe ser mayor o igual a 0 y duración debe ser mayor a 0",
+            "Precio debe ser mayor o igual a 0 y duración debe ser mayor o igual a 0",
         },
         { status: 400 },
       );
