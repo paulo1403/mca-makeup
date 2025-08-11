@@ -39,7 +39,9 @@ export async function POST(request: NextRequest) {
       price === undefined ||
       price === null ||
       price === "" ||
-      !duration ||
+      duration === undefined ||
+      duration === null ||
+      duration === "" ||
       !category
     ) {
       return NextResponse.json(
