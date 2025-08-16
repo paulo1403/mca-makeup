@@ -242,35 +242,69 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Get configured working hours from database
-    const dayOfWeek = appointmentDate.getDay();
-    const regularAvailability = await prisma.regularAvailability.findMany({
+    // Check for special dates first
+    const specialDate = await prisma.specialDate.findFirst({
       where: {
-        dayOfWeek,
-        locationType: locationType as "STUDIO" | "HOME",
-        isActive: true,
-      },
-      orderBy: {
-        startTime: "asc",
+        date: appointmentDate,
       },
     });
 
-    if (regularAvailability.length === 0) {
+    // If it's a special date and not available, return empty slots
+    if (specialDate && !specialDate.isAvailable) {
       return NextResponse.json({
         date: date,
         availableRanges: [],
-        message: `No hay horarios configurados para ${locationType === "STUDIO" ? "estudio" : "domicilio"} en este día`,
+        message: `${specialDate.note || "Día no disponible"}`,
+        isSpecialDate: true,
+        specialDateNote: specialDate.note,
       });
+    }
+
+    // Get configured working hours from database
+    const dayOfWeek = appointmentDate.getDay();
+    let workingPeriods: { start: number; end: number }[] = [];
+
+    if (specialDate && specialDate.isAvailable && specialDate.startTime && specialDate.endTime) {
+      // Use special date custom hours
+      workingPeriods = [{
+        start: timeToMinutes(specialDate.startTime),
+        end: timeToMinutes(specialDate.endTime),
+      }];
+      
+      console.log("Using special date hours:", {
+        date: date,
+        customHours: `${specialDate.startTime} - ${specialDate.endTime}`,
+        note: specialDate.note,
+      });
+    } else {
+      // Use regular availability
+      const regularAvailability = await prisma.regularAvailability.findMany({
+        where: {
+          dayOfWeek,
+          locationType: locationType as "STUDIO" | "HOME",
+          isActive: true,
+        },
+        orderBy: {
+          startTime: "asc",
+        },
+      });
+
+      if (regularAvailability.length === 0) {
+        return NextResponse.json({
+          date: date,
+          availableRanges: [],
+          message: `No hay horarios configurados para ${locationType === "STUDIO" ? "estudio" : "domicilio"} en este día`,
+        });
+      }
+
+      workingPeriods = regularAvailability.map((slot) => ({
+        start: timeToMinutes(slot.startTime),
+        end: timeToMinutes(slot.endTime),
+      }));
     }
 
     // Generate available time slots dynamically with optimized consecutive scheduling
     let availableRanges: string[] = [];
-
-    // Define working hours in minutes using configured availability
-    const workingPeriods = regularAvailability.map((slot) => ({
-      start: timeToMinutes(slot.startTime),
-      end: timeToMinutes(slot.endTime),
-    }));
 
     console.log("Working hours debug:", {
       locationType,
@@ -288,6 +322,14 @@ export async function GET(request: NextRequest) {
         service: b.serviceType,
         location: b.locationType,
       })),
+      specialDate: specialDate ? {
+        date: specialDate.date,
+        isAvailable: specialDate.isAvailable,
+        customHours: specialDate.startTime && specialDate.endTime 
+          ? `${specialDate.startTime} - ${specialDate.endTime}` 
+          : null,
+        note: specialDate.note,
+      } : null,
     });
 
     // Process each working period separately
@@ -478,12 +520,19 @@ export async function GET(request: NextRequest) {
         isToday: true,
         message:
           "Para citas del mismo día se requiere al menos 2 horas de anticipación",
+        isSpecialDate: !!specialDate,
+        specialDateNote: specialDate?.note,
       });
     }
 
     return NextResponse.json({
       date: date,
       availableRanges,
+      isSpecialDate: !!specialDate,
+      specialDateNote: specialDate?.note,
+      ...(specialDate && specialDate.isAvailable && specialDate.startTime && specialDate.endTime && {
+        message: `Horario especial: ${specialDate.startTime} - ${specialDate.endTime}${specialDate.note ? ` (${specialDate.note})` : ''}`,
+      }),
     });
   } catch (error) {
     console.error("Error fetching availability:", error);
