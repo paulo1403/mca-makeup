@@ -3,6 +3,14 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+// Helper function to get current time in Peru timezone
+function getCurrentTimeInPeru(): Date {
+  const now = new Date();
+  // Convert to Peru timezone (UTC-5)
+  const peruTime = new Date(now.toLocaleString("en-US", { timeZone: "America/Lima" }));
+  return peruTime;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -25,8 +33,8 @@ export async function GET(request: NextRequest) {
       appointmentDate = new Date(date);
     }
 
-    // Validate date (must be today or future)
-    const today = new Date();
+    // Validate date (must be today or future) - using Peru timezone
+    const today = getCurrentTimeInPeru();
     today.setHours(0, 0, 0, 0);
     const checkDate = new Date(appointmentDate);
     checkDate.setHours(0, 0, 0, 0);
@@ -278,12 +286,22 @@ export async function GET(request: NextRequest) {
       });
     } else {
       // Use regular availability
+      const whereClause: {
+        dayOfWeek: number;
+        isActive: boolean;
+        locationType?: "STUDIO" | "HOME";
+      } = {
+        dayOfWeek,
+        isActive: true,
+      };
+      
+      // Only filter by locationType if it's not "any"
+      if (locationType !== "any") {
+        whereClause.locationType = locationType as "STUDIO" | "HOME";
+      }
+
       const regularAvailability = await prisma.regularAvailability.findMany({
-        where: {
-          dayOfWeek,
-          locationType: locationType as "STUDIO" | "HOME",
-          isActive: true,
-        },
+        where: whereClause,
         orderBy: {
           startTime: "asc",
         },
@@ -501,12 +519,20 @@ export async function GET(request: NextRequest) {
     });
 
     // Special handling for same day appointments (can't book within 2 hours)
-    const now = new Date();
+    const now = getCurrentTimeInPeru();
     const isToday = checkDate.getTime() === today.getTime();
 
     if (isToday) {
       const currentMinutes = now.getHours() * 60 + now.getMinutes();
       const cutoffMinutes = currentMinutes + 120; // 2 hours notice required
+
+      console.log("Same day booking restriction:", {
+        currentTime: `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`,
+        currentMinutes,
+        cutoffMinutes,
+        cutoffTime: `${Math.floor(cutoffMinutes / 60)}:${(cutoffMinutes % 60).toString().padStart(2, '0')}`,
+        timezone: "America/Lima"
+      });
 
       const filteredRanges = availableRanges.filter((range) => {
         const rangeStart = range.split(" - ")[0];
