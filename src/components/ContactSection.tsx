@@ -23,6 +23,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { es } from "date-fns/locale";
 import { format } from "date-fns";
 import { ServiceSelection, Service } from "@/types";
+import { analytics } from "@/lib/analytics";
 import DistrictSelector from "./DistrictSelector";
 import PricingBreakdown from "./PricingBreakdown";
 import ServiceSelector from "./ServiceSelector";
@@ -92,6 +93,13 @@ export default function ContactSection() {
 
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  // Track when contact form comes into view
+  useEffect(() => {
+    if (isInView) {
+      analytics.contactFormViewed();
+    }
+  }, [isInView]);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -219,6 +227,14 @@ export default function ContactSection() {
     setIsSubmitting(true);
     setSubmitMessage("");
 
+    // Track booking started
+    const selectedServices = Object.keys(formData.service).filter(
+      serviceId => formData.service[serviceId] > 0
+    );
+    if (selectedServices.length > 0) {
+      analytics.bookingStarted(selectedServices.join(', '));
+    }
+
     // Validación personalizada completa
     if (!formData.name) {
       setSubmitMessage("Por favor ingresa tu nombre completo.");
@@ -299,6 +315,13 @@ export default function ContactSection() {
       });
 
       if (response.ok) {
+        // Track successful booking
+        analytics.bookingCompleted(
+          selectedServices.join(', '),
+          formData.locationType,
+          calculatedPricing.totalPrice
+        );
+
         setSubmitMessage(
           "¡Solicitud enviada con éxito! Te contactaré pronto para confirmar tu cita.",
         );

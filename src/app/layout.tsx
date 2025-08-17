@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Playfair_Display, Allura, Montserrat } from 'next/font/google';
 import QueryProvider from '@/providers/QueryProvider';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css';
 
 const playfairDisplay = Playfair_Display({
@@ -209,6 +211,8 @@ export default function RootLayout({
         <QueryProvider>
           {children}
         </QueryProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

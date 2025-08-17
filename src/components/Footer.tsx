@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Instagram, Phone, MapPin, ChevronUp } from "lucide-react";
+import { analytics } from "@/lib/analytics";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -50,6 +51,7 @@ export default function Footer() {
                 <a
                   href="tel:+51989164990"
                   className="text-main text-sm hover:text-accent-primary transition-colors"
+                  onClick={() => analytics.phoneClicked()}
                 >
                   +51 989 164 990
                 </a>
@@ -112,6 +114,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="w-8 h-8 bg-gray-100 hover:bg-green-600 text-green-600 hover:text-white rounded-full flex items-center justify-center transition-all duration-300"
                 aria-label="WhatsApp"
+                onClick={() => analytics.whatsappClicked()}
               >
                 <Phone className="w-4 h-4" />
               </a>
