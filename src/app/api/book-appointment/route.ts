@@ -31,8 +31,16 @@ const appointmentSchema = z
         );
       }, "Formato de teléfono inválido. Ej: +51 999 209 880 o 999209880"),
     services: z
-      .array(z.string().min(1, "Servicio inválido"))
-      .min(1, "Debe seleccionar al menos un servicio"),
+      .record(z.string(), z.number().min(1))
+      .refine((obj) => Object.keys(obj).length > 0, {
+        message: "Debe seleccionar al menos un servicio",
+      })
+      .refine(
+        (obj) => Object.values(obj).some(quantity => quantity > 0),
+        {
+          message: "Debe seleccionar al menos una cantidad de servicio",
+        }
+      ),
     servicePrice: z.number().min(0, "Precio del servicio requerido"),
     appointmentDate: z.string().min(1, "Fecha requerida"),
     appointmentTimeRange: z.string().min(1, "Horario requerido"),
@@ -101,31 +109,27 @@ export async function POST(request: NextRequest) {
     let totalDuration = 0;
     let calculatedServicePrice = 0;
 
-    for (const serviceString of validatedData.services) {
-      // Extract service name from string (formato: "Nombre (S/ 200)")
-      let serviceName = serviceString;
-      if (serviceString.includes("(S/")) {
-        serviceName = serviceString.split(" (S/")[0].trim();
-      }
+    // Process ServiceSelection object
+    for (const [serviceId, quantity] of Object.entries(validatedData.services)) {
+      if (quantity <= 0) continue;
 
-      // Find matching service in database
-      const matchedService = allServices.find(
-        (s) =>
-          s.name === serviceName ||
-          s.name.toLowerCase().includes(serviceName.toLowerCase()) ||
-          serviceName.toLowerCase().includes(s.name.toLowerCase()),
-      );
+      // Find matching service in database by ID
+      const matchedService = allServices.find(s => s.id === serviceId);
 
       if (!matchedService) {
         return NextResponse.json(
-          { error: `Servicio no encontrado: ${serviceName}` },
+          { error: `Servicio no encontrado: ${serviceId}` },
           { status: 400 },
         );
       }
 
-      parsedServices.push(matchedService);
-      totalDuration += matchedService.duration;
-      calculatedServicePrice += matchedService.price;
+      // Add service with quantity
+      for (let i = 0; i < quantity; i++) {
+        parsedServices.push(matchedService);
+      }
+      
+      totalDuration += matchedService.duration * quantity;
+      calculatedServicePrice += matchedService.price * quantity;
     }
 
     // Validar combinaciones de servicios
@@ -234,16 +238,42 @@ export async function POST(request: NextRequest) {
     }
 
     // Crear string de servicios para serviceType (mantener compatibilidad)
-    const serviceTypeString = parsedServices.map((s) => s.name).join(" + ");
-
-    // Crear objeto de servicios para almacenar en JSON
-    const servicesJson = parsedServices.map((s) => ({
-      id: s.id,
-      name: s.name,
-      price: s.price,
-      duration: s.duration,
-      category: s.category,
-    }));
+    const serviceTypeParts = [];
+    const servicesJson = [];
+    
+    // Group services by their details and create summary
+    const serviceGroups = new Map();
+    
+    for (const [serviceId, quantity] of Object.entries(validatedData.services)) {
+      if (quantity <= 0) continue;
+      
+      const service = allServices.find(s => s.id === serviceId);
+      if (service) {
+        const key = service.id;
+        serviceGroups.set(key, {
+          id: service.id,
+          name: service.name,
+          price: service.price,
+          duration: service.duration,
+          category: service.category,
+          quantity: quantity,
+        });
+        
+        // Add to service type string
+        if (quantity > 1) {
+          serviceTypeParts.push(`${quantity}x ${service.name}`);
+        } else {
+          serviceTypeParts.push(service.name);
+        }
+      }
+    }
+    
+    const serviceTypeString = serviceTypeParts.join(" + ");
+    
+    // Convert groups to final JSON format
+    for (const serviceGroup of serviceGroups.values()) {
+      servicesJson.push(serviceGroup);
+    }
 
     // Create the appointment
     const appointment = await prisma.appointment.create({

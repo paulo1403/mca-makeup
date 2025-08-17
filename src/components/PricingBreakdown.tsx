@@ -3,9 +3,10 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useTransportCost } from "@/hooks/useTransportCost";
 import { Calculator, MapPin, Truck, AlertCircle } from "lucide-react";
+import { ServiceSelection, Service } from "@/types";
 
 interface PricingBreakdownProps {
-  selectedServices: string[];
+  selectedServices: ServiceSelection;
   locationType: "STUDIO" | "HOME";
   district?: string;
   onPriceCalculated?: (
@@ -15,9 +16,14 @@ interface PricingBreakdownProps {
   ) => void;
 }
 
-interface ParsedService {
+interface ServiceWithQuantity {
+  id: string;
   name: string;
   price: number;
+  duration: number;
+  quantity: number;
+  totalPrice: number;
+  totalDuration: number;
 }
 
 export default function PricingBreakdown({
@@ -26,7 +32,8 @@ export default function PricingBreakdown({
   district,
   onPriceCalculated,
 }: PricingBreakdownProps) {
-  const [parsedServices, setParsedServices] = useState<ParsedService[]>([]);
+  const [servicesWithQuantity, setServicesWithQuantity] = useState<ServiceWithQuantity[]>([]);
+  const [allServices, setAllServices] = useState<Service[]>([]);
   const [totalServicePrice, setTotalServicePrice] = useState<number>(0);
   const {
     transportCost,
@@ -46,31 +53,58 @@ export default function PricingBreakdown({
   // Debounce para evitar cálculos excesivos
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Parsear servicios seleccionados
+  // Cargar servicios disponibles
   useEffect(() => {
-    if (!selectedServices || selectedServices.length === 0) {
-      setParsedServices([]);
+    const loadServices = async () => {
+      try {
+        const response = await fetch("/api/services");
+        if (response.ok) {
+          const data = await response.json();
+          setAllServices(data.services || []);
+        }
+      } catch (error) {
+        console.error("Error loading services:", error);
+      }
+    };
+    loadServices();
+  }, []);
+
+  // Parsear servicios seleccionados con cantidades
+  useEffect(() => {
+    if (!selectedServices || Object.keys(selectedServices).length === 0) {
+      setServicesWithQuantity([]);
       setTotalServicePrice(0);
       return;
     }
 
-    const parsed: ParsedService[] = [];
+    const servicesList: ServiceWithQuantity[] = [];
     let total = 0;
 
-    selectedServices.forEach((serviceString) => {
-      // Buscar precio en el texto del servicio (formato: "Nombre (S/ 200)")
-      const priceMatch = serviceString.match(/\(S\/\s*(\d+(?:\.\d+)?)\)/);
-      if (priceMatch) {
-        const price = parseFloat(priceMatch[1]);
-        const name = serviceString.replace(/\s*\(S\/.*\)/, "");
-        parsed.push({ name, price });
-        total += price;
+    Object.entries(selectedServices).forEach(([serviceId, quantity]) => {
+      if (quantity > 0) {
+        const service = allServices.find(s => s.id === serviceId);
+        if (service) {
+          const totalPrice = service.price * quantity;
+          const totalDuration = service.duration * quantity;
+          
+          servicesList.push({
+            id: service.id,
+            name: service.name,
+            price: service.price,
+            duration: service.duration,
+            quantity,
+            totalPrice,
+            totalDuration,
+          });
+          
+          total += totalPrice;
+        }
       }
     });
 
-    setParsedServices(parsed);
+    setServicesWithQuantity(servicesList);
     setTotalServicePrice(total);
-  }, [selectedServices]);
+  }, [selectedServices, allServices]);
 
   // Obtener costo de transporte cuando cambia el distrito
   useEffect(() => {
@@ -140,7 +174,7 @@ export default function PricingBreakdown({
     <div className="bg-gradient-to-r from-[#D4AF37]/10 to-[#B06579]/10 rounded-lg p-3 sm:p-4 border border-[#D4AF37]/20">
       <div className="flex items-center gap-2 mb-3">
         <Calculator className="h-4 w-4 sm:h-5 sm:w-5 text-[#D4AF37]" />
-        <h3 className="font-semibold text-gray-900 text-sm sm:text-base">
+        <h3 className="font-semibold text-black text-sm sm:text-base">
           Detalle de Costos
         </h3>
       </div>
@@ -148,30 +182,33 @@ export default function PricingBreakdown({
       <div className="space-y-3">
         {/* Servicios seleccionados */}
         <div className="space-y-2">
-          {parsedServices.map((service, index) => (
+                    {servicesWithQuantity.map((service, index) => (
             <div
               key={index}
-              className="flex justify-between items-start sm:items-center gap-2"
+              className="flex justify-between items-center py-2"
             >
-              <div className="flex-1 min-w-0">
-                <span className="text-xs sm:text-sm text-gray-600 break-words">
-                  {service.name}
-                </span>
+              <div className="flex items-center gap-2">
+                <span className="text-black text-sm">{service.name}</span>
+                {service.quantity > 1 && (
+                  <span className="bg-primary-accent/10 text-primary-accent text-xs px-2 py-1 rounded-full font-medium">
+                    {service.quantity}x
+                  </span>
+                )}
               </div>
-              <span className="font-medium text-gray-900 text-sm sm:text-base flex-shrink-0">
-                S/ {service.price.toFixed(2)}
+              <span className="font-medium text-black text-sm">
+                S/ {service.totalPrice.toFixed(2)}
               </span>
             </div>
           ))}
 
           {/* Subtotal de servicios si hay más de uno */}
-          {parsedServices.length > 1 && (
+          {servicesWithQuantity.length > 1 && (
             <div className="border-t border-gray-200 pt-2">
               <div className="flex justify-between items-center gap-2">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-black">
                   Subtotal servicios:
                 </span>
-                <span className="font-semibold text-gray-900 text-sm sm:text-base">
+                <span className="font-semibold text-black text-sm sm:text-base">
                   S/ {totalServicePrice.toFixed(2)}
                 </span>
               </div>
@@ -185,23 +222,23 @@ export default function PricingBreakdown({
             <div className="flex justify-between items-start sm:items-center gap-2">
               <div className="flex items-center gap-2 flex-1 min-w-0">
                 <Truck className="h-3 w-3 sm:h-4 sm:w-4 text-[#B06579] flex-shrink-0" />
-                <span className="text-xs sm:text-sm text-gray-600 break-words">
+                <span className="text-xs sm:text-sm text-black break-words">
                   Transporte {district && `(${district})`}
                 </span>
               </div>
               <div className="text-right flex-shrink-0">
                 {loading ? (
-                  <span className="text-xs sm:text-sm text-gray-500">
+                  <span className="text-xs sm:text-sm text-gray-600">
                     Calculando...
                   </span>
                 ) : error ? (
                   <span className="text-xs sm:text-sm text-red-600">Error</span>
                 ) : transportCost?.hasTransportCost ? (
-                  <span className="font-medium text-gray-900 text-sm sm:text-base">
+                  <span className="font-medium text-black text-sm sm:text-base">
                     S/ {transportCost.cost.toFixed(2)}
                   </span>
                 ) : (
-                  <span className="text-xs sm:text-sm text-gray-500">
+                  <span className="text-xs sm:text-sm text-gray-600">
                     No disponible
                   </span>
                 )}
@@ -246,8 +283,8 @@ export default function PricingBreakdown({
         {/* Total */}
         <div className="border-t border-[#D4AF37]/30 pt-3">
           <div className="flex justify-between items-center">
-            <span className="font-bold text-gray-900 text-sm sm:text-base">
-              Total estimado:
+            <span className="font-bold text-black text-sm sm:text-base">
+              Total:
             </span>
             <span className="font-bold text-base sm:text-lg text-[#D4AF37]">
               S/ {totalPrice.toFixed(2)}
@@ -269,7 +306,7 @@ export default function PricingBreakdown({
                 {locationType === "HOME" && (
                   <li>• El transporte incluye ida y vuelta</li>
                 )}
-                {parsedServices.length > 1 && (
+                {servicesWithQuantity.length > 1 && (
                   <li>
                     • Los servicios múltiples se realizan en la misma sesión
                   </li>

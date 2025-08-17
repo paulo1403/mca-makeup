@@ -31,6 +31,24 @@ export const getStatusText = (status: Appointment["status"]) => {
   }
 };
 
+export const formatServices = (appointment: Appointment) => {
+  // Si hay datos de services con cantidades, usar esos
+  if (appointment.services && Array.isArray(appointment.services) && appointment.services.length > 0) {
+    return appointment.services.map(service => ({
+      name: service.name,
+      quantity: service.quantity,
+      displayText: service.quantity > 1 ? `${service.name} x${service.quantity}` : service.name
+    }));
+  }
+  
+  // Fallback al serviceType string
+  return [{
+    name: appointment.serviceType,
+    quantity: 1,
+    displayText: appointment.serviceType
+  }];
+};
+
 export const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   return formatDateForDisplay(date);

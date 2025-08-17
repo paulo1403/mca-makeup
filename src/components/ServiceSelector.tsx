@@ -1,20 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { ChevronDown, Sparkles, Clock, AlertTriangle } from "lucide-react";
-
-interface Service {
-  id: string;
-  name: string;
-  price: number;
-  description?: string;
-  duration: number;
-  category: string;
-}
+import { ChevronDown, Sparkles, Clock, AlertTriangle, Plus, Minus } from "lucide-react";
+import { Service, ServiceSelection } from "@/types";
 
 interface ServiceSelectorProps {
-  value: string[];
-  onChangeAction: (services: string[]) => void;
+  value: ServiceSelection;
+  onChangeAction: (services: ServiceSelection) => void;
   required?: boolean;
   disabled?: boolean;
   placeholder?: string;
@@ -100,11 +92,12 @@ export default function ServiceSelector({
   }, []);
 
   // Validación de combinaciones permitidas
-  const validateServiceCombination = (selectedServices: string[]): string => {
-    if (selectedServices.length === 0) return "";
+  const validateServiceCombination = (selectedServices: ServiceSelection): string => {
+    const serviceIds = Object.keys(selectedServices).filter(id => selectedServices[id] > 0);
+    if (serviceIds.length === 0) return "";
 
     const selectedServiceObjects = services.filter((service) =>
-      selectedServices.includes(`${service.name} (S/ ${service.price})`),
+      serviceIds.includes(service.id)
     );
 
     const categories = selectedServiceObjects.map(
@@ -171,18 +164,16 @@ export default function ServiceSelector({
   );
 
   const selectedServices = services.filter((service) =>
-    value.includes(`${service.name} (S/ ${service.price})`),
+    value[service.id] && value[service.id] > 0
   );
 
-  const handleToggleService = (service: Service) => {
-    const serviceKey = `${service.name} (S/ ${service.price})`;
-    const isSelected = value.includes(serviceKey);
-
-    let newSelection: string[];
-    if (isSelected) {
-      newSelection = value.filter((s) => s !== serviceKey);
+  const handleQuantityChange = (service: Service, quantity: number) => {
+    const newSelection = { ...value };
+    
+    if (quantity <= 0) {
+      delete newSelection[service.id];
     } else {
-      newSelection = [...value, serviceKey];
+      newSelection[service.id] = quantity;
     }
 
     // Siempre aplicar el cambio para evitar comportamiento confuso
@@ -193,9 +184,16 @@ export default function ServiceSelector({
     setValidationError(error);
   };
 
+  const handleToggleService = (service: Service) => {
+    const currentQuantity = value[service.id] || 0;
+    handleQuantityChange(service, currentQuantity > 0 ? 0 : 1);
+  };
+
   const handleInputClick = () => {
-    setIsOpen(true);
-    setSearchTerm("");
+    setIsOpen(!isOpen);
+    if (!isOpen) {
+      setSearchTerm("");
+    }
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -214,14 +212,14 @@ export default function ServiceSelector({
 
   const getTotalDuration = () => {
     return selectedServices.reduce(
-      (total, service) => total + service.duration,
+      (total, service) => total + (service.duration * (value[service.id] || 0)),
       0,
     );
   };
 
   const getTotalPrice = () => {
     return selectedServices.reduce(
-      (total, service) => total + service.price,
+      (total, service) => total + (service.price * (value[service.id] || 0)),
       0,
     );
   };
@@ -261,8 +259,11 @@ export default function ServiceSelector({
                     key={index}
                     className="inline-flex items-center gap-1 px-2 py-1 bg-primary-accent/10 text-primary-accent text-xs rounded-md"
                   >
+                    {value[service.id] > 1 && (
+                      <span className="font-bold">{value[service.id]}x</span>
+                    )}
                     {service.name}
-                    <span className="font-semibold">S/ {service.price}</span>
+                    <span className="font-semibold">S/ {service.price * (value[service.id] || 0)}</span>
                   </span>
                 ))}
               </div>
@@ -311,7 +312,7 @@ export default function ServiceSelector({
       {selectedServices.length > 0 && !isOpen && !loading && (
         <div className="mt-3 p-3 bg-gradient-to-r from-primary-accent/5 to-secondary-accent/5 rounded-lg border border-primary-accent/20">
           <div className="flex justify-between items-center mb-2">
-            <span className="font-medium text-gray-900 text-sm">
+            <span className="font-medium text-black text-sm">
               Servicios seleccionados:
             </span>
             <div className="text-right">
@@ -331,8 +332,13 @@ export default function ServiceSelector({
                 key={index}
                 className="flex justify-between items-center text-sm"
               >
-                <span className="text-gray-700">{service.name}</span>
-                <span className="font-medium">S/ {service.price}</span>
+                <span className="text-black">
+                  {value[service.id] > 1 && (
+                    <span className="font-bold text-primary-accent mr-1">{value[service.id]}x</span>
+                  )}
+                  {service.name}
+                </span>
+                <span className="font-medium">S/ {service.price * (value[service.id] || 0)}</span>
               </div>
             ))}
           </div>
@@ -379,14 +385,14 @@ export default function ServiceSelector({
 
                     {/* Servicios de la categoría */}
                     {categoryServices.map((service) => {
-                      const serviceKey = `${service.name} (S/ ${service.price})`;
-                      const isSelected = value.includes(serviceKey);
+                      const currentQuantity = value[service.id] || 0;
+                      const isSelected = currentQuantity > 0;
 
                       return (
-                        <label
+                        <div
                           key={service.id}
                           className={`
-                          flex items-start gap-3 p-3 cursor-pointer transition-colors duration-150
+                          flex items-start gap-3 p-3 transition-colors duration-150
                           hover:bg-gray-50 border-l-4 border-transparent
                           ${isSelected ? "bg-primary-accent/5 border-l-primary-accent" : ""}
                         `}
@@ -405,11 +411,11 @@ export default function ServiceSelector({
                           <div className="flex-1 min-w-0">
                             <div className="flex justify-between items-start gap-2">
                               <div className="flex-1 min-w-0">
-                                <h4 className="font-medium text-gray-900 text-sm leading-tight">
+                                <h4 className="font-medium text-black text-sm leading-tight">
                                   {service.name}
                                 </h4>
                                 {service.description && (
-                                  <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                                  <p className="text-xs text-gray-600 mt-1 leading-relaxed">
                                     {service.description}
                                   </p>
                                 )}
@@ -421,15 +427,42 @@ export default function ServiceSelector({
                               </div>
                             </div>
 
-                            {/* Duración y categoría */}
-                            <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
-                              <div className="flex items-center gap-1">
+                            {/* Duración y controls de cantidad */}
+                            <div className="flex items-center justify-between mt-2">
+                              <div className="flex items-center gap-1 text-xs text-black">
                                 <Clock className="h-3 w-3" />
                                 <span>{formatDuration(service.duration)}</span>
                               </div>
+                              
+                              {/* Quantity controls */}
+                              {isSelected && (
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleQuantityChange(service, currentQuantity - 1)}
+                                    className="w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors"
+                                    disabled={currentQuantity <= 1}
+                                  >
+                                    <Minus className="h-3 w-3" />
+                                  </button>
+                                  
+                                  <span className="min-w-[20px] text-center text-sm font-medium text-black">
+                                    {currentQuantity}
+                                  </span>
+                                  
+                                  <button
+                                    type="button"
+                                    onClick={() => handleQuantityChange(service, currentQuantity + 1)}
+                                    className="w-6 h-6 rounded-full bg-primary-accent hover:bg-primary-accent/80 text-white flex items-center justify-center transition-colors"
+                                    disabled={currentQuantity >= 5} // Límite máximo de 5
+                                  >
+                                    <Plus className="h-3 w-3" />
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           </div>
-                        </label>
+                        </div>
                       );
                     })}
                   </div>

@@ -5,6 +5,7 @@ import { useIsSmallMobile } from "@/hooks/useMediaQuery";
 import {
   formatDate,
   formatTime,
+  formatServices,
   getStatusColor,
   getStatusText,
   getClientInitials,
@@ -34,9 +35,21 @@ function AppointmentItem({ appointment }: AppointmentItemProps) {
             <p className="font-medium text-gray-900 text-sm truncate">
               {appointment.clientName}
             </p>
-            <p className="text-xs text-gray-500 truncate">
-              {appointment.serviceType}
-            </p>
+            <div className="text-xs text-gray-500 truncate">
+              {formatServices(appointment).map((service, index) => (
+                <span key={index} className="inline-flex items-center">
+                  {service.displayText}
+                  {service.quantity > 1 && (
+                    <span className="ml-1 inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium bg-[#D4AF37]/10 text-[#B8941F]">
+                      {service.quantity}
+                    </span>
+                  )}
+                  {index < formatServices(appointment).length - 1 && (
+                    <span className="mx-1 text-gray-400">•</span>
+                  )}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -85,9 +98,21 @@ function AppointmentItem({ appointment }: AppointmentItemProps) {
           <p className="font-medium text-gray-900 text-base truncate">
             {appointment.clientName}
           </p>
-          <p className="text-sm text-gray-600 truncate">
-            {appointment.serviceType}
-          </p>
+          <div className="text-sm text-gray-600 truncate">
+            {formatServices(appointment).map((service, index) => (
+              <span key={index} className="inline-flex items-center">
+                {service.displayText}
+                {service.quantity > 1 && (
+                  <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-[#D4AF37]/10 text-[#B8941F]">
+                    {service.quantity}
+                  </span>
+                )}
+                {index < formatServices(appointment).length - 1 && (
+                  <span className="mx-1 text-gray-400">•</span>
+                )}
+              </span>
+            ))}
+          </div>
           <div className="flex items-center space-x-4 text-xs text-gray-500 mt-1">
             <div className="flex items-center space-x-1">
               <Calendar className="w-3.5 h-3.5" />

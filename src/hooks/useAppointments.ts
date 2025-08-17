@@ -7,6 +7,13 @@ export interface Appointment {
   clientEmail: string;
   clientPhone: string;
   serviceType: string;
+  services?: Array<{
+    id: string;
+    name: string;
+    quantity: number;
+    price: number;
+    duration: number;
+  }>;
   appointmentDate: string;
   appointmentTime: string;
   status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";

@@ -121,6 +121,7 @@ export async function GET() {
         clientName: true,
         clientEmail: true,
         serviceType: true,
+        services: true,
         appointmentDate: true,
         appointmentTime: true,
         status: true,

@@ -10,6 +10,7 @@ import {
   formatDate,
   formatTime,
   formatPrice,
+  formatServices,
   getPriceBreakdown,
 } from "@/utils/appointmentHelpers";
 import { copyReviewLink } from "@/utils/reviewHelpers";
@@ -74,7 +75,21 @@ function MobileAppointmentCard({
                   </span>
                 )}
               </h3>
-              <p className="text-sm text-gray-600">{appointment.serviceType}</p>
+              <div className="text-sm text-gray-600">
+                {formatServices(appointment).map((service, index) => (
+                  <span key={index} className="inline-flex items-center">
+                    {service.displayText}
+                    {service.quantity > 1 && (
+                      <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-[#D4AF37]/10 text-[#B8941F]">
+                        {service.quantity}
+                      </span>
+                    )}
+                    {index < formatServices(appointment).length - 1 && (
+                      <span className="mx-1 text-gray-400">•</span>
+                    )}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
           <div className="flex flex-col items-end space-y-1">
@@ -273,8 +288,19 @@ function AppointmentRow({
         </div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
-        <div className="text-sm text-gray-900">{appointment.serviceType}</div>
-        <div className="text-sm text-gray-500">{appointment.duration} min</div>
+        <div className="space-y-1">
+          {formatServices(appointment).map((service, index) => (
+            <div key={index} className="flex items-center text-sm text-gray-900">
+              <span>{service.name}</span>
+              {service.quantity > 1 && (
+                <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#D4AF37]/10 text-[#B8941F]">
+                  x{service.quantity}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="text-sm text-gray-500 mt-1">{appointment.duration} min</div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <div className="text-sm text-gray-900">

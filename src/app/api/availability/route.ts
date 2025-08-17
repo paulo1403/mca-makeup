@@ -80,44 +80,51 @@ export async function GET(request: NextRequest) {
     // Get all active services for matching
     const allServices = await prisma.service.findMany({
       where: { isActive: true },
-      select: { name: true, duration: true },
+      select: { id: true, name: true, duration: true },
     });
 
     // Match and calculate total duration for all selected services
     let totalDuration = 0;
     const matchedServices = [];
 
-    for (const serviceType of serviceTypeArray) {
-      // Extract service name from serviceType (remove price if present)
-      // Example: "Maquillaje Social - Estilo Natural (S/ 200)" -> "Maquillaje Social - Estilo Natural"
-      let serviceName = serviceType;
-      if (serviceType.includes("(S/")) {
-        serviceName = serviceType.split(" (S/")[0].trim();
-      }
-
-      // Try exact match first
-      let matchedService = allServices.find((s) => s.name === serviceName);
-
-      // If no exact match, try partial match
+    for (const serviceTypeOrId of serviceTypeArray) {
+      let matchedService;
+      
+      // First try to find by ID (new format)
+      matchedService = allServices.find((s) => s.id === serviceTypeOrId);
+      
+      // If not found by ID, try the old format (service name with price)
       if (!matchedService) {
-        matchedService = allServices.find(
-          (s) =>
-            s.name.toLowerCase().includes(serviceName.toLowerCase()) ||
-            serviceName.toLowerCase().includes(s.name.toLowerCase()),
-        );
+        // Extract service name from serviceType (remove price if present)
+        // Example: "Maquillaje Social - Estilo Natural (S/ 200)" -> "Maquillaje Social - Estilo Natural"
+        let serviceName = serviceTypeOrId;
+        if (serviceTypeOrId.includes("(S/")) {
+          serviceName = serviceTypeOrId.split(" (S/")[0].trim();
+        }
+
+        // Try exact match first
+        matchedService = allServices.find((s) => s.name === serviceName);
+
+        // If no exact match, try partial match
+        if (!matchedService) {
+          matchedService = allServices.find(
+            (s) =>
+              s.name.toLowerCase().includes(serviceName.toLowerCase()) ||
+              serviceName.toLowerCase().includes(s.name.toLowerCase()),
+          );
+        }
       }
 
       if (!matchedService) {
         console.error("No service found:", {
-          serviceType,
-          serviceName,
-          availableServices: allServices.map((s) => s.name),
+          serviceTypeOrId,
+          availableServices: allServices.map((s) => ({ id: s.id, name: s.name })),
         });
         return NextResponse.json(
           {
             error: "Tipo de servicio no encontrado o inactivo",
-            details: `Servicio buscado: "${serviceName}"`,
-            originalServiceType: serviceType,
+            details: `Servicio buscado: "${serviceTypeOrId}"`,
+            originalServiceType: serviceTypeOrId,
             availableServices: allServices.map((s) => s.name),
           },
           { status: 400 },

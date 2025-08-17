@@ -46,6 +46,7 @@ export async function GET(request: NextRequest) {
           clientEmail: true,
           clientPhone: true,
           serviceType: true,
+          services: true,
           appointmentDate: true,
           appointmentTime: true,
           duration: true,

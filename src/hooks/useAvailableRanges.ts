@@ -1,13 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
+import { ServiceSelection } from "@/types";
 
 export function useAvailableRanges(
   date: Date | null,
-  serviceTypes: string[],
+  serviceSelection: ServiceSelection,
   locationType: "STUDIO" | "HOME",
 ) {
   const formattedDate = date ? format(date, "yyyy-MM-dd") : "";
-  const serviceTypesString = serviceTypes.join(",");
+  
+  // Convertir ServiceSelection a array de service IDs que tienen cantidad > 0
+  const selectedServiceIds = Object.keys(serviceSelection).filter(
+    serviceId => serviceSelection[serviceId] > 0
+  );
+  
+  const serviceTypesString = selectedServiceIds.join(",");
 
   return useQuery({
     queryKey: [
@@ -17,7 +24,7 @@ export function useAvailableRanges(
       locationType,
     ],
     queryFn: async () => {
-      if (!formattedDate || !serviceTypes.length || !locationType)
+      if (!formattedDate || !selectedServiceIds.length || !locationType)
         return { availableRanges: [] };
       const params = new URLSearchParams({
         date: formattedDate,
@@ -29,6 +36,6 @@ export function useAvailableRanges(
       if (!res.ok) throw new Error("Error al obtener horarios");
       return res.json();
     },
-    enabled: !!formattedDate && serviceTypes.length > 0 && !!locationType,
+    enabled: !!formattedDate && selectedServiceIds.length > 0 && !!locationType,
   });
 }

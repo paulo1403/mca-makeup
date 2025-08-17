@@ -22,6 +22,7 @@ import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { es } from "date-fns/locale";
 import { format } from "date-fns";
+import { ServiceSelection, Service } from "@/types";
 import DistrictSelector from "./DistrictSelector";
 import PricingBreakdown from "./PricingBreakdown";
 import ServiceSelector from "./ServiceSelector";
@@ -33,7 +34,7 @@ export default function ContactSection() {
     name: "",
     email: "",
     phone: "",
-    service: [] as string[],
+    service: {} as ServiceSelection,
     date: null as Date | null,
     timeRange: "",
     locationType: "HOME" as "STUDIO" | "HOME",
@@ -42,6 +43,25 @@ export default function ContactSection() {
     addressReference: "",
     message: "",
   });
+
+  // Estado para servicios disponibles
+  const [services, setServices] = useState<Service[]>([]);
+
+  // Cargar servicios al inicio
+  useEffect(() => {
+    const loadServices = async () => {
+      try {
+        const response = await fetch("/api/services");
+        if (response.ok) {
+          const data = await response.json();
+          setServices(data.services || []);
+        }
+      } catch (error) {
+        console.error("Error loading services:", error);
+      }
+    };
+    loadServices();
+  }, []);
 
   // Estado para precios calculados
   const [calculatedPricing, setCalculatedPricing] = useState({
@@ -168,6 +188,32 @@ export default function ContactSection() {
     }));
   };
 
+  // Función auxiliar para calcular duración total
+  const calculateTotalDuration = (): number => {
+    let totalMinutes = 0;
+    
+    Object.entries(formData.service).forEach(([serviceId, quantity]) => {
+      if (quantity > 0) {
+        const service = services.find(s => s.id === serviceId);
+        if (service) {
+          totalMinutes += service.duration * quantity;
+        }
+      }
+    });
+    
+    return totalMinutes;
+  };
+
+  // Función auxiliar para formatear duración en texto legible
+  const formatDuration = (minutes: number): string => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    if (hours > 0) {
+      return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+    }
+    return `${minutes}m`;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -192,7 +238,8 @@ export default function ContactSection() {
       return;
     }
 
-    if (!formData.service) {
+    if (!formData.service || Object.keys(formData.service).length === 0 || 
+        !Object.values(formData.service).some(quantity => quantity > 0)) {
       setSubmitMessage("Por favor selecciona un servicio antes de continuar.");
       setIsSubmitting(false);
       return;
@@ -259,7 +306,7 @@ export default function ContactSection() {
           name: "",
           email: "",
           phone: "",
-          service: [],
+          service: {},
           date: null,
           timeRange: "",
           locationType: "HOME",
@@ -506,15 +553,10 @@ export default function ContactSection() {
                       ) : (
                         rangesData?.availableRanges?.map(
                           (range: string, idx: number) => {
-                            // Mostrar duración junto al rango
-                            let duration = "";
-                            if (formData.service.includes("Novia"))
-                              duration = " (2h 30m)";
-                            else if (
-                              formData.service.includes("Social") ||
-                              formData.service.includes("Madura")
-                            )
-                              duration = " (1h 30m)";
+                            // Calcular duración real basada en cantidades
+                            const totalMinutes = calculateTotalDuration();
+                            const duration = totalMinutes > 0 ? ` (${formatDuration(totalMinutes)})` : "";
+                            
                             return (
                               <option key={idx} value={range}>
                                 {range}

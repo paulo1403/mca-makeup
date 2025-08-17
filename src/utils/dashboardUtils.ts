@@ -1,6 +1,26 @@
 import { type RecentAppointment } from "@/hooks/useRecentAppointments";
 import { formatTimeRange, formatDateForDashboard } from "@/utils/dateUtils";
 
+export const formatServices = (appointment: RecentAppointment) => {
+  // Si hay datos de services con cantidades, usar esos
+  if (appointment.services && Array.isArray(appointment.services) && appointment.services.length > 0) {
+    return appointment.services.map((service) => ({
+      name: service.name || service.serviceName || "",
+      quantity: service.quantity || 1,
+      displayText: (service.quantity && service.quantity > 1) ? 
+        `${service.name || service.serviceName} x${service.quantity}` : 
+        (service.name || service.serviceName)
+    }));
+  }
+  
+  // Fallback al serviceType string
+  return [{
+    name: appointment.serviceType,
+    quantity: 1,
+    displayText: appointment.serviceType
+  }];
+};
+
 export const formatDate = (dateString: string): string => {
   try {
     const date = new Date(dateString);
