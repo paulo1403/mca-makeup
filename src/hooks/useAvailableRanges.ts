@@ -9,12 +9,19 @@ export function useAvailableRanges(
 ) {
   const formattedDate = date ? format(date, "yyyy-MM-dd") : "";
   
-  // Convertir ServiceSelection a array de service IDs que tienen cantidad > 0
-  const selectedServiceIds = Object.keys(serviceSelection).filter(
-    serviceId => serviceSelection[serviceId] > 0
-  );
+  // Convertir ServiceSelection a array expandido con cantidades
+  const expandedServiceIds: string[] = [];
+  Object.keys(serviceSelection).forEach(serviceId => {
+    const quantity = serviceSelection[serviceId];
+    if (quantity > 0) {
+      // Agregar el servicio tantas veces como su cantidad
+      for (let i = 0; i < quantity; i++) {
+        expandedServiceIds.push(serviceId);
+      }
+    }
+  });
   
-  const serviceTypesString = selectedServiceIds.join(",");
+  const serviceTypesString = expandedServiceIds.join(",");
 
   return useQuery({
     queryKey: [
@@ -24,7 +31,7 @@ export function useAvailableRanges(
       locationType,
     ],
     queryFn: async () => {
-      if (!formattedDate || !selectedServiceIds.length || !locationType)
+      if (!formattedDate || !expandedServiceIds.length || !locationType)
         return { availableRanges: [] };
       const params = new URLSearchParams({
         date: formattedDate,
@@ -36,6 +43,6 @@ export function useAvailableRanges(
       if (!res.ok) throw new Error("Error al obtener horarios");
       return res.json();
     },
-    enabled: !!formattedDate && selectedServiceIds.length > 0 && !!locationType,
+    enabled: !!formattedDate && expandedServiceIds.length > 0 && !!locationType,
   });
 }
