@@ -12,6 +12,8 @@ import {
   subMonths,
   parseISO,
   isValid,
+  startOfWeek,
+  endOfWeek,
 } from "date-fns";
 import { es } from "date-fns/locale";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -348,14 +350,16 @@ export default function AdminCalendar() {
       );
   }, [appointments]);
 
-  // Obtener días del mes
   const monthDays = useMemo(() => {
     const start = startOfMonth(currentDate);
     const end = endOfMonth(currentDate);
-    return eachDayOfInterval({ start, end });
+    
+    const calendarStart = startOfWeek(start, { weekStartsOn: 0 }); // 0 = domingo
+    const calendarEnd = endOfWeek(end, { weekStartsOn: 0 });
+    
+    return eachDayOfInterval({ start: calendarStart, end: calendarEnd });
   }, [currentDate]);
 
-  // Obtener citas por día
   const appointmentsByDay = useMemo(() => {
     const map = new Map<string, ProcessedAppointment[]>();
 
