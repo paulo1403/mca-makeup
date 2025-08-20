@@ -381,298 +381,367 @@ export default function ContactSection() {
       <div className="container mx-auto px-6 lg:px-12 max-w-6xl">
         {/* Header minimalista */}
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl md:text-5xl font-playfair text-heading mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-playfair text-heading mb-4 sm:mb-6">
             Agenda tu Cita
           </h2>
-          <p className="text-main text-lg max-w-2xl mx-auto">
+          <p className="text-main text-base sm:text-lg max-w-2xl mx-auto mb-6">
             ¿Lista para verte hermosa? Completa el formulario y me pondré en
             contacto contigo para confirmar tu cita y todos los detalles.
           </p>
+          
+          {/* Proceso simplificado */}
+          <div className="bg-gradient-to-r from-[#D4AF37]/10 to-[#B06579]/10 rounded-xl p-4 sm:p-6 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base text-heading">
+              <strong>Proceso simple:</strong> Completa el formulario → Te contacto en 24h → ¡Tu cita está lista!
+            </p>
+          </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
           {/* Formulario */}
           <motion.div
-            className="lg:col-span-2"
+            className="lg:col-span-2 order-2 lg:order-1"
             initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className="bg-light-background rounded-xl p-0 md:p-8 md:border md:border-gray-100">
-              <h3 className="text-xl sm:text-2xl font-playfair text-heading mb-4 sm:mb-6">
+            <div className="lg:bg-light-background lg:rounded-xl lg:p-8 lg:border lg:border-gray-100">
+              <h3 className="text-xl sm:text-2xl font-playfair text-heading mb-6 sm:mb-8">
                 Información de la Cita
               </h3>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Información Personal */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="name"
-                      className="flex items-center gap-2 text-heading font-medium text-sm"
-                    >
-                      <User className="w-4 h-4 text-accent-primary" />
-                      Nombre Completo *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-sm sm:text-base"
-                      placeholder="Tu nombre completo"
-                    />
+              <form onSubmit={handleSubmit} className="space-y-6 lg:space-y-8">
+                {/* PASO 1 & 2: Información Personal y Servicio en desktop */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+                  {/* PASO 1: Información Personal */}
+                  <div className="bg-white rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+                    <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                      <div className="w-8 h-8 bg-[#D4AF37] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                        1
+                      </div>
+                      <h4 className="text-lg sm:text-xl font-medium text-heading">
+                        Tu Información Personal
+                      </h4>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="name"
+                          className="flex items-center gap-2 text-heading font-medium text-sm"
+                        >
+                          <User className="w-4 h-4 text-accent-primary" />
+                          Nombre Completo *
+                        </label>
+                        <input
+                          type="text"
+                          id="name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          required
+                          className="w-full px-4 py-3 sm:px-4 sm:py-4 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-base touch-manipulation"
+                          placeholder="Ingresa tu nombre completo"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="phone"
+                          className="flex items-center gap-2 text-heading font-medium text-sm"
+                        >
+                          <Phone className="w-4 h-4 text-accent-primary" />
+                          Teléfono / WhatsApp *
+                        </label>
+                        <input
+                          type="tel"
+                          id="phone"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handlePhoneChange}
+                          required
+                          className="w-full px-4 py-3 sm:px-4 sm:py-4 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-base touch-manipulation"
+                          placeholder="+51 989 164 990 o 989 164 990"
+                          maxLength={15}
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="email"
+                          className="flex items-center gap-2 text-heading font-medium text-sm"
+                        >
+                          <Mail className="w-4 h-4 text-accent-primary" />
+                          Email *
+                        </label>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          required
+                          className="w-full px-4 py-3 sm:px-4 sm:py-4 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-base touch-manipulation"
+                          placeholder="tu@email.com"
+                        />
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="phone"
-                      className="flex items-center gap-2 text-heading font-medium text-sm"
-                    >
-                      <Phone className="w-4 h-4 text-accent-primary" />
-                      Teléfono *
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handlePhoneChange}
-                      required
-                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-sm sm:text-base"
-                      placeholder="+51 989 164 990 o 989 164 990"
-                      maxLength={15}
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label
-                    htmlFor="email"
-                    className="flex items-center gap-2 text-heading font-medium text-sm"
-                  >
-                    <Mail className="w-4 h-4 text-accent-primary" />
-                    Email *
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-sm sm:text-base"
-                    placeholder="tu@email.com"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label
-                    htmlFor="service"
-                    className="text-heading font-medium text-sm flex items-center gap-1"
-                  >
-                    Tipo de Servicio
-                    <span className="text-red-500">*</span>
-                  </label>
-                  <ServiceSelector
-                    value={formData.service}
-                    onChangeAction={(services) =>
-                      setFormData((prev) => ({ ...prev, service: services }))
-                    }
-                    required
-                    placeholder="Busca y selecciona tu servicio..."
-                  />
-                </div>
-
-                {/* Ubicación - MOVER ARRIBA */}
-                <div className="space-y-4">
-                  <label className="flex items-center gap-2 text-heading font-medium text-sm">
-                    <MapPin className="w-4 h-4 text-accent-primary" />
-                    Ubicación del Servicio *
-                  </label>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                    <label className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                      <input
-                        type="radio"
-                        name="locationType"
-                        value="HOME"
-                        checked={formData.locationType === "HOME"}
-                        onChange={handleInputChange}
-                        className="text-accent-primary focus:ring-accent-primary"
+                  {/* PASO 2: Selección de Servicio */}
+                  <div className="bg-white rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+                    <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                      <div className="w-8 h-8 bg-[#D4AF37] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                        2
+                      </div>
+                      <h4 className="text-lg sm:text-xl font-medium text-heading">
+                        Selecciona tu Servicio
+                      </h4>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="service"
+                        className="text-heading font-medium text-sm flex items-center gap-1"
+                      >
+                        Tipo de Servicio
+                        <span className="text-red-500">*</span>
+                      </label>
+                      <ServiceSelector
+                        value={formData.service}
+                        onChangeAction={(services) =>
+                          setFormData((prev) => ({ ...prev, service: services }))
+                        }
+                        required
+                        placeholder="Busca y selecciona tu servicio favorito..."
                       />
-                      <Home className="w-5 h-5 text-accent-primary" />
-                      <span className="text-heading text-sm sm:text-base">
-                        A domicilio
-                      </span>
-                    </label>
-
-                    <label className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                      <input
-                        type="radio"
-                        name="locationType"
-                        value="STUDIO"
-                        checked={formData.locationType === "STUDIO"}
-                        onChange={handleInputChange}
-                        className="text-accent-primary focus:ring-accent-primary"
-                      />
-                      <MapPin className="w-5 h-5 text-accent-primary" />
-                      <span className="text-heading text-sm sm:text-base">
-                        Room Studio
-                      </span>
-                    </label>
+                    </div>
                   </div>
                 </div>
 
-                {/* Fecha y Hora */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  <div className="space-y-2">
-                    <label className="flex items-center gap-2 text-heading font-medium text-sm">
-                      <Calendar className="w-4 h-4 text-accent-primary" />
-                      Fecha Preferida *
-                    </label>
-                    <DatePicker
-                      selected={formData.date}
-                      onChange={handleDateChange}
-                      locale="es"
-                      minDate={new Date()}
-                      dateFormat="dd/MM/yyyy"
-                      placeholderText="Selecciona una fecha"
-                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-sm sm:text-base"
-                    />
+                {/* PASO 3 & 4: Ubicación y Fecha/Horario en desktop */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+                  {/* PASO 3: Ubicación del Servicio */}
+                  <div className="bg-white rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+                    <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                      <div className="w-8 h-8 bg-[#D4AF37] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                        3
+                      </div>
+                      <h4 className="text-lg sm:text-xl font-medium text-heading">
+                        ¿Dónde te atiendo?
+                      </h4>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-3">
+                      <label className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                        <input
+                          type="radio"
+                          name="locationType"
+                          value="HOME"
+                          checked={formData.locationType === "HOME"}
+                          onChange={handleInputChange}
+                          className="text-accent-primary focus:ring-accent-primary w-5 h-5"
+                        />
+                        <Home className="w-5 h-5 text-accent-primary" />
+                        <div className="flex-1">
+                          <span className="text-heading text-base font-medium">
+                            Servicio a Domicilio
+                          </span>
+                          <p className="text-xs text-gray-500 mt-1">
+                            Costo adicional según distrito
+                          </p>
+                        </div>
+                      </label>
+
+                      <label className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                        <input
+                          type="radio"
+                          name="locationType"
+                          value="STUDIO"
+                          checked={formData.locationType === "STUDIO"}
+                          onChange={handleInputChange}
+                          className="text-accent-primary focus:ring-accent-primary w-5 h-5"
+                        />
+                        <MapPin className="w-5 h-5 text-accent-primary" />
+                        <div className="flex-1">
+                          <span className="text-heading text-base font-medium">
+                            Room Studio
+                          </span>
+                          <p className="text-xs text-gray-500 mt-1">
+                            Sin costo adicional
+                          </p>
+                        </div>
+                      </label>
+                    </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="flex items-center gap-2 text-heading font-medium text-sm">
-                      <Clock className="w-4 h-4 text-accent-primary" />
-                      Horario Disponible *
-                    </label>
-                    <select
-                      id="timeRange"
-                      name="timeRange"
-                      value={formData.timeRange}
-                      onChange={handleTimeRangeChange}
-                      required
-                      disabled={!formData.date || !formData.service}
-                      className={`w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-200 rounded-lg text-heading focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-sm sm:text-base${!formData.date || !formData.service ? " opacity-50 cursor-not-allowed" : ""}`}
-                    >
-                      <option value="">Selecciona un horario</option>
-                      {isLoadingRanges ? (
-                        <option disabled>Cargando horarios...</option>
-                      ) : rangesData?.availableRanges?.length === 0 &&
-                        formData.date &&
-                        formData.service ? (
-                        <option disabled>
-                          No hay horarios disponibles para el servicio y fecha
-                          seleccionados.
-                        </option>
-                      ) : (
-                        rangesData?.availableRanges?.map(
-                          (range: string, idx: number) => {
-                            // Calcular duración real basada en cantidades
-                            const totalMinutes = calculateTotalDuration();
-                            const duration = totalMinutes > 0 ? ` (${formatDuration(totalMinutes)})` : "";
-                            
-                            return (
-                              <option key={idx} value={range}>
-                                {range}
-                                {duration}
-                              </option>
-                            );
-                          },
-                        )
-                      )}
-                    </select>
-                    <p className="text-xs text-gray-500 mt-2">
-                      * Solo se muestran horarios válidos según el servicio y
-                      ubicación elegidos.
-                      <br />* La duración se indica junto al horario.
-                    </p>
+                  {/* PASO 4: Fecha y Horario */}
+                  <div className="bg-white rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+                    <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                      <div className="w-8 h-8 bg-[#D4AF37] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                        4
+                      </div>
+                      <h4 className="text-lg sm:text-xl font-medium text-heading">
+                        Fecha y Horario
+                      </h4>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label className="flex items-center gap-2 text-heading font-medium text-sm">
+                          <Calendar className="w-4 h-4 text-accent-primary" />
+                          Fecha Preferida *
+                        </label>
+                        <DatePicker
+                          selected={formData.date}
+                          onChange={handleDateChange}
+                          locale="es"
+                          minDate={new Date()}
+                          dateFormat="dd/MM/yyyy"
+                          placeholderText="Selecciona una fecha"
+                          className="w-full px-4 py-3 sm:px-4 sm:py-4 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-base touch-manipulation"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="flex items-center gap-2 text-heading font-medium text-sm">
+                          <Clock className="w-4 h-4 text-accent-primary" />
+                          Horario Disponible *
+                        </label>
+                        <select
+                          id="timeRange"
+                          name="timeRange"
+                          value={formData.timeRange}
+                          onChange={handleTimeRangeChange}
+                          required
+                          disabled={!formData.date || !formData.service || Object.keys(formData.service).length === 0}
+                          className={`w-full px-4 py-3 sm:px-4 sm:py-4 bg-white border border-gray-200 rounded-lg text-heading focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-base touch-manipulation${!formData.date || !formData.service || Object.keys(formData.service).length === 0 ? " opacity-50 cursor-not-allowed bg-gray-100" : ""}`}
+                        >
+                          <option value="">
+                            {!formData.service || Object.keys(formData.service).length === 0 
+                              ? "Primero selecciona un servicio" 
+                              : !formData.date 
+                              ? "Primero selecciona una fecha"
+                              : "Selecciona un horario"}
+                          </option>
+                          {isLoadingRanges ? (
+                            <option disabled>Cargando horarios...</option>
+                          ) : rangesData?.availableRanges?.length === 0 &&
+                            formData.date &&
+                            formData.service ? (
+                            <option disabled>
+                              No hay horarios disponibles para el servicio y fecha
+                              seleccionados.
+                            </option>
+                          ) : (
+                            rangesData?.availableRanges?.map(
+                              (range: string, idx: number) => {
+                                // Calcular duración real basada en cantidades
+                                const totalMinutes = calculateTotalDuration();
+                                const duration = totalMinutes > 0 ? ` (${formatDuration(totalMinutes)})` : "";
+                                
+                                return (
+                                  <option key={idx} value={range}>
+                                    {range}
+                                    {duration}
+                                  </option>
+                                );
+                              },
+                            )
+                          )}
+                        </select>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 {formData.locationType === "HOME" && (
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="district"
-                        className="text-heading font-medium text-sm flex items-center gap-1"
-                      >
-                        Distrito
-                        <span className="text-red-500">*</span>
-                      </label>
-                      <DistrictSelector
-                        value={formData.district}
-                        onChange={(district) =>
-                          setFormData((prev) => ({ ...prev, district }))
-                        }
-                        required={formData.locationType === "HOME"}
-                        placeholder="Busca y selecciona tu distrito..."
-                      />
-                    </div>
+                  <div className="bg-orange-50 rounded-xl p-4 sm:p-6 border border-orange-200">
+                    <h4 className="text-lg font-medium text-heading mb-4">
+                      Detalles del Servicio a Domicilio
+                    </h4>
+                    
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="district"
+                          className="text-heading font-medium text-sm flex items-center gap-1"
+                        >
+                          Tu Distrito
+                          <span className="text-red-500">*</span>
+                        </label>
+                        <DistrictSelector
+                          value={formData.district}
+                          onChange={(district) =>
+                            setFormData((prev) => ({ ...prev, district }))
+                          }
+                          required={formData.locationType === "HOME"}
+                          placeholder="Busca y selecciona tu distrito..."
+                        />
+                      </div>
 
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="address"
-                        className="text-heading font-medium text-sm flex items-center gap-1"
-                      >
-                        Dirección
-                        <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="address"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleInputChange}
-                        required={formData.locationType === "HOME"}
-                        className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-sm sm:text-base"
-                        placeholder="Dirección completa"
-                      />
-                    </div>
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="address"
+                          className="text-heading font-medium text-sm flex items-center gap-1"
+                        >
+                          Dirección Completa
+                          <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          id="address"
+                          name="address"
+                          value={formData.address}
+                          onChange={handleInputChange}
+                          required={formData.locationType === "HOME"}
+                          className="w-full px-4 py-3 sm:px-4 sm:py-4 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-base touch-manipulation"
+                          placeholder="Ej: Av. Javier Prado 1234, San Isidro"
+                        />
+                      </div>
 
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="addressReference"
-                        className="text-heading font-medium text-sm"
-                      >
-                        Referencia
-                      </label>
-                      <input
-                        type="text"
-                        id="addressReference"
-                        name="addressReference"
-                        value={formData.addressReference}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-sm sm:text-base resize-none"
-                        placeholder="Referencia de ubicación"
-                      />
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="addressReference"
+                          className="text-heading font-medium text-sm"
+                        >
+                          Referencia (Opcional)
+                        </label>
+                        <input
+                          type="text"
+                          id="addressReference"
+                          name="addressReference"
+                          value={formData.addressReference}
+                          onChange={handleInputChange}
+                          className="w-full px-4 py-3 sm:px-4 sm:py-4 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-base touch-manipulation"
+                          placeholder="Ej: Cerca al parque, portón negro, edificio azul"
+                        />
+                      </div>
                     </div>
                   </div>
                 )}
 
+                {/* Detalles Adicionales */}
                 <div className="space-y-2">
                   <label
                     htmlFor="message"
                     className="text-heading font-medium text-sm"
                   >
-                    Mensaje Adicional
+                    Mensaje Adicional (Opcional)
                   </label>
                   <textarea
                     id="message"
                     name="message"
                     value={formData.message}
                     onChange={handleInputChange}
-                    rows={4}
-                    className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-sm sm:text-base"
-                    placeholder="Detalles adicionales sobre tu evento o preferencias..."
+                    rows={3}
+                    className="w-full px-4 py-3 sm:px-4 sm:py-4 bg-white border border-gray-200 rounded-lg text-heading placeholder-gray-400 focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-300 text-base touch-manipulation resize-none"
+                    placeholder="Cuéntame sobre tu evento o preferencias especiales..."
                   />
                 </div>
 
@@ -686,68 +755,91 @@ export default function ContactSection() {
                       onPriceCalculated={handlePriceCalculated}
                     />
 
-                    {/* Información de depósito PLIN */}
-                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 sm:p-6 border border-blue-200">
-                      <div className="flex items-start gap-3">
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-semibold text-blue-900 mb-2 text-sm sm:text-base">
-                            💳 Información de Pago - Depósito Requerido
+                    {/* Información de depósito PLIN mejorada */}
+                    <div className="bg-gradient-to-r from-[#D4AF37]/10 to-[#B06579]/10 rounded-xl p-6 border border-[#D4AF37]/20">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 bg-[#D4AF37] rounded-full flex items-center justify-center">
+                          <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm2 2h8v1H6V6zm0 3h8v1H6V9zm0 3h4v1H6v-1z"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-heading text-lg">
+                            Información de Pago
                           </h4>
-                          <div className="space-y-2 text-xs sm:text-sm text-blue-800">
-                            <p className="leading-relaxed">
-                              <span className="font-medium">
-                                Para confirmar tu cita:
-                              </span>{" "}
-                              Se requiere un depósito de{" "}
-                              <span className="font-bold text-blue-900">
-                                S/ 150
-                              </span>
-                            </p>
-                            <div className="bg-white rounded-md p-3 border border-blue-100">
-                              <p className="font-medium text-blue-900 mb-2">
-                                Datos para PLIN:
-                              </p>
-                              <div className="flex items-center gap-2 bg-blue-50 rounded-md p-2 border border-blue-200">
-                                <span className="font-mono text-sm font-bold text-blue-900 flex-1">
-                                  📱 +51999209880
-                                </span>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    copyToClipboard("+51999209880")
-                                  }
-                                  className="flex items-center gap-1 px-2 py-1 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700 transition-colors touch-manipulation"
-                                >
-                                  {copied ? (
-                                    <>
-                                      <Check className="h-3 w-3" />
-                                      <span>¡Copiado!</span>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <Copy className="h-3 w-3" />
-                                      <span>Copiar</span>
-                                    </>
-                                  )}
-                                </button>
-                              </div>
-                              <p className="text-xs text-blue-700 mt-2">
-                                💡 Haz clic en &quot;Copiar&quot; para guardar
-                                el número en el portapapeles
-                              </p>
+                          <p className="text-sm text-gray-600">
+                            Depósito requerido para confirmar tu cita
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        {/* Monto del depósito */}
+                        <div className="bg-white rounded-lg p-4 border border-[#D4AF37]/30">
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-700 font-medium">Depósito requerido:</span>
+                            <span className="text-2xl font-bold text-[#D4AF37]">S/ 150</span>
+                          </div>
+                        </div>
+
+                        {/* Datos PLIN */}
+                        <div className="bg-white rounded-lg p-4 border border-gray-200">
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+                              <span className="text-white font-bold text-sm">P</span>
                             </div>
-                            <div className="text-xs text-blue-700 space-y-1">
-                              <p>
-                                • El saldo restante se paga el día de la cita
-                              </p>
-                              <p>
-                                • Te contactaré para coordinar el depósito
-                                después de enviar este formulario
-                              </p>
-                              <p>
-                                • Una vez confirmado el pago, tu cita quedará
-                                reservada
-                              </p>
+                            <span className="font-medium text-gray-800">Datos para PLIN:</span>
+                          </div>
+                          
+                          <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                <Phone className="w-4 h-4 text-gray-500" />
+                                <span className="text-sm text-gray-600">Número de teléfono</span>
+                              </div>
+                              <span className="font-mono text-base sm:text-lg font-bold text-gray-800 block">
+                                +51999209880
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => copyToClipboard("+51999209880")}
+                              className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 bg-[#D4AF37] text-white rounded-lg hover:bg-[#D4AF37]/90 transition-colors touch-manipulation shadow-sm flex-shrink-0"
+                            >
+                              {copied ? (
+                                <>
+                                  <Check className="h-4 w-4" />
+                                  <span className="font-medium text-sm">¡Copiado!</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Copy className="h-4 w-4" />
+                                  <span className="font-medium text-sm">Copiar</span>
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Proceso de pago */}
+                        <div className="bg-white rounded-lg p-4 border border-gray-200">
+                          <h5 className="font-medium text-gray-800 mb-3">📋 Proceso de pago:</h5>
+                          <div className="space-y-2">
+                            <div className="flex items-start gap-2">
+                              <div className="w-5 h-5 bg-[#D4AF37] text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5">1</div>
+                              <p className="text-sm text-gray-700">Envía tu solicitud completando este formulario</p>
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <div className="w-5 h-5 bg-[#D4AF37] text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5">2</div>
+                              <p className="text-sm text-gray-700">Te contactaré para coordinar el depósito de S/ 150</p>
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <div className="w-5 h-5 bg-[#D4AF37] text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5">3</div>
+                              <p className="text-sm text-gray-700">El saldo restante se paga el día de la cita</p>
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <div className="w-5 h-5 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5">✓</div>
+                              <p className="text-sm text-gray-700 font-medium">Tu cita queda confirmada y reservada</p>
                             </div>
                           </div>
                         </div>
@@ -758,10 +850,10 @@ export default function ContactSection() {
 
                 {submitMessage && (
                   <div
-                    className={`p-4 rounded-lg ${
+                    className={`p-4 rounded-lg border ${
                       submitMessage.includes("éxito")
-                        ? "bg-green-50 text-green-700 border border-green-200"
-                        : "bg-red-50 text-red-700 border border-red-200"
+                        ? "bg-green-50 text-green-700 border-green-200"
+                        : "bg-red-50 text-red-700 border-red-200"
                     }`}
                   >
                     {submitMessage}
@@ -771,19 +863,19 @@ export default function ContactSection() {
                 <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-primary-accent text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg font-medium text-base sm:text-lg hover:bg-primary-accent/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 touch-manipulation"
+                  className="w-full bg-primary-accent text-white py-4 sm:py-5 px-6 sm:px-8 rounded-lg font-medium text-lg hover:bg-primary-accent/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-3 touch-manipulation shadow-lg hover:shadow-xl"
                   whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   {isSubmitting ? (
                     <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                      Enviando...
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                      Enviando solicitud...
                     </>
                   ) : (
                     <>
                       <Send className="w-5 h-5" />
-                      Enviar Solicitud
+                      Enviar Solicitud de Cita
                     </>
                   )}
                 </motion.button>
@@ -793,7 +885,7 @@ export default function ContactSection() {
 
           {/* Información de Contacto */}
           <motion.div
-            className="lg:col-span-1 order-first lg:order-last"
+            className="lg:col-span-1 order-1 lg:order-2"
             initial={{ opacity: 0, x: 20 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
             transition={{ duration: 0.6, delay: 0.4 }}
@@ -836,27 +928,6 @@ export default function ContactSection() {
                     >
                       @marcelacorderobeauty
                     </a>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-light-background rounded-xl p-4 sm:p-6 border border-gray-100">
-                <h3 className="text-lg sm:text-xl font-playfair text-heading mb-3 sm:mb-4">
-                  Horarios de Atención
-                </h3>
-
-                <div className="space-y-2 sm:space-y-3 text-main text-sm sm:text-base">
-                  <div className="flex justify-between">
-                    <span>Lunes - Viernes</span>
-                    <span>9:00 AM - 6:00 PM</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Sábados</span>
-                    <span>9:00 AM - 4:00 PM</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Domingos</span>
-                    <span>Solo eventos sociales</span>
                   </div>
                 </div>
               </div>
