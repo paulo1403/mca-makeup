@@ -207,22 +207,22 @@ export default function ServicesSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
         {/* Header - Más minimalista */}
         <motion.div
-          className="text-center mb-12 sm:mb-16"
+          className="text-center mb-8 sm:mb-12 lg:mb-16"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl sm:text-4xl font-playfair text-heading mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-playfair text-heading mb-3 sm:mb-4">
             Servicios
           </h2>
-          <p className="text-lg text-main max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg text-main max-w-2xl mx-auto leading-relaxed px-2">
             Especialista en maquillaje para novias y eventos sociales
           </p>
         </motion.div>
 
-        {/* Services Grid - Diseño más limpio y minimalista */}
+        {/* Services Grid - Diseño más limpio y responsivo */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
@@ -231,14 +231,14 @@ export default function ServicesSection() {
             ? // Loading skeleton
               Array.from({ length: 3 }).map((_, index) => (
                 <div key={index} className="text-center">
-                  <div className="bg-white border border-gray-100 p-8 rounded-lg animate-pulse">
-                    <div className="h-6 bg-gray-200 rounded mb-4 mx-auto w-3/4"></div>
-                    <div className="space-y-2 mb-6">
-                      <div className="h-4 bg-gray-200 rounded"></div>
-                      <div className="h-4 bg-gray-200 rounded"></div>
-                      <div className="h-4 bg-gray-200 rounded"></div>
+                  <div className="bg-white border border-gray-100 p-4 sm:p-6 lg:p-8 rounded-lg animate-pulse">
+                    <div className="h-5 sm:h-6 bg-gray-200 rounded mb-3 sm:mb-4 mx-auto w-3/4"></div>
+                    <div className="space-y-2 mb-4 sm:mb-6">
+                      <div className="h-3 sm:h-4 bg-gray-200 rounded"></div>
+                      <div className="h-3 sm:h-4 bg-gray-200 rounded"></div>
+                      <div className="h-3 sm:h-4 bg-gray-200 rounded"></div>
                     </div>
-                    <div className="h-8 bg-gray-200 rounded mb-4 mx-auto w-1/2"></div>
+                    <div className="h-6 sm:h-8 bg-gray-200 rounded mb-3 sm:mb-4 mx-auto w-1/2"></div>
                     <div className="h-10 bg-gray-200 rounded mx-auto w-3/4"></div>
                   </div>
                 </div>
@@ -251,30 +251,35 @@ export default function ServicesSection() {
                   className="text-center group cursor-pointer"
                   onClick={() => window.open(service.portfolioUrl, "_blank")}
                 >
-                  <div className="bg-white border border-gray-100 p-8 rounded-lg transition-all duration-300 hover:shadow-md hover:border-accent-primary/20">
-                    <h3 className="text-xl font-playfair text-heading mb-4">
+                  <div className="bg-white border border-gray-100 p-4 sm:p-6 lg:p-8 rounded-lg transition-all duration-300 hover:shadow-lg hover:border-accent-primary/30 active:scale-[0.98] relative">
+                    {/* Indicador visual de que es clickeable en mobile */}
+                    <div className="absolute top-3 right-3 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <div className="w-2 h-2 bg-accent-primary rounded-full"></div>
+                    </div>
+                    
+                    <h3 className="text-lg sm:text-xl font-playfair text-heading mb-3 sm:mb-4">
                       {service.title}
                     </h3>
 
-                    <div className="space-y-2 mb-6">
+                    <div className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-6">
                       {service.features.map((feature, idx) => (
                         <p
                           key={idx}
-                          className="text-sm text-main leading-relaxed"
+                          className="text-xs sm:text-sm text-main leading-relaxed"
                         >
                           {feature}
                         </p>
                       ))}
                     </div>
 
-                    <div className="text-2xl font-light text-accent-primary mb-4">
+                    <div className="text-xl sm:text-2xl font-light text-accent-primary mb-4">
                       {service.price}
                     </div>
 
-                    {/* Botón para indicar que es clickeable */}
+                    {/* Botón optimizado para mobile */}
                     <motion.button
-                      className="bg-accent-primary/10 text-accent-primary px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-accent-primary hover:text-white group-hover:bg-accent-primary group-hover:text-white"
-                      whileHover={{ scale: 1.05 }}
+                      className="bg-accent-primary/10 text-accent-primary px-4 sm:px-6 py-3 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-accent-primary hover:text-white group-hover:bg-accent-primary group-hover:text-white min-h-[48px] w-full sm:w-auto touch-manipulation"
+                      whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.95 }}
                     >
                       Ver portafolio
@@ -284,28 +289,28 @@ export default function ServicesSection() {
               ))}
         </motion.div>
 
-        {/* Contact Information - Más minimalista */}
+        {/* Contact Information - Optimizado para mobile */}
         <motion.div
-          className="mt-16 sm:mt-20 text-center"
+          className="mt-12 sm:mt-16 lg:mt-20 text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <div className="bg-white border border-gray-100 p-8 rounded-lg max-w-2xl mx-auto">
-            <h3 className="text-xl font-playfair mb-4 text-heading">
+          <div className="bg-white border border-gray-100 p-6 sm:p-8 rounded-lg max-w-2xl mx-auto">
+            <h3 className="text-lg sm:text-xl font-playfair mb-3 sm:mb-4 text-heading">
               Atención Personalizada
             </h3>
-            <p className="text-main mb-6 leading-relaxed">
+            <p className="text-sm sm:text-base text-main mb-4 sm:mb-6 leading-relaxed px-2 sm:px-0">
               Servicios profesionales en nuestro estudio en Av. Bolívar 1073,
               Pueblo Libre o en la ubicación de tu preferencia
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center text-sm text-main">
-              <div className="flex items-center">
-                <MapPin className="w-5 h-5 text-accent-primary mr-2" />
+            <div className="flex flex-col xs:flex-row gap-4 sm:gap-6 justify-center items-center text-xs sm:text-sm text-main">
+              <div className="flex items-center min-h-[44px]">
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-accent-primary mr-2 flex-shrink-0" />
                 <span>Servicio a domicilio</span>
               </div>
-              <div className="flex items-center">
-                <Clock className="w-5 h-5 text-accent-primary mr-2" />
+              <div className="flex items-center min-h-[44px]">
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-accent-primary mr-2 flex-shrink-0" />
                 <span>Horarios flexibles</span>
               </div>
             </div>
