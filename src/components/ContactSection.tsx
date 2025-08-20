@@ -403,7 +403,7 @@ export default function ContactSection() {
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className="bg-light-background rounded-xl p-0 md:p-2 border border-gray-100">
+            <div className="bg-light-background rounded-xl p-0 md:p-8 md:border md:border-gray-100">
               <h3 className="text-xl sm:text-2xl font-playfair text-heading mb-4 sm:mb-6">
                 Información de la Cita
               </h3>
@@ -525,7 +525,7 @@ export default function ContactSection() {
                       />
                       <MapPin className="w-5 h-5 text-accent-primary" />
                       <span className="text-heading text-sm sm:text-base">
-                        En mi estudio
+                        Room Studio
                       </span>
                     </label>
                   </div>
