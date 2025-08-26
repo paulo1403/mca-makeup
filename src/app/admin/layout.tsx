@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import NotificationCenter from "@/components/NotificationCenter";
+import PushSubscribe from "@/components/admin/PushSubscribe";
 import { LogOut, User, Menu, X, ChevronDown } from "lucide-react";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import "@/styles/admin.css";
@@ -29,10 +30,10 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
 
   // Refs para cerrar menús al hacer click fuera
   const dropdownRef = useClickOutside<HTMLDivElement>(() =>
-    setIsDropdownOpen(false),
+    setIsDropdownOpen(false)
   );
   const mobileMenuRef = useClickOutside<HTMLDivElement>(() =>
-    setIsMobileMenuOpen(false),
+    setIsMobileMenuOpen(false)
   );
 
   const handleSignOut = async () => {
@@ -222,6 +223,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                   <LogOut className="h-4 w-4" />
                   <span className="hidden sm:inline">Salir</span>
                 </button>
+                <PushSubscribe />
               </div>
             </div>
           </div>

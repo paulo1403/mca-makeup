@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { randomUUID } from "crypto";
-import { sendEmail, emailTemplates } from "@/lib/email";
+import { sendPushToAll } from '@/lib/push';
 import { formatDateForDisplay } from "@/utils/dateUtils";
 
 // PATCH /api/admin/appointments/[id] - Update appointment status
@@ -63,7 +63,7 @@ export async function PATCH(
           },
         });
 
-        // Send review request email
+        // Create review DB notification and send push to user/admin
         try {
           const serviceNames =
             appointmentData.services && Array.isArray(appointmentData.services)
@@ -80,26 +80,23 @@ export async function PATCH(
                   .join(", ")
               : appointmentData.serviceType || "Servicio de maquillaje";
 
-          const emailData = emailTemplates.reviewRequest(
-            appointmentData.clientName,
-            serviceNames,
-            formatDateForDisplay(appointmentData.appointmentDate),
-            reviewToken,
-          );
+          const title = '¡Comparte tu experiencia!';
+          const message = `Por favor califica tu servicio de ${serviceNames} del ${formatDateForDisplay(appointmentData.appointmentDate)}.`;
 
-          await sendEmail({
-            to: appointmentData.clientEmail,
-            subject: emailData.subject,
-            html: emailData.html,
-            text: emailData.text,
+          await prisma.notification.create({
+            data: {
+              type: 'REMINDER',
+              title,
+              message,
+              link: `${process.env.NEXTAUTH_URL || ''}/review/${reviewToken}`,
+              appointmentId,
+              read: false,
+            },
           });
 
-          console.log(
-            `Review request email sent to ${appointmentData.clientEmail}`,
-          );
-        } catch (emailError) {
-          console.error("Error sending review request email:", emailError);
-          // Don't fail the appointment update if email fails
+          await sendPushToAll({ title, body: message, data: { link: `${process.env.NEXTAUTH_URL || ''}/review/${reviewToken}` } });
+        } catch (err) {
+          console.error('Error creating review notification or sending push:', err);
         }
       } else {
         reviewToken = existingReview.reviewToken;

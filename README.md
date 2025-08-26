@@ -145,6 +145,20 @@ src/
 - `GET /api/availability?date=YYYY-MM-DD`: Verificar horarios disponibles
 - `POST /api/book-appointment`: Crear nueva cita
 
+Push notifications
+------------------
+
+This project now supports Web Push for admin notifications. High level:
+
+- Generate VAPID keys (example using web-push):
+    - npm i -g web-push
+    - web-push generate-vapid-keys
+- Set env vars: `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, and `VAPID_SUBJECT` (mailto:...)
+- In the admin panel include the `src/components/admin/PushSubscribe.tsx` component and ask admin to enable notifications.
+- Subscriptions are stored in the `push_subscriptions` table (Prisma). When a new appointment or status change occurs a DB `Notification` is created and a web-push is sent to subscriptions.
+
+If you want to keep emails as fallback, you can keep `RESEND_API_KEY` configured; otherwise remove email env vars and they'll not be used.
+
 ## 🔧 Scripts Disponibles
 
 ```bash
