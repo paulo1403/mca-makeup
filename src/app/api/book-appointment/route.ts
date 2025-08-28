@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient, Prisma } from "@prisma/client";
 import { z } from "zod";
-import { sendEmailToAdmins, emailTemplates } from "@/lib/serverEmail";
+import { sendEmailToAdmins, emailTemplates, sendEmail } from "@/lib/serverEmail";
 import {
   parseDateFromString,
   debugDate,
@@ -321,7 +321,29 @@ export async function POST(request: NextRequest) {
       text: adminEmailTemplate.text,
     });
 
-    console.log("📧 Notificación por email enviada:", emailSent ? "✅ Exitosa" : "❌ Fallida");
+    console.log("📧 Notificación admin enviada:", emailSent ? "✅ Exitosa" : "❌ Fallida");
+
+    // Send confirmation email to client
+    const clientEmailTemplate = emailTemplates.appointmentPending(
+      appointment.clientName,
+      serviceTypeString,
+      appointment.appointmentDate.toLocaleDateString('es-ES'),
+      appointment.appointmentTime,
+      appointment.locationType,
+      appointment.district || undefined,
+      appointment.address || undefined,
+      appointment.addressReference || undefined,
+      appointment.additionalNotes || undefined
+    );
+
+    const clientEmailSent = await sendEmail({
+      to: appointment.clientEmail,
+      subject: clientEmailTemplate.subject,
+      html: clientEmailTemplate.html,
+      text: clientEmailTemplate.text,
+    });
+
+    console.log("📧 Email cliente enviado:", clientEmailSent ? "✅ Exitosa" : "❌ Fallida");
 
     return NextResponse.json(
       {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { randomUUID } from "crypto";
+import { sendEmail, emailTemplates } from "@/lib/serverEmail";
 
 // PATCH /api/admin/appointments/[id] - Update appointment status
 export async function PATCH(
@@ -29,8 +30,14 @@ export async function PATCH(
         clientEmail: true,
         serviceType: true,
         appointmentDate: true,
+        appointmentTime: true,
         status: true,
         services: true,
+        locationType: true,
+        district: true,
+        address: true,
+        addressReference: true,
+        additionalNotes: true,
       },
     });
 
@@ -94,6 +101,66 @@ export async function PATCH(
         },
       },
     });
+
+    // Send email to client based on status change
+    if (appointmentData.status !== status) {
+      try {
+        let emailTemplate = null;
+        const serviceType = appointmentData.serviceType || 'Servicio de maquillaje';
+        
+        switch (status) {
+          case 'CONFIRMED':
+            emailTemplate = emailTemplates.appointmentConfirmed(
+              appointmentData.clientName,
+              serviceType,
+              appointmentData.appointmentDate.toLocaleDateString('es-ES'),
+              appointmentData.appointmentTime,
+              appointmentData.locationType,
+              appointmentData.district || undefined,
+              appointmentData.address || undefined,
+              appointmentData.addressReference || undefined,
+              appointmentData.additionalNotes || undefined
+            );
+            break;
+            
+          case 'CANCELLED':
+            emailTemplate = emailTemplates.appointmentCancelled(
+              appointmentData.clientName,
+              serviceType,
+              appointmentData.appointmentDate.toLocaleDateString('es-ES'),
+              appointmentData.appointmentTime
+            );
+            break;
+            
+          case 'COMPLETED':
+            // Only send review email if we just created a new review token
+            if (reviewToken) {
+              emailTemplate = emailTemplates.reviewRequest(
+                appointmentData.clientName,
+                serviceType,
+                appointmentData.appointmentDate.toLocaleDateString('es-ES'),
+                reviewToken
+              );
+            }
+            break;
+        }
+
+        if (emailTemplate) {
+          const emailSent = await sendEmail({
+            to: appointmentData.clientEmail,
+            subject: emailTemplate.subject,
+            html: emailTemplate.html,
+            text: emailTemplate.text,
+          });
+          
+          console.log(`📧 Email ${status.toLowerCase()} enviado a ${appointmentData.clientName}:`, 
+                     emailSent ? "✅ Exitoso" : "❌ Fallido");
+        }
+      } catch (emailError) {
+        console.error("Error enviando email al cliente:", emailError);
+        // No falla la operación si el email falla
+      }
+    }
 
     return NextResponse.json({
       success: true,
