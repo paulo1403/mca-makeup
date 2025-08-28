@@ -1,34 +1,65 @@
-# Marcela Cordero - Makeup Artist Landing Page
+# Marcela Cordero - Makeup Artist
 
-Una landing page profesional y sistema de agendamiento de citas para Marcela Cordero, maquilladora profesional. Construida con Next.js, TypeScript, Tailwind CSS, Prisma y PostgreSQL.
+Landing page profesional para Marcela Cordero, maquilladora especializada. Sistema completo de agendamiento de citas con notificaciones automáticas.
 
-## ✨ Características
+## ✨ Características Principales
 
-- **Landing Page Elegante**: Diseño moderno y responsivo con paleta de colores profesional
-- **Sistema de Agendamiento**: Reserva de citas en tiempo real con verificación de disponibilidad
-- **Portafolio Interactivo**: Galería filtrable de trabajos realizados
-- **Panel de Administración**: Gestión completa de citas y disponibilidad (próximamente)
-- **Base de Datos**: PostgreSQL con Prisma ORM para manejo de datos
-- **API Routes**: Backend completo con Next.js API Routes
-- **Responsive Design**: Optimizado para móvil, tablet y desktop
+- **Página web elegante** con portafolio de trabajos
+- **Sistema de reservas** en tiempo real
+- **Notificaciones push** para nuevas citas
+- **Panel administrativo** para gestión de agenda
+- **Diseño responsivo** optimizado para todos los dispositivos
 
-## 🛠️ Tecnologías Utilizadas
+## 🛠️ Tecnologías
 
-- **Framework**: Next.js 15 con App Router
-- **Lenguaje**: TypeScript
-- **Estilos**: Tailwind CSS con fuentes personalizadas (Playfair Display, Allura, Montserrat)
-- **Base de Datos**: PostgreSQL con Prisma ORM
-- **Autenticación**: NextAuth.js (para panel admin)
-- **Formularios**: React Hook Form con validación Zod
-- **Despliegue**: Vercel (recomendado)
+- **Next.js** con TypeScript
+- **Tailwind CSS** para estilos
+- **PostgreSQL** con Prisma ORM
+- **Web Push API** para notificaciones
 
-## 🎨 Paleta de Colores
+## 🚀 Instalación
 
-- **Primary Dark**: #1C1C1C (Carbón Sofisticado)
-- **Light Contrast**: #FFFFFF (Blanco Puro)
-- **Primary Accent**: #D4AF37 (Champagne Cálido)
-- **Secondary Accent**: #B06579 (Rosa Malva Profundo)
-- **Neutral**: #5A5A5A (Gris Pizarra)
+```bash
+# Instalar dependencias
+npm install
+
+# Configurar base de datos
+npx prisma migrate dev
+npx prisma generate
+
+# Ejecutar en desarrollo
+npm run dev
+```
+
+## 📧 Configuración de Notificaciones
+
+### Push Notifications
+- Configuradas automáticamente con VAPID keys
+- Funcionan en Android y desktop
+- Limitadas en iOS (requiere navegador abierto)
+
+### EmailJS (Respaldo)
+```bash
+# Variables necesarias en .env
+NEXT_PUBLIC_EMAILJS_SERVICE_ID="tu_service_id"
+NEXT_PUBLIC_EMAILJS_TEMPLATE_ID="tu_template_id"
+NEXT_PUBLIC_EMAILJS_PUBLIC_KEY="tu_public_key"
+NEXT_PUBLIC_ADMIN_EMAIL="tu_email@gmail.com"
+```
+
+## 📋 Uso Básico
+
+1. **Clientes**: Visitan la web y reservan citas online
+2. **Sistema**: Envía notificaciones push y email automático
+3. **Administración**: Panel para gestionar citas y disponibilidad
+
+## 🎨 Diseño
+
+- Paleta profesional: Negro carbón, champagne dorado, rosa malva
+- Fuentes elegantes: Playfair Display, Montserrat
+- Totalmente responsivo para móvil y desktop
+
+**Nota:** Los scripts de testing y documentación específica han sido removidos para mantener un repositorio limpio para producción.
 
 ## 🚀 Comenzar
 
@@ -65,12 +96,10 @@ DATABASE_URL="postgresql://username:password@localhost:5432/mca_makeup"
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="generate-a-secure-random-string-here"
 
-# Email Configuration (opcional)
-EMAIL_SERVER_HOST="smtp.gmail.com"
-EMAIL_SERVER_PORT=587
-EMAIL_SERVER_USER="your-email@domain.com"
-EMAIL_SERVER_PASSWORD="your-app-specific-password"
-EMAIL_FROM="noreply@yourdomain.com"
+# Push Notifications (VAPID Keys)
+VAPID_PUBLIC_KEY="tu-clave-publica-vapid"
+VAPID_PRIVATE_KEY="tu-clave-privada-vapid"
+NEXT_PUBLIC_VAPID_PUBLIC_KEY="tu-clave-publica-vapid"
 
 # Admin Credentials (cambiar en producción)
 ADMIN_EMAIL="admin@yourdomain.com"
@@ -161,7 +190,29 @@ La aplicación está optimizada para:
 - **Tablet**: 768px - 1024px  
 - **Desktop**: 1024px+
 
-## 🚀 Despliegue
+## �️ Scripts Útiles
+
+```bash
+# Verificar configuración completa del sistema
+node scripts/final-test.js
+
+# Generar nuevas claves VAPID (si es necesario)
+node scripts/generate-vapid-keys.js
+
+# Verificar configuración de push notifications
+node scripts/verify-push-setup.js
+
+# Probar envío de notificaciones push
+node scripts/test-push-notifications.js
+
+# Resetear base de datos en producción
+npx tsx scripts/production-reset.ts
+
+# Ejecutar seed de datos de prueba
+npx tsx scripts/seed-transport-costs.ts
+```
+
+## �🚀 Despliegue
 
 ### Vercel (Recomendado)
 

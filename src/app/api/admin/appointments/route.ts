@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { sendEmail, emailTemplates } from "@/lib/email";
+import { PushNotificationService } from "@/lib/pushNotifications";
 import {
   parseDateFromString,
-  formatDateForDisplay,
-  formatTimeRange,
   debugDate,
 } from "@/utils/dateUtils";
 
@@ -247,49 +245,54 @@ export async function PUT(request: NextRequest) {
       data: updateData,
     });
 
-    // Send email notifications if status changed
+    // Send push notifications only (emails disabled)
     if (updateData.status && updateData.status !== currentAppointment.status) {
-      const formatDate = (date: Date) => {
-        return formatDateForDisplay(date);
-      };
-
-      const formatTime = (time: string) => {
-        return formatTimeRange(time);
-      };
-
       try {
         if (updateData.status === "CONFIRMED") {
-          const emailData = emailTemplates.appointmentConfirmed(
-            appointment.clientName,
-            appointment.serviceType || "Servicio no especificado",
-            formatDate(appointment.appointmentDate),
-            formatTime(appointment.appointmentTime),
-          );
-
-          await sendEmail({
-            to: appointment.clientEmail,
-            subject: emailData.subject,
-            html: emailData.html,
-            text: emailData.text,
+          // Send push notification to admin about confirmation
+          const adminUser = await prisma.user.findFirst({
+            where: { role: 'ADMIN' }
           });
+
+          if (adminUser) {
+            await PushNotificationService.sendNotification(
+              adminUser.id,
+              {
+                title: 'Cita Confirmada',
+                body: `La cita de ${appointment.clientName} ha sido confirmada exitosamente`,
+                icon: '/icon-192x192.png',
+                data: {
+                  type: 'appointment_confirmed',
+                  appointmentId: appointment.id
+                }
+              }
+            );
+          }
         } else if (updateData.status === "CANCELLED") {
-          const emailData = emailTemplates.appointmentCancelled(
-            appointment.clientName,
-            appointment.serviceType || "Servicio no especificado",
-            formatDate(appointment.appointmentDate),
-            formatTime(appointment.appointmentTime),
-          );
-
-          await sendEmail({
-            to: appointment.clientEmail,
-            subject: emailData.subject,
-            html: emailData.html,
-            text: emailData.text,
+          // Send push notification to admin about cancellation
+          const adminUser = await prisma.user.findFirst({
+            where: { role: 'ADMIN' }
           });
+
+          if (adminUser) {
+            await PushNotificationService.sendNotification(
+              adminUser.id,
+              {
+                title: 'Cita Cancelada',
+                body: `La cita de ${appointment.clientName} ha sido cancelada`,
+                icon: '/icon-192x192.png',
+                data: {
+                  type: 'appointment_cancelled',
+                  appointmentId: appointment.id
+                }
+              }
+            );
+          }
         }
-      } catch (emailError) {
-        console.error("Error sending email:", emailError);
-        // No fallar la operación si el email falla
+        console.log("Push notification sent successfully");
+      } catch (notificationError) {
+        console.error("Error sending push notification:", notificationError);
+        // No fallar la operación si la notificación falla
       }
     }
 

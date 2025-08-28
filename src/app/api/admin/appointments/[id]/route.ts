@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { randomUUID } from "crypto";
-import { sendEmail, emailTemplates } from "@/lib/email";
-import { formatDateForDisplay } from "@/utils/dateUtils";
 
 // PATCH /api/admin/appointments/[id] - Update appointment status
 export async function PATCH(
@@ -63,44 +61,10 @@ export async function PATCH(
           },
         });
 
-        // Send review request email
-        try {
-          const serviceNames =
-            appointmentData.services && Array.isArray(appointmentData.services)
-              ? (
-                  appointmentData.services as Array<{
-                    name?: string;
-                    serviceName?: string;
-                  }>
-                )
-                  .map(
-                    (service) =>
-                      service.name || service.serviceName || "Servicio",
-                  )
-                  .join(", ")
-              : appointmentData.serviceType || "Servicio de maquillaje";
-
-          const emailData = emailTemplates.reviewRequest(
-            appointmentData.clientName,
-            serviceNames,
-            formatDateForDisplay(appointmentData.appointmentDate),
-            reviewToken,
-          );
-
-          await sendEmail({
-            to: appointmentData.clientEmail,
-            subject: emailData.subject,
-            html: emailData.html,
-            text: emailData.text,
-          });
-
-          console.log(
-            `Review request email sent to ${appointmentData.clientEmail}`,
-          );
-        } catch (emailError) {
-          console.error("Error sending review request email:", emailError);
-          // Don't fail the appointment update if email fails
-        }
+        // Review request emails disabled - reviews are handled through the website
+        console.log(
+          `Review token created for ${appointmentData.clientName}: ${reviewToken}`,
+        );
       } else {
         reviewToken = existingReview.reviewToken;
       }

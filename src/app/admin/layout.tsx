@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import NotificationCenter from "@/components/NotificationCenter";
+import PushNotificationManager from "@/components/PushNotificationManager";
 import { LogOut, User, Menu, X, ChevronDown } from "lucide-react";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import "@/styles/admin.css";
@@ -206,6 +207,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
             {/* Right side: Notifications + User */}
             <div className="flex items-center space-x-2">
               <NotificationCenter />
+              <PushNotificationManager userId={session?.user?.id || ''} />
 
               <div className="flex items-center space-x-2 border-l border-gray-200 pl-2">
                 <div className="hidden sm:flex items-center space-x-2 text-sm text-gray-600">
