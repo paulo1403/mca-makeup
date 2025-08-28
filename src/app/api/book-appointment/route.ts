@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient, Prisma } from "@prisma/client";
 import { z } from "zod";
-import { sendPushToAll } from '@/lib/push';
+import { sendEmail, emailTemplates } from "@/lib/email";
 import {
   parseDateFromString,
   formatDateForDisplay,
@@ -324,17 +324,55 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Send web-push notifications to subscribed admins/clients
+    // Send notification emails
     try {
-      const pushPayload = {
-        title: 'Nueva cita pendiente',
-        body: `${appointment.clientName} solicitó ${serviceTypeString} para el ${formatDate(appointment.appointmentDate)} a las ${formatTime(appointment.appointmentTime)}`,
-        data: { link: '/admin/appointments', appointmentId: appointment.id },
-      };
+      // Send notification to admin/Marcela
+      if (process.env.ADMIN_EMAIL) {
+        const adminEmailData = emailTemplates.newAppointmentAlert(
+          appointment.clientName,
+          serviceTypeString,
+          formatDate(appointment.appointmentDate),
+          formatTime(appointment.appointmentTime),
+          appointment.clientEmail,
+          appointment.clientPhone,
+          validatedData.locationType,
+          validatedData.district,
+          validatedData.address,
+          validatedData.addressReference,
+          validatedData.additionalNotes,
+        );
 
-      await sendPushToAll(pushPayload);
-    } catch (pushErr) {
-      console.error('Error sending push notifications:', pushErr);
+        await sendEmail({
+          to: process.env.ADMIN_EMAIL,
+          subject: adminEmailData.subject,
+          html: adminEmailData.html,
+          text: adminEmailData.text,
+        });
+      }
+
+      // Send pending confirmation to client
+      const clientEmailData = emailTemplates.appointmentPending(
+        appointment.clientName,
+        serviceTypeString,
+        formatDate(appointment.appointmentDate),
+        formatTime(appointment.appointmentTime),
+        validatedData.locationType,
+        validatedData.district,
+        validatedData.address,
+        validatedData.addressReference,
+        validatedData.additionalNotes,
+      );
+
+      await sendEmail({
+        to: appointment.clientEmail,
+        subject: clientEmailData.subject,
+        html: clientEmailData.html,
+        text: clientEmailData.text,
+      });
+      console.log("Email notifications sent successfully");
+    } catch (emailError) {
+      console.error("Error sending email notifications:", emailError);
+      // No fallar la operación si el email falla
     }
 
     return NextResponse.json(

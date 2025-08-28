@@ -41,7 +41,6 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.60.0",
     "resend": "^4.7.0",
-  "web-push": "^3.5.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {

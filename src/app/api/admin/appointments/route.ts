@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { sendPushToAll } from '@/lib/push';
+import { sendEmail, emailTemplates } from "@/lib/email";
 import {
   parseDateFromString,
   formatDateForDisplay,
@@ -247,33 +247,49 @@ export async function PUT(request: NextRequest) {
       data: updateData,
     });
 
-    // Create DB notification and send push when status changes
+    // Send email notifications if status changed
     if (updateData.status && updateData.status !== currentAppointment.status) {
-      const formatDate = (date: Date) => formatDateForDisplay(date);
-      const formatTime = (time: string) => formatTimeRange(time);
+      const formatDate = (date: Date) => {
+        return formatDateForDisplay(date);
+      };
 
-      const title = updateData.status === 'CONFIRMED' ? 'Cita confirmada' : updateData.status === 'CANCELLED' ? 'Cita cancelada' : 'Actualización de cita';
-      const message = updateData.status === 'CONFIRMED'
-        ? `Tu cita para ${appointment.serviceType || 'servicio'} el ${formatDate(appointment.appointmentDate)} a las ${formatTime(appointment.appointmentTime)} ha sido confirmada.`
-        : updateData.status === 'CANCELLED'
-        ? `Tu cita para ${appointment.serviceType || 'servicio'} el ${formatDate(appointment.appointmentDate)} a las ${formatTime(appointment.appointmentTime)} ha sido cancelada.`
-        : `El estado de tu cita ha cambiado a ${updateData.status}`;
+      const formatTime = (time: string) => {
+        return formatTimeRange(time);
+      };
 
       try {
-        await prisma.notification.create({
-          data: {
-            type: 'APPOINTMENT',
-            title,
-            message,
-            link: `/admin/appointments`,
-            appointmentId: appointment.id,
-            read: false,
-          },
-        });
+        if (updateData.status === "CONFIRMED") {
+          const emailData = emailTemplates.appointmentConfirmed(
+            appointment.clientName,
+            appointment.serviceType || "Servicio no especificado",
+            formatDate(appointment.appointmentDate),
+            formatTime(appointment.appointmentTime),
+          );
 
-        await sendPushToAll({ title, body: message, data: { appointmentId: appointment.id, link: '/admin/appointments' } });
-      } catch (err) {
-        console.error('Error creating notification or sending push:', err);
+          await sendEmail({
+            to: appointment.clientEmail,
+            subject: emailData.subject,
+            html: emailData.html,
+            text: emailData.text,
+          });
+        } else if (updateData.status === "CANCELLED") {
+          const emailData = emailTemplates.appointmentCancelled(
+            appointment.clientName,
+            appointment.serviceType || "Servicio no especificado",
+            formatDate(appointment.appointmentDate),
+            formatTime(appointment.appointmentTime),
+          );
+
+          await sendEmail({
+            to: appointment.clientEmail,
+            subject: emailData.subject,
+            html: emailData.html,
+            text: emailData.text,
+          });
+        }
+      } catch (emailError) {
+        console.error("Error sending email:", emailError);
+        // No fallar la operación si el email falla
       }
     }
 
