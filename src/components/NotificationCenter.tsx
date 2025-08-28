@@ -19,7 +19,7 @@ export default function NotificationCenter() {
 
   useEffect(() => {
     fetchNotifications();
-    const interval = setInterval(fetchNotifications, 30000);
+    const interval = setInterval(fetchNotifications, 1800000); // 30 minutos
     return () => clearInterval(interval);
   }, []);
 

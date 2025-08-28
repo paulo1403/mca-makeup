@@ -34,7 +34,7 @@ export const useRecentAppointments = (limit: number = 5) => {
       
       return data.data.appointments;
     },
-    staleTime: 2 * 60 * 1000, // 2 minutes
-    refetchInterval: 2 * 60 * 1000, // Refresh every 2 minutes
+    staleTime: 30 * 60 * 1000, // 30 minutes
+    refetchInterval: 30 * 60 * 1000, // Refresh every 30 minutes
   });
 };

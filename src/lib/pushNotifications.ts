@@ -184,48 +184,36 @@ export class PushNotificationService {
       where: { role: 'ADMIN' }
     });
 
-    let pushNotificationSent = false;
+    const pushPromise = adminUser ? this.sendNotification(adminUser.id, payload) : Promise.resolve(false);
+    
+    const emailData: EmailData = {
+      to_email: process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',')[0] || 'marcelacordero.bookings@gmail.com',
+      client_name: clientName,
+      service_name: serviceType,
+      appointment_date: appointmentDate.toLocaleDateString('es-ES'),
+      appointment_time: appointmentTime,
+      client_phone: clientPhone,
+      client_email: clientEmail,
+      total_price: totalPrice,
+      notes: notes,
+    };
 
-    if (adminUser) {
-      try {
-        pushNotificationSent = await this.sendNotification(adminUser.id, payload);
-        console.log('📱 Push notification result:', pushNotificationSent ? '✅ Sent' : '❌ Failed');
-      } catch (error) {
-        console.error('❌ Error sending push notification:', error);
-        pushNotificationSent = false;
-      }
-    }
+    const emailPromise = emailJSService.sendAppointmentNotification(emailData);
 
-    // Si las push notifications fallaron o no hay suscripción, enviar email como respaldo
-    if (!pushNotificationSent) {
-      console.log('📧 Enviando email como respaldo...');
+    const [pushResult, emailResult] = await Promise.allSettled([pushPromise, emailPromise]);
 
-      const emailData: EmailData = {
-        to_email: 'marcelacordero.bookings@gmail.com', // Email de Marcela
-        client_name: clientName,
-        service_name: serviceType,
-        appointment_date: appointmentDate.toLocaleDateString('es-ES'),
-        appointment_time: appointmentTime,
-        client_phone: clientPhone,
-        client_email: clientEmail,
-        total_price: totalPrice,
-        notes: notes,
-      };
+    const pushNotificationSent = pushResult.status === 'fulfilled' ? pushResult.value : false;
+    const emailSent = emailResult.status === 'fulfilled' ? emailResult.value : false;
 
-      try {
-        const emailSent = await emailJSService.sendAppointmentNotification(emailData);
-        console.log('📧 Email respaldo result:', emailSent ? '✅ Sent' : '❌ Failed');
+    console.log('📱 Push notification result:', pushNotificationSent ? '✅ Sent' : '❌ Failed');
+    console.log('📧 Email notification result:', emailSent ? '✅ Sent' : '❌ Failed');
 
-        if (emailSent) {
-          console.log('✅ Notificación enviada exitosamente via email');
-        } else {
-          console.error('❌ Fallaron tanto push notifications como email');
-        }
-      } catch (error) {
-        console.error('❌ Error enviando email de respaldo:', error);
-      }
+    if (pushNotificationSent && emailSent) {
+      console.log('✅ Ambas notificaciones enviadas exitosamente (push + email)');
+    } else if (pushNotificationSent || emailSent) {
+      console.log('⚠️ Al menos una notificación enviada exitosamente');
     } else {
-      console.log('✅ Push notification enviada exitosamente');
+      console.error('❌ Fallaron tanto push notifications como email');
     }
   }
 

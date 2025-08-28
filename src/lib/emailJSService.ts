@@ -1,11 +1,12 @@
 import emailjs from '@emailjs/browser';
 
-// Configuración de EmailJS
 const EMAILJS_CONFIG = {
   serviceId: process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '',
   templateId: process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '',
   publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '',
-  adminEmail: process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'marcelacordero.bookings@gmail.com',
+  adminEmails: process.env.NEXT_PUBLIC_ADMIN_EMAILS ?
+    process.env.NEXT_PUBLIC_ADMIN_EMAILS.split(',').map(email => email.trim()) :
+    ['marcelacordero.bookings@gmail.com'],
 };
 
 export interface EmailData {
@@ -52,29 +53,41 @@ export class EmailJSService {
     }
 
     try {
-      // Enviar email al administrador (Marcela)
-      const adminTemplateData = {
-        to_email: EMAILJS_CONFIG.adminEmail,
-        from_name: data.client_name,
-        client_name: data.client_name,
-        service_name: data.service_name,
-        appointment_date: data.appointment_date,
-        appointment_time: data.appointment_time,
-        client_phone: data.client_phone || 'No especificado',
-        client_email: data.client_email || 'No especificado',
-        total_price: data.total_price || 'Por confirmar',
-        notes: data.notes || 'Sin notas adicionales',
-        subject: `Nueva Cita: ${data.client_name} - ${data.service_name}`,
-      };
+      // Enviar email a todos los administradores configurados
+      const emailPromises = EMAILJS_CONFIG.adminEmails.map(async (adminEmail) => {
+        const adminTemplateData = {
+          to_email: adminEmail,
+          from_name: data.client_name,
+          client_name: data.client_name,
+          service_name: data.service_name,
+          appointment_date: data.appointment_date,
+          appointment_time: data.appointment_time,
+          client_phone: data.client_phone || 'No especificado',
+          client_email: data.client_email || 'No especificado',
+          total_price: data.total_price || 'Por confirmar',
+          notes: data.notes || 'Sin notas adicionales',
+          subject: `Nueva Cita: ${data.client_name} - ${data.service_name}`,
+        };
 
-      const result = await emailjs.send(
-        EMAILJS_CONFIG.serviceId,
-        EMAILJS_CONFIG.templateId,
-        adminTemplateData
-      );
+        return emailjs.send(
+          EMAILJS_CONFIG.serviceId,
+          EMAILJS_CONFIG.templateId,
+          adminTemplateData
+        );
+      });
 
-      console.log('✅ Email enviado exitosamente:', result);
-      return true;
+      const results = await Promise.allSettled(emailPromises);
+      
+      // Verificar si al menos un email se envió correctamente
+      const successfulSends = results.filter(result => result.status === 'fulfilled');
+      
+      if (successfulSends.length > 0) {
+        console.log(`✅ Email enviado exitosamente a ${successfulSends.length} de ${EMAILJS_CONFIG.adminEmails.length} destinatarios`);
+        return true;
+      } else {
+        console.error('❌ Error enviando emails a todos los destinatarios');
+        return false;
+      }
     } catch (error) {
       console.error('❌ Error enviando email:', error);
       return false;
@@ -96,7 +109,7 @@ export class EmailJSService {
         appointment_date: data.appointment_date,
         appointment_time: data.appointment_time,
         total_price: data.total_price || 'Por confirmar',
-        admin_email: EMAILJS_CONFIG.adminEmail,
+        admin_email: EMAILJS_CONFIG.adminEmails[0], // Usar el primer email como contacto
         subject: `Confirmación de Cita - ${data.service_name}`,
       };
 
@@ -121,19 +134,29 @@ export class EmailJSService {
            !!EMAILJS_CONFIG.publicKey;
   }
 
+  public getAdminEmails(): string[] {
+    return [...EMAILJS_CONFIG.adminEmails];
+  }
+
+  public getPrimaryAdminEmail(): string {
+    return EMAILJS_CONFIG.adminEmails[0] || '';
+  }
+
   public getConfigStatus(): {
     configured: boolean;
     serviceId: boolean;
     templateId: boolean;
     publicKey: boolean;
-    adminEmail: boolean;
+    adminEmails: boolean;
+    adminEmailsCount: number;
   } {
     return {
       configured: this.isConfigured(),
       serviceId: !!EMAILJS_CONFIG.serviceId,
       templateId: !!EMAILJS_CONFIG.templateId,
       publicKey: !!EMAILJS_CONFIG.publicKey,
-      adminEmail: !!EMAILJS_CONFIG.adminEmail,
+      adminEmails: EMAILJS_CONFIG.adminEmails.length > 0,
+      adminEmailsCount: EMAILJS_CONFIG.adminEmails.length,
     };
   }
 
@@ -147,7 +170,7 @@ export class EmailJSService {
       console.log('📧 Enviando email de prueba...');
 
       const testData: EmailData = {
-        to_email: EMAILJS_CONFIG.adminEmail,
+        to_email: EMAILJS_CONFIG.adminEmails[0], // Usar el primer email para pruebas
         client_name: 'Sistema de Prueba',
         service_name: 'Prueba de EmailJS',
         appointment_date: new Date().toLocaleDateString('es-ES'),

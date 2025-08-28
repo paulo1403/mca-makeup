@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient, Prisma } from "@prisma/client";
 import { z } from "zod";
 import { PushNotificationService } from "@/lib/pushNotifications";
-import { emailJSService } from "@/lib/emailJSService";
 import {
   parseDateFromString,
   debugDate,
@@ -20,9 +19,7 @@ const appointmentSchema = z
       .min(8, "Teléfono inválido")
       .max(20, "Teléfono muy largo")
       .refine((phone) => {
-        // Remover espacios, guiones y símbolos para validar solo números
         const cleanPhone = phone.replace(/[\s\-\+\(\)]/g, "");
-        // Aceptar teléfonos peruanos: 9 dígitos o con código de país (11-12 dígitos)
         return (
           cleanPhone.length >= 9 &&
           cleanPhone.length <= 12 &&
@@ -53,7 +50,6 @@ const appointmentSchema = z
   })
   .refine(
     (data) => {
-      // Si es a domicilio, distrito y dirección son requeridos
       if (data.locationType === "HOME") {
         return (
           data.district &&
@@ -72,11 +68,7 @@ const appointmentSchema = z
   )
   .refine(
     (data) => {
-      // Validar combinaciones de servicios permitidas
       if (data.services.length === 0) return true;
-
-      // Obtener servicios desde la base de datos para validar categorías
-      // Esta validación se hará en el endpoint después de parsear los servicios
       return true;
     },
     {
@@ -89,10 +81,8 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Validate input
     const validatedData = appointmentSchema.parse(body);
 
-    // Parse and validate services
     const allServices = await prisma.service.findMany({
       where: { isActive: true },
       select: {
@@ -108,11 +98,9 @@ export async function POST(request: NextRequest) {
     let totalDuration = 0;
     let calculatedServicePrice = 0;
 
-    // Process ServiceSelection object
     for (const [serviceId, quantity] of Object.entries(validatedData.services)) {
       if (quantity <= 0) continue;
 
-      // Find matching service in database by ID
       const matchedService = allServices.find(s => s.id === serviceId);
 
       if (!matchedService) {
@@ -122,7 +110,6 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Add service with quantity
       for (let i = 0; i < quantity; i++) {
         parsedServices.push(matchedService);
       }
@@ -131,11 +118,9 @@ export async function POST(request: NextRequest) {
       calculatedServicePrice += matchedService.price * quantity;
     }
 
-    // Validar combinaciones de servicios
     const categories = parsedServices.map((s) => s.category);
     const uniqueCategories = [...new Set(categories)];
 
-    // No permitir solo peinado
     if (uniqueCategories.length === 1 && uniqueCategories[0] === "HAIRSTYLE") {
       return NextResponse.json(
         {
@@ -315,42 +300,19 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Send push notification to admin/Marcela
+    // Send push notification and email simultaneously to admin/Marcela
     await PushNotificationService.notifyNewAppointment(
       appointment.clientName,
       serviceTypeString,
       appointment.appointmentDate,
-      appointment.appointmentTime
+      appointment.appointmentTime,
+      appointment.clientPhone,
+      appointment.clientEmail,
+      `S/ ${appointment.totalPrice}`,
+      `Ubicación: ${appointment.locationType === 'HOME' ? 'Domicilio' : 'Studio'}${appointment.district ? ` - Distrito: ${appointment.district}` : ''}${appointment.address ? ` - Dirección: ${appointment.address}` : ''}`
     );
 
-    // EmailJS backup notification (if push fails or as additional backup)
-    if (emailJSService.isConfigured()) {
-      try {
-        const emailResult = await emailJSService.sendAppointmentNotification({
-          to_email: process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'marcelacordero.bookings@gmail.com',
-          client_name: appointment.clientName,
-          service_name: serviceTypeString,
-          appointment_date: appointment.appointmentDate.toLocaleDateString('es-ES'),
-          appointment_time: appointment.appointmentTime,
-          client_phone: appointment.clientPhone,
-          client_email: appointment.clientEmail,
-          total_price: `S/ ${appointment.totalPrice}`,
-          notes: `Ubicación: ${appointment.locationType === 'HOME' ? 'Domicilio' : 'Studio'}${appointment.district ? ` - Distrito: ${appointment.district}` : ''}${appointment.address ? ` - Dirección: ${appointment.address}` : ''}`
-        });
-
-        if (emailResult) {
-          console.log("📧 Email de respaldo enviado exitosamente");
-        } else {
-          console.warn("⚠️ Email de respaldo falló, pero push notification pudo haber funcionado");
-        }
-      } catch (emailError) {
-        console.error("❌ Error enviando email de respaldo:", emailError);
-      }
-    } else {
-      console.log("📧 EmailJS no configurado - solo push notification enviada");
-    }
-
-    console.log("Push notification sent successfully to admin");
+    console.log("✅ Notificaciones enviadas (push + email simultáneamente)");
 
     return NextResponse.json(
       {

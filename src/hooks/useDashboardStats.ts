@@ -30,7 +30,7 @@ export const useDashboardStats = () => {
 
       return data.data;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    refetchInterval: 5 * 60 * 1000, // Refresh every 5 minutes
+    staleTime: 30 * 60 * 1000, // 30 minutes
+    refetchInterval: 30 * 60 * 1000, // Refresh every 30 minutes
   });
 };
