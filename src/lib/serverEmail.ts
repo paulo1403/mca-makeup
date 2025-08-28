@@ -71,6 +71,43 @@ export const sendEmail = async (emailData: EmailData): Promise<boolean> => {
   }
 };
 
+// Nueva función para enviar emails a múltiples destinatarios (admins)
+export const sendEmailToAdmins = async (emailData: Omit<EmailData, 'to'>): Promise<boolean> => {
+  try {
+    if (!EMAIL_CONFIG.auth.user || !EMAIL_CONFIG.auth.pass) {
+      console.log("Gmail credentials not configured, skipping email send");
+      return false;
+    }
+
+    const transporter = getTransporter();
+    if (!transporter) {
+      console.log("Email transporter not available, skipping email send");
+      return false;
+    }
+
+    const mailOptions = {
+      from: `"Marcela Cordero Makeup" <${EMAIL_CONFIG.auth.user}>`,
+      to: EMAIL_CONFIG.adminEmails,
+      subject: emailData.subject,
+      html: emailData.html,
+      text: emailData.text,
+    };
+
+    const result = await transporter.sendMail(mailOptions);
+
+    console.log(
+      "Email sent successfully to admins:",
+      EMAIL_CONFIG.adminEmails.join(', '),
+      "Message ID:",
+      result.messageId,
+    );
+    return true;
+  } catch (error) {
+    console.error("Error sending email to admins:", error);
+    return false;
+  }
+};
+
 // Templates de email usando HTML directo (sin dependencias de EmailJS)
 export const emailTemplates = {
   appointmentConfirmed: (

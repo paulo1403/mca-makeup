@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient, Prisma } from "@prisma/client";
 import { z } from "zod";
-import { sendEmail, emailTemplates } from "@/lib/serverEmail";
+import { sendEmailToAdmins, emailTemplates } from "@/lib/serverEmail";
 import {
   parseDateFromString,
   debugDate,
@@ -315,8 +315,7 @@ export async function POST(request: NextRequest) {
       `Ubicación: ${appointment.locationType === 'HOME' ? 'Domicilio' : 'Studio'}${appointment.district ? ` - Distrito: ${appointment.district}` : ''}${appointment.address ? ` - Dirección: ${appointment.address}` : ''}`
     );
 
-    const emailSent = await sendEmail({
-      to: process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',')[0] || 'marcelacordero.bookings@gmail.com',
+    const emailSent = await sendEmailToAdmins({
       subject: adminEmailTemplate.subject,
       html: adminEmailTemplate.html,
       text: adminEmailTemplate.text,

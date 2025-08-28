@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { sendEmail, emailTemplates } from "@/lib/serverEmail";
+import { sendEmailToAdmins, emailTemplates } from "@/lib/serverEmail";
 import {
   parseDateFromString,
   debugDate,
@@ -249,8 +249,7 @@ export async function PUT(request: NextRequest) {
     if (updateData.status && updateData.status !== currentAppointment.status) {
       try {
         if (updateData.status === "CONFIRMED") {
-          // Send email notification to admin about confirmation
-          const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',')[0] || 'marcelacordero.bookings@gmail.com';
+          // Send email notification to all admins about confirmation
           const confirmedTemplate = emailTemplates.appointmentConfirmed(
             appointment.clientName,
             appointment.serviceType || 'Servicio',
@@ -263,15 +262,13 @@ export async function PUT(request: NextRequest) {
             `CITA CONFIRMADA - ${appointment.additionalNotes || 'Sin notas adicionales'}`
           );
 
-          await sendEmail({
-            to: adminEmail,
+          await sendEmailToAdmins({
             subject: confirmedTemplate.subject,
             html: confirmedTemplate.html,
             text: confirmedTemplate.text,
           });
         } else if (updateData.status === "CANCELLED") {
-          // Send email notification to admin about cancellation
-          const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',')[0] || 'marcelacordero.bookings@gmail.com';
+          // Send email notification to all admins about cancellation
           const cancelledTemplate = emailTemplates.appointmentCancelled(
             appointment.clientName,
             appointment.serviceType || 'Servicio',
@@ -279,8 +276,7 @@ export async function PUT(request: NextRequest) {
             appointment.appointmentTime
           );
 
-          await sendEmail({
-            to: adminEmail,
+          await sendEmailToAdmins({
             subject: cancelledTemplate.subject,
             html: cancelledTemplate.html,
             text: cancelledTemplate.text,
