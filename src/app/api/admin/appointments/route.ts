@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { PushNotificationService } from "@/lib/pushNotifications";
+import { sendEmail, emailTemplates } from "@/lib/serverEmail";
 import {
   parseDateFromString,
   debugDate,
@@ -249,45 +249,42 @@ export async function PUT(request: NextRequest) {
     if (updateData.status && updateData.status !== currentAppointment.status) {
       try {
         if (updateData.status === "CONFIRMED") {
-          // Send push notification to admin about confirmation
-          const adminUser = await prisma.user.findFirst({
-            where: { role: 'ADMIN' }
-          });
+          // Send email notification to admin about confirmation
+          const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',')[0] || 'marcelacordero.bookings@gmail.com';
+          const confirmedTemplate = emailTemplates.appointmentConfirmed(
+            appointment.clientName,
+            appointment.serviceType || 'Servicio',
+            appointment.appointmentDate.toLocaleDateString('es-ES'),
+            appointment.appointmentTime,
+            appointment.locationType,
+            appointment.district || undefined,
+            appointment.address || undefined,
+            appointment.addressReference || undefined,
+            `CITA CONFIRMADA - ${appointment.additionalNotes || 'Sin notas adicionales'}`
+          );
 
-          if (adminUser) {
-            await PushNotificationService.sendNotification(
-              adminUser.id,
-              {
-                title: 'Cita Confirmada',
-                body: `La cita de ${appointment.clientName} ha sido confirmada exitosamente`,
-                icon: '/icon-192x192.png',
-                data: {
-                  type: 'appointment_confirmed',
-                  appointmentId: appointment.id
-                }
-              }
-            );
-          }
+          await sendEmail({
+            to: adminEmail,
+            subject: confirmedTemplate.subject,
+            html: confirmedTemplate.html,
+            text: confirmedTemplate.text,
+          });
         } else if (updateData.status === "CANCELLED") {
-          // Send push notification to admin about cancellation
-          const adminUser = await prisma.user.findFirst({
-            where: { role: 'ADMIN' }
-          });
+          // Send email notification to admin about cancellation
+          const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',')[0] || 'marcelacordero.bookings@gmail.com';
+          const cancelledTemplate = emailTemplates.appointmentCancelled(
+            appointment.clientName,
+            appointment.serviceType || 'Servicio',
+            appointment.appointmentDate.toLocaleDateString('es-ES'),
+            appointment.appointmentTime
+          );
 
-          if (adminUser) {
-            await PushNotificationService.sendNotification(
-              adminUser.id,
-              {
-                title: 'Cita Cancelada',
-                body: `La cita de ${appointment.clientName} ha sido cancelada`,
-                icon: '/icon-192x192.png',
-                data: {
-                  type: 'appointment_cancelled',
-                  appointmentId: appointment.id
-                }
-              }
-            );
-          }
+          await sendEmail({
+            to: adminEmail,
+            subject: cancelledTemplate.subject,
+            html: cancelledTemplate.html,
+            text: cancelledTemplate.text,
+          });
         }
         console.log("Push notification sent successfully");
       } catch (notificationError) {

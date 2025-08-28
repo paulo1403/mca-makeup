@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient, Prisma } from "@prisma/client";
 import { z } from "zod";
-import { PushNotificationService } from "@/lib/pushNotifications";
+import { sendEmail, emailTemplates } from "@/lib/serverEmail";
 import {
   parseDateFromString,
   debugDate,
@@ -300,19 +300,29 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Send push notification and email simultaneously to admin/Marcela
-    await PushNotificationService.notifyNewAppointment(
+    // Send email notification to admin/Marcela
+    const adminEmailTemplate = emailTemplates.newAppointmentAlert(
       appointment.clientName,
       serviceTypeString,
-      appointment.appointmentDate,
+      appointment.appointmentDate.toLocaleDateString('es-ES'),
       appointment.appointmentTime,
-      appointment.clientPhone,
       appointment.clientEmail,
-      `S/ ${appointment.totalPrice}`,
+      appointment.clientPhone,
+      appointment.locationType,
+      appointment.district || undefined,
+      appointment.address || undefined,
+      appointment.addressReference || undefined,
       `Ubicación: ${appointment.locationType === 'HOME' ? 'Domicilio' : 'Studio'}${appointment.district ? ` - Distrito: ${appointment.district}` : ''}${appointment.address ? ` - Dirección: ${appointment.address}` : ''}`
     );
 
-    console.log("✅ Notificaciones enviadas (push + email simultáneamente)");
+    const emailSent = await sendEmail({
+      to: process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',')[0] || 'marcelacordero.bookings@gmail.com',
+      subject: adminEmailTemplate.subject,
+      html: adminEmailTemplate.html,
+      text: adminEmailTemplate.text,
+    });
+
+    console.log("📧 Notificación por email enviada:", emailSent ? "✅ Exitosa" : "❌ Fallida");
 
     return NextResponse.json(
       {

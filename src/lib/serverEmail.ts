@@ -1,9 +1,13 @@
-import emailjs from '@emailjs/browser';
+import nodemailer from 'nodemailer';
 
-const EMAILJS_CONFIG = {
-  serviceId: process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '',
-  templateId: process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '',
-  publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '',
+const EMAIL_CONFIG = {
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.GMAIL_USER || 'marcelacordero.bookings@gmail.com',
+    pass: process.env.GMAIL_APP_PASSWORD || '',
+  },
   adminEmails: process.env.NEXT_PUBLIC_ADMIN_EMAILS ?
     process.env.NEXT_PUBLIC_ADMIN_EMAILS.split(',').map(email => email.trim()) :
     ['marcelacordero.bookings@gmail.com'],
@@ -16,55 +20,49 @@ export interface EmailData {
   text?: string;
 }
 
-// Configurar EmailJS - solo inicializar si hay API key
-let emailjsClient: typeof emailjs | null = null;
+// Configurar Nodemailer
+let transporter: nodemailer.Transporter | null = null;
 
-const getEmailJSClient = () => {
-  if (!emailjsClient && EMAILJS_CONFIG.publicKey) {
-    emailjs.init(EMAILJS_CONFIG.publicKey);
-    emailjsClient = emailjs;
+const getTransporter = () => {
+  if (!transporter) {
+    transporter = nodemailer.createTransport({
+      host: EMAIL_CONFIG.host,
+      port: EMAIL_CONFIG.port,
+      secure: EMAIL_CONFIG.secure,
+      auth: EMAIL_CONFIG.auth,
+    });
   }
-  return emailjsClient;
+  return transporter;
 };
 
 export const sendEmail = async (emailData: EmailData): Promise<boolean> => {
   try {
-    if (!EMAILJS_CONFIG.publicKey) {
-      console.log("EmailJS API key not configured, skipping email send");
+    if (!EMAIL_CONFIG.auth.user || !EMAIL_CONFIG.auth.pass) {
+      console.log("Gmail credentials not configured, skipping email send");
       return false;
     }
 
-    const emailjsClient = getEmailJSClient();
-    if (!emailjsClient) {
-      console.log("EmailJS client not available, skipping email send");
+    const transporter = getTransporter();
+    if (!transporter) {
+      console.log("Email transporter not available, skipping email send");
       return false;
     }
 
-    // Convertir el formato de Resend al formato de EmailJS
-    const emailjsData = {
-      to_email: emailData.to,
+    const mailOptions = {
+      from: `"Marcela Cordero Makeup" <${EMAIL_CONFIG.auth.user}>`,
+      to: emailData.to,
       subject: emailData.subject,
-      message: emailData.html,
-      from_name: 'Marcela Cordero Makeup',
-      reply_to: 'marcelacordero.bookings@gmail.com'
+      html: emailData.html,
+      text: emailData.text,
     };
 
-    const result = await emailjsClient.send(
-      EMAILJS_CONFIG.serviceId,
-      EMAILJS_CONFIG.templateId,
-      emailjsData
-    );
-
-    if (result.status !== 200) {
-      console.error("Error sending email with EmailJS:", result);
-      return false;
-    }
+    const result = await transporter.sendMail(mailOptions);
 
     console.log(
       "Email sent successfully to:",
       emailData.to,
-      "ID:",
-      result.text,
+      "Message ID:",
+      result.messageId,
     );
     return true;
   } catch (error) {
@@ -73,7 +71,7 @@ export const sendEmail = async (emailData: EmailData): Promise<boolean> => {
   }
 };
 
-// Templates de email adaptados para EmailJS
+// Templates de email usando HTML directo (sin dependencias de EmailJS)
 export const emailTemplates = {
   appointmentConfirmed: (
     clientName: string,

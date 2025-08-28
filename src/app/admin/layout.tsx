@@ -3,7 +3,6 @@
 import { signOut, useSession, SessionProvider } from "next-auth/react";
 import { useState, useEffect } from "react";
 import NotificationCenter from "@/components/NotificationCenter";
-import PushNotificationManagerCompact from "@/components/PushNotificationManagerCompact";
 import AdminSidebar from "@/components/AdminSidebar";
 import { LogOut, User, Menu } from "lucide-react";
 import "@/styles/admin.css";
@@ -84,11 +83,6 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
 
             {/* Right Side Actions */}
             <div className="flex items-center space-x-3">
-              {/* Push Notifications - Compact Version */}
-              <div className="block">
-                <PushNotificationManagerCompact userId={session?.user?.id || ''} />
-              </div>
-
               {/* Notifications */}
               <NotificationCenter />
 

@@ -230,19 +230,6 @@ model SystemSettings {
   @@map("system_settings")
 }
 
-model PushSubscription {
-  id          String   @id @default(cuid())
-  userId      String   @unique
-  endpoint    String
-  p256dh      String
-  auth        String
-  userAgent   String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("push_subscriptions")
-}
-
 enum Role {
   ADMIN
 }
