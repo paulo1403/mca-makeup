@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { ChevronDown, Sparkles, Clock, AlertTriangle, Plus, Minus } from "lucide-react";
+import {
+  ChevronDown,
+  Sparkles,
+  Clock,
+  AlertTriangle,
+  Plus,
+  Minus,
+} from "lucide-react";
 import { Service, ServiceSelection } from "@/types";
 
 interface ServiceSelectorProps {
@@ -48,7 +55,6 @@ export default function ServiceSelector({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Cargar servicios
   useEffect(() => {
     const loadServices = async () => {
       try {
@@ -60,7 +66,6 @@ export default function ServiceSelector({
           const data = await response.json();
           setServices(data.services || []);
         } else {
-          // No usar fallback para evitar inconsistencias con la BD
           console.error("No se pudieron cargar los servicios");
           setServices([]);
         }
@@ -75,7 +80,6 @@ export default function ServiceSelector({
     loadServices();
   }, [onLoadingChangeAction]);
 
-  // Cerrar dropdown al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -91,9 +95,12 @@ export default function ServiceSelector({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Validación de combinaciones permitidas
-  const validateServiceCombination = (selectedServices: ServiceSelection): string => {
-    const serviceIds = Object.keys(selectedServices).filter(id => selectedServices[id] > 0);
+  const validateServiceCombination = (
+    selectedServices: ServiceSelection
+  ): string => {
+    const serviceIds = Object.keys(selectedServices).filter(
+      (id) => selectedServices[id] > 0
+    );
     if (serviceIds.length === 0) return "";
 
     const selectedServiceObjects = services.filter((service) =>
@@ -101,16 +108,14 @@ export default function ServiceSelector({
     );
 
     const categories = selectedServiceObjects.map(
-      (service) => service.category,
+      (service) => service.category
     );
     const uniqueCategories = [...new Set(categories)];
 
-    // No permitir solo peinado
     if (uniqueCategories.length === 1 && uniqueCategories[0] === "HAIRSTYLE") {
       return "No se puede reservar solo peinado. Debe incluir un servicio de maquillaje.";
     }
 
-    // No permitir combinar novia con social/piel madura
     const hasNovia = categories.includes("BRIDAL");
     const hasSocial =
       categories.includes("SOCIAL") || categories.includes("MATURE_SKIN");
@@ -119,13 +124,11 @@ export default function ServiceSelector({
       return "No se pueden combinar servicios de novia con servicios sociales o de piel madura.";
     }
 
-    // Si hay más de una categoría, verificar que sean combinaciones válidas
     if (uniqueCategories.length > 2) {
       return "Solo se pueden combinar máximo 2 tipos de servicios.";
     }
 
     if (uniqueCategories.length === 2) {
-      // Solo permitir maquillaje + peinado
       const hasHairstyle = categories.includes("HAIRSTYLE");
       const hasMakeup =
         categories.includes("SOCIAL") ||
@@ -140,7 +143,6 @@ export default function ServiceSelector({
     return "";
   };
 
-  // Filtrar servicios por búsqueda
   const filteredServices = services.filter((service) => {
     if (!searchTerm) return true;
     return (
@@ -152,34 +154,28 @@ export default function ServiceSelector({
     );
   });
 
-  // Agrupar por categoría
-  const servicesByCategory = filteredServices.reduce(
-    (acc, service) => {
-      const category = service.category as keyof typeof CATEGORY_LABELS;
-      if (!acc[category]) acc[category] = [];
-      acc[category].push(service);
-      return acc;
-    },
-    {} as Record<keyof typeof CATEGORY_LABELS, Service[]>,
-  );
+  const servicesByCategory = filteredServices.reduce((acc, service) => {
+    const category = service.category as keyof typeof CATEGORY_LABELS;
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(service);
+    return acc;
+  }, {} as Record<keyof typeof CATEGORY_LABELS, Service[]>);
 
-  const selectedServices = services.filter((service) =>
-    value[service.id] && value[service.id] > 0
+  const selectedServices = services.filter(
+    (service) => value[service.id] && value[service.id] > 0
   );
 
   const handleQuantityChange = (service: Service, quantity: number) => {
     const newSelection = { ...value };
-    
+
     if (quantity <= 0) {
       delete newSelection[service.id];
     } else {
       newSelection[service.id] = quantity;
     }
 
-    // Siempre aplicar el cambio para evitar comportamiento confuso
     onChangeAction(newSelection);
 
-    // Validar nueva selección y mostrar error si existe
     const error = validateServiceCombination(newSelection);
     setValidationError(error);
   };
@@ -212,15 +208,15 @@ export default function ServiceSelector({
 
   const getTotalDuration = () => {
     return selectedServices.reduce(
-      (total, service) => total + (service.duration * (value[service.id] || 0)),
-      0,
+      (total, service) => total + service.duration * (value[service.id] || 0),
+      0
     );
   };
 
   const getTotalPrice = () => {
     return selectedServices.reduce(
-      (total, service) => total + (service.price * (value[service.id] || 0)),
-      0,
+      (total, service) => total + service.price * (value[service.id] || 0),
+      0
     );
   };
 
@@ -233,7 +229,11 @@ export default function ServiceSelector({
           bg-white cursor-pointer transition-all duration-200
           hover:border-primary-accent focus-within:border-primary-accent focus-within:ring-2 focus-within:ring-primary-accent/20
           ${disabled ? "opacity-50 cursor-not-allowed" : ""}
-          ${validationError ? "border-red-300 focus-within:border-red-500 focus-within:ring-red-500/20" : ""}
+          ${
+            validationError
+              ? "border-red-300 focus-within:border-red-500 focus-within:ring-red-500/20"
+              : ""
+          }
         `}
         onClick={handleInputClick}
       >
@@ -247,7 +247,7 @@ export default function ServiceSelector({
               value={searchTerm}
               onChange={handleSearchChange}
               disabled={disabled}
-              className="w-full border-none outline-none bg-transparent text-sm placeholder-gray-500 service-selector-input"
+              className="w-full border-none outline-none bg-transparent text-sm placeholder-gray-500 text-black service-selector-input"
               required={required && selectedServices.length === 0}
             />
 
@@ -263,7 +263,9 @@ export default function ServiceSelector({
                       <span className="font-bold">{value[service.id]}x</span>
                     )}
                     {service.name}
-                    <span className="font-semibold">S/ {service.price * (value[service.id] || 0)}</span>
+                    <span className="font-semibold">
+                      S/ {service.price * (value[service.id] || 0)}
+                    </span>
                   </span>
                 ))}
               </div>
@@ -334,11 +336,15 @@ export default function ServiceSelector({
               >
                 <span className="text-black">
                   {value[service.id] > 1 && (
-                    <span className="font-bold text-primary-accent mr-1">{value[service.id]}x</span>
+                    <span className="font-bold text-primary-accent mr-1">
+                      {value[service.id]}x
+                    </span>
                   )}
                   {service.name}
                 </span>
-                <span className="font-medium">S/ {service.price * (value[service.id] || 0)}</span>
+                <span className="font-medium">
+                  S/ {service.price * (value[service.id] || 0)}
+                </span>
               </div>
             ))}
           </div>
@@ -371,7 +377,11 @@ export default function ServiceSelector({
                   >
                     {/* Header de categoría */}
                     <div
-                      className={`px-3 py-2 text-xs font-medium border-l-4 ${CATEGORY_COLORS[category as keyof typeof CATEGORY_COLORS]}`}
+                      className={`px-3 py-2 text-xs font-medium border-l-4 ${
+                        CATEGORY_COLORS[
+                          category as keyof typeof CATEGORY_COLORS
+                        ]
+                      }`}
                     >
                       <div className="flex items-center gap-2">
                         <Sparkles className="h-3 w-3" />
@@ -391,10 +401,27 @@ export default function ServiceSelector({
                       return (
                         <div
                           key={service.id}
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => handleToggleService(service)}
+                          onKeyDown={(e) => {
+                            if (
+                              e.key === "Enter" ||
+                              e.key === " " ||
+                              e.key === "Spacebar"
+                            ) {
+                              e.preventDefault();
+                              handleToggleService(service);
+                            }
+                          }}
                           className={`
                           flex items-start gap-3 p-3 transition-colors duration-150
                           hover:bg-gray-50 border-l-4 border-transparent
-                          ${isSelected ? "bg-primary-accent/5 border-l-primary-accent" : ""}
+                          ${
+                            isSelected
+                              ? "bg-primary-accent/5 border-l-primary-accent"
+                              : ""
+                          }
                         `}
                         >
                           {/* Checkbox */}
@@ -403,6 +430,7 @@ export default function ServiceSelector({
                               type="checkbox"
                               checked={isSelected}
                               onChange={() => handleToggleService(service)}
+                              onClick={(e) => e.stopPropagation()}
                               className="rounded border-gray-300 text-primary-accent focus:ring-primary-accent focus:ring-2"
                             />
                           </div>
@@ -433,26 +461,38 @@ export default function ServiceSelector({
                                 <Clock className="h-3 w-3" />
                                 <span>{formatDuration(service.duration)}</span>
                               </div>
-                              
+
                               {/* Quantity controls */}
                               {isSelected && (
                                 <div className="flex items-center gap-2">
                                   <button
                                     type="button"
-                                    onClick={() => handleQuantityChange(service, currentQuantity - 1)}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleQuantityChange(
+                                        service,
+                                        currentQuantity - 1
+                                      );
+                                    }}
                                     className="w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors"
                                     disabled={currentQuantity <= 1}
                                   >
                                     <Minus className="h-3 w-3" />
                                   </button>
-                                  
+
                                   <span className="min-w-[20px] text-center text-sm font-medium text-black">
                                     {currentQuantity}
                                   </span>
-                                  
+
                                   <button
                                     type="button"
-                                    onClick={() => handleQuantityChange(service, currentQuantity + 1)}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleQuantityChange(
+                                        service,
+                                        currentQuantity + 1
+                                      );
+                                    }}
                                     className="w-6 h-6 rounded-full bg-primary-accent hover:bg-primary-accent/80 text-white flex items-center justify-center transition-colors"
                                     disabled={currentQuantity >= 5} // Límite máximo de 5
                                   >
@@ -466,7 +506,7 @@ export default function ServiceSelector({
                       );
                     })}
                   </div>
-                ),
+                )
               )}
             </div>
           )}

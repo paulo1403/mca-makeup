@@ -45,10 +45,8 @@ export default function ContactSection() {
     message: "",
   });
 
-  // Estado para servicios disponibles
   const [services, setServices] = useState<Service[]>([]);
 
-  // Cargar servicios al inicio
   useEffect(() => {
     const loadServices = async () => {
       try {
@@ -64,7 +62,6 @@ export default function ContactSection() {
     loadServices();
   }, []);
 
-  // Estado para precios calculados
   const [calculatedPricing, setCalculatedPricing] = useState({
     servicePrice: 0,
     transportCost: 0,
@@ -94,7 +91,6 @@ export default function ContactSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
-  // Track when contact form comes into view
   useEffect(() => {
     if (isInView) {
       analytics.contactFormViewed();
@@ -142,7 +138,6 @@ export default function ContactSection() {
     }));
   };
 
-  // Función para manejar los precios calculados desde PricingBreakdown
   const handlePriceCalculated = useCallback(
     (totalPrice: number, servicePrice: number, transportCost: number) => {
       setCalculatedPricing({
@@ -154,14 +149,12 @@ export default function ContactSection() {
     [],
   );
 
-  // Función para copiar número al portapapeles
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback para navegadores que no soportan clipboard API
       const textArea = document.createElement("textarea");
       textArea.value = text;
       document.body.appendChild(textArea);
@@ -196,7 +189,6 @@ export default function ContactSection() {
     }));
   };
 
-  // Función auxiliar para calcular duración total
   const calculateTotalDuration = (): number => {
     let totalMinutes = 0;
     
