@@ -56,6 +56,7 @@ export async function GET(request: NextRequest) {
           locationType: true,
           servicePrice: true,
           transportCost: true,
+          nightShiftCost: true,
           totalPrice: true,
           createdAt: true,
           updatedAt: true,

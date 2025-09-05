@@ -22,6 +22,7 @@ export interface Appointment {
   duration: number;
   servicePrice?: number;
   transportCost?: number;
+  nightShiftCost?: number;
   totalPrice?: number;
   district?: string;
   address?: string;

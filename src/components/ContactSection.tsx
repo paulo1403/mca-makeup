@@ -66,6 +66,7 @@ export default function ContactSection() {
     servicePrice: 0,
     transportCost: 0,
     totalPrice: 0,
+    nightShiftCost: 0,
   });
 
   const { data: rangesData, isLoading: isLoadingRanges } = useAvailableRanges(
@@ -139,11 +140,12 @@ export default function ContactSection() {
   };
 
   const handlePriceCalculated = useCallback(
-    (totalPrice: number, servicePrice: number, transportCost: number) => {
+    (totalPrice: number, servicePrice: number, transportCost: number, nightShiftCost: number = 0) => {
       setCalculatedPricing({
         servicePrice,
         transportCost,
         totalPrice,
+        nightShiftCost,
       });
     },
     [],
@@ -744,6 +746,7 @@ export default function ContactSection() {
                       selectedServices={formData.service}
                       locationType={formData.locationType}
                       district={formData.district}
+                      timeRange={formData.timeRange}
                       onPriceCalculated={handlePriceCalculated}
                     />
 

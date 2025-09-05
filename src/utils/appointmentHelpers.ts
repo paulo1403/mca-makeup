@@ -32,7 +32,6 @@ export const getStatusText = (status: Appointment["status"]) => {
 };
 
 export const formatServices = (appointment: Appointment) => {
-  // Si hay datos de services con cantidades, usar esos
   if (appointment.services && Array.isArray(appointment.services) && appointment.services.length > 0) {
     return appointment.services.map(service => ({
       name: service.name,
@@ -41,7 +40,6 @@ export const formatServices = (appointment: Appointment) => {
     }));
   }
   
-  // Fallback al serviceType string
   return [{
     name: appointment.serviceType,
     quantity: 1,
@@ -80,16 +78,18 @@ export const formatPrice = (price?: number) => {
 export const getPriceBreakdown = (appointment: Appointment) => {
   const servicePrice = appointment.servicePrice || 0;
   const transportCost = appointment.transportCost || 0;
-  // Usar totalPrice de la DB si existe (incluso si es 0), sino calcular como fallback
+  const nightShiftCost = appointment.nightShiftCost || 0;
   const totalPrice =
     appointment.totalPrice !== null && appointment.totalPrice !== undefined
       ? appointment.totalPrice
-      : servicePrice + transportCost;
+      : servicePrice + transportCost + nightShiftCost;
 
   return {
     servicePrice,
     transportCost,
+    nightShiftCost,
     totalPrice,
     hasTransport: transportCost > 0,
+    hasNightShift: nightShiftCost > 0,
   };
 };

@@ -190,6 +190,20 @@ export default function AppointmentModal({
                           )}
                         </div>
                       )}
+                      {priceInfo.hasNightShift && (
+                        <div className="bg-slate-50 p-3 rounded-lg">
+                          <div className="block text-xs font-medium text-gray-600 mb-1">
+                            Costo Nocturno
+                          </div>
+                          <p className="text-base sm:text-lg font-semibold text-gray-900">
+                            {formatPrice(priceInfo.nightShiftCost)}
+                          </p>
+                          <div className="text-xs text-gray-500 mt-1 flex items-center space-x-1">
+                            <div className="w-2 h-2 bg-indigo-500 rounded-full flex-shrink-0"></div>
+                            <span>7:30 PM - 6:00 AM</span>
+                          </div>
+                        </div>
+                      )}
                       <div className="bg-[#D4AF37] text-white p-3 rounded-lg">
                         <div className="block text-xs font-medium text-white/80 mb-1">
                           Total

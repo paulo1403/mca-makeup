@@ -162,10 +162,15 @@ function MobileAppointmentCard({
                 {formatPrice(priceInfo.totalPrice)}
               </span>
             </div>
-            {priceInfo.hasTransport && (
+            {(priceInfo.hasTransport || priceInfo.hasNightShift) && (
               <div className="text-xs text-gray-600 mt-1">
-                Servicio: {formatPrice(priceInfo.servicePrice)} + Movilidad:{" "}
-                {formatPrice(priceInfo.transportCost)}
+                Servicio: {formatPrice(priceInfo.servicePrice)}
+                {priceInfo.hasTransport && (
+                  <span> + Movilidad: {formatPrice(priceInfo.transportCost)}</span>
+                )}
+                {priceInfo.hasNightShift && (
+                  <span> + Nocturno: {formatPrice(priceInfo.nightShiftCost)}</span>
+                )}
               </div>
             )}
           </div>
@@ -316,11 +321,15 @@ function AppointmentRow({
             <div className="text-sm font-semibold text-[#D4AF37]">
               {formatPrice(priceInfo.totalPrice)}
             </div>
-            {priceInfo.hasTransport && (
+            {(priceInfo.hasTransport || priceInfo.hasNightShift) && (
               <div className="text-xs text-gray-500">
                 Servicio: {formatPrice(priceInfo.servicePrice)}
-                <br />
-                Movilidad: {formatPrice(priceInfo.transportCost)}
+                {priceInfo.hasTransport && (
+                  <><br />Movilidad: {formatPrice(priceInfo.transportCost)}</>
+                )}
+                {priceInfo.hasNightShift && (
+                  <><br />Nocturno: {formatPrice(priceInfo.nightShiftCost)}</>
+                )}
               </div>
             )}
             {appointment.district && (

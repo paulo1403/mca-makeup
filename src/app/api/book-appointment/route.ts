@@ -6,6 +6,7 @@ import {
   parseDateFromString,
   debugDate,
 } from "@/utils/dateUtils";
+import { calculateNightShiftCost } from "@/utils/nightShift";
 
 const prisma = new PrismaClient();
 
@@ -203,6 +204,9 @@ export async function POST(request: NextRequest) {
     // Calcular costo de transporte si es a domicilio
     let transportCost = 0;
     let totalPrice = calculatedServicePrice;
+    
+    // Calculate night shift cost
+    const nightShiftCost = calculateNightShiftCost(validatedData.appointmentTimeRange);
 
     if (validatedData.locationType === "HOME" && validatedData.district) {
       const transportCostData = await prisma.transportCost.findFirst({
@@ -217,8 +221,10 @@ export async function POST(request: NextRequest) {
 
       if (transportCostData) {
         transportCost = transportCostData.cost;
-        totalPrice = calculatedServicePrice + transportCost;
+        totalPrice = calculatedServicePrice + transportCost + nightShiftCost;
       }
+    } else {
+      totalPrice = calculatedServicePrice + nightShiftCost;
     }
 
     // Crear string de servicios para serviceType (mantener compatibilidad)
@@ -269,6 +275,7 @@ export async function POST(request: NextRequest) {
         services: servicesJson as Prisma.InputJsonValue,
         servicePrice: calculatedServicePrice,
         transportCost: transportCost > 0 ? transportCost : null,
+        nightShiftCost: nightShiftCost > 0 ? nightShiftCost : null,
         totalPrice: totalPrice,
         duration: totalDuration,
         totalDuration: totalDuration,
@@ -353,6 +360,7 @@ export async function POST(request: NextRequest) {
         pricing: {
           servicePrice: calculatedServicePrice,
           transportCost: transportCost,
+          nightShiftCost: nightShiftCost,
           totalPrice: totalPrice,
         },
         services: servicesJson,

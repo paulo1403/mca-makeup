@@ -81,6 +81,7 @@ model Appointment {
   servicePrice     Float?
   totalPrice       Float?
   transportCost    Float?
+  nightShiftCost   Float?
   services         Json?
   totalDuration    Int?
   notifications    Notification[]

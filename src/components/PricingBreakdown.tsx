@@ -2,17 +2,20 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useTransportCost } from "@/hooks/useTransportCost";
-import { Calculator, MapPin, Truck, AlertCircle } from "lucide-react";
+import { Calculator, MapPin, Truck, AlertCircle, Moon } from "lucide-react";
 import { ServiceSelection, Service } from "@/types";
+import { calculateNightShiftCost, getNightShiftExplanation } from "@/utils/nightShift";
 
 interface PricingBreakdownProps {
   selectedServices: ServiceSelection;
   locationType: "STUDIO" | "HOME";
   district?: string;
+  timeRange?: string;
   onPriceCalculated?: (
     totalPrice: number,
     servicePrice: number,
     transportCost: number,
+    nightShiftCost?: number,
   ) => void;
 }
 
@@ -30,6 +33,7 @@ export default function PricingBreakdown({
   selectedServices,
   locationType,
   district,
+  timeRange,
   onPriceCalculated,
 }: PricingBreakdownProps) {
   const [servicesWithQuantity, setServicesWithQuantity] = useState<ServiceWithQuantity[]>([]);
@@ -43,17 +47,15 @@ export default function PricingBreakdown({
     clearTransportCost,
   } = useTransportCost();
 
-  // Ref para evitar bucle infinito
   const lastCalculatedRef = useRef({
     totalPrice: 0,
     servicePrice: 0,
     transportCost: 0,
+    nightShiftCost: 0,
   });
 
-  // Debounce para evitar cálculos excesivos
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Cargar servicios disponibles
   useEffect(() => {
     const loadServices = async () => {
       try {
@@ -69,7 +71,6 @@ export default function PricingBreakdown({
     loadServices();
   }, []);
 
-  // Parsear servicios seleccionados con cantidades
   useEffect(() => {
     if (!selectedServices || Object.keys(selectedServices).length === 0) {
       setServicesWithQuantity([]);
@@ -106,7 +107,6 @@ export default function PricingBreakdown({
     setTotalServicePrice(total);
   }, [selectedServices, allServices]);
 
-  // Obtener costo de transporte cuando cambia el distrito
   useEffect(() => {
     if (locationType === "HOME" && district && district.trim()) {
       getTransportCost(district.trim());
@@ -115,41 +115,38 @@ export default function PricingBreakdown({
     }
   }, [district, locationType, getTransportCost, clearTransportCost]);
 
-  // Debounced price calculation
   const debouncedPriceCalculation = useCallback(() => {
     const currentTransportCost =
       locationType === "HOME" && transportCost ? transportCost.cost : 0;
-    const totalPrice = totalServicePrice + currentTransportCost;
+    const currentNightShiftCost = timeRange ? calculateNightShiftCost(timeRange) : 0;
+    const totalPrice = totalServicePrice + currentTransportCost + currentNightShiftCost;
 
-    // Solo llamar onPriceCalculated si los valores cambiaron
     const lastCalculated = lastCalculatedRef.current;
     if (
       lastCalculated.totalPrice !== totalPrice ||
       lastCalculated.servicePrice !== totalServicePrice ||
-      lastCalculated.transportCost !== currentTransportCost
+      lastCalculated.transportCost !== currentTransportCost ||
+      lastCalculated.nightShiftCost !== currentNightShiftCost
     ) {
       lastCalculatedRef.current = {
         totalPrice,
         servicePrice: totalServicePrice,
         transportCost: currentTransportCost,
+        nightShiftCost: currentNightShiftCost,
       };
-      onPriceCalculated?.(totalPrice, totalServicePrice, currentTransportCost);
+      onPriceCalculated?.(totalPrice, totalServicePrice, currentTransportCost, currentNightShiftCost);
     }
-  }, [totalServicePrice, transportCost, locationType, onPriceCalculated]);
+  }, [totalServicePrice, transportCost, locationType, timeRange, onPriceCalculated]);
 
-  // Calcular precio total y notificar al componente padre con debounce
   useEffect(() => {
-    // Limpiar timeout anterior
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
     }
 
-    // Establecer nuevo timeout
     debounceTimeoutRef.current = setTimeout(() => {
       debouncedPriceCalculation();
-    }, 100); // 100ms de debounce
+    }, 100); 
 
-    // Cleanup
     return () => {
       if (debounceTimeoutRef.current) {
         clearTimeout(debounceTimeoutRef.current);
@@ -157,7 +154,6 @@ export default function PricingBreakdown({
     };
   }, [debouncedPriceCalculation]);
 
-  // No mostrar nada si no hay servicios seleccionados
   if (
     !selectedServices ||
     selectedServices.length === 0 ||
@@ -168,7 +164,9 @@ export default function PricingBreakdown({
 
   const currentTransportCost =
     locationType === "HOME" && transportCost ? transportCost.cost : 0;
-  const totalPrice = totalServicePrice + currentTransportCost;
+  const currentNightShiftCost = timeRange ? calculateNightShiftCost(timeRange) : 0;
+  
+  const totalPrice = totalServicePrice + currentTransportCost + currentNightShiftCost;
 
   return (
     <div className="bg-gradient-to-r from-[#D4AF37]/10 to-[#B06579]/10 rounded-lg p-3 sm:p-4 border border-[#D4AF37]/20">
@@ -270,6 +268,33 @@ export default function PricingBreakdown({
           </div>
         )}
 
+        {/* Costo por atención fuera del horario laboral */}
+        {currentNightShiftCost > 0 && (
+          <div className="border-t border-gray-200 pt-2">
+            <div className="flex justify-between items-start sm:items-center gap-2">
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                <Moon className="h-3 w-3 sm:h-4 sm:w-4 text-indigo-600 flex-shrink-0" />
+                <span className="text-xs sm:text-sm text-black break-words">
+                  Por atención fuera del horario laboral
+                </span>
+              </div>
+              <div className="text-right flex-shrink-0">
+                <span className="font-medium text-black text-sm sm:text-base">
+                  S/ {currentNightShiftCost.toFixed(2)}
+                </span>
+              </div>
+            </div>
+
+            {/* Explicación del costo nocturno */}
+            <div className="flex items-start gap-2 mt-2">
+              <AlertCircle className="h-3 w-3 text-indigo-500 mt-0.5 flex-shrink-0" />
+              <span className="text-xs text-indigo-600 leading-relaxed">
+                {getNightShiftExplanation()}
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* Ubicación del servicio */}
         <div className="text-xs text-gray-500 flex items-start gap-1 py-1">
           <MapPin className="h-3 w-3 mt-0.5 flex-shrink-0" />
@@ -305,6 +330,11 @@ export default function PricingBreakdown({
                 <li>• El costo final se confirmará durante la consulta</li>
                 {locationType === "HOME" && (
                   <li>• El transporte incluye ida y vuelta</li>
+                )}
+                {currentNightShiftCost > 0 && (
+                  <li>
+                    • Costo extra de S/ 50.00 por horario nocturno (7:30 PM - 6:00 AM)
+                  </li>
                 )}
                 {servicesWithQuantity.length > 1 && (
                   <li>
