@@ -12,16 +12,17 @@ export default {
         'xs': '475px', // Extra small devices - between mobile and sm
       },
       colors: {
-        'primary-dark': '#0A0A0A',        // Negro más profundo
-        'secondary-dark': '#1A1A1A',      // Gris oscuro para variedad
-        'light-contrast': '#FFFFFF',      // Blanco puro mantener
-        'primary-accent': '#6366F1',      // Indigo moderno (más tech/profesional)
-        'secondary-accent': '#10B981',    // Verde esmeralda (sofisticado)
-        'tertiary-accent': '#F59E0B',     // Ámbar cálido (para acentos especiales)
-        neutral: '#6B7280',               // Gris más suave
-        'neutral-light': '#9CA3AF',       // Gris claro para texto secundario
-        'glass-white': 'rgba(255, 255, 255, 0.1)', // Para efectos glassmorphism
-        'glass-dark': 'rgba(0, 0, 0, 0.2)',        // Para overlays
+        'background': 'var(--color-background)',
+        'surface': 'var(--color-surface)',
+        'surface-2': 'var(--color-surface-2)',
+        'heading': 'var(--color-heading)',
+        'main': 'var(--color-body)',
+        'muted': 'var(--color-muted)',
+        'primary-accent': 'var(--color-accent-primary)',
+        'secondary-accent': 'var(--color-accent-secondary)',
+        'tertiary-accent': 'var(--color-accent-tertiary)',
+        'neutral': 'var(--color-neutral)',
+        'whatsapp': 'var(--color-whatsapp)',
       },
       fontFamily: {
         playfair: ['var(--font-playfair)', 'serif'],

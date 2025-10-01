@@ -1,16 +1,89 @@
-/* Variables CSS - Paleta de colores y configuración base */
+/* Variables CSS - Paleta de colores y configuración base (tema claro/oscuro) */
 :root {
-  /* Modern Color Palette */
-  --primary-dark: #0A0A0A;        /* Negro más profundo */
-  --secondary-dark: #1A1A1A;      /* Gris oscuro para variedad */
-  --light-contrast: #FFFFFF;      /* Blanco puro mantener */
-  --primary-accent: #6366F1;      /* Indigo moderno (más tech/profesional) */
-  --secondary-accent: #10B981;    /* Verde esmeralda (sofisticado) */
-  --tertiary-accent: #F59E0B;     /* Ámbar cálido (para acentos especiales) */
-  --neutral: #6B7280;             /* Gris más suave */
-  --neutral-light: #9CA3AF;       /* Gris claro para texto secundario */
-  --background: #ffffff;
-  --foreground: #1C1C1C;
+  /* Backgrounds */
+  --color-background: #F9F9F9;
+  --color-surface: #FFFFFF;
+  --color-surface-2: #F7F7F7;
+
+  /* Text colors */
+  --color-foreground: #1C1C1C;
+  --color-heading: #333333;
+  --color-body: #4A4A4A;
+  --color-muted: #9CA3AF;
+
+  /* Accent palette (luxury warm) */
+  --color-accent-primary: #D4AF37; /* Warm champagne gold */
+  --color-accent-secondary: #B06579; /* Deep mauve rose */
+  --color-accent-tertiary: #F59E0B; /* Amber */
+
+  /* Neutral tokens */
+  --color-neutral: #6B7280;
+
+  /* Glass/overlay tokens */
+  --color-glass-white: rgba(255, 255, 255, 0.1);
+  --color-glass-dark: rgba(0, 0, 0, 0.2);
+
+  /* Utility */
+  --color-whatsapp: #25D366;
+
+  /* Button gradient tokens (light theme) */
+  --btn-gradient-primary: linear-gradient(90deg, #FFC300 0%, #D4AF37 100%);
+  --btn-gradient-text: #000000;
+  --btn-gradient-shadow: rgba(180, 120, 30, 0.18);
+}
+
+/* Dark theme (controlled with data-theme="dark") */
+[data-theme="dark"] {
+  /* Deep slate / charcoal background for a soft, elegant dark theme */
+  --color-background: #121212; /* primary page background */
+  --color-surface: #1B1B1B; /* cards, panels */
+  --color-surface-2: #232323; /* subtle surfaces and borders */
+
+  --color-foreground: #FFFFFF;
+  --color-heading: #FFFFFF;
+  --color-body: #F0F0F0;
+  --color-muted: #9CA3AF;
+
+  /* Accents: primary = magenta/fuchsia, secondary = warm gold */
+  --color-accent-primary: #FF007F; /* vivid magenta/fuchsia */
+  --color-accent-secondary: #FFC300; /* bright gold for highlights */
+  --color-accent-tertiary: #F59E0B;
+
+  --color-neutral: #9CA3AF;
+  --color-glass-white: rgba(255,255,255,0.03);
+  --color-glass-dark: rgba(0,0,0,0.65);
+
+  /* Button gradient tokens (dark theme) */
+  --btn-gradient-primary: linear-gradient(90deg, #FF00A0 0%, #6A00FF 100%);
+  --btn-gradient-text: #FFFFFF;
+  --btn-gradient-shadow: rgba(170, 40, 170, 0.18);
+}
+
+/* Typographic refinement for hero title */
+.hero-title {
+  letter-spacing: -0.6px;
+  font-weight: 500;
+}
+
+/* Follow user preference only when no explicit data-theme is set */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-background: #0A0A0A;
+    --color-foreground: #FFFFFF;
+    --color-surface: #121212;
+    --color-surface-2: #1A1A1A;
+    --color-accent-primary: #FF007F;
+    --color-accent-secondary: #FFC300;
+    --color-glass-white: rgba(255,255,255,0.03);
+    --color-glass-dark: rgba(0,0,0,0.65);
+  }
+
+  /* (prefers-color-scheme block) */
+  /* Slightly stronger foreground for better contrast in dark mode */
+  [data-theme="dark"] {
+    --color-foreground: #FFFFFF;
+    --color-body: #E6E6E6;
+  }
 }
 
 /* Prevent horizontal scroll globally */
@@ -36,17 +109,10 @@ img, video, iframe, embed, object {
   height: auto;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #1C1C1C;
-    --foreground: #ffffff;
-  }
-}
-
 /* Configuración base del body */
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-background);
+  color: var(--color-foreground);
   font-family: var(--font-montserrat), Arial, Helvetica, sans-serif;
 }
 
@@ -62,4 +128,126 @@ h1, h2, h3, h4, h5, h6 {
 
 .font-artistic {
   font-family: var(--font-allura);
+}
+
+/* Button gradient utility (primary) - uses the theme tokens above */
+.btn-gradient-primary {
+  background-image: var(--btn-gradient-primary);
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  color: var(--btn-gradient-text);
+  transition: background-position 0.45s ease, transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+  box-shadow: 0 8px 22px var(--btn-gradient-shadow);
+}
+
+.btn-gradient-primary:hover {
+  background-position: 100% 50%;
+  transform: translateY(-2px);
+  filter: brightness(1.02);
+}
+
+.btn-gradient-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 5px 14px var(--btn-gradient-shadow);
+}
+
+.btn-gradient-primary:focus {
+  outline: none;
+}
+
+/* Illumination / quick flash effect for vibrant (dark-theme) gradients */
+@keyframes btn-illum-flash {
+  0% {
+    filter: brightness(1);
+    box-shadow: 0 0 0 0 rgba(0,0,0,0);
+    opacity: 0;
+  }
+  40% {
+    filter: brightness(1.12);
+    opacity: 1;
+  }
+  100% {
+    filter: brightness(1);
+    opacity: 0;
+  }
+}
+
+/* Make sure button can show pseudo-element glow */
+.btn-gradient-primary {
+  position: relative;
+  overflow: visible;
+}
+
+.btn-gradient-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: 0 0 0 0 var(--btn-illumination-color, transparent);
+  opacity: 0;
+  transition: box-shadow 160ms ease, opacity 160ms ease, transform 160ms ease;
+}
+
+/* Only apply the stronger illumination styles in the dark theme where the fucsia/purple gradient is used */
+[data-theme="dark"] .btn-gradient-primary:active {
+  filter: brightness(1.1);
+  box-shadow: 0 6px 20px var(--btn-gradient-shadow);
+}
+
+[data-theme="dark"] .btn-gradient-primary:active::after {
+  box-shadow: 0 0 18px 4px var(--btn-illumination-color, rgba(255,0,160,0.18));
+  opacity: 1;
+  animation: btn-illum-flash 420ms ease-out;
+}
+
+[data-theme="dark"] {
+  --btn-illumination-color: rgba(255, 0, 160, 0.20);
+}
+
+/* Secondary button: ghost/outline by default (both themes). Use accent color for border/text. */
+.btn-gradient-secondary {
+  background: transparent;
+  color: var(--color-accent-primary);
+  border: 2px solid var(--color-accent-primary);
+  box-shadow: none;
+  transition: background 140ms ease, transform 120ms ease, box-shadow 120ms ease, color 120ms ease;
+}
+
+.btn-gradient-secondary:hover {
+  background: color-mix(in srgb, var(--color-accent-primary) 6%, transparent);
+  transform: translateY(-2px);
+}
+
+.btn-gradient-secondary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* High-specificity override to remove any background-image set by other styles/tools */
+.btn-gradient-secondary, button.btn-gradient-secondary {
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
+/* In dark theme, make secondary button an outline/ghost using primary accent */
+[data-theme="dark"] .btn-gradient-secondary {
+  background: transparent;
+  color: var(--color-accent-primary);
+  border: 2px solid var(--color-accent-primary);
+  box-shadow: none;
+}
+
+[data-theme="dark"] .btn-gradient-secondary:hover {
+  background: rgba(255,0,160,0.06);
+}
+
+/* Hero overlay that respects theme glass tokens (light/dark) */
+.hero-overlay {
+  background: linear-gradient(to top, var(--color-glass-white), transparent);
+}
+
+/* In dark theme, use the dark glass token for hero overlay */
+[data-theme="dark"] .hero-overlay {
+  background: linear-gradient(to top, var(--color-glass-dark), transparent);
 }
