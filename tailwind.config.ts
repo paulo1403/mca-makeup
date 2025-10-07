@@ -27,7 +27,7 @@ export default {
       fontFamily: {
         playfair: ['var(--font-playfair)', 'serif'],
         allura: ['var(--font-allura)', 'cursive'],
-        montserrat: ['var(--font-montserrat)', 'sans-serif'],
+        inter: ['var(--font-inter)', 'ui-sans-serif', 'system-ui'],
       },
     },
   },

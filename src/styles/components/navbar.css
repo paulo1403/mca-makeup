@@ -99,3 +99,58 @@ body.menu-open .hero-content {
 body.menu-open .menu-panel-full {
   background: var(--color-background);
 }
+
+/* Mobile-specific: ensure brand is pure white in dark theme for maximum contrast */
+@media (max-width: 767px) {
+  [data-theme="dark"] .brand-heading {
+    color: #FFFFFF !important;
+  }
+}
+
+/* Logo / monogram styles */
+.site-logo {
+  line-height: 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.site-logo svg {
+  color: var(--color-foreground);
+  width: 40px;
+  height: 40px;
+}
+
+/* Use darker tone for light theme text inside logo, and white for dark theme */
+[data-theme="light"] .site-logo svg {
+  color: #2b2219; /* dark brown near-black */
+  --logo-stroke: rgba(0,0,0,0.06);
+}
+
+[data-theme="dark"] .site-logo svg {
+  color: #FFFFFF;
+  --logo-stroke: rgba(255,255,255,0.06);
+}
+
+/* accent sparkle uses the gold gradient provided by SVG defs via CSS vars */
+.site-logo circle[fill^="url"] {
+  filter: drop-shadow(0 2px 6px rgba(255,195,0,0.12));
+}
+
+/* Mobile header icon layout tweaks */
+.mobile-left-spacer { display: none; }
+
+/* Theme toggle visual: gold/copper ring and circular */
+.theme-toggle {
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  border: 2px solid var(--color-accent-secondary, #FFC300);
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle svg { width: 20px; height: 20px; color: var(--color-foreground); }
+
+.theme-toggle:focus { outline: none; box-shadow: 0 0 0 4px rgba(255,195,0,0.12); }

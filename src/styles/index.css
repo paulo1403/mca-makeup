@@ -2,6 +2,7 @@
 
 /* Base y variables */
 @import "./base.css";
+@import "./fonts.css";
 
 /* Utilidades */
 @import "./utils/colors.css";

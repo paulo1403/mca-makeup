@@ -1,14 +1,15 @@
 import type { Metadata } from 'next';
-import { Playfair_Display, Allura, Montserrat } from 'next/font/google';
+import { Playfair_Display, Allura, Inter } from 'next/font/google';
 import QueryProvider from '@/providers/QueryProvider';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css';
 
-const playfairDisplay = Playfair_Display({
+const playfair = Playfair_Display({
   variable: '--font-playfair',
   subsets: ['latin'],
   display: 'swap',
+  weight: ['400', '500', '700'],
 });
 
 const allura = Allura({
@@ -18,10 +19,11 @@ const allura = Allura({
   display: 'swap',
 });
 
-const montserrat = Montserrat({
-  variable: '--font-montserrat',
+const inter = Inter({
+  variable: '--font-inter',
   subsets: ['latin'],
   display: 'swap',
+  weight: ['300', '400', '600'],
 });
 
 export const metadata: Metadata = {
@@ -206,7 +208,7 @@ export default function RootLayout({
         <link rel='canonical' href='https://marcelacordero.com' />
       </head>
       <body
-        className={`${playfairDisplay.variable} ${allura.variable} ${montserrat.variable} antialiased overflow-x-hidden max-w-full`}
+        className={`${inter.variable} ${playfair.variable} ${allura.variable} antialiased overflow-x-hidden max-w-full`}
       >
         <QueryProvider>
           {children}

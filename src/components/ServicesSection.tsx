@@ -2,180 +2,15 @@
 
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { MapPin, Clock } from "lucide-react";
 import Button from "./ui/Button";
+import useServices from '@/hooks/useServices';
 
-interface ServiceData {
-  id: string;
-  name: string;
-  description?: string;
-  price: number;
-  duration: number;
-  category: string;
-}
 
-interface ServiceGroup {
-  title: string;
-  price: string;
-  features: string[];
-  portfolioUrl: string;
-}
 
 export default function ServicesSection() {
-  const [services, setServices] = useState<ServiceGroup[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadServices = async () => {
-      try {
-        const response = await fetch("/api/services");
-        if (response.ok) {
-          const data = await response.json();
-          const servicesByCategory = data.servicesByCategory;
-
-          const formattedServices: ServiceGroup[] = [];
-
-          // Maquillaje de Novia
-          if (servicesByCategory.BRIDAL?.length > 0) {
-            const bridalServices = servicesByCategory.BRIDAL;
-            const minPrice = Math.min(
-              ...bridalServices.map((s: ServiceData) => s.price),
-            );
-            formattedServices.push({
-              title: "Maquillaje de Novia",
-              price: `Desde S/ ${minPrice}`,
-              features: [
-                "Prueba previa incluida",
-                "Maquillaje de larga duración",
-                "Peinado profesional",
-              ],
-              portfolioUrl:
-                "https://marcelacorderomakeup.my.canva.site/#page-0",
-            });
-          }
-
-          // Eventos Sociales
-          if (servicesByCategory.SOCIAL?.length > 0) {
-            const socialServices = servicesByCategory.SOCIAL;
-            const minPrice = Math.min(
-              ...socialServices.map((s: ServiceData) => s.price),
-            );
-            formattedServices.push({
-              title: "Eventos Sociales",
-              price: `Desde S/ ${minPrice}`,
-              features: [
-                "Maquillaje natural o glamoroso",
-                "Duración 1h30 - 2h",
-                "Pestañas incluidas",
-              ],
-              portfolioUrl:
-                "https://marcelacorderomakeup.my.canva.site/2/#page-0",
-            });
-          }
-
-          // Piel Madura
-          if (servicesByCategory.MATURE_SKIN?.length > 0) {
-            const matureServices = servicesByCategory.MATURE_SKIN;
-            const minPrice = Math.min(
-              ...matureServices.map((s: ServiceData) => s.price),
-            );
-            formattedServices.push({
-              title: "Piel Madura",
-              price: `Desde S/ ${minPrice}`,
-              features: [
-                "Técnicas especializadas",
-                "Acabado natural luminoso",
-                "Cuidado personalizado",
-              ],
-              portfolioUrl:
-                "https://marcelacorderomakeup.my.canva.site/2/#page-0",
-            });
-          }
-
-          setServices(formattedServices);
-        } else {
-          // Fallback to default services
-          setServices([
-            {
-              title: "Maquillaje de Novia",
-              price: "Desde S/ 480",
-              features: [
-                "Prueba previa incluida",
-                "Maquillaje de larga duración",
-                "Peinado profesional",
-              ],
-              portfolioUrl:
-                "https://marcelacorderomakeup.my.canva.site/#page-0",
-            },
-            {
-              title: "Eventos Sociales",
-              price: "Desde S/ 200",
-              features: [
-                "Maquillaje natural o glamoroso",
-                "Duración 1h30 - 2h",
-                "Pestañas incluidas",
-              ],
-              portfolioUrl:
-                "https://marcelacorderomakeup.my.canva.site/2/#page-0",
-            },
-            {
-              title: "Piel Madura",
-              price: "Desde S/ 230",
-              features: [
-                "Técnicas especializadas",
-                "Acabado natural luminoso",
-                "Cuidado personalizado",
-              ],
-              portfolioUrl:
-                "https://marcelacorderomakeup.my.canva.site/2/#page-0",
-            },
-          ]);
-        }
-      } catch (error) {
-        console.error("Error loading services:", error);
-        // Use fallback services
-        setServices([
-          {
-            title: "Maquillaje de Novia",
-            price: "Desde S/ 480",
-            features: [
-              "Prueba previa incluida",
-              "Maquillaje de larga duración",
-              "Peinado profesional",
-            ],
-            portfolioUrl: "https://marcelacorderomakeup.my.canva.site/#page-0",
-          },
-          {
-            title: "Eventos Sociales",
-            price: "Desde S/ 200",
-            features: [
-              "Maquillaje natural o glamoroso",
-              "Duración 1h30 - 2h",
-              "Pestañas incluidas",
-            ],
-            portfolioUrl:
-              "https://marcelacorderomakeup.my.canva.site/2/#page-0",
-          },
-          {
-            title: "Piel Madura",
-            price: "Desde S/ 230",
-            features: [
-              "Técnicas especializadas",
-              "Acabado natural luminoso",
-              "Cuidado personalizado",
-            ],
-            portfolioUrl:
-              "https://marcelacorderomakeup.my.canva.site/2/#page-0",
-          },
-        ]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadServices();
-  }, []);
+  const { data: services = [], isLoading: loading } = useServices();
 
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -213,7 +48,7 @@ export default function ServicesSection() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-playfair text-heading mb-3 sm:mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl section-title text-heading mb-3 sm:mb-4">
             Descubre Nuestros Servicios Premium
           </h2>
           <p className="text-base sm:text-lg text-main max-w-2xl mx-auto leading-relaxed px-2">
@@ -257,7 +92,7 @@ export default function ServicesSection() {
                       <div className="w-2 h-2 bg-accent-primary rounded-full"></div>
                     </div>
                     
-                    <h3 className="text-lg sm:text-xl font-playfair text-heading mb-3 sm:mb-4">
+                    <h3 className="text-lg sm:text-xl section-title text-heading mb-3 sm:mb-4">
                       {service.title}
                     </h3>
 

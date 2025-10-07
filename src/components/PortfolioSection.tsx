@@ -31,7 +31,7 @@ export default function PortfolioSection() {
   ];
 
   return (
-    <section id='portafolio' className='py-16 sm:py-20 bg-white' ref={ref}>
+    <section id='portafolio' className='py-16 sm:py-20 section-bg-portfolio' ref={ref}>
       <div className='container mx-auto px-6 lg:px-12 max-w-6xl'>
         {/* Header minimalista */}
         <motion.div
@@ -40,7 +40,7 @@ export default function PortfolioSection() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className='text-3xl sm:text-4xl font-playfair text-heading mb-4'>
+          <h2 className='text-3xl sm:text-4xl section-title text-heading mb-4'>
             Portafolio
           </h2>
           <p className='text-lg text-main max-w-2xl mx-auto leading-relaxed mb-8'>
@@ -80,7 +80,7 @@ export default function PortfolioSection() {
                 <div className='text-3xl font-light text-accent-primary mb-2'>
                   {category.count}
                 </div>
-                <h3 className='text-xl font-playfair text-heading mb-3'>
+                <h3 className='text-xl section-title text-heading mb-3'>
                   {category.title}
                 </h3>
                 <p className='text-sm text-main leading-relaxed'>

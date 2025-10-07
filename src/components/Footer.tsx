@@ -23,7 +23,7 @@ export default function Footer() {
             transition={{ duration: 0.6 }}
             className="lg:col-span-2"
           >
-            <h3 className="text-2xl font-playfair text-heading mb-2">
+            <h3 className="text-2xl brand-heading text-heading mb-2">
               Marcela Cordero
             </h3>
             <p className="text-accent-primary font-medium mb-3">
@@ -42,7 +42,7 @@ export default function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <h4 className="text-lg font-playfair text-heading mb-4">
+            <h4 className="text-lg section-title text-heading mb-4">
               Contacto
             </h4>
             <div className="space-y-2">
@@ -82,7 +82,7 @@ export default function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h4 className="text-lg font-playfair text-heading mb-4">
+            <h4 className="text-lg section-title text-heading mb-4">
               Horarios
             </h4>
             <div className="space-y-1 text-sm">
@@ -116,7 +116,10 @@ export default function Footer() {
                 aria-label="WhatsApp"
                 onClick={() => analytics.whatsappClicked()}
               >
-                <Phone className="w-5 h-5" />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor" aria-hidden>
+                  <path d="M20.52 3.48A11.9 11.9 0 0012.01.02C6.02.02 1 5.04 1 11.04c0 1.94.51 3.83 1.48 5.5L.01 23l6.7-1.76A11.88 11.88 0 0012.02 23c6 0 11-4.98 11-11 0-1.98-.54-3.84-1.5-5.52zM12.02 20.1c-1.6 0-3.17-.42-4.52-1.22l-.32-.19-3.98 1.05 1.05-3.87-.2-.32A8.45 8.45 0 013.57 11C3.57 6.26 7.27 2.56 12.02 2.56c2.11 0 4.09.66 5.72 1.9a8.02 8.02 0 012.33 5.6c0 4.74-3.7 8.44-8.05 8.44z" />
+                  <path d="M17.56 14.14c-.28-.14-1.64-.81-1.9-.9-.26-.09-.45-.14-.64.14-.19.28-.74.9-.9 1.09-.16.19-.32.21-.6.07-.28-.14-1.18-.43-2.24-1.38-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.57.12-.12.28-.32.42-.48.14-.16.19-.28.28-.47.09-.19.05-.35-.02-.49-.07-.14-.64-1.55-.88-2.12-.23-.56-.47-.48-.64-.49-.17-.01-.37-.01-.57-.01s-.49.07-.74.35c-.24.28-.92.89-.92 2.17 0 1.28.94 2.52 1.07 2.7.12.17 1.84 2.88 4.45 3.92 2.61 1.04 2.61.69 3.08.65.47-.05 1.53-.62 1.75-1.22.22-.59.22-1.09.16-1.22-.06-.13-.22-.19-.5-.33z" />
+                </svg>
               </a>
             </div>
           </motion.div>

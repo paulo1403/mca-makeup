@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
-import Link from 'next/link';
 import Button from './ui/Button';
+import Logo from './Logo';
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
@@ -28,7 +28,7 @@ export default function NavBar() {
   <nav className="w-full z-50 md:sticky md:top-0 bg-[color:var(--color-surface)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between py-3 md:py-4">
         <div className="flex items-center gap-4">
-          <Link href="/" className="text-lg sm:text-xl font-playfair text-heading hover:opacity-90">Marcela Cordero</Link>
+          <Logo size={44} />
         </div>
 
         <div className="hidden md:flex items-center gap-6">
@@ -48,10 +48,12 @@ export default function NavBar() {
         </div>
 
         <div className="md:hidden flex items-center gap-2">
-          <ThemeToggle />
-          <button onClick={() => setOpen((s) => !s)} aria-label="Toggle menu" className="p-3 rounded-md bg-surface hover:bg-surface-2 shadow-sm border" style={{ borderColor: 'var(--color-surface-2)' }}>
-            {open ? <X className="w-6 h-6 text-heading" /> : <Menu className="w-6 h-6 text-heading" />}
-          </button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <button onClick={() => setOpen((s) => !s)} aria-label="Toggle menu" className="p-3 rounded-md bg-surface hover:bg-surface-2 shadow-sm border" style={{ borderColor: 'var(--color-surface-2)' }}>
+              {open ? <X className="w-6 h-6 text-heading" /> : <Menu className="w-6 h-6 text-heading" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -61,8 +63,7 @@ export default function NavBar() {
           <div className="absolute inset-0 bg-[color:var(--color-background)]" onClick={() => setOpen(false)} />
 
           <div className="absolute inset-0 mx-auto h-full w-full overflow-auto p-6 transition-transform menu-panel-full" style={{ transformOrigin: 'right center' }}>
-            <div className="flex items-center justify-between mb-6">
-              <div className="text-lg font-playfair text-heading">Marcela Cordero</div>
+            <div className="flex items-center justify-end mb-6">
               <button onClick={() => setOpen(false)} className="menu-close-btn" aria-label="Cerrar menú">
                 <X className="w-6 h-6" />
               </button>

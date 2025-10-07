@@ -31,7 +31,7 @@ export default function HeroSection() {
             {/* Contenido de texto */}
             <div className="text-center lg:text-left lg:flex-1">
               <motion.h1
-                className="hero-title text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl font-playfair text-heading mb-4 sm:mb-6 leading-tight"
+                className="brand-heading hero-title text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl text-heading mb-4 sm:mb-6 leading-tight"
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
