@@ -59,6 +59,12 @@
   --btn-gradient-shadow: rgba(170, 40, 170, 0.18);
 }
 
+/* Additional accent gradient tokens for portfolio CTA use */
+:root {
+  --color-accent-primary-2: #8A2BE2;
+  --color-accent-secondary-2: #D4AF37;
+}
+
 /* Typographic refinement for hero title */
 .hero-title {
   letter-spacing: -0.6px;

@@ -1,0 +1,182 @@
+/* Portfolio section styles - theme aware, luxurious typographic treatment */
+
+.section-bg-portfolio {
+  background: var(--color-background);
+  color: var(--color-body);
+}
+
+.portfolio-card {
+  border-radius: 12px;
+  padding: 2rem;
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+[data-theme="dark"] .portfolio-card {
+  background: #1E1E1E; /* slightly lighter than page bg */
+  color: #FFFFFF;
+  box-shadow: none;
+}
+
+[data-theme="light"] .portfolio-card {
+  background: #FFFFFF;
+  color: #333333;
+  box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+}
+
+.portfolio-count {
+  font-family: var(--font-playfair), serif;
+  font-weight: 800;
+  font-size: 3rem; /* 48px */
+  line-height: 1;
+}
+
+.portfolio-title {
+  font-family: var(--font-playfair), serif;
+  font-weight: 700;
+  font-size: 1.25rem; /* 20px */
+}
+
+.portfolio-desc {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  color: var(--color-body);
+}
+
+.cta-gradient-primary {
+  background-image: linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-primary-2, #8A2BE2));
+  color: white;
+}
+
+.cta-gradient-light {
+  background-image: linear-gradient(90deg, var(--color-accent-secondary), var(--color-accent-secondary-2, #D4AF37));
+  color: #1C1C1C;
+}
+
+.card-ghost {
+  background: transparent;
+  border: 1px solid currentColor;
+}
+
+/* Accent colors for numbers/titles per theme */
+[data-theme="dark"] .portfolio-count,
+[data-theme="dark"] .portfolio-title {
+  color: var(--color-accent-primary); /* fucsia */
+}
+
+[data-theme="light"] .portfolio-count,
+[data-theme="light"] .portfolio-title {
+  color: var(--color-accent-secondary); /* gold */
+}
+
+/* Ghost / outline button for 'Ver Más' and gallery */
+.btn-ghost-accent {
+  background: transparent;
+  border: 2px solid currentColor;
+  color: currentColor;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+/* Light-theme refinement: subtle pale-beige interior, keep gold border & text */
+[data-theme="light"] .btn-ghost-accent {
+  background: #FDFBFB; /* very pale beige */
+  border-color: var(--color-accent-secondary); /* gold */
+  color: var(--color-accent-secondary); /* gold text */
+  box-shadow: 0 6px 18px rgba(16,24,40,0.04);
+}
+
+/* Ensure per-card 'Ver Más' links adopt the ghost-accent appearance in light theme */
+[data-theme="light"] .portfolio-meta a.btn-ghost-accent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border-width: 2px;
+}
+
+/* Testimonial / quote block styling */
+.portfolio-quote {
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+[data-theme="dark"] .portfolio-quote blockquote {
+  font-family: var(--font-playfair), serif;
+  font-style: italic;
+  color: #E6E6E6;
+  font-size: 1.25rem;
+}
+
+[data-theme="light"] .portfolio-quote blockquote {
+  font-family: var(--font-playfair), serif;
+  font-style: italic;
+  color: #111111;
+  font-size: 1.25rem;
+}
+
+[data-theme="dark"] .portfolio-quote .quote-author {
+  font-family: var(--font-inter);
+  font-weight: 600;
+  color: var(--color-accent-primary);
+}
+
+[data-theme="light"] .portfolio-quote .quote-author {
+  font-family: var(--font-inter);
+  font-weight: 600;
+  color: var(--color-accent-secondary);
+}
+
+[data-theme="dark"] .portfolio-quote .social-proof {
+  color: #BDBDBD;
+}
+
+[data-theme="light"] .portfolio-quote .social-proof {
+  color: #666666;
+}
+
+.portfolio-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(2,6,23,0.25); }
+
+.portfolio-meta { margin-top: 1rem; }
+
+/* WhatsApp bubble floating style */
+.whatsapp-bubble {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+
+.back-to-top {
+  width: 52px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+}
+
+/* Small corner CTAs (newsletter/chat) - increase touch size on mobile */
+@media (max-width: 640px) {
+  .corner-cta { width: 48px; height: 48px; }
+}
+
+/* CTA portfolio theme-aware */
+.cta-portfolio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .cta-portfolio {
+  background: linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-primary-2));
+  color: #FFFFFF;
+  box-shadow: 0 8px 22px rgba(170,40,170,0.12);
+}
+
+[data-theme="light"] .cta-portfolio {
+  /* Gold -> copper gradient for light theme */
+  background: linear-gradient(90deg, #FFC300 0%, #B87333 100%);
+  color: #111111; /* dark text for legibility */
+  box-shadow: 0 8px 20px rgba(16,24,40,0.06);
+}
