@@ -22,6 +22,8 @@
 @import "./components/hero.css";
 @import "./components/services.css";
 @import "./components/portfolio.css";
+@import "./components/about.css";
+@import "./components/testimonials.css";
 
 /* Dashboard específico */
 @import "./dashboard.css";

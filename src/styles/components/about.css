@@ -1,0 +1,147 @@
+/* About section - premium card, theme-aware */
+
+.about-module {
+  border-radius: 16px;
+  padding: 2rem;
+  display: block;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .about-module {
+  background: #1E1E1E; /* slightly lighter than page bg */
+  color: #F0F0F0;
+}
+
+[data-theme="light"] .about-module {
+  background: #FFFFFF;
+  color: #333333;
+  box-shadow: 0 12px 40px rgba(16,24,40,0.06);
+}
+
+.about-title {
+  font-family: var(--font-playfair);
+  font-weight: 700;
+  font-size: 2.25rem;
+  color: var(--color-accent-primary);
+  margin-bottom: 0.25rem;
+}
+
+.about-subtitle {
+  font-family: var(--font-playfair);
+  color: var(--color-heading);
+  font-size: 1.25rem;
+}
+
+.about-body p {
+  font-family: var(--font-inter);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--color-body);
+}
+
+/* Enfasis: usa el color de acento y negrita */
+.about-emphasis {
+  font-weight: 700;
+  color: var(--color-accent-primary);
+}
+
+/* Perfil imagen */
+.about-image-wrapper {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(2,6,23,0.16);
+}
+
+.about-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.96) contrast(0.98) brightness(0.98);
+}
+
+/* CTA full-width */
+.about-cta {
+  display: inline-block;
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border-radius: 12px;
+  text-align: center;
+}
+
+/* Ensure CTA gradient text color follows theme tokens */
+[data-theme="dark"] .about-cta {
+  color: #FFFFFF; /* dark theme uses white text on vivid gradient */
+}
+[data-theme="light"] .about-cta {
+  color: #111111; /* dark text in light theme */
+}
+
+/* Achievements / Certifications cards */
+.about-achievements {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .about-achievements { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.about-achievement-card {
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: transform 220ms ease, box-shadow 220ms ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+[data-theme="dark"] .about-achievement-card {
+  background: #1E1E1E;
+  color: #F0F0F0;
+  border: 1px solid rgba(255,0,160,0.06);
+}
+
+[data-theme="light"] .about-achievement-card {
+  background: #FFFFFF;
+  color: #333333;
+  border: 1px solid rgba(16,24,40,0.04);
+  box-shadow: 0 8px 20px rgba(16,24,40,0.04);
+}
+
+.about-achievement-icon {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  margin-bottom: 0.75rem;
+}
+
+[data-theme="dark"] .about-achievement-icon {
+  color: var(--color-accent-primary);
+}
+[data-theme="light"] .about-achievement-icon {
+  color: var(--color-accent-secondary);
+}
+
+.about-achievement-title {
+  font-family: var(--font-playfair);
+  font-weight: 700;
+  color: var(--color-accent-primary);
+  margin-bottom: 0.5rem;
+}
+
+.about-achievement-desc {
+  font-family: var(--font-inter);
+  font-size: 0.95rem;
+  color: var(--color-body);
+}
+
+.about-final-cta { margin-top: 2rem; }
+
+
+

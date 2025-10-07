@@ -1,0 +1,99 @@
+/* Testimonials module - luxury, theme-aware styles */
+
+.testimonials-wrap {
+  margin-top: 2rem;
+}
+
+.testimonial-module {
+  border-radius: 14px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+[data-theme="dark"] .testimonial-module {
+  background: #1E1E1E; /* slightly lighter than page bg */
+  color: #FFFFFF;
+}
+
+[data-theme="light"] .testimonial-module {
+  background: #FFFFFF;
+  color: #333333;
+  box-shadow: 0 10px 30px rgba(16,24,40,0.06);
+}
+
+.testimonial-title {
+  font-family: var(--font-playfair);
+  font-weight: 700;
+  font-size: 1.75rem;
+  color: var(--color-heading);
+}
+
+.testimonial-quote blockquote {
+  font-family: var(--font-playfair);
+  font-style: italic;
+  font-size: 1.125rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.testimonial-stars {
+  display: inline-flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+[data-theme="dark"] .testimonial-stars { color: var(--color-accent-primary); }
+[data-theme="light"] .testimonial-stars { color: var(--color-accent-secondary); }
+
+.testimonial-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-family: var(--font-playfair);
+}
+
+[data-theme="dark"] .testimonial-avatar {
+  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-primary-2));
+  color: #FFFFFF;
+}
+
+[data-theme="light"] .testimonial-avatar {
+  background: linear-gradient(135deg, var(--color-accent-secondary), var(--color-accent-secondary-2));
+  color: #111111;
+}
+
+.testimonial-client-meta {
+  font-family: var(--font-inter);
+  font-size: 0.875rem;
+  color: #8B8B8B;
+}
+
+.testimonial-dots { display: flex; gap: 0.5rem; align-items: center; }
+.testimonial-dots .dot { width: 8px; height: 8px; border-radius: 9999px; background: #E6E6E6; }
+[data-theme="dark"] .testimonial-dots .dot.active { background: var(--color-accent-primary); }
+[data-theme="light"] .testimonial-dots .dot.active { background: var(--color-accent-secondary); }
+
+/* Adjust quote icon circle */
+.quote-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[data-theme="dark"] .quote-circle { background: var(--color-accent-primary); color: #fff; }
+[data-theme="light"] .quote-circle { background: var(--color-accent-secondary); color: #111; }
+
+/* Indicators */
+.testimonial-indicators button { width: 10px; height: 10px; border-radius: 9999px; }
+
+

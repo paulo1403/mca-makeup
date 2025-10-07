@@ -160,7 +160,7 @@ export default function TestimonialsSection() {
   };
 
   return (
-    <section id="testimonials" className="py-20 bg-white">
+    <section id="testimonials" className="py-20">
       <div className="container mx-auto px-6 lg:px-12">
         {/* Header minimalista y compacto */}
         <motion.div
@@ -169,7 +169,7 @@ export default function TestimonialsSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-playfair text-heading">
+          <h2 className="testimonial-title">
             Lo que Dicen mis Clientas
           </h2>
         </motion.div>
@@ -177,7 +177,7 @@ export default function TestimonialsSection() {
         {/* Testimonial destacado */}
         {loading ? (
           <div className="max-w-4xl mx-auto mb-16">
-            <div className="bg-light-background p-8 md:p-12 rounded-xl text-center">
+              <div className="testimonial-module p-8 md:p-12 rounded-xl text-center">
               <div className="animate-pulse">
                 <div className="w-16 h-16 bg-gray-300 rounded-full mx-auto mb-6"></div>
                 <div className="h-4 bg-gray-300 rounded w-32 mx-auto mb-6"></div>
@@ -199,34 +199,36 @@ export default function TestimonialsSection() {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            <div className="bg-light-background p-8 md:p-12 rounded-xl text-center">
+              <div className="testimonial-module p-8 md:p-12 rounded-xl text-center">
               {/* Quote icon */}
               <div className="flex justify-center mb-6">
-                <div className="w-16 h-16 bg-accent-primary rounded-full flex items-center justify-center">
-                  <Quote className="w-8 h-8 text-white" />
+                <div className="quote-circle">
+                  <Quote className="w-8 h-8" />
                 </div>
               </div>
 
               {/* Stars */}
-              <div className="flex justify-center mb-6">
+              <div className="flex justify-center mb-6 testimonial-stars">
                 {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
                   <Star
                     key={i}
-                    className="w-5 h-5 text-accent-primary mx-0.5"
+                    className="w-5 h-5 mx-0.5"
                     fill="currentColor"
                   />
                 ))}
               </div>
 
               {/* Testimonial text */}
-              <blockquote className="text-xl md:text-2xl text-heading italic mb-8 leading-relaxed font-light">
-                &ldquo;{testimonials[currentIndex].text}&rdquo;
-              </blockquote>
+              <div className="testimonial-quote mb-8">
+                <blockquote>
+                  &ldquo;{testimonials[currentIndex].text}&rdquo;
+                </blockquote>
+              </div>
 
               {/* Client info */}
               <div className="flex flex-col items-center">
-                <div className="w-14 h-14 bg-accent-primary rounded-full flex items-center justify-center mb-4">
-                  <span className="text-white font-bold text-lg">
+                <div className="w-14 h-14 testimonial-avatar rounded-full flex items-center justify-center mb-4">
+                  <span className="font-bold text-lg">
                     {testimonials[currentIndex].initials}
                   </span>
                 </div>
@@ -247,16 +249,13 @@ export default function TestimonialsSection() {
 
         {/* Indicadores */}
         <div className="flex justify-center mb-16">
-          <div className="flex gap-2">
+          <div className="flex gap-2 testimonial-dots">
             {testimonials.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  index === currentIndex
-                    ? "bg-accent-primary"
-                    : "bg-gray-300 hover:bg-gray-400"
-                }`}
+                className={`dot ${index === currentIndex ? 'active' : ''}`}
+                aria-label={`Ir al testimonio ${index + 1}`}
               />
             ))}
           </div>
