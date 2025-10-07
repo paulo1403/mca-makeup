@@ -3,6 +3,7 @@ import { Playfair_Display, Allura, Inter } from 'next/font/google';
 import QueryProvider from '@/providers/QueryProvider';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Toaster } from 'react-hot-toast';
 import './globals.css';
 
 const playfair = Playfair_Display({
@@ -213,6 +214,34 @@ export default function RootLayout({
         <QueryProvider>
           {children}
         </QueryProvider>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 6000,
+            style: {
+              background: 'var(--color-surface)',
+              color: 'var(--color-heading)',
+              border: '1px solid var(--color-accent-primary)',
+              borderRadius: '12px',
+              fontSize: '14px',
+              fontWeight: '500',
+              maxWidth: '400px',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+            },
+            success: {
+              iconTheme: {
+                primary: 'var(--color-accent-primary)',
+                secondary: 'var(--color-surface)',
+              },
+            },
+            error: {
+              iconTheme: {
+                primary: '#EF4444',
+                secondary: 'var(--color-surface)',
+              },
+            },
+          }}
+        />
         <Analytics />
         <SpeedInsights />
       </body>

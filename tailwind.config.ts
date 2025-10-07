@@ -12,6 +12,8 @@ export default {
         'xs': '475px', // Extra small devices - between mobile and sm
       },
       colors: {
+        'accent-primary': 'var(--color-accent-primary)',
+        'accent-secondary': 'var(--color-accent-secondary)',
         'background': 'var(--color-background)',
         'surface': 'var(--color-surface)',
         'surface-2': 'var(--color-surface-2)',
@@ -19,13 +21,15 @@ export default {
         'main': 'var(--color-body)',
         'muted': 'var(--color-muted)',
         'primary-accent': 'var(--color-accent-primary)',
-        'secondary-accent': 'var(--color-accent-secondary)',
+  'secondary-accent': 'var(--color-accent-secondary)',
         'tertiary-accent': 'var(--color-accent-tertiary)',
+  'card': 'var(--color-card)',
+  'selected': 'var(--color-selected)',
         'neutral': 'var(--color-neutral)',
         'whatsapp': 'var(--color-whatsapp)',
       },
       fontFamily: {
-        playfair: ['var(--font-playfair)', 'serif'],
+        'font-serif': ['var(--font-playfair)', 'serif'],
         allura: ['var(--font-allura)', 'cursive'],
         inter: ['var(--font-inter)', 'ui-sans-serif', 'system-ui'],
       },

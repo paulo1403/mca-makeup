@@ -5,12 +5,12 @@ import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { MapPin, Clock } from "lucide-react";
 import Button from "./ui/Button";
-import useServices from '@/hooks/useServices';
+import useServiceGroups from '@/hooks/useServiceGroups';
 
 
 
 export default function ServicesSection() {
-  const { data: services = [], isLoading: loading } = useServices();
+  const { data: services = [], isLoading: loading } = useServiceGroups();
 
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });

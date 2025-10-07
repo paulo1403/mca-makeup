@@ -5,8 +5,11 @@ import { Sun, Moon } from "lucide-react";
 
 export default function ThemeToggle() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+    
     try {
       const stored = localStorage.getItem('theme');
       if (stored === 'dark' || stored === 'light') {
@@ -16,29 +19,48 @@ export default function ThemeToggle() {
       }
 
       if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setTheme('dark');
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
+        const newTheme = 'dark';
+        setTheme(newTheme);
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
         return;
       }
 
-      document.documentElement.setAttribute('data-theme', 'light');
+      const newTheme = 'light';
+      setTheme(newTheme);
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
     } catch {}
   }, []);
 
-  useEffect(() => {
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    
     try {
-      localStorage.setItem('theme', theme);
-      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', newTheme);
+      document.documentElement.setAttribute('data-theme', newTheme);
     } catch {}
-  }, [theme]);
+  };
+
+  if (!mounted) {
+    return (
+      <button
+        type="button"
+        className="p-2 rounded-full transition-colors duration-200 flex items-center justify-center theme-toggle"
+        disabled
+      >
+        <div className="w-5 h-5" />
+      </button>
+    );
+  }
 
   return (
     <button
       type="button"
       aria-label={theme === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'}
       aria-pressed={theme === 'dark'}
-      onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+      onClick={toggleTheme}
       className="p-2 rounded-full transition-colors duration-200 flex items-center justify-center theme-toggle"
     >
       {theme === 'dark' ? (

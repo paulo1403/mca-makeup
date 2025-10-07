@@ -101,7 +101,7 @@ export default function DistrictSelector({
   };
 
   const handleInputClick = () => {
-    setIsOpen(true);
+    setIsOpen(!isOpen);
     setSearchTerm("");
   };
 
@@ -116,6 +116,11 @@ export default function DistrictSelector({
     <div className={`relative ${className}`} ref={dropdownRef}>
       {/* Input principal */}
       <div className="relative">
+        {/* Icono izquierdo */}
+        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <MapPin className="w-5 h-5 text-muted" />
+        </div>
+
         <input
           ref={inputRef}
           type="text"
@@ -125,27 +130,27 @@ export default function DistrictSelector({
           placeholder={placeholder}
           required={required}
           disabled={disabled || loading}
-          className={`w-full px-3 py-2 sm:px-4 sm:py-3 pr-10 sm:pr-12 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-primary-accent focus:border-transparent transition-all duration-300 text-sm sm:text-base ${
-            disabled ? "bg-gray-50 cursor-not-allowed" : "cursor-pointer"
+          className={`w-full bg-card border border-transparent focus:border-accent-primary/30 rounded-lg pl-12 pr-12 py-3 placeholder:text-muted text-heading outline-none shadow-sm transition-all duration-200 focus:shadow-md ${
+            disabled ? "bg-muted/10 cursor-not-allowed" : "cursor-pointer"
           }`}
           autoComplete="off"
         />
 
         {/* Iconos del lado derecho */}
-        <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:pr-3">
+        <div className="absolute inset-y-0 right-0 flex items-center pr-4">
           {loading ? (
-            <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-primary-accent"></div>
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-accent-primary"></div>
           ) : value && !isOpen ? (
             <button
               type="button"
               onClick={handleClearSelection}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-muted hover:text-heading transition-colors"
             >
-              <X className="h-3 w-3 sm:h-4 sm:w-4" />
+              <X className="h-4 w-4" />
             </button>
           ) : (
             <ChevronDown
-              className={`h-3 w-3 sm:h-4 sm:w-4 text-gray-400 transition-transform ${
+              className={`h-4 w-4 text-muted transition-transform ${
                 isOpen ? "rotate-180" : ""
               }`}
             />
@@ -155,14 +160,16 @@ export default function DistrictSelector({
 
       {/* Información del distrito seleccionado */}
       {selectedDistrict && !isOpen && (
-        <div className="mt-2 flex items-start gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-md">
-          <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+        <div className="mt-3 flex items-start gap-3 px-4 py-3 bg-accent-primary/10 border border-accent-primary/20 rounded-lg">
+          <div className="w-5 h-5 flex items-center justify-center bg-accent-primary/20 rounded-full mt-0.5 flex-shrink-0">
+            <MapPin className="h-3 w-3 text-accent-primary" />
+          </div>
           <div className="flex-1">
-            <span className="text-xs sm:text-sm text-blue-700 font-medium">
+            <span className="text-sm text-heading font-medium">
               Costo de transporte: S/ {selectedDistrict.cost.toFixed(2)}
             </span>
             {selectedDistrict.notes && (
-              <p className="text-xs text-blue-600 mt-1 leading-relaxed">
+              <p className="text-sm text-muted mt-1 leading-relaxed">
                 {selectedDistrict.notes}
               </p>
             )}
@@ -172,18 +179,18 @@ export default function DistrictSelector({
 
       {/* Dropdown de opciones */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 sm:max-h-60 overflow-y-auto">
+        <div className="absolute z-50 w-full mt-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg max-h-80 overflow-y-auto">
           {filteredDistricts.length === 0 ? (
-            <div className="px-3 py-4 text-xs sm:text-sm text-gray-500 text-center">
+            <div className="px-4 py-6 text-sm text-heading text-center">
               {searchTerm ? (
                 <>
-                  <Search className="h-4 w-4 mx-auto mb-2 text-gray-400" />
+                  <Search className="h-5 w-5 mx-auto mb-3 text-heading" />
                   No se encontraron distritos que coincidan con &ldquo;
                   {searchTerm}&rdquo;
                 </>
               ) : (
                 <>
-                  <MapPin className="h-4 w-4 mx-auto mb-2 text-gray-400" />
+                  <MapPin className="h-5 w-5 mx-auto mb-3 text-heading" />
                   No hay distritos disponibles
                 </>
               )}
@@ -191,10 +198,10 @@ export default function DistrictSelector({
           ) : (
             <>
               {/* Header del dropdown */}
-              <div className="px-3 sm:px-4 py-2 border-b border-gray-100 bg-gray-50">
-                <div className="flex items-center gap-2">
-                  <Search className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
-                  <span className="text-xs text-gray-600 font-medium">
+              <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-muted/10">
+                <div className="flex items-center gap-3">
+                  <Search className="h-4 w-4 text-muted" />
+                  <span className="text-sm text-muted font-medium">
                     {filteredDistricts.length} distrito
                     {filteredDistricts.length !== 1 ? "s" : ""} disponible
                     {filteredDistricts.length !== 1 ? "s" : ""}
@@ -208,37 +215,51 @@ export default function DistrictSelector({
                   key={district.name}
                   type="button"
                   onClick={() => handleSelectDistrict(district)}
-                  className={`w-full px-3 sm:px-4 py-2 sm:py-3 text-left hover:bg-gray-50 active:bg-gray-100 transition-colors border-b border-gray-50 last:border-b-0 touch-manipulation ${
-                    district.name === value ? "bg-blue-50 border-blue-100" : ""
+                  className={`w-full px-4 py-3 text-left hover:bg-muted/10 active:bg-muted/20 transition-colors border-b border-gray-200 dark:border-gray-700 last:border-b-0 touch-manipulation ${
+                    district.name === value ? "bg-accent-primary text-white" : ""
                   }`}
                 >
                   <div className="flex justify-between items-start">
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400 flex-shrink-0" />
-                        <span className="font-medium text-gray-900 text-sm sm:text-base">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-4 h-4 flex items-center justify-center rounded-full flex-shrink-0 ${
+                          district.name === value ? "bg-white/20" : "bg-muted/20"
+                        }`}>
+                          <MapPin className={`h-2.5 w-2.5 ${
+                            district.name === value ? "text-white" : "text-muted"
+                          }`} />
+                        </div>
+                        <span className={`font-medium text-base ${
+                          district.name === value ? "text-white" : "text-heading"
+                        }`}>
                           {district.name}
                         </span>
                       </div>
                       {district.notes && (
-                        <p className="text-xs text-gray-500 mt-1 ml-5 sm:ml-6 leading-relaxed">
+                        <p className={`text-sm mt-2 ml-7 leading-relaxed ${
+                          district.name === value ? "text-white/80" : "text-muted"
+                        }`}>
                           {district.notes}
                         </p>
                       )}
                     </div>
-                    <div className="ml-2 sm:ml-4 text-right flex-shrink-0">
-                      <span className="text-xs sm:text-sm font-semibold text-primary-accent">
+                    <div className="ml-4 text-right flex-shrink-0">
+                      <span className={`text-sm font-semibold ${
+                        district.name === value ? "text-white" : "text-accent-secondary"
+                      }`}>
                         S/ {district.cost.toFixed(2)}
                       </span>
-                      <p className="text-xs text-gray-500">transporte</p>
+                      <p className={`text-sm ${
+                        district.name === value ? "text-white/80" : "text-muted"
+                      }`}>transporte</p>
                     </div>
                   </div>
                 </button>
               ))}
 
               {/* Footer informativo */}
-              <div className="px-3 sm:px-4 py-2 border-t border-gray-100 bg-gray-50">
-                <p className="text-xs text-gray-500 text-center">
+              <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700 bg-muted/10">
+                <p className="text-sm text-muted text-center">
                   Los costos de transporte incluyen ida y vuelta
                 </p>
               </div>
