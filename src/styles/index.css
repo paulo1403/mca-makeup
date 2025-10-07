@@ -17,5 +17,10 @@
 @import "./components/inner-dividers.css";
 @import "./components/section-backgrounds.css";
 
+/* Newly separated component styles */
+@import "./components/navbar.css";
+@import "./components/hero.css";
+@import "./components/services.css";
+
 /* Dashboard específico */
 @import "./dashboard.css";

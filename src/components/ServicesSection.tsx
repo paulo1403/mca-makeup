@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { MapPin, Clock } from "lucide-react";
+import Button from "./ui/Button";
 
 interface ServiceData {
   id: string;
@@ -213,10 +214,10 @@ export default function ServicesSection() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-playfair text-heading mb-3 sm:mb-4">
-            Servicios
+            Descubre Nuestros Servicios Premium
           </h2>
           <p className="text-base sm:text-lg text-main max-w-2xl mx-auto leading-relaxed px-2">
-            Especialista en maquillaje para novias y eventos sociales
+            Maquillaje profesional para novias y eventos con atención personalizada
           </p>
         </motion.div>
 
@@ -231,15 +232,15 @@ export default function ServicesSection() {
             ? // Loading skeleton
               Array.from({ length: 3 }).map((_, index) => (
                 <div key={index} className="text-center">
-                  <div className="bg-white border border-gray-100 p-4 sm:p-6 lg:p-8 rounded-lg animate-pulse">
-                    <div className="h-5 sm:h-6 bg-gray-200 rounded mb-3 sm:mb-4 mx-auto w-3/4"></div>
+                  <div className="service-card animate-pulse">
+                    <div className="h-5 sm:h-6 bg-[color:var(--color-surface-2)] rounded mb-3 sm:mb-4 mx-auto w-3/4"></div>
                     <div className="space-y-2 mb-4 sm:mb-6">
-                      <div className="h-3 sm:h-4 bg-gray-200 rounded"></div>
-                      <div className="h-3 sm:h-4 bg-gray-200 rounded"></div>
-                      <div className="h-3 sm:h-4 bg-gray-200 rounded"></div>
+                      <div className="h-3 sm:h-4 bg-[color:var(--color-surface-2)] rounded"></div>
+                      <div className="h-3 sm:h-4 bg-[color:var(--color-surface-2)] rounded"></div>
+                      <div className="h-3 sm:h-4 bg-[color:var(--color-surface-2)] rounded"></div>
                     </div>
-                    <div className="h-6 sm:h-8 bg-gray-200 rounded mb-3 sm:mb-4 mx-auto w-1/2"></div>
-                    <div className="h-10 bg-gray-200 rounded mx-auto w-3/4"></div>
+                    <div className="h-6 sm:h-8 bg-[color:var(--color-surface-2)] rounded mb-3 sm:mb-4 mx-auto w-1/2"></div>
+                    <div className="h-10 bg-[color:var(--color-surface-2)] rounded mx-auto w-3/4"></div>
                   </div>
                 </div>
               ))
@@ -248,10 +249,9 @@ export default function ServicesSection() {
                   key={index}
                   variants={itemVariants}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="text-center group cursor-pointer"
-                  onClick={() => window.open(service.portfolioUrl, "_blank")}
+                  className="text-center group"
                 >
-                  <div className="bg-white border border-gray-100 p-4 sm:p-6 lg:p-8 rounded-lg transition-all duration-300 hover:shadow-lg hover:border-accent-primary/30 active:scale-[0.98] relative">
+                  <div className="service-card transition-all duration-300 hover:shadow-lg active:scale-[0.98] relative">
                     {/* Indicador visual de que es clickeable en mobile */}
                     <div className="absolute top-3 right-3 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                       <div className="w-2 h-2 bg-accent-primary rounded-full"></div>
@@ -263,27 +263,27 @@ export default function ServicesSection() {
 
                     <div className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-6">
                       {service.features.map((feature, idx) => (
-                        <p
-                          key={idx}
-                          className="text-xs sm:text-sm text-main leading-relaxed"
-                        >
-                          {feature}
+                        <p key={idx} className="text-xs sm:text-sm text-main leading-relaxed flex items-start">
+                          <span className="feature-bullet mt-1 mr-3 flex-shrink-0" />
+                          <span>{feature}</span>
                         </p>
                       ))}
                     </div>
 
-                    <div className="text-xl sm:text-2xl font-light text-accent-primary mb-4">
+                    <div className="service-price text-xl sm:text-2xl font-light text-accent-primary mb-4">
                       {service.price}
                     </div>
 
-                    {/* Botón optimizado para mobile */}
-                    <motion.button
-                      className="bg-accent-primary/10 text-accent-primary px-4 sm:px-6 py-3 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-accent-primary hover:text-white group-hover:bg-accent-primary group-hover:text-white min-h-[48px] w-full sm:w-auto touch-manipulation"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      Ver portafolio
-                    </motion.button>
+                    <div className="w-full sm:w-auto">
+                      <Button
+                        variant="secondary"
+                        size="md"
+                        className="w-full sm:w-auto"
+                        onClick={() => window.open(service.portfolioUrl, "_blank")}
+                      >
+                        Ver portafolio
+                      </Button>
+                    </div>
                   </div>
                 </motion.div>
               ))}
@@ -296,7 +296,7 @@ export default function ServicesSection() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <div className="bg-white border border-gray-100 p-6 sm:p-8 rounded-lg max-w-2xl mx-auto">
+          <div className="attention-card max-w-2xl mx-auto">
             <h3 className="text-lg sm:text-xl font-playfair mb-3 sm:mb-4 text-heading">
               Atención Personalizada
             </h3>

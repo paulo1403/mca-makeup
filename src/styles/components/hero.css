@@ -1,0 +1,35 @@
+/* Hero-specific styles extracted from base.css */
+
+/* Typographic refinement for hero title */
+.hero-title {
+  letter-spacing: -0.6px;
+  font-weight: 500;
+}
+
+/* Hero overlay that respects theme glass tokens (light/dark) */
+.hero-overlay {
+  background: linear-gradient(to top, var(--color-glass-white), transparent);
+}
+
+/* In dark theme, use the dark glass token for hero overlay */
+[data-theme="dark"] .hero-overlay {
+  background: linear-gradient(to top, var(--color-glass-dark), transparent);
+}
+
+/* Theme toggle styling: circular, accent border, subtle hover */
+.theme-toggle {
+  border: 2px solid var(--color-accent-secondary);
+  background: var(--color-surface);
+  width: 40px;
+  height: 40px;
+  padding: 0.25rem;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+}
+
+/* Decorative hero gradients (kept minimal) */
+.hero-decorative {
+  position: absolute;
+}
