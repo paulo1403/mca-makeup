@@ -13,6 +13,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 export default function Button({ variant = "primary", size = "md", className, ...props }: ButtonProps) {
   const base = "inline-flex items-center justify-center rounded-lg font-medium transition-shadow focus:outline-none focus:ring-2 focus:ring-offset-2";
+  const press = "btn-press";
   const variants: Record<Variant, string> = {
     primary: "btn-gradient-primary shadow-lg",
     secondary: "btn-gradient-secondary",
@@ -25,6 +26,6 @@ export default function Button({ variant = "primary", size = "md", className, ..
   };
 
   return (
-    <button className={clsx(base, variants[variant], sizes[size], className)} {...props} />
+    <button className={clsx(base, press, variants[variant], sizes[size], className)} {...props} />
   );
 }

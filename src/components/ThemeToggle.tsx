@@ -39,8 +39,7 @@ export default function ThemeToggle() {
       aria-label={theme === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'}
       aria-pressed={theme === 'dark'}
       onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
-      className="p-2 rounded-full transition-colors duration-200 flex items-center justify-center border-2"
-      style={{ borderColor: 'var(--color-accent-secondary)', background: 'var(--color-surface)' }}
+      className="p-2 rounded-full transition-colors duration-200 flex items-center justify-center theme-toggle"
     >
       {theme === 'dark' ? (
         <Sun className="w-5 h-5 text-heading" />

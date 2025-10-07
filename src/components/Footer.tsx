@@ -103,20 +103,20 @@ export default function Footer() {
                 href="https://www.instagram.com/marcelacorderobeauty/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 bg-gray-100 hover:bg-accent-primary text-accent-primary hover:text-white rounded-full flex items-center justify-center transition-all duration-300"
+                className="w-10 h-10 bg-gray-100 hover:bg-accent-primary text-accent-primary hover:text-white rounded-full flex items-center justify-center transition-all duration-300"
                 aria-label="Instagram"
               >
-                <Instagram className="w-4 h-4" />
+                <Instagram className="w-5 h-5" />
               </a>
               <a
                 href="https://wa.me/51989164990?text=Hola%20Marcela%2C%20me%20interesa%20conocer%20tus%20servicios"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 bg-gray-100 hover:bg-green-600 text-green-600 hover:text-white rounded-full flex items-center justify-center transition-all duration-300"
+                className="w-12 h-12 bg-gray-100 hover:bg-green-600 text-green-600 hover:text-white rounded-full flex items-center justify-center transition-all duration-300"
                 aria-label="WhatsApp"
                 onClick={() => analytics.whatsappClicked()}
               >
-                <Phone className="w-4 h-4" />
+                <Phone className="w-5 h-5" />
               </a>
             </div>
           </motion.div>

@@ -1,12 +1,21 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
+import Link from 'next/link';
 import Button from './ui/Button';
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (open) document.body.classList.add('menu-open');
+      else document.body.classList.remove('menu-open');
+    } catch {}
+    return () => { try { document.body.classList.remove('menu-open'); } catch {} };
+  }, [open]);
 
   const items = [
     { href: '#servicios', label: 'Servicios' },
@@ -16,10 +25,10 @@ export default function NavBar() {
   ];
 
   return (
-  <nav className="w-full z-50 relative bg-[color:var(--color-surface)]">
+  <nav className="w-full z-50 md:sticky md:top-0 bg-[color:var(--color-surface)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between py-3 md:py-4">
         <div className="flex items-center gap-4">
-          <div className="text-lg sm:text-xl font-playfair text-heading">Marcela Cordero</div>
+          <Link href="/" className="text-lg sm:text-xl font-playfair text-heading hover:opacity-90">Marcela Cordero</Link>
         </div>
 
         <div className="hidden md:flex items-center gap-6">
@@ -49,24 +58,25 @@ export default function NavBar() {
       {/* Mobile menu */}
       {open && (
         <div className="fixed inset-0 z-50 md:hidden">
-          <div className="absolute inset-0 bg-black/30" onClick={() => setOpen(false)} />
+          <div className="absolute inset-0 bg-[color:var(--color-background)]" onClick={() => setOpen(false)} />
 
-          <div className="absolute top-8 left-4 right-4 md:left-auto md:right-4 md:w-fit md:max-w-sm mx-auto max-h-[85vh] overflow-auto p-6 rounded-lg shadow-2xl transition-transform glass-gradient bg-[color:var(--color-surface)]/90 backdrop-blur-sm" style={{ transformOrigin: 'right center' }}>
+          <div className="absolute inset-0 mx-auto h-full w-full overflow-auto p-6 transition-transform menu-panel-full" style={{ transformOrigin: 'right center' }}>
             <div className="flex items-center justify-between mb-6">
               <div className="text-lg font-playfair text-heading">Marcela Cordero</div>
-              <button onClick={() => setOpen(false)} className="p-2 rounded-md bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-2)]">
-                <X className="w-6 h-6 text-[color:var(--color-heading)]" />
+              <button onClick={() => setOpen(false)} className="menu-close-btn" aria-label="Cerrar menú">
+                <X className="w-6 h-6" />
               </button>
             </div>
 
-            <nav className="flex flex-col gap-4">
+            <nav className="flex flex-col">
               {items.map((it) => (
-                <a key={it.href} href={it.href} className="text-[color:var(--color-body)] text-lg" onClick={() => setOpen(false)}>{it.label}</a>
+                <a key={it.href} href={it.href} className="menu-link" onClick={() => setOpen(false)}>{it.label}</a>
               ))}
             </nav>
 
-            <div className="mt-6">
-              <Button variant="primary" size="md" onClick={() => { const el = document.getElementById('contacto'); el?.scrollIntoView({behavior:'smooth'}); setOpen(false); }} className="w-full min-h-[48px]">Agendar Cita</Button>
+            <div className="menu-ctas">
+              <Button variant="primary" size="md" onClick={() => { const el = document.getElementById('contacto'); el?.scrollIntoView({behavior:'smooth'}); setOpen(false); }} className="min-h-[48px]">Agendar Cita</Button>
+              <Button variant="secondary" size="md" onClick={() => { const el = document.getElementById('portafolio'); el?.scrollIntoView({behavior:'smooth'}); setOpen(false); }} className="min-h-[48px]">Ver Portafolio</Button>
             </div>
           </div>
         </div>

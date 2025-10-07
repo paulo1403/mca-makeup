@@ -22,6 +22,7 @@ export default function HeroSection() {
       <NavBar />
 
       {/* Hero Content - Layout mejorado para desktop */}
+      <div className="hero-content">
       <div className="flex items-center justify-center min-h-[calc(100vh-120px)] md:min-h-[calc(100vh-100px)] lg:min-h-[85vh] px-4 sm:px-6 lg:px-12 xl:px-16">
         <div className="w-full max-w-7xl mx-auto">
           {/* Layout responsivo: centrado en mobile, dos columnas en desktop */}
@@ -39,12 +40,12 @@ export default function HeroSection() {
               </motion.h1>
 
               <motion.p
-                className="text-base xs:text-lg sm:text-xl md:text-2xl lg:text-xl xl:text-2xl text-main mb-6 sm:mb-8 lg:mb-6 font-light leading-relaxed px-2 lg:px-0 max-w-3xl lg:max-w-none mx-auto lg:mx-0"
+                className="text-base xs:text-lg sm:text-xl md:text-2xl lg:text-xl xl:text-2xl text-[color:var(--color-body)] mb-6 sm:mb-8 lg:mb-6 font-light leading-relaxed px-2 lg:px-0 max-w-3xl lg:max-w-none mx-auto lg:mx-0"
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
               >
-                Makeup Artist especializada en maquillaje nupcial y eventos sociales
+                Realzando tu belleza para momentos inolvidables. Especialista en Soft Glam y Maquillaje Nupcial.
               </motion.p>
 
               <motion.div
@@ -68,11 +69,11 @@ export default function HeroSection() {
                   variant="secondary"
                   className="w-full xs:w-auto min-h-[48px] text-base sm:text-base px-6 sm:px-8 py-3 sm:py-3"
                   onClick={() => {
-                    const serviciosSection = document.getElementById("servicios");
-                    serviciosSection?.scrollIntoView({ behavior: "smooth" });
+                    const portafolioSection = document.getElementById("portafolio");
+                    portafolioSection?.scrollIntoView({ behavior: "smooth" });
                   }}
                 >
-                  Servicios
+                  Ver Portafolio
                 </Button>
               </motion.div>
 
@@ -83,11 +84,11 @@ export default function HeroSection() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
               >
-                <span className="flex items-center gap-2"><MapPin className="w-4 h-4 text-[color:var(--color-accent-primary)]" />Av. Bolívar 1073, Pueblo Libre, Lima</span>
+                <span className="flex items-center gap-2 text-[color:var(--color-body)]"><MapPin className="w-4 h-4 text-[color:var(--color-accent-primary)]" />Av. Bolívar 1073, Pueblo Libre, Lima</span>
                 <span className="hidden xs:block text-accent-primary">•</span>
-                <span className="flex items-center gap-2"><Truck className="w-4 h-4 text-[color:var(--color-accent-primary)]" />Servicio a domicilio</span>
+                <span className="flex items-center gap-2 text-[color:var(--color-body)]"><Truck className="w-4 h-4 text-[color:var(--color-accent-primary)]" />Servicio a domicilio</span>
                 <span className="hidden xs:block text-accent-primary">•</span>
-                <span className="flex items-center gap-2"><Clock className="w-4 h-4 text-[color:var(--color-accent-primary)]" />Horarios flexibles</span>
+                <span className="flex items-center gap-2 text-[color:var(--color-body)]"><Clock className="w-4 h-4 text-[color:var(--color-accent-primary)]" />Horarios flexibles</span>
               </motion.div>
             </div>
 
@@ -121,6 +122,7 @@ export default function HeroSection() {
 
           </div>
         </div>
+      </div>
       </div>
     </section>
   );
