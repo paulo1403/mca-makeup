@@ -9,59 +9,232 @@
   background-color: var(--color-surface-2);
 }
 
-/* === TEXTOS === */
-.text-main {
-  color: var(--color-body);
+/* === INPUT FIELD UTILITIES === */
+.bg-input {
+  background-color: var(--input-background);
 }
 
-.text-heading {
-  color: var(--color-heading);
+.border-input {
+  border-color: var(--input-border);
 }
 
-.text-on-dark {
-  color: var(--color-foreground);
+.border-input-focus {
+  border-color: var(--input-focus-border);
 }
 
-/* === ACENTOS === */
-.text-accent-primary { color: var(--color-accent-primary); }
-.bg-accent-primary { background-color: var(--color-accent-primary); }
-
-.text-accent-secondary { color: var(--color-accent-secondary); }
-.bg-accent-secondary { background-color: var(--color-accent-secondary); }
-
-.text-tertiary-accent { color: var(--color-accent-tertiary); }
-.bg-tertiary-accent { background-color: var(--color-accent-tertiary); }
-
-.bg-whatsapp { background-color: var(--color-whatsapp); }
-
-/* Legacy aliases kept for compatibility */
-.text-accent { color: var(--color-accent-primary); }
-.text-primary-dark { color: var(--color-heading); }
-.bg-primary-dark { background-color: var(--color-background); }
-.bg-secondary-dark { background-color: var(--color-surface); }
-.text-primary-accent { color: var(--color-accent-primary); }
-.bg-primary-accent { background-color: var(--color-accent-primary); }
-.text-secondary-accent { color: var(--color-accent-secondary); }
-.bg-secondary-accent { background-color: var(--color-accent-secondary); }
-
-/* Neutral tokens */
-.text-neutral { color: var(--color-neutral); }
-.bg-neutral { background-color: var(--color-neutral); }
-.text-neutral-light { color: var(--color-muted); }
-
-/* Gradients using variables where appropriate */
-.hero-gradient {
-  background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 50%, rgba(212,175,55,0.07) 100%);
+.border-input-error {
+  border-color: var(--input-error-border);
 }
 
-.glass-gradient { background: linear-gradient(180deg, var(--color-glass-white), rgba(255,255,255,0.02)); }
-.glass-dark { background: linear-gradient(180deg, var(--color-glass-dark), rgba(0,0,0,0.35)); }
+.text-input {
+  color: var(--input-text);
+}
 
-/* subtle magenta highlight at the top for dark theme glass panels */
-.glass-dark::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(225,29,116,0.06) 0%, transparent 30%);
-  pointer-events: none;
+.text-input-placeholder {
+  color: var(--input-placeholder);
+}
+
+.text-input-label {
+  color: var(--input-label);
+}
+
+/* === DROPDOWN UTILITIES === */
+.bg-dropdown {
+  background-color: var(--dropdown-background);
+}
+
+.text-dropdown-price {
+  color: var(--dropdown-price-text);
+}
+
+/* === SERVICE CARD ENHANCED UTILITIES === */
+.bg-service-card {
+  background-color: var(--service-card-background);
+}
+
+.border-service-card {
+  border-color: var(--service-card-border);
+}
+
+.border-service-card-selected {
+  border-color: var(--service-card-border-selected);
+}
+
+.shadow-service-card {
+  box-shadow: 0 1px 3px 0 var(--service-card-shadow), 0 1px 2px 0 var(--service-card-shadow);
+}
+
+.shadow-service-card-hover {
+  box-shadow: 0 4px 6px -1px var(--service-card-shadow-hover), 0 2px 4px -1px var(--service-card-shadow-hover);
+}
+
+.shadow-service-card-selected {
+  box-shadow: 0 8px 25px -5px var(--service-card-shadow-selected), 0 4px 6px -2px var(--service-card-shadow-selected);
+}
+
+/* === SERVICE INFO UTILITIES === */
+.text-service-title {
+  color: var(--service-title);
+}
+
+.text-service-subtitle {
+  color: var(--service-subtitle);
+}
+
+.text-service-price-highlight {
+  color: var(--service-price-highlight);
+}
+
+.text-service-duration {
+  color: var(--service-duration);
+}
+
+.bg-service-description {
+  background-color: var(--service-description-bg);
+}
+
+.border-service-description {
+  border-color: var(--service-description-border);
+}
+
+/* === CATEGORY HEADER UTILITIES === */
+.bg-category {
+  background-color: var(--category-background);
+}
+
+.border-category {
+  border-color: var(--category-border);
+}
+
+.text-category {
+  color: var(--category-text);
+}
+
+.text-category-count {
+  color: var(--category-count);
+}
+
+/* === SERVICE SELECTION UTILITIES === */
+.bg-service-price {
+  background-color: var(--service-price-background);
+}
+
+.text-service-price {
+  color: var(--service-price-text);
+}
+
+.border-service-price {
+  border-color: var(--service-price-border);
+}
+
+/* === QUANTITY CONTROL UTILITIES === */
+.bg-quantity-button {
+  background-color: var(--quantity-button-background);
+}
+
+.border-quantity-button {
+  border-color: var(--quantity-button-border);
+}
+
+.text-quantity-button {
+  color: var(--quantity-button-text);
+}
+
+.hover\:bg-quantity-button-hover:hover {
+  background-color: var(--quantity-button-hover-background);
+}
+
+.hover\:border-quantity-button-hover:hover {
+  border-color: var(--quantity-button-hover-border);
+}
+
+.hover\:text-quantity-button-hover:hover {
+  color: var(--quantity-button-hover-text);
+}
+
+.text-quantity {
+  color: var(--quantity-text);
+}
+
+.bg-quantity-button-disabled {
+  background-color: var(--quantity-button-disabled-background);
+}
+
+.border-quantity-button-disabled {
+  border-color: var(--quantity-button-disabled-border);
+}
+
+.text-quantity-button-disabled {
+  color: var(--quantity-button-disabled-text);
+}
+
+/* === SEARCH INPUT UTILITIES === */
+.bg-search {
+  background-color: var(--search-background);
+}
+
+.border-search {
+  border-color: var(--search-border);
+}
+
+.focus\:border-search-focus:focus {
+  border-color: var(--search-focus-border);
+}
+
+.text-search-icon {
+  color: var(--search-icon);
+}
+
+.shadow-search {
+  box-shadow: 0 1px 3px 0 var(--search-shadow), 0 1px 2px 0 var(--search-shadow);
+}
+
+.focus\:shadow-search-focus:focus {
+  box-shadow: 0 4px 6px -1px var(--search-shadow-focus), 0 2px 4px -1px var(--search-shadow-focus);
+}
+
+/* === QUANTITY BUTTON PLUS UTILITIES === */
+.bg-quantity-plus {
+  background-color: var(--quantity-plus-background);
+}
+
+.hover\:bg-quantity-plus-hover:hover {
+  background-color: var(--quantity-plus-background-hover);
+}
+
+.text-quantity-plus {
+  color: var(--quantity-plus-text);
+}
+
+.shadow-quantity-plus {
+  box-shadow: 0 2px 4px 0 var(--quantity-plus-shadow), 0 1px 2px 0 var(--quantity-plus-shadow);
+}
+
+.hover\:shadow-quantity-plus-hover:hover {
+  box-shadow: 0 4px 8px 0 var(--quantity-plus-shadow), 0 2px 4px 0 var(--quantity-plus-shadow);
+}
+
+/* === VALIDATION TOAST UTILITIES === */
+.bg-validation-toast {
+  background-color: var(--validation-toast-background);
+}
+
+.border-validation-toast {
+  border-color: var(--validation-toast-border);
+}
+
+.text-validation-toast {
+  color: var(--validation-toast-text);
+}
+
+.text-validation-toast-icon {
+  color: var(--validation-toast-icon);
+}
+
+.shadow-validation-toast {
+  box-shadow: 0 10px 25px -5px var(--validation-toast-shadow), 0 10px 10px -5px var(--validation-toast-shadow);
+}
+
+.text-validation-toast-accent {
+  color: var(--validation-toast-accent);
 }

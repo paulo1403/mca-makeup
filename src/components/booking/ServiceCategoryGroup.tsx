@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, Package } from 'lucide-react'
 import ServiceCard from './ServiceCard'
 import type { Service } from '../../hooks/useServicesQuery'
 import { CATEGORY_LABELS } from '@/lib/serviceRules'
@@ -17,24 +17,38 @@ export default function ServiceCategoryGroup({ category, services, fieldName }: 
   const [isExpanded, setIsExpanded] = useState(true)
   
   return (
-    <section className="space-y-4">
-      <button
-        type="button"
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="flex items-center justify-between w-full text-left group hover:bg-accent-primary/5 rounded-lg p-2 -m-2 transition-colors"
-        aria-expanded={isExpanded}
-      >
-        <h3 className="text-accent-primary font-semibold uppercase tracking-widest text-sm group-hover:text-accent-primary/80">
-          {label}
-        </h3>
-        <motion.div
-          animate={{ rotate: isExpanded ? 0 : -90 }}
-          transition={{ duration: 0.2 }}
-          className="text-accent-primary/70 group-hover:text-accent-primary"
+    <section className="space-y-3">
+      {/* Category Header */}
+      <div className="bg-category border border-category rounded-xl p-4">
+        <button
+          type="button"
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="flex items-center justify-between w-full text-left group"
+          aria-expanded={isExpanded}
         >
-          <ChevronDown className="w-4 h-4" />
-        </motion.div>
-      </button>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-accent-primary/10 rounded-lg flex items-center justify-center">
+              <Package className="w-5 h-5 text-category" />
+            </div>
+            <div>
+              <h3 className="text-category font-bold text-lg">
+                {label}
+              </h3>
+              <p className="text-category-count text-sm font-medium">
+                {services.length} {services.length === 1 ? 'servicio' : 'servicios'}
+              </p>
+            </div>
+          </div>
+          
+          <motion.div
+            animate={{ rotate: isExpanded ? 0 : -90 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="text-category group-hover:text-accent-primary transition-colors"
+          >
+            <ChevronDown className="w-5 h-5" />
+          </motion.div>
+        </button>
+      </div>
       
       <AnimatePresence>
         {isExpanded && (
@@ -45,9 +59,20 @@ export default function ServiceCategoryGroup({ category, services, fieldName }: 
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="grid grid-cols-1 gap-3">
-              {services.map((s, i) => (
-                <ServiceCard key={s.id} service={s} index={i} fieldName={fieldName} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {services.map((service, index) => (
+                <motion.div
+                  key={service.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ 
+                    duration: 0.3, 
+                    delay: index * 0.05,
+                    ease: "easeOut"
+                  }}
+                >
+                  <ServiceCard service={service} index={index} fieldName={fieldName} />
+                </motion.div>
               ))}
             </div>
           </motion.div>

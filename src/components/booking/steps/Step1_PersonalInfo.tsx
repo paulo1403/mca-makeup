@@ -1,5 +1,6 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import { useTheme } from '@/hooks/useTheme'
 import { Controller, useFormContext } from 'react-hook-form'
 import { User, Phone, Mail, Lock } from 'lucide-react'
 import type { BookingData } from '@/lib/bookingSchema'
@@ -36,28 +37,6 @@ interface InputFieldProps {
 }
 
 const InputField = ({ type = "text", placeholder, icon, field, label, formatValue, error }: InputFieldProps) => {
-  const [key, setKey] = useState(0)
-
-  useEffect(() => {
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (
-          mutation.type === 'attributes' &&
-          mutation.attributeName === 'data-theme'
-        ) {
-          setKey(prev => prev + 1)
-        }
-      })
-    })
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme']
-    })
-
-    return () => observer.disconnect()
-  }, [])
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = formatValue ? formatValue(e.target.value) : e.target.value
     field.onChange(value)
@@ -65,15 +44,14 @@ const InputField = ({ type = "text", placeholder, icon, field, label, formatValu
 
   return (
     <div className="group">
-      <label className="block text-sm font-medium text-heading mb-2 transition-colors">
+      <label className="block text-sm font-medium text-input-label mb-2 transition-colors">
         {label}
       </label>
       <div className="relative">
-        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted group-focus-within:text-accent-primary transition-colors duration-200">
+        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-input-placeholder group-focus-within:text-accent-primary transition-colors duration-200">
           {icon}
         </div>
         <input
-          key={key}
           value={field.value}
           onChange={handleChange}
           onBlur={field.onBlur}
@@ -81,7 +59,9 @@ const InputField = ({ type = "text", placeholder, icon, field, label, formatValu
           type={type}
           placeholder={placeholder}
           aria-invalid={error ? 'true' : 'false'}
-          className={`w-full pl-11 pr-4 py-4 bg-surface rounded-xl text-heading placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-200 hover:border-accent-primary/50 ${error ? 'border border-red-400' : 'border border-gray-200 dark:border-gray-700'}`}
+          className={`w-full pl-11 pr-4 py-4 rounded-xl bg-input border border-input text-input placeholder:text-input-placeholder transition-all duration-200 hover:border-accent-primary/50 focus:outline-none focus:ring-2 focus:ring-input-focus-border focus:border-transparent ${
+            error ? 'border-input-error' : ''
+          }`}
         />
       </div>
       {error && <p className="mt-2 text-sm text-red-600" role="alert">{error}</p>}
@@ -91,6 +71,7 @@ const InputField = ({ type = "text", placeholder, icon, field, label, formatValu
 
 export default function Step1_PersonalInfo() {
   const { control } = useFormContext<BookingData>()
+  const { isDark } = useTheme()
   
   return (
     <div className="space-y-8">
@@ -98,7 +79,7 @@ export default function Step1_PersonalInfo() {
       <div className="text-center space-y-2">
         <div className="flex justify-center">
           <div className="w-12 h-12 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-full flex items-center justify-center shadow-lg">
-            <User className="w-6 h-6 text-black dark:text-white" />
+            <User className={`w-6 h-6 ${isDark ? 'text-white' : 'text-black'}`} />
           </div>
         </div>
         <h3 className="text-xl font-serif text-heading">Información Personal</h3>

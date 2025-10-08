@@ -15,9 +15,9 @@ export const CATEGORY_COLORS: Record<string, string> = {
 }
 
 // selectedMap: Record<serviceId, quantity>
-export function validateSelection(selectedMap: Record<string, number>, services: unknown[]): string {
+export function validateSelection(selectedMap: Record<string, number>, services: unknown[]): { message: string; suggestion: string } | null {
   const serviceIds = Object.keys(selectedMap).filter(id => (selectedMap[id] || 0) > 0)
-  if (serviceIds.length === 0) return ''
+  if (serviceIds.length === 0) return null
 
   const arr = services as Array<Record<string, unknown>>
   const selectedServiceObjects = arr.filter(svc => serviceIds.includes(String(svc.id)))
@@ -25,18 +25,27 @@ export function validateSelection(selectedMap: Record<string, number>, services:
   const uniqueCategories = Array.from(new Set(categories))
 
   if (uniqueCategories.length === 1 && uniqueCategories[0] === 'HAIRSTYLE') {
-    return 'No se puede reservar solo peinado. Debe incluir un servicio de maquillaje.'
+    return {
+      message: 'Solo peinado seleccionado',
+      suggestion: 'Agrega un servicio de maquillaje para completar tu reserva. Los peinados deben ir acompañados de maquillaje.'
+    }
   }
 
   const hasNovia = categories.includes('BRIDAL')
   const hasSocial = categories.includes('SOCIAL') || categories.includes('MATURE_SKIN')
 
   if (hasNovia && hasSocial) {
-    return 'No se pueden combinar servicios de novia con servicios sociales o de piel madura.'
+    return {
+      message: 'Combinación no permitida',
+      suggestion: 'Los servicios de novia no se pueden combinar con servicios sociales o de piel madura. Elige solo una categoría.'
+    }
   }
 
   if (uniqueCategories.length > 2) {
-    return 'Solo se pueden combinar máximo 2 tipos de servicios.'
+    return {
+      message: 'Demasiados tipos de servicios',
+      suggestion: 'Solo puedes combinar máximo 2 tipos de servicios. Reduce tu selección para continuar.'
+    }
   }
 
   if (uniqueCategories.length === 2) {
@@ -44,11 +53,14 @@ export function validateSelection(selectedMap: Record<string, number>, services:
     const hasMakeup = categories.includes('SOCIAL') || categories.includes('MATURE_SKIN') || categories.includes('BRIDAL')
 
     if (!(hasHairstyle && hasMakeup)) {
-      return 'Solo se puede combinar maquillaje con peinado.'
+      return {
+        message: 'Combinación incorrecta',
+        suggestion: 'Solo puedes combinar servicios de maquillaje con peinados. Ajusta tu selección.'
+      }
     }
   }
 
-  return ''
+  return null
 }
 
 const serviceRules = { CATEGORY_LABELS, CATEGORY_COLORS, validateSelection }
