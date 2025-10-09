@@ -62,13 +62,10 @@ export function useTheme() {
       });
     }
 
-    // Listener para cambios en preferencias del sistema
     const mediaQuery = window.matchMedia?.('(prefers-color-scheme: dark)');
     const handleSystemThemeChange = (e: MediaQueryListEvent) => {
-      // Solo cambiar si no hay tema guardado en localStorage
       if (!localStorage.getItem('theme')) {
         const newTheme = e.matches ? 'dark' : 'light';
-        // Aplicar el tema y sincronizar con DOM/localStorage directamente
         setTheme(newTheme);
         try {
           localStorage.setItem('theme', newTheme);
@@ -87,14 +84,12 @@ export function useTheme() {
     };
   }, []);
 
-  // Función para cambiar el tema
   const toggleTheme = () => {
     if (!mounted) return;
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     setThemeValue(newTheme);
   };
 
-  // Función para establecer un tema específico
   const setThemeValue = (newTheme: Theme) => {
     if (!mounted) return;
     
