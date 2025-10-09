@@ -108,6 +108,7 @@
 
   /* Utility */
   --color-whatsapp: #25D366;
+  --on-accent-contrast: #000000;
 
   /* Button gradient tokens (light theme) */
   --btn-gradient-primary: linear-gradient(90deg, #FFC300 0%, #D4AF37 100%);
@@ -223,6 +224,7 @@
   --btn-gradient-primary: linear-gradient(90deg, #FF00A0 0%, #6A00FF 100%);
   --btn-gradient-text: #FFFFFF;
   --btn-gradient-shadow: rgba(170, 40, 170, 0.18);
+  --on-accent-contrast: #FFFFFF;
 }
 
 /* Additional accent gradient tokens for portfolio CTA use */
@@ -230,6 +232,8 @@
   --color-accent-primary-2: #8A2BE2;
   --color-accent-secondary-2: #D4AF37;
 }
+
+.on-accent-contrast { color: var(--on-accent-contrast); }
 
 /* Typographic refinement for hero title */
 .hero-title {

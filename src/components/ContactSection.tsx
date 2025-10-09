@@ -1,7 +1,11 @@
 "use client"
 
 import BookingFlow from './BookingFlow'
+import ThemeToggle from './ThemeToggle'
 
 export default function ContactSection() {
-  return <BookingFlow />
+  return (<>
+    <ThemeToggle />
+    <BookingFlow />
+  </>);
 }
