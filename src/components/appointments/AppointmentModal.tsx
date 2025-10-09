@@ -445,14 +445,14 @@ export default function AppointmentModal({
                 <button
                   onClick={() => handleStatusUpdate("CONFIRMED")}
                   disabled={updateStatusMutation.isPending}
-                  className="px-4 py-3 bg-emerald-400 text-white rounded-lg hover:bg-emerald-500 disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[44px]"
+                  className="px-4 py-3 bg-success text-on-success rounded-lg hover:opacity-90 disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[44px]"
                 >
                   Confirmar Cita
                 </button>
                 <button
                   onClick={() => handleStatusUpdate("CANCELLED")}
                   disabled={updateStatusMutation.isPending}
-                  className="px-4 py-3 bg-rose-400 text-white rounded-lg hover:bg-rose-500 disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[44px]"
+                  className="px-4 py-3 bg-danger text-on-danger rounded-lg hover:opacity-90 disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[44px]"
                 >
                   Cancelar Cita
                 </button>
@@ -462,7 +462,7 @@ export default function AppointmentModal({
               <button
                 onClick={() => handleStatusUpdate("COMPLETED")}
                 disabled={updateStatusMutation.isPending}
-                className="w-full px-4 py-3 bg-sky-400 text-white rounded-lg hover:bg-sky-500 disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[44px]"
+                className="w-full px-4 py-3 bg-info text-on-info rounded-lg hover:opacity-90 disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[44px]"
               >
                 Marcar como Completada
               </button>
@@ -471,7 +471,7 @@ export default function AppointmentModal({
             {/* Secondary Action */}
             <button
               onClick={onClose}
-              className="w-full px-4 py-3 text-[#1C1C1C] bg-gray-200 rounded-lg hover:bg-gray-300 font-medium transition-colors min-h-[44px]"
+              className="w-full px-4 py-3 bg-card text-main border border-border rounded-lg hover:bg-muted/10 font-medium transition-colors min-h-[44px]"
             >
               Cerrar
             </button>

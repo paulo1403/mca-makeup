@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import DatePicker from 'react-datepicker';
 import { es } from 'date-fns/locale';
-import 'react-datepicker/dist/react-datepicker.css';
+// Eliminamos el CSS por defecto para usar nuestro tema premium
 
 const specialDateSchema = z.object({
   date: z.date({
@@ -120,7 +120,7 @@ export default function AddSpecialDateModal({
                   minDate={new Date()}
                   placeholderText="Seleccionar fecha..."
                   className='w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#B06579] focus:border-[#B06579] text-lg font-medium'
-                  calendarClassName="react-datepicker-custom"
+                  calendarClassName="premium-datepicker"
                 />
               )}
             />

@@ -12,13 +12,13 @@ interface ReviewStatCardProps {
 
 function ReviewStatCard({ title, value, icon, color, bgColor, subtitle }: ReviewStatCardProps) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 hover:shadow-md hover:border-[#D4AF37]/20 transition-all duration-200 hover-lift smooth-transition">
+    <div className="bg-card rounded-xl border border-border p-4 sm:p-6 transition-all duration-200 hover-lift smooth-transition">
       <div className="flex items-center justify-between">
         <div className="flex-1">
-          <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 mobile-text">{title}</p>
-          <p className="text-xl sm:text-2xl font-bold text-gray-900">{value}</p>
+          <p className="text-xs sm:text-sm font-medium text-muted mb-1 mobile-text">{title}</p>
+          <p className="text-xl sm:text-2xl font-bold text-heading">{value}</p>
           {subtitle && (
-            <p className="text-xs text-gray-500 mt-1">{subtitle}</p>
+            <p className="text-xs text-muted mt-1">{subtitle}</p>
           )}
         </div>
         <div className={`p-2 sm:p-3 ${bgColor} rounded-lg flex-shrink-0 smooth-transition hover:scale-105`}>

@@ -37,7 +37,7 @@ export default function ServiceSelector({
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [validationError, setValidationError] = useState("");
+  const [validationError, setValidationError] = useState<{ message: string; suggestion: string } | null>(null);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -84,7 +84,7 @@ export default function ServiceSelector({
 
   const validateServiceCombination = (
     selectedServices: ServiceSelection
-  ): string => {
+  ): { message: string; suggestion: string } | null => {
     // selectedServices is a map of serviceId -> quantity
     return validateSelection(selectedServices, services)
   };
@@ -245,9 +245,9 @@ export default function ServiceSelector({
           <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
           <div className="flex-1">
             <span className="text-sm text-amber-800 font-medium">
-              Combinación no válida:
+              {validationError.message}
             </span>
-            <p className="text-sm text-amber-700 mt-1">{validationError}</p>
+            <p className="text-sm text-amber-700 mt-1">{validationError.suggestion}</p>
             <p className="text-xs text-amber-600 mt-2">
               💡 Puedes seguir seleccionando servicios, pero esta combinación no
               podrá ser enviada.

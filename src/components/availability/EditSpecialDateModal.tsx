@@ -8,7 +8,6 @@ import DatePicker from 'react-datepicker';
 import { X } from 'lucide-react';
 import { es } from 'date-fns/locale';
 import { SpecialDate } from '@/hooks/useAvailability';
-import 'react-datepicker/dist/react-datepicker.css';
 
 const editSpecialDateSchema = z.object({
   date: z.date({
@@ -144,7 +143,7 @@ export default function EditSpecialDateModal({
                   minDate={new Date()}
                   placeholderText="Seleccionar fecha..."
                   className='w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#B06579] focus:border-[#B06579] text-lg font-medium'
-                  calendarClassName="react-datepicker-custom"
+                  calendarClassName="premium-datepicker"
                 />
               )}
             />

@@ -1,4 +1,4 @@
-// ...single import at top
+import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 
 export type ServiceData = {
   id: string

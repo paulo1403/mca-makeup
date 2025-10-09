@@ -24,6 +24,7 @@ export const BookingSchema = z.object({
   timeSlot: z.string().min(1, 'Horario requerido.'),
 
   message: z.string().max(500).optional(),
+  additionalNotes: z.string().max(500).optional(),
   agreedToTerms: z.boolean().refine((val) => val === true, 'Debes aceptar los términos.'),
 })
 

@@ -23,7 +23,6 @@ export default function Step2_ServiceSelection() {
   
   // grouped is a map category -> Service[]; collect all services into an array for validation
   const allServices = Object.values(grouped).flat()
-  const validationError = validateSelection(selectedServicesMap || {}, allServices)
 
   // Filter services by search query (name or description)
   const normalized = (s: string) => s.trim().toLowerCase()
@@ -81,6 +80,11 @@ export default function Step2_ServiceSelection() {
 
   return (
     <div className="space-y-8">
+      {/* Encabezado de sección */}
+      <div className="space-y-2">
+        <h2 className="font-serif text-xl sm:text-2xl text-accent-primary">Selecciona el servicio:</h2>
+        <p className="text-sm text-muted">Elige uno o más servicios y ajusta cantidades si es necesario.</p>
+      </div>
       {/* Search Input */}
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -102,7 +106,7 @@ export default function Step2_ServiceSelection() {
             <Search className="w-8 h-8 text-gray-400" />
           </div>
           <p className="text-muted text-lg font-medium">
-            No se encontraron servicios para "{query}"
+            No se encontraron servicios para &quot;{query}&quot;
           </p>
           <p className="text-muted/70 text-sm mt-1">
             Intenta con otros términos de búsqueda

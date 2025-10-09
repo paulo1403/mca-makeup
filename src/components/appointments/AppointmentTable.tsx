@@ -186,14 +186,14 @@ function MobileAppointmentCard({
               <button
                 onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
                 disabled={isUpdating}
-                className="bg-emerald-400 hover:bg-emerald-500 text-white px-3 py-2.5 rounded-lg text-sm disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[40px]"
+                className="bg-success hover:opacity-90 text-on-success px-3 py-2.5 rounded-lg text-sm disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[40px]"
               >
                 Confirmar
               </button>
               <button
                 onClick={() => onStatusUpdate(appointment.id, "CANCELLED")}
                 disabled={isUpdating}
-                className="bg-rose-400 hover:bg-rose-500 text-white px-3 py-2.5 rounded-lg text-sm disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[40px]"
+                className="bg-danger hover:opacity-90 text-on-danger px-3 py-2.5 rounded-lg text-sm disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[40px]"
               >
                 Cancelar
               </button>
@@ -204,10 +204,10 @@ function MobileAppointmentCard({
             <button
               onClick={() => onStatusUpdate(appointment.id, "COMPLETED")}
               disabled={isUpdating}
-              className="w-full bg-sky-400 hover:bg-sky-500 text-white px-3 py-2.5 rounded-lg text-sm disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[40px]"
-            >
-              Marcar Completada
-            </button>
+            className="w-full bg-info hover:opacity-90 text-on-info px-3 py-2.5 rounded-lg text-sm disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[40px]"
+          >
+            Marcar Completada
+          </button>
           )}
 
           {/* Review Link for Completed Appointments */}
@@ -365,14 +365,14 @@ function AppointmentRow({
               <button
                 onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
                 disabled={isUpdating}
-                className="bg-emerald-400 text-white px-3 py-2 rounded-lg text-xs hover:bg-emerald-500 disabled:opacity-50 font-medium transition-colors"
+                className="bg-success text-on-success px-3 py-2 rounded-lg text-xs hover:opacity-90 disabled:opacity-50 font-medium transition-colors"
               >
                 Confirmar
               </button>
               <button
                 onClick={() => onStatusUpdate(appointment.id, "CANCELLED")}
                 disabled={isUpdating}
-                className="bg-rose-400 text-white px-3 py-2 rounded-lg text-xs hover:bg-rose-500 disabled:opacity-50 font-medium transition-colors"
+                className="bg-danger text-on-danger px-3 py-2 rounded-lg text-xs hover:opacity-90 disabled:opacity-50 font-medium transition-colors"
               >
                 Cancelar
               </button>
@@ -383,15 +383,15 @@ function AppointmentRow({
             <button
               onClick={() => onStatusUpdate(appointment.id, "COMPLETED")}
               disabled={isUpdating}
-              className="bg-sky-400 text-white px-3 py-2 rounded-lg text-xs hover:bg-sky-500 disabled:opacity-50 font-medium transition-colors"
-            >
-              Completar
-            </button>
+            className="bg-info text-on-info px-3 py-2 rounded-lg text-xs hover:opacity-90 disabled:opacity-50 font-medium transition-colors"
+          >
+            Completar
+          </button>
           )}
 
           <button
             onClick={() => onViewDetails(appointment)}
-            className="bg-[#D4AF37] text-white px-3 py-2 rounded-lg text-xs hover:bg-[#B8941F] font-medium transition-colors"
+            className="bg-accent-secondary on-accent-contrast px-3 py-2 rounded-lg text-xs hover:opacity-90 font-medium transition-colors"
           >
             Ver Detalles
           </button>
@@ -404,7 +404,7 @@ function AppointmentRow({
                   event.target as HTMLButtonElement,
                 );
               }}
-              className="bg-purple-500 text-white px-3 py-2 rounded-lg text-xs hover:bg-purple-600 font-medium transition-colors"
+              className="bg-accent-primary on-accent-contrast px-3 py-2 rounded-lg text-xs hover:opacity-90 font-medium transition-colors"
             >
               📋 Link Review
             </button>
@@ -413,7 +413,7 @@ function AppointmentRow({
           <button
             onClick={() => onDelete(appointment.id)}
             disabled={isDeleting}
-            className="bg-slate-400 text-white px-3 py-2 rounded-lg text-xs hover:bg-slate-500 disabled:opacity-50 font-medium transition-colors"
+            className="bg-danger text-on-danger px-3 py-2 rounded-lg text-xs hover:opacity-90 disabled:opacity-50 font-medium transition-colors"
           >
             Eliminar
           </button>

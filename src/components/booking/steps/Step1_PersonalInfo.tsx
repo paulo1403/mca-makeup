@@ -44,7 +44,7 @@ const InputField = ({ type = "text", placeholder, icon, field, label, formatValu
 
   return (
     <div className="group">
-      <label className="block text-sm font-medium text-input-label mb-2 transition-colors">
+      <label className="block text-sm font-medium text-accent-primary mb-2 transition-colors">
         {label}
       </label>
       <div className="relative">
@@ -82,7 +82,7 @@ export default function Step1_PersonalInfo() {
             <User className={`w-6 h-6 ${isDark ? 'text-white' : 'text-black'}`} />
           </div>
         </div>
-        <h3 className="text-xl font-serif text-heading">Información Personal</h3>
+        <h3 className="text-xl font-serif text-accent-primary">Información Personal</h3>
         <p className="text-sm text-muted max-w-md mx-auto">
           Comparte tus datos para que podamos crear la experiencia perfecta para ti
         </p>
@@ -110,7 +110,7 @@ export default function Step1_PersonalInfo() {
           render={({ field, fieldState }) => (
             <InputField
               type="tel"
-              placeholder="+51 989 164 990"
+              placeholder="+51 989 164 990 o 989 164 990"
               icon={<Phone className="w-5 h-5" />}
               field={field}
               label="Número de teléfono"

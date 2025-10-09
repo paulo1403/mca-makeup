@@ -9,6 +9,102 @@
   background-color: var(--color-surface-2);
 }
 
+/* Tarjetas y paneles */
+.bg-card {
+  background-color: var(--color-card);
+}
+
+/* === BORDES GENERALES === */
+.border-border {
+  border-color: var(--color-border);
+}
+
+/* === TEXTO GENERALES === */
+.text-heading {
+  color: var(--color-heading);
+}
+
+.text-main {
+  color: var(--color-body);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-accent-primary {
+  color: var(--color-accent-primary);
+}
+
+.text-accent-secondary {
+  color: var(--color-accent-secondary);
+}
+
+/* === STATUS UTILITIES (SUCCESS / DANGER / INFO / WARNING) === */
+.bg-success {
+  background-color: var(--success-solid);
+}
+
+.text-success {
+  color: var(--success-text);
+}
+
+.border-success {
+  border-color: var(--success-border);
+}
+
+.text-on-success {
+  color: var(--success-on-solid);
+}
+
+.bg-danger {
+  background-color: var(--danger-solid);
+}
+
+.text-danger {
+  color: var(--danger-text);
+}
+
+.border-danger {
+  border-color: var(--danger-border);
+}
+
+.text-on-danger {
+  color: var(--danger-on-solid);
+}
+
+.bg-info {
+  background-color: var(--info-solid);
+}
+
+.text-info {
+  color: var(--info-text);
+}
+
+.border-info {
+  border-color: var(--info-border);
+}
+
+.text-on-info {
+  color: var(--info-on-solid);
+}
+
+.bg-warning {
+  background-color: var(--warning-solid);
+}
+
+.text-warning {
+  color: var(--warning-text);
+}
+
+.border-warning {
+  border-color: var(--warning-border);
+}
+
+.text-on-warning {
+  color: var(--warning-on-solid);
+}
+
 /* === INPUT FIELD UTILITIES === */
 .bg-input {
   background-color: var(--input-background);
@@ -237,4 +333,21 @@
 
 .text-validation-toast-accent {
   color: var(--validation-toast-accent);
+}
+
+/* === STEP 4 & CALENDAR UTILITIES === */
+.bg-step-card {
+  background-color: var(--step-card-background);
+}
+
+.border-card-inactive {
+  border-color: var(--card-inactive-border);
+}
+
+.text-calendar-label {
+  color: var(--calendar-label);
+}
+
+.text-calendar-inactive {
+  color: var(--calendar-inactive);
 }

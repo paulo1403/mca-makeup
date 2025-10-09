@@ -68,7 +68,14 @@ export function useTheme() {
       // Solo cambiar si no hay tema guardado en localStorage
       if (!localStorage.getItem('theme')) {
         const newTheme = e.matches ? 'dark' : 'light';
-        setThemeValue(newTheme);
+        // Aplicar el tema y sincronizar con DOM/localStorage directamente
+        setTheme(newTheme);
+        try {
+          localStorage.setItem('theme', newTheme);
+          document.documentElement.setAttribute('data-theme', newTheme);
+        } catch (error) {
+          console.error('Error al establecer el tema:', error);
+        }
       }
     };
 

@@ -18,7 +18,7 @@ async function fetchServiceGroups(): Promise<ServiceGroup[]> {
 
     if (servicesByCategory.BRIDAL?.length > 0) {
       const bridal = servicesByCategory.BRIDAL
-      const minPrice = Math.min(...bridal.map((s: any) => s.price))
+      const minPrice = Math.min(...bridal.map((s: { price: number }) => s.price))
       formatted.push({
         title: 'Maquillaje de Novia',
         price: `Desde S/ ${minPrice}`,
@@ -29,7 +29,7 @@ async function fetchServiceGroups(): Promise<ServiceGroup[]> {
 
     if (servicesByCategory.SOCIAL?.length > 0) {
       const social = servicesByCategory.SOCIAL
-      const minPrice = Math.min(...social.map((s: any) => s.price))
+      const minPrice = Math.min(...social.map((s: { price: number }) => s.price))
       formatted.push({
         title: 'Eventos Sociales',
         price: `Desde S/ ${minPrice}`,
@@ -40,7 +40,7 @@ async function fetchServiceGroups(): Promise<ServiceGroup[]> {
 
     if (servicesByCategory.MATURE_SKIN?.length > 0) {
       const mature = servicesByCategory.MATURE_SKIN
-      const minPrice = Math.min(...mature.map((s: any) => s.price))
+      const minPrice = Math.min(...mature.map((s: { price: number }) => s.price))
       formatted.push({
         title: 'Piel Madura',
         price: `Desde S/ ${minPrice}`,
