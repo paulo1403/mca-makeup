@@ -5,17 +5,34 @@ import { Menu, X } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import Button from './ui/Button';
 import Logo from './Logo';
+import styles from './NavBar.module.css';
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     try {
-      if (open) document.body.classList.add('menu-open');
-      else document.body.classList.remove('menu-open');
+      if (open) {
+        document.body.classList.add('menu-open');
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.classList.remove('menu-open');
+        document.body.style.overflow = '';
+      }
     } catch {}
-    return () => { try { document.body.classList.remove('menu-open'); } catch {} };
+    return () => {
+      try {
+        document.body.classList.remove('menu-open');
+        document.body.style.overflow = '';
+      } catch {}
+    };
   }, [open]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   const items = [
     { href: '#servicios', label: 'Servicios' },
@@ -25,63 +42,109 @@ export default function NavBar() {
   ];
 
   return (
-  <nav className="w-full z-50 md:sticky md:top-0 bg-[color:var(--color-surface)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between py-3 md:py-4">
-        <div className="flex items-center gap-4">
-          <Logo size={44} />
+    <nav className={styles.navRoot} aria-label="Barra de navegación">
+      <div className={styles.navInner}>
+        {/* Marca */}
+        <div className={styles.brand}>
+          <Logo size={40} />
+          <span className={styles.brandName}>Marcela Cordero</span>
         </div>
 
-        <div className="hidden md:flex items-center gap-6">
-          <div className="flex items-center gap-6">
+        {/* Desktop */}
+        <div className={styles.desktop}>
+          <div className={styles.links}>
             {items.map((it) => (
-              <a key={it.href} href={it.href} className="relative text-main hover:text-accent-primary transition-colors px-2 py-1 focus:outline-none focus:ring-2 focus:ring-accent-primary/30 rounded" aria-label={it.label}>
-                <span className="block">{it.label}</span>
-                <span className="absolute left-0 -bottom-1 h-0.5 w-0 bg-accent-primary transition-all duration-300 group-hover:w-full" />
+              <a key={it.href} href={it.href} className={styles.link} aria-label={it.label}>
+                <span>{it.label}</span>
+                <span className={styles.linkUnderline} />
               </a>
             ))}
           </div>
-
-          <div className="flex items-center gap-3">
+          <div className={styles.actions}>
             <ThemeToggle />
-            <Button variant="primary" size="md" onClick={() => { const el = document.getElementById('contacto'); el?.scrollIntoView({behavior:'smooth'}); }} className="min-h-[48px]">Agendar Cita</Button>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => {
+                const el = document.getElementById('contacto');
+                el?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className={styles.ctaButton}
+            >
+              Agendar Cita
+            </Button>
           </div>
         </div>
 
-        <div className="md:hidden flex items-center gap-2">
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <button onClick={() => setOpen((s) => !s)} aria-label="Toggle menu" className="p-3 rounded-md bg-surface hover:bg-surface-2 shadow-sm border" style={{ borderColor: 'var(--color-surface-2)' }}>
-              {open ? <X className="w-6 h-6 text-heading" /> : <Menu className="w-6 h-6 text-heading" />}
-            </button>
-          </div>
+        {/* Mobile */}
+        <div className={styles.mobile}>
+          <ThemeToggle />
+          <button
+            onClick={() => setOpen((s) => !s)}
+            aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+            aria-expanded={open}
+            aria-controls="mobile-menu-panel"
+            className={styles.burger}
+          >
+            {open ? <X className="w-6 h-6 text-heading" /> : <Menu className="w-6 h-6 text-heading" />}
+          </button>
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {open && (
-        <div className="fixed inset-0 z-50 md:hidden">
-          <div className="absolute inset-0 bg-[color:var(--color-background)]" onClick={() => setOpen(false)} />
-
-          <div className="absolute inset-0 mx-auto h-full w-full overflow-auto p-6 transition-transform menu-panel-full" style={{ transformOrigin: 'right center' }}>
-            <div className="flex items-center justify-end mb-6">
-              <button onClick={() => setOpen(false)} className="menu-close-btn" aria-label="Cerrar menú">
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-
-            <nav className="flex flex-col">
-              {items.map((it) => (
-                <a key={it.href} href={it.href} className="menu-link" onClick={() => setOpen(false)}>{it.label}</a>
-              ))}
-            </nav>
-
-            <div className="menu-ctas">
-              <Button variant="primary" size="md" onClick={() => { const el = document.getElementById('contacto'); el?.scrollIntoView({behavior:'smooth'}); setOpen(false); }} className="min-h-[48px]">Agendar Cita</Button>
-              <Button variant="secondary" size="md" onClick={() => { const el = document.getElementById('portafolio'); el?.scrollIntoView({behavior:'smooth'}); setOpen(false); }} className="min-h-[48px]">Ver Portafolio</Button>
-            </div>
+      {/* Mobile menu (siempre montado para animación de cierre) */}
+      <div className="md:hidden">
+        <div
+          className={`${styles.overlay} ${open ? styles.overlayOpen : ''}`}
+          onClick={() => setOpen(false)}
+          aria-hidden={!open}
+        />
+        <aside
+          id="mobile-menu-panel"
+          role="dialog"
+          aria-modal={open}
+          aria-label="Menú de navegación"
+          className={`${styles.panel} ${open ? styles.panelOpen : ''}`}
+        >
+          <div className={styles.panelHeader}>
+            <button onClick={() => setOpen(false)} className={styles.panelCloseBtn} aria-label="Cerrar menú">
+              <X className="w-6 h-6 text-heading" />
+            </button>
           </div>
-        </div>
-      )}
+          <nav className={styles.panelNav}>
+            {items.map((it) => (
+              <a key={it.href} href={it.href} className={styles.panelLink} onClick={() => setOpen(false)}>
+                {it.label}
+              </a>
+            ))}
+          </nav>
+          <div className={styles.panelCtas}>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => {
+                const el = document.getElementById('contacto');
+                el?.scrollIntoView({ behavior: 'smooth' });
+                setOpen(false);
+              }}
+              className={styles.ctaButton}
+            >
+              Agendar Cita
+            </Button>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => {
+                const el = document.getElementById('portafolio');
+                el?.scrollIntoView({ behavior: 'smooth' });
+                setOpen(false);
+              }}
+              className={styles.ctaButton}
+            >
+              Ver Portafolio
+            </Button>
+          </div>
+        </aside>
+      </div>
     </nav>
   );
 }

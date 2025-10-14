@@ -1,665 +1,94 @@
-/* Variables CSS - Paleta de colores y configuración base (tema claro/oscuro) */
+/* Nuevo tema base morado (light/dark) enfocado en NavBar y tokens esenciales */
+
+/* Light theme variables */
 :root {
-  /* Backgrounds */
-  --color-background: #FAFAFA;
-  /* Pantalla: Blanco roto */
+  /* Core backgrounds */
+  --color-background: #FBF9FF;
+  /* very light lavender */
   --color-surface: #FFFFFF;
-  /* Superficie/Panel */
-  --color-surface-2: #F7F7F7;
+  /* pure surface */
+  --color-surface-2: #F1E9FF;
+  /* subtle lavender surface */
   --color-card: #FFFFFF;
-  --color-contact: #FFFFFF;
-  /* Fondo de Tarjeta/Input */
 
-  /* Text colors */
-  --color-foreground: #1C1C1C;
-  --color-heading: #333333;
-  --color-body: #374151;
-  /* Texto de contenido principal (gris carbón) */
-  --color-muted: #A3A3A3;
+  /* Text tokens */
+  --color-foreground: #1E1B2E;
+  /* foreground default */
+  --color-heading: #1E1B2E;
+  /* deep purple/near-black for titles */
+  --color-body: #3B3A4F;
+  /* desaturated purple/graphite for body */
+  --color-muted: #A0A0B8;
+  /* gray-lilac for secondary text */
 
-  /* Accent palette (premium) */
-  --color-accent-primary: #FF007F;
-  /* Fucsia/Magenta */
-  --color-accent-secondary: #FFC72C;
-  /* Dorado/Amarillo */
-  --color-accent-tertiary: #F59E0B;
-  /* Amber */
+  /* Accent palette (purple design) */
+  --color-accent-primary: #7C3AED;
+  /* purple-600 */
+  --color-accent-secondary: #C084FC;
+  /* purple-400 */
+  --color-accent-tertiary: #A78BFA;
+  /* purple-500 */
 
-  /* Input Field Colors - Light Mode */
-  --input-background: #FFFFFF;
-  /* Fondo de input */
-  --input-border: #D1D5DB;
-  /* Borde inactivo visible */
-  --input-text: #374151;
-  /* Texto principal en inputs */
-  --input-placeholder: #6B7280;
-  /* Medium gray for secondary text */
-  --input-label: #6B7280;
-  /* Medium gray for secondary text */
-  --input-focus-border: #FF007F;
-  /* Accent Primary Fucsia/Magenta */
-  --input-error-border: #EF4444;
-  /* Standard Red */
-
-  /* Dropdown Colors - Light Mode */
-  --dropdown-background: #FFFFFF;
-  /* Same as input background */
-  --dropdown-price-text: #FFC72C;
-  /* Gold for price text */
-
-  /* Service Card Colors - Light Mode */
-  --card-background: #FFFFFF;
-  --card-border: #D1D5DB;
-  /* Borde de tarjetas en tema claro */
-  --card-border-hover: rgba(212, 175, 55, 0.2);
-  /* Accent primary with opacity */
-  --card-shadow: rgba(0, 0, 0, 0.04);
-  --card-shadow-hover: rgba(0, 0, 0, 0.08);
-
-  /* Service Selection Colors - Light Mode */
-  --service-price-background: rgba(212, 175, 55, 0.1);
-  /* Accent primary background */
-  --service-price-text: #D4AF37;
-  /* Accent primary */
-  --service-price-border: rgba(212, 175, 55, 0.2);
-
-  /* Quantity Control Colors - Light Mode */
-  --quantity-button-background: transparent;
-  --quantity-button-border: #E5E7EB;
-  --quantity-button-text: #6B7280;
-  --quantity-button-hover-background: rgba(212, 175, 55, 0.05);
-  --quantity-button-hover-border: #D4AF37;
-  --quantity-button-hover-text: #D4AF37;
-  --quantity-text: #1F2937;
-
-  /* Quantity Button Disabled - Light Mode */
-  --quantity-button-disabled-background: #F9FAFB;
-  --quantity-button-disabled-border: #E5E7EB;
-  --quantity-button-disabled-text: #D1D5DB;
-
-  /* Quantity Button Plus - Light Mode */
-  --quantity-plus-background: #D4AF37;
-  --quantity-plus-background-hover: #B8941F;
-  --quantity-plus-text: #FFFFFF;
-  --quantity-plus-shadow: rgba(212, 175, 55, 0.2);
-
-  /* Service Card Enhanced - Light Mode */
-  --service-card-background: #FFFFFF;
-  --service-card-border: #F1F5F9;
-  --service-card-border-selected: rgba(212, 175, 55, 0.3);
-  --service-card-shadow: rgba(0, 0, 0, 0.02);
-  --service-card-shadow-hover: rgba(0, 0, 0, 0.06);
-  --service-card-shadow-selected: rgba(212, 175, 55, 0.15);
-
-  /* Service Info Colors - Light Mode */
-  --service-title: #1F2937;
-  --service-subtitle: #6B7280;
-  --service-price-highlight: #D4AF37;
-  --service-duration: #9CA3AF;
-  --service-description-bg: #F8FAFC;
-  --service-description-border: #E2E8F0;
-
-  /* Category Header - Light Mode */
-  --category-background: rgba(212, 175, 55, 0.05);
-  --category-border: rgba(212, 175, 55, 0.1);
-  --category-text: #D4AF37;
-  --category-count: #6B7280;
-
-  /* Search Input Colors - Light Mode */
-  --search-background: #FFFFFF;
-  --search-border: #E5E7EB;
-  --search-focus-border: rgba(212, 175, 55, 0.3);
-  --search-icon: #9CA3AF;
-  --search-shadow: rgba(0, 0, 0, 0.04);
-  --search-shadow-focus: rgba(0, 0, 0, 0.08);
-
-  /* Validation Toast Colors - Light Mode */
-  --validation-toast-background: #FEF2F2;
-  --validation-toast-border: #FECACA;
-  --validation-toast-text: #991B1B;
-  --validation-toast-icon: #DC2626;
-  --validation-toast-shadow: rgba(220, 38, 38, 0.1);
-  --validation-toast-accent: #D4AF37;
-
-  /* Status tokens - Light Mode */
-  --success-solid: #10B981;
-  --success-text: #047857;
-  --success-border: #A7E3C0;
-  --success-on-solid: #FFFFFF;
-
-  --danger-solid: #EF4444;
-  --danger-text: #B91C1C;
-  --danger-border: #FCA5A5;
-  --danger-on-solid: #FFFFFF;
-
-  --info-solid: #0EA5E9;
-  --info-text: #0C4A6E;
-  --info-border: #93C5FD;
-  --info-on-solid: #FFFFFF;
-
-  --warning-solid: #F59E0B;
-  --warning-text: #92400E;
-  --warning-border: #FCD34D;
-  --warning-on-solid: #111111;
-
-  /* Neutral tokens */
+  /* Utility tokens */
   --color-neutral: #6B7280;
-
-  /* Glass/overlay tokens */
-  --color-glass-white: rgba(255, 255, 255, 0.1);
-  --color-glass-dark: rgba(0, 0, 0, 0.2);
-
-  /* Utility */
+  /* gray-500 */
   --color-whatsapp: #25D366;
-  --on-accent-contrast: #000000;
-
-  /* Calendar & Step 4 tokens (light theme defaults) */
-  --calendar-label: #374151; /* slate-700 for month/day labels */
-  --calendar-inactive: #A3A3A3; /* gray-400 for inactive/out-of-range */
-  --step-card-background: var(--color-card);
-  --card-inactive-border: #D1D5DB; /* visible neutral border */
-
-  /* Button gradient tokens (light theme) */
-  --btn-gradient-primary: linear-gradient(90deg, #FFC300 0%, #D4AF37 100%);
-  --btn-gradient-text: #000000;
-  --btn-gradient-shadow: rgba(180, 120, 30, 0.18);
-}
-
-/* Dark theme (controlled with data-theme="dark") */
-[data-theme="dark"] {
-  /* Premium dark theme per specification */
-  --color-background: #141414;
-  /* Pantalla: negro profundo */
-  --color-surface: #1F1F1F;
-  /* Superficie/Panel */
-  --color-surface-2: #232323;
-  /* subtle surfaces and borders */
-  --color-card: #1F1F1F;
-  /* Fondo de Tarjeta/Input */
-  --color-contact: #1e1e1e;
-
-  --color-foreground: #FFFFFF;
-  --color-heading: #FFFFFF;
-  --color-body: #F3F4F6;
-  /* Texto de contenido principal (blanco suave) */
-  --color-muted: #9CA3AF;
-
-  /* Accents (persist across themes) */
-  --color-accent-primary: #FF007F;
-  /* Fucsia/Magenta */
-  --color-accent-secondary: #FFC72C;
-  /* Dorado/Amarillo */
-  --color-accent-tertiary: #F59E0B;
-
-  /* Input Field Colors - Dark Mode */
-  --input-background: #1F1F1F;
-  /* Fondo de input igual a tarjeta */
-  --input-border: #404040;
-  /* Borde inactivo medio oscuro */
-  --input-text: #F3F4F6;
-  /* Texto principal en inputs */
-  --input-placeholder: #A3A3A3;
-  /* Light gray for secondary text */
-  --input-label: #FF007F;
-  /* Fucsia para etiquetas en modo oscuro, según especificación */
-  --input-focus-border: #FF007F;
-  /* Accent Primary Fucsia/Magenta */
-  --input-error-border: #EF4444;
-  /* Standard Red */
-
-  /* Dropdown Colors - Dark Mode */
-  --dropdown-background: #1F1F1F;
-  /* Igual al fondo de input */
-  --dropdown-price-text: #FFC72C;
-  /* Gold for price text */
-
-  /* Service Card Colors - Dark Mode */
-  --card-background: #1F1F1F;
-  --card-border: #404040;
-  /* Borde de tarjetas en tema oscuro */
-  --card-border-hover: rgba(255, 0, 127, 0.2);
-  /* Accent primary with opacity */
-  --card-shadow: rgba(0, 0, 0, 0.2);
-  --card-shadow-hover: rgba(0, 0, 0, 0.3);
-
-  /* Service Selection Colors - Dark Mode */
-  --service-price-background: rgba(255, 0, 127, 0.1);
-  /* Accent primary background */
-  --service-price-text: #FF007F;
-  /* Accent primary */
-  --service-price-border: rgba(255, 0, 127, 0.2);
-
-  /* Quantity Control Colors - Dark Mode */
-  --quantity-button-background: transparent;
-  --quantity-button-border: #404040;
-  --quantity-button-text: #9CA3AF;
-  --quantity-button-hover-background: rgba(255, 0, 127, 0.05);
-  --quantity-button-hover-border: #FF007F;
-  --quantity-button-hover-text: #FF007F;
-  --quantity-text: #FFFFFF;
-
-  /* Quantity Button Disabled - Dark Mode */
-  --quantity-button-disabled-background: #1F1F1F;
-  --quantity-button-disabled-border: #2D2D2D;
-  --quantity-button-disabled-text: #4B5563;
-
-  /* Quantity Button Plus - Dark Mode */
-  --quantity-plus-background: #FF007F;
-  --quantity-plus-background-hover: #E6006B;
-  --quantity-plus-text: #FFFFFF;
-  --quantity-plus-shadow: rgba(255, 0, 127, 0.3);
-
-  /* Service Card Enhanced - Dark Mode */
-  --service-card-background: #1A1A1A;
-  --service-card-border: #2A2A2A;
-  --service-card-border-selected: rgba(255, 0, 127, 0.3);
-  --service-card-shadow: rgba(0, 0, 0, 0.3);
-  --service-card-shadow-hover: rgba(0, 0, 0, 0.4);
-  --service-card-shadow-selected: rgba(255, 0, 127, 0.2);
-
-  /* Service Info Colors - Dark Mode */
-  --service-title: #FFFFFF;
-  --service-subtitle: #A3A3A3;
-  --service-price-highlight: #FF007F;
-  --service-duration: #6B7280;
-  --service-description-bg: #262626;
-  --service-description-border: #404040;
-
-  /* Category Header - Dark Mode */
-  --category-background: rgba(255, 0, 127, 0.05);
-  --category-border: rgba(255, 0, 127, 0.1);
-  --category-text: #FF007F;
-  --category-count: #9CA3AF;
-
-  /* Search Input Colors - Dark Mode */
-  --search-background: #2C2C2C;
-  --search-border: #404040;
-  --search-focus-border: rgba(255, 0, 127, 0.3);
-  --search-icon: #6B7280;
-  --search-shadow: rgba(0, 0, 0, 0.2);
-  --search-shadow-focus: rgba(0, 0, 0, 0.3);
-
-  /* Validation Toast Colors - Dark Mode */
-  --validation-toast-background: #2D1B1B;
-  --validation-toast-border: #4B2626;
-  --validation-toast-text: #FCA5A5;
-  --validation-toast-icon: #EF4444;
-  --validation-toast-shadow: rgba(239, 68, 68, 0.2);
-  --validation-toast-accent: #FF007F;
-
-  /* Status tokens - Dark Mode */
-  --success-solid: #065F46;
-  --success-text: #A7F3D0;
-  --success-border: #134E4A;
-  --success-on-solid: #E6E6E6;
-
-  --danger-solid: #7F1D1D;
-  --danger-text: #FCA5A5;
-  --danger-border: #4B1818;
-  --danger-on-solid: #E6E6E6;
-
-  --info-solid: #0C4A6E;
-  --info-text: #93C5FD;
-  --info-border: #0E7490;
-  --info-on-solid: #E6E6E6;
-
-  --warning-solid: #B45309;
-  --warning-text: #FDE68A;
-  --warning-border: #7C2D12;
-  --warning-on-solid: #111111;
-
-  --color-neutral: #9CA3AF;
-  --color-glass-white: rgba(255, 255, 255, 0.03);
-  --color-glass-dark: rgba(0, 0, 0, 0.65);
-
-  /* Button gradient tokens (dark theme) */
-  --btn-gradient-primary: linear-gradient(90deg, #FF00A0 0%, #6A00FF 100%);
-  --btn-gradient-text: #FFFFFF;
-  --btn-gradient-shadow: rgba(170, 40, 170, 0.18);
   --on-accent-contrast: #FFFFFF;
-
-  /* Calendar & Step 4 tokens (dark theme) */
-  --calendar-label: #F3F4F6; /* Soft white for labels */
-  --calendar-inactive: #A3A3A3; /* Medium gray for inactive/out-of-range */
-  --step-card-background: #1F1F1F; /* Dark gray card background */
-  --card-inactive-border: #404040; /* Subtle dark gray border */
+  /* text on accent backgrounds in light theme (for purple-600) */
 }
 
-/* Additional accent gradient tokens for portfolio CTA use */
-:root {
-  --color-accent-primary-2: #8A2BE2;
-  --color-accent-secondary-2: #D4AF37;
+/* Dark theme variables */
+[data-theme="dark"] {
+  /* Core backgrounds */
+  --color-background: #0F0B1E;
+  /* deep indigo/eggplant */
+  --color-surface: #151226;
+  /* dark surface */
+  --color-surface-2: #1A1633;
+  /* darker indigo surface */
+  --color-card: #151226;
+
+  /* Text tokens */
+  --color-foreground: #F5F3FF;
+  /* soft white (lilac tint) */
+  --color-heading: #F5F3FF;
+  /* titles white */
+  --color-body: #EDE9FE;
+  /* soft lavender for readable body */
+  --color-muted: #A1A1B5;
+  /* gray-lilac for secondary text */
+
+  /* Accent palette (purple design) */
+  --color-accent-primary: #8B5CF6;
+  /* purple-500 (vibrant in dark) */
+  --color-accent-secondary: #C4B5FD;
+  /* purple-300 */
+  --color-accent-tertiary: #A78BFA;
+  /* purple-400/500 */
+
+  /* Utility tokens */
+  --color-neutral: #9CA3AF;
+  /* gray-400 */
+  --on-accent-contrast: #FFFFFF;
+  /* text on dark accent backgrounds */
 }
 
-.on-accent-contrast {
-  color: var(--on-accent-contrast);
-}
-
-/* Typographic refinement for hero title */
-.hero-title {
-  letter-spacing: -0.6px;
-  font-weight: 500;
-}
-
-/* Follow user preference only when no explicit data-theme is set */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
-    --color-background: #0A0A0A;
-    --color-foreground: #FFFFFF;
-    --color-surface: #121212;
-    --color-surface-2: #1A1A1A;
-    --color-accent-primary: #FF007F;
-    --color-accent-secondary: #FFC300;
-    --color-glass-white: rgba(255, 255, 255, 0.03);
-    --color-glass-dark: rgba(0, 0, 0, 0.65);
-  }
-
-  /* (prefers-color-scheme block) */
-  /* Slightly stronger foreground for better contrast in dark mode */
-  [data-theme="dark"] {
-    --color-foreground: #FFFFFF;
-    --color-body: #E6E6E6;
-  }
-}
-
-/* Prevent horizontal scroll globally */
+/* Minimal global resets relevant to layout */
 html,
 body {
   overflow-x: hidden;
   max-width: 100vw;
 }
 
-/* Ensure all containers respect viewport width */
 * {
   box-sizing: border-box;
 }
 
-.container {
-  max-width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Fix for elements that might cause horizontal overflow */
-img,
-video,
-iframe,
-embed,
-object {
-  max-width: 100%;
-  height: auto;
-}
-
-/* Configuración base del body */
 body {
   background: var(--color-background);
   color: var(--color-foreground);
-  font-family: var(--font-montserrat), Arial, Helvetica, sans-serif;
 }
 
-/* Smooth scroll behavior */
 html {
   scroll-behavior: smooth;
-}
-
-/* Tipografía base */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-playfair);
-}
-
-.font-artistic {
-  font-family: var(--font-allura);
-}
-
-/* Typographic system: headings use Playfair Display, body uses Montserrat */
-html {
-  font-family: var(--font-inter);
-  color: var(--color-foreground);
-}
-
-/* Brand / H1 - largest serif display */
-.brand-heading,
-.hero-title,
-h1 {
-  font-family: var(--font-playfair);
-  font-weight: 700;
-  /* bold for maximum impact */
-  color: var(--color-heading);
-  line-height: 1.02;
-}
-
-/* Section headings H2/H3 */
-h2,
-h3,
-.section-title {
-  font-family: var(--font-playfair);
-  font-weight: 700;
-  /* use bold for section headings per spec */
-  color: var(--color-heading);
-}
-
-/* Body text and UI (buttons, menu, legal) use Montserrat */
-body,
-p,
-span,
-input,
-textarea,
-button,
-a {
-  font-family: var(--font-inter);
-  color: var(--color-body);
-}
-
-/* Buttons: Montserrat semi-bold for prominence */
-button,
-.btn,
-.inline-btn {
-  font-family: var(--font-inter);
-  font-weight: 600;
-}
-
-/* Responsive sizes - H1 scales down on small screens */
-@media (min-width: 1024px) {
-  .brand-heading {
-    font-size: 3.5rem;
-  }
-
-  h2 {
-    font-size: 2rem;
-  }
-}
-
-@media (max-width: 1023px) {
-  .brand-heading {
-    font-size: 2.25rem;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-  }
-}
-
-/* Button gradient utility (primary) - uses the theme tokens above */
-.btn-gradient-primary {
-  background-image: var(--btn-gradient-primary);
-  background-size: 200% 100%;
-  background-position: 0% 50%;
-  color: var(--btn-gradient-text);
-  transition: background-position 0.45s ease, transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
-  box-shadow: 0 8px 22px var(--btn-gradient-shadow);
-}
-
-.btn-gradient-primary:hover {
-  background-position: 100% 50%;
-  transform: translateY(-2px);
-  filter: brightness(1.02);
-}
-
-.btn-gradient-primary:active {
-  transform: translateY(0);
-  box-shadow: 0 5px 14px var(--btn-gradient-shadow);
-}
-
-.btn-press:active {
-  transform: scale(0.97) !important;
-  transition: transform 120ms ease !important;
-}
-
-.btn-gradient-primary:focus {
-  outline: none;
-}
-
-/* Illumination / quick flash effect for vibrant (dark-theme) gradients */
-@keyframes btn-illum-flash {
-  0% {
-    filter: brightness(1);
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-    opacity: 0;
-  }
-
-  40% {
-    filter: brightness(1.12);
-    opacity: 1;
-  }
-
-  100% {
-    filter: brightness(1);
-    opacity: 0;
-  }
-}
-
-/* Make sure button can show pseudo-element glow */
-.btn-gradient-primary {
-  position: relative;
-  overflow: visible;
-}
-
-.btn-gradient-primary::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  box-shadow: 0 0 0 0 var(--btn-illumination-color, transparent);
-  opacity: 0;
-  transition: box-shadow 160ms ease, opacity 160ms ease, transform 160ms ease;
-}
-
-/* Only apply the stronger illumination styles in the dark theme where the fucsia/purple gradient is used */
-[data-theme="dark"] .btn-gradient-primary:active {
-  filter: brightness(1.1);
-  box-shadow: 0 6px 20px var(--btn-gradient-shadow);
-}
-
-[data-theme="dark"] .btn-gradient-primary:active::after {
-  box-shadow: 0 0 18px 4px var(--btn-illumination-color, rgba(255, 0, 160, 0.18));
-  opacity: 1;
-  animation: btn-illum-flash 420ms ease-out;
-}
-
-[data-theme="dark"] {
-  --btn-illumination-color: rgba(255, 0, 160, 0.20);
-}
-
-/* Secondary button: ghost/outline by default (both themes). Use accent color for border/text. */
-.btn-gradient-secondary {
-  background: transparent;
-  color: var(--color-accent-primary);
-  border: 2px solid var(--color-accent-primary);
-  box-shadow: none;
-  transition: background 140ms ease, transform 120ms ease, box-shadow 120ms ease, color 120ms ease;
-}
-
-.btn-gradient-secondary:hover {
-  background: color-mix(in srgb, var(--color-accent-primary) 6%, transparent);
-  transform: translateY(-2px);
-}
-
-.btn-gradient-secondary:active {
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-/* High-specificity override to remove any background-image set by other styles/tools */
-.btn-gradient-secondary,
-button.btn-gradient-secondary {
-  background-image: none !important;
-  background-color: transparent !important;
-}
-
-/* In dark theme, make secondary button an outline/ghost using primary accent */
-[data-theme="dark"] .btn-gradient-secondary {
-  background: transparent;
-  color: var(--color-accent-primary);
-  border: 2px solid var(--color-accent-primary);
-  box-shadow: none;
-}
-
-[data-theme="dark"] .btn-gradient-secondary:hover {
-  background: rgba(255, 0, 160, 0.06);
-}
-
-/* Component-level styles (navbar, hero, services) moved to dedicated files in ./components/ */
-
-/* Generic global helpers that apply across components */
-.visually-hidden {
-  position: absolute !important;
-  height: 1px;
-  width: 1px;
-  overflow: hidden;
-  clip: rect(1px, 1px, 1px, 1px);
-  white-space: nowrap;
-}
-
-
-/* Small reusable utilities */
-.centered {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.stack {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.row {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
-
-.background-card {
-  background-color: var(--color-background);
-}
-
-.bg-contact {
-  background-color: var(--color-contact);
-}
-
-/* Fix: colores de autofill/autocompletado en inputs para ambos temas */
-input:-webkit-autofill,
-textarea:-webkit-autofill,
-select:-webkit-autofill {
-  -webkit-text-fill-color: var(--input-text) !important;
-  box-shadow: 0 0 0 1000px var(--input-background) inset !important;
-  background-color: var(--input-background) !important;
-  transition: background-color 5000s ease-in-out 0s !important;
-  caret-color: var(--input-text) !important;
-}
-
-/* Ajuste específico para tema oscuro para asegurar contraste correcto */
-[data-theme="dark"] input:-webkit-autofill,
-[data-theme="dark"] textarea:-webkit-autofill,
-[data-theme="dark"] select:-webkit-autofill {
-  -webkit-text-fill-color: var(--input-text) !important;
-  box-shadow: 0 0 0 1000px var(--input-background) inset !important;
-  border-color: var(--input-border) !important;
 }
