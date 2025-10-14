@@ -222,32 +222,48 @@ small,
 /* Desktop tweak: reduce overall scale slightly on large viewports so typography doesn't feel oversized */
 @media (min-width: 1024px) {
   :root {
-    /* base text sizing - reduce by ~10% on large screens */
-    --text-body: 0.95rem; /* ~15.2px */
-    --text-h1: 2.25rem; /* ~36px -> down */
-    --text-h2: 1.75rem; /* ~28px */
-    --text-h3: 1.125rem; /* ~18px */
-    --text-h4: 1.0625rem; /* ~17px */
-    --text-display: 2.75rem;
+    /* base text sizing - slightly increased for better legibility on desktop */
+    --text-body: 1.02rem; /* ~16.3px */
+    --text-h1: 2.5rem; /* ~40px */
+    --text-h2: 1.875rem; /* ~30px */
+    --text-h3: 1.25rem; /* ~20px */
+    --text-h4: 1.125rem; /* ~18px */
+    --text-display: 3rem;
   }
 
   /* Ensure specific headings inherit the smaller sizes reliably */
-  h1, .text-h1 { font-size: var(--text-h1); }
-  h2, .text-h2 { font-size: var(--text-h2); }
-  h3, .text-h3 { font-size: var(--text-h3); }
-  h4, .text-h4 { font-size: var(--text-h4); }
-  .display, .text-display { font-size: var(--text-display); }
+  h1,
+  .text-h1 {
+    font-size: var(--text-h1);
+  }
+  h2,
+  .text-h2 {
+    font-size: var(--text-h2);
+  }
+  h3,
+  .text-h3 {
+    font-size: var(--text-h3);
+  }
+  h4,
+  .text-h4 {
+    font-size: var(--text-h4);
+  }
+  .display,
+  .text-display {
+    font-size: var(--text-display);
+  }
 }
 
 /* Also explicitly override the light theme root variables (higher specificity) so the desktop reduction applies in light mode */
 @media (min-width: 1024px) {
   :root[data-theme="light"] {
-    --text-body: 0.95rem;
-    --text-h1: 2.25rem;
-    --text-h2: 1.75rem;
-    --text-h3: 1.125rem;
-    --text-h4: 1.0625rem;
-    --text-display: 2.75rem;
+    /* Light theme desktop sizes — keep slightly larger for readability */
+    --text-body: 1.02rem;
+    --text-h1: 2.5rem;
+    --text-h2: 1.875rem;
+    --text-h3: 1.25rem;
+    --text-h4: 1.125rem;
+    --text-display: 3rem;
   }
 }
 

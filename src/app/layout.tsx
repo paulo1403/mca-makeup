@@ -180,7 +180,7 @@ export default function RootLayout({
       "https://www.instagram.com/marcelacorderobeauty/",
       "https://www.facebook.com/marcelacorderomakeup",
       "https://www.tiktok.com/@marcelacordero_mua",
-      "https://wa.me/51989164990",
+  "https://wa.me/51989164990",
     ],
   };
 

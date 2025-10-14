@@ -79,8 +79,18 @@
 
 @media (min-width: 768px) {
   .testimonials-container {
-    grid-template-columns: 1fr 360px;
-    align-items: center;
+    /* En desktop, usar una sola columna centrada para el carrusel */
+    grid-template-columns: 1fr;
+    max-width: 1000px;
+    margin: 0 auto;
+    justify-items: center;
+  }
+
+  /* Centrar y limitar el ancho de la tarjeta de testimonio */
+  .testimonial-card {
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
   }
 }
 
