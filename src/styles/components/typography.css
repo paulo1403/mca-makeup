@@ -239,6 +239,18 @@ small,
   .display, .text-display { font-size: var(--text-display); }
 }
 
+/* Also explicitly override the light theme root variables (higher specificity) so the desktop reduction applies in light mode */
+@media (min-width: 1024px) {
+  :root[data-theme="light"] {
+    --text-body: 0.95rem;
+    --text-h1: 2.25rem;
+    --text-h2: 1.75rem;
+    --text-h3: 1.125rem;
+    --text-h4: 1.0625rem;
+    --text-display: 2.75rem;
+  }
+}
+
 /* ============================================
    LISTS
    ============================================ */
@@ -254,20 +266,6 @@ ol {
 ul li,
 ol li {
   margin-bottom: 0.5rem;
-}
-
-/* ============================================
-   LINKS
-   ============================================ */
-
-a {
-  color: var(--color-primary);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-a:hover {
-  color: var(--color-accent);
 }
 
 /* ============================================
