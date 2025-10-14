@@ -1,5 +1,15 @@
-/* Font variable fallbacks for when next/font injects CSS variables on body/html */
+
+
 :root {
+  --font-heading: var(--font-plusjakarta, system-ui);
+  --font-body: var(--font-plusjakarta, system-ui);
+
   --font-playfair: 'Playfair Display', serif;
   --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
 }

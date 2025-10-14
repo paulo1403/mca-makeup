@@ -1,0 +1,20 @@
+/* Typography system wired to CSS tokens */
+
+html, body {
+  font-family: var(--font-body, system-ui);
+  font-size: var(--text-body);
+  line-height: var(--text-body-lh);
+  color: var(--color-body);
+}
+
+h1 { font-family: var(--font-heading); font-size: var(--text-h1); line-height: var(--text-h1-lh); color: var(--color-heading); }
+h2 { font-family: var(--font-heading); font-size: var(--text-h2); line-height: var(--text-h2-lh); color: var(--color-heading); }
+h3 { font-family: var(--font-heading); font-size: var(--text-h3); line-height: var(--text-h3-lh); color: var(--color-heading); }
+h4 { font-family: var(--font-heading); font-size: var(--text-h4); line-height: var(--text-h4-lh); color: var(--color-heading); }
+
+p, ul, ol { font-family: var(--font-body); font-size: var(--text-body); line-height: var(--text-body-lh); color: var(--color-body); }
+
+small, .text-small { font-size: var(--text-small); line-height: var(--text-small-lh); }
+.caption, .text-caption { font-size: var(--text-caption); line-height: var(--text-caption-lh); }
+
+.display { font-size: var(--text-display); line-height: calc(var(--text-display-lh) + 0.02); font-weight: 700; font-family: var(--font-heading); overflow: visible; padding-bottom: 0.06em; }

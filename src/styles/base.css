@@ -1,76 +1,139 @@
 /* Nuevo tema base morado (light/dark) enfocado en NavBar y tokens esenciales */
 
-/* Light theme variables */
-:root {
-  /* Core backgrounds */
-  --color-background: #FBF9FF;
-  /* very light lavender */
-  --color-surface: #FFFFFF;
-  /* pure surface */
-  --color-surface-2: #F1E9FF;
-  /* subtle lavender surface */
-  --color-card: #FFFFFF;
+/* Light theme variables (default) */
+:root,
+:root[data-theme="light"] {
+  /* Backgrounds */
+  --color-background: #FAF9FD;        /* Lavanda muy suave */
+  --color-surface: #FFFFFF;           /* Blanco puro */
+  --color-surface-elevated: #F8F7FF;  /* Lavanda casi blanco */
 
-  /* Text tokens */
-  --color-foreground: #1E1B2E;
-  /* foreground default */
-  --color-heading: #1E1B2E;
-  /* deep purple/near-black for titles */
-  --color-body: #3B3A4F;
-  /* desaturated purple/graphite for body */
-  --color-muted: #A0A0B8;
-  /* gray-lilac for secondary text */
+  /* Purple Palette */
+  --color-primary: #7C3AED;           /* Purple principal */
+  --color-primary-hover: #6D28D9;     /* Purple hover */
+  --color-primary-light: #8B5CF6;     /* Purple suave */
+  --color-accent: #A78BFA;            /* Purple acento */
+  --color-accent-soft: #DDD6FE;       /* Purple muy suave */
 
-  /* Accent palette (purple design) */
-  --color-accent-primary: #7C3AED;
-  /* purple-600 */
-  --color-accent-secondary: #C084FC;
-  /* purple-400 */
-  --color-accent-tertiary: #A78BFA;
-  /* purple-500 */
+  /* Text */
+  --color-heading: #1E1B2E;           /* Casi negro */
+  --color-body: #4C4960;              /* Gris morado */
+  --color-muted: #6B7280;             /* Gris neutro */
 
-  /* Utility tokens */
-  --color-neutral: #6B7280;
-  /* gray-500 */
-  --color-whatsapp: #25D366;
-  --on-accent-contrast: #FFFFFF;
-  /* text on accent backgrounds in light theme (for purple-600) */
+  /* Semantic */
+  --color-cta-bg: #7C3AED;
+  --color-cta-hover: #6D28D9;
+  --color-cta-text: #FFFFFF;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(124, 58, 237, 0.15);
+
+  /* Backwards compatible aliases (used in older CSS files) */
+  --color-foreground: var(--color-body);
+  --color-accent-primary: var(--color-primary);
+  --color-accent-secondary: var(--color-accent);
+  --on-accent-contrast: var(--color-cta-text);
+
+  /* Typographic scale */
+  --text-display: clamp(2.5rem, 5vw, 4rem);
+  --text-display-lh: 1.1;
+
+  --text-h1: clamp(2rem, 4vw, 3rem);
+  --text-h1-lh: 1.2;
+
+  --text-h2: clamp(1.75rem, 3vw, 2.25rem);
+  --text-h2-lh: 1.3;
+
+  --text-h3: clamp(1.5rem, 2.5vw, 1.875rem);
+  --text-h3-lh: 1.4;
+
+  --text-h4: clamp(1.25rem, 2vw, 1.5rem);
+  --text-h4-lh: 1.4;
+
+  --text-body: clamp(1rem, 1.5vw, 1.125rem);
+  --text-body-lh: 1.6;
+
+  --text-small: clamp(0.875rem, 1.2vw, 0.938rem);
+  --text-small-lh: 1.5;
+
+  --text-caption: 0.75rem;
+  --text-caption-lh: 1.4;
+
+  /* Button sizes */
+  --btn-lg-height: 56px;
+  --btn-lg-padding: 24px 32px;
+  --btn-lg-font: 1.125rem;
+  --btn-lg-radius: 14px;
+
+  --btn-md-height: 48px;
+  --btn-md-padding: 16px 24px;
+  --btn-md-font: 1rem;
+  --btn-md-radius: 12px;
+
+  --btn-sm-height: 40px;
+  --btn-sm-padding: 12px 20px;
+  --btn-sm-font: 0.875rem;
+  --btn-sm-radius: 10px;
+
+  --btn-xs-height: 32px;
+  --btn-xs-padding: 8px 16px;
+  --btn-xs-font: 0.813rem;
+  --btn-xs-radius: 8px;
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  --section-padding-y: var(--space-20);
+  --section-padding-x: var(--space-6);
+  --card-padding: var(--space-6);
+  --element-gap: var(--space-4);
 }
 
 /* Dark theme variables */
-[data-theme="dark"] {
-  /* Core backgrounds */
-  --color-background: #0F0B1E;
-  /* deep indigo/eggplant */
-  --color-surface: #151226;
-  /* dark surface */
-  --color-surface-2: #1A1633;
-  /* darker indigo surface */
-  --color-card: #151226;
+:root[data-theme="dark"] {
+  /* Backgrounds */
+  --color-background: #0B0A1A;        /* Navy profundo */
+  --color-surface: #13111F;           /* Surface cards */
+  --color-surface-elevated: #1A1729;  /* Elevated elements */
 
-  /* Text tokens */
-  --color-foreground: #F5F3FF;
-  /* soft white (lilac tint) */
-  --color-heading: #F5F3FF;
-  /* titles white */
-  --color-body: #EDE9FE;
-  /* soft lavender for readable body */
-  --color-muted: #A1A1B5;
-  /* gray-lilac for secondary text */
+  /* Purple Palette */
+  --color-primary: #8B5CF6;           /* Purple principal */
+  --color-primary-hover: #7C3AED;     /* Purple hover */
+  --color-primary-light: #A78BFA;     /* Purple suave */
+  --color-accent: #C084FC;            /* Purple claro/acento */
+  --color-accent-soft: #E9D5FF;       /* Purple muy suave */
 
-  /* Accent palette (purple design) */
-  --color-accent-primary: #8B5CF6;
-  /* purple-500 (vibrant in dark) */
-  --color-accent-secondary: #C4B5FD;
-  /* purple-300 */
-  --color-accent-tertiary: #A78BFA;
-  /* purple-400/500 */
+  /* Text */
+  --color-heading: #F5F3FF;           /* Títulos blancos */
+  --color-body: #E5E1F5;              /* Texto body */
+  --color-muted: #A1A1B5;             /* Texto secundario */
 
-  /* Utility tokens */
-  --color-neutral: #9CA3AF;
-  /* gray-400 */
-  --on-accent-contrast: #FFFFFF;
-  /* text on dark accent backgrounds */
+  /* Semantic */
+  --color-cta-bg: #8B5CF6;
+  --color-cta-hover: #7C3AED;
+  --color-cta-text: #FFFFFF;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(19, 17, 31, 0.75);
+  --glass-border: rgba(139, 92, 246, 0.2);
+
+  /* Backwards compatible aliases */
+  --color-foreground: var(--color-body);
+  --color-accent-primary: var(--color-primary);
+  --color-accent-secondary: var(--color-accent);
+  --on-accent-contrast: var(--color-cta-text);
 }
 
 /* Minimal global resets relevant to layout */

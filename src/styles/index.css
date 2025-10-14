@@ -4,13 +4,7 @@
 @import "./base.css";
 @import "./fonts.css";
 
-/* Utilidades */
-@import "./utils/colors.css";
-@import "./utils/animations.css";
-@import "./utils/scrollbar.css";
-
 /* Componentes */
-@import "./components/buttons.css";
 @import "./components/forms.css";
 @import "./components/datepicker.css";
 @import "./components/about-section.css";
@@ -22,6 +16,9 @@
 @import "./components/portfolio.css";
 @import "./components/about.css";
 @import "./components/testimonials.css";
+@import "./components/navbar.css";
+@import "./components/button.css";
+@import "./components/typography.css";
 
 /* Dashboard específico */
 @import "./dashboard.css";

@@ -24,20 +24,20 @@
 }
 
 .portfolio-count {
-  font-family: var(--font-playfair), serif;
+  font-family: var(--font-plusjakarta), 'Playfair Display', serif;
   font-weight: 800;
   font-size: 3rem; /* 48px */
   line-height: 1;
 }
 
 .portfolio-title {
-  font-family: var(--font-playfair), serif;
+  font-family: var(--font-plusjakarta), 'Playfair Display', serif;
   font-weight: 700;
   font-size: 1.25rem; /* 20px */
 }
 
 .portfolio-desc {
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-plusjakarta), ui-sans-serif, system-ui;
   color: var(--color-body);
 }
 
@@ -102,27 +102,27 @@
 }
 
 [data-theme="dark"] .portfolio-quote blockquote {
-  font-family: var(--font-playfair), serif;
+  font-family: var(--font-plusjakarta), 'Playfair Display', serif;
   font-style: italic;
   color: #E6E6E6;
   font-size: 1.25rem;
 }
 
 [data-theme="light"] .portfolio-quote blockquote {
-  font-family: var(--font-playfair), serif;
+  font-family: var(--font-plusjakarta), 'Playfair Display', serif;
   font-style: italic;
   color: #111111;
   font-size: 1.25rem;
 }
 
 [data-theme="dark"] .portfolio-quote .quote-author {
-  font-family: var(--font-inter);
+  font-family: var(--font-plusjakarta), ui-sans-serif, system-ui;
   font-weight: 600;
   color: var(--color-accent-primary);
 }
 
 [data-theme="light"] .portfolio-quote .quote-author {
-  font-family: var(--font-inter);
+  font-family: var(--font-plusjakarta), ui-sans-serif, system-ui;
   font-weight: 600;
   color: var(--color-accent-secondary);
 }

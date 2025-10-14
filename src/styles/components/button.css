@@ -1,0 +1,192 @@
+/* ============================================
+   BUTTON SYSTEM - Marcela Cordero
+   ============================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btn-lg {
+  height: var(--btn-lg-height);
+  padding: var(--btn-lg-padding);
+  font-size: var(--btn-lg-font);
+  border-radius: var(--btn-lg-radius);
+}
+.btn-md {
+  height: var(--btn-md-height);
+  padding: var(--btn-md-padding);
+  font-size: var(--btn-md-font);
+  border-radius: var(--btn-md-radius);
+}
+.btn-sm {
+  height: var(--btn-sm-height);
+  padding: var(--btn-sm-padding);
+  font-size: var(--btn-sm-font);
+  border-radius: var(--btn-sm-radius);
+}
+.btn-xs {
+  height: var(--btn-xs-height);
+  padding: var(--btn-xs-padding);
+  font-size: var(--btn-xs-font);
+  border-radius: var(--btn-xs-radius);
+}
+
+.btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-primary-hover) 100%
+  );
+  color: var(--color-cta-text);
+  box-shadow: 0 4px 14px -4px rgba(124, 58, 237, 0.4),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -6px rgba(124, 58, 237, 0.5),
+    0 4px 8px rgba(0, 0, 0, 0.15);
+}
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px -2px rgba(124, 58, 237, 0.4);
+}
+
+/* Primary glow variant for hero CTA */
+.btn-primary-glow {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  color: var(--color-cta-text);
+  box-shadow: 0 6px 30px -10px rgba(124,58,237,0.45), 0 0 0 0 rgba(124,58,237,0);
+  animation: pulse-shadow 2.4s ease-in-out infinite;
+}
+.btn-primary-glow:hover { animation: none; transform: translateY(-2px); box-shadow: 0 12px 40px -10px rgba(124,58,237,0.55); }
+
+@keyframes pulse-shadow {
+  0%, 100% { box-shadow: 0 6px 30px -10px rgba(124,58,237,0.45); }
+  50% { box-shadow: 0 12px 50px -10px rgba(124,58,237,0.55); }
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+.btn-secondary:hover {
+  background: var(--color-primary);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px -4px rgba(124, 58, 237, 0.4);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-primary);
+  border: none;
+}
+.btn-ghost:hover {
+  background: rgba(124, 58, 237, 0.1);
+}
+
+.btn-soft {
+  background: rgba(124, 58, 237, 0.1);
+  color: var(--color-primary);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+}
+.btn-soft:hover {
+  background: rgba(124, 58, 237, 0.15);
+  border-color: rgba(124, 58, 237, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid var(--glass-border);
+  color: var(--color-heading);
+}
+.btn-glass:hover {
+  background: rgba(124, 58, 237, 0.15);
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.btn-whatsapp {
+  background: linear-gradient(135deg, #25d366 0%, #20ba5a 100%);
+  color: white;
+  box-shadow: 0 4px 14px -4px rgba(37, 211, 102, 0.4);
+}
+.btn-whatsapp:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -6px rgba(37, 211, 102, 0.5);
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-icon svg,
+.btn-icon .icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.btn-icon-left svg {
+  margin-right: 4px;
+}
+.btn-icon-right svg {
+  margin-left: 4px;
+}
+
+.btn-icon-only {
+  padding: 0;
+  width: 48px;
+  aspect-ratio: 1;
+  justify-content: center;
+}
+.btn-icon-only.btn-sm {
+  width: 40px;
+}
+.btn-icon-only.btn-lg {
+  width: 56px;
+}
+
+.btn-group {
+  display: inline-flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.btn-group-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+    animation: none;
+  }
+}

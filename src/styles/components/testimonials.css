@@ -25,14 +25,14 @@
 }
 
 .testimonial-title {
-  font-family: var(--font-playfair);
+  font-family: var(--font-plusjakarta), 'Playfair Display', serif;
   font-weight: 700;
   font-size: 1.75rem;
   color: var(--color-heading);
 }
 
 .testimonial-quote blockquote {
-  font-family: var(--font-playfair);
+  font-family: var(--font-plusjakarta), 'Playfair Display', serif;
   font-style: italic;
   font-size: 1.125rem;
   line-height: 1.4;
@@ -56,7 +56,7 @@
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-family: var(--font-playfair);
+  font-family: var(--font-plusjakarta), 'Playfair Display', serif;
 }
 
 [data-theme="dark"] .testimonial-avatar {
@@ -70,7 +70,7 @@
 }
 
 .testimonial-client-meta {
-  font-family: var(--font-inter);
+  font-family: var(--font-plusjakarta), ui-sans-serif, system-ui;
   font-size: 0.875rem;
   color: #8B8B8B;
 }

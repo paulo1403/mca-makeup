@@ -29,9 +29,10 @@ export default {
         'whatsapp': 'var(--color-whatsapp)',
       },
       fontFamily: {
-        'font-serif': ['var(--font-playfair)', 'serif'],
+        sans: ['var(--font-plusjakarta)', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial'],
+        'font-serif': ['var(--font-plusjakarta)', 'serif'],
         allura: ['var(--font-allura)', 'cursive'],
-        inter: ['var(--font-inter)', 'ui-sans-serif', 'system-ui'],
+        inter: ['var(--font-plusjakarta)', 'ui-sans-serif', 'system-ui'],
       },
     },
   },
