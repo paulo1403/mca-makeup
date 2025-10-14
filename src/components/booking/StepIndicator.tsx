@@ -1,102 +1,104 @@
-import React from 'react'
-import { Check } from 'lucide-react'
-import { useTheme } from '@/hooks/useTheme'
+import React from "react";
+import { Check } from "lucide-react";
+import "@/styles/components/step-indicator.css";
 
 interface Props {
-  currentStep: number
-  totalSteps: number
+  currentStep: number;
+  totalSteps: number;
 }
 
 export default function StepIndicator({ currentStep, totalSteps }: Props) {
-  const steps = Array.from({ length: totalSteps }, (_, i) => i + 1)
-  const { theme } = useTheme()
+  const steps = Array.from({ length: totalSteps }, (_, i) => i + 1);
 
   const stepNames = [
-    'Información Personal',
-    'Servicios',
-    'Ubicación',
-    'Fecha y Hora',
-    'Confirmación'
-  ]
+    "Información Personal",
+    "Servicios",
+    "Ubicación",
+    "Fecha y Hora",
+    "Confirmación",
+  ];
 
   return (
-    <div className="mb-8">
+    <div className="step-indicator">
       {/* Versión mobile: stepper sin números */}
-      <div className="flex items-center justify-center gap-2 sm:gap-3 md:hidden">
+      <div className="step-indicator-mobile">
         {steps.map((s) => {
-          const isActive = s === currentStep
-          const isCompleted = s < currentStep
+          const isActive = s === currentStep;
+          const isCompleted = s < currentStep;
           return (
             <div key={s} className="flex flex-col items-center">
               <div
-                className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shadow-md ${
+                className={`step-circle ${
                   isActive
-                    ? 'bg-[#FF007F] ring-4 ring-[#FF007F]/30 shadow-lg'
+                    ? "step-circle--active"
                     : isCompleted
-                      ? 'bg-[#FFC72C]'
-                      : `border-2 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-300'}`
+                    ? "step-circle--completed"
+                    : "step-circle--inactive"
                 }`}
               >
-                {isCompleted ? <Check className="w-4 h-4 sm:w-5 sm:h-5 text-white" /> : null}
+                {isCompleted ? (
+                  <Check className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                ) : null}
               </div>
-              {s !== totalSteps && (
-                <div className="w-6 h-0.5 bg-subtle mx-1 hidden" />
-              )}
             </div>
-          )
+          );
         })}
       </div>
 
       {/* Versión desktop: línea de progreso con etiquetas */}
-      <div className="hidden md:block">
-        <div className="relative">
+      <div className="step-indicator-desktop">
+        <div className="step-progress-container">
           {/* Línea de progreso base */}
-          <div className={`absolute top-1/2 left-0 right-0 h-1 -translate-y-1/2 rounded-full ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-300'}`}></div>
+          <div className="step-progress-base"></div>
 
           {/* Línea de progreso activa */}
           <div
-            className="absolute top-1/2 left-0 h-1 bg-[#FF007F] -translate-y-1/2 rounded-full shadow-[0_0_12px_rgba(0,0,0,0.06)]"
-            style={{ width: `${(Math.max(currentStep - 1, 0) / (totalSteps - 1)) * 100}%` }}
+            className="step-progress-active"
+            style={{
+              width: `${
+                (Math.max(currentStep - 1, 0) / (totalSteps - 1)) * 100
+              }%`,
+            }}
           />
 
-          {/* Puntos de paso (sin números) */}
-          <div className="relative flex justify-between">
+          {/* Puntos de paso */}
+          <div className="step-points">
             {steps.map((s) => {
-              const isActive = s === currentStep
-              const isCompleted = s < currentStep
+              const isActive = s === currentStep;
+              const isCompleted = s < currentStep;
               return (
-                <div key={s} className="flex flex-col items-center pt-6 pb-2">
-                  <div className="absolute -top-3">
-                    <div
-                      className={`w-7 h-7 rounded-full flex items-center justify-center shadow-lg ${
-                        isActive
-                          ? 'bg-[#FF007F] ring-4 ring-[#FF007F]/30 shadow-lg'
-                          : isCompleted
-                            ? 'bg-[#FFC72C]'
-                            : `border-2 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-300'}`
-                      }`}
-                    >
-                      {isCompleted ? <Check className="w-4 h-4 text-white" /> : null}
-                    </div>
+                <div key={s} className="step-point">
+                  <div
+                    className={`step-point-circle ${
+                      isActive
+                        ? "step-point-circle--active"
+                        : isCompleted
+                        ? "step-point-circle--completed"
+                        : "step-point-circle--inactive"
+                    }`}
+                  >
+                    {isCompleted ? (
+                      <Check className="w-4 h-4 text-white" />
+                    ) : null}
                   </div>
 
                   <span
-                    className={`mt-5 text-xs font-medium ${
+                    className={`step-label ${
                       isActive
-                        ? 'text-[#FF007F] font-semibold'
+                        ? "step-label--active"
                         : isCompleted
-                          ? 'text-[#FFC72C]'
-                          : theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                        ? "step-label--completed"
+                        : "step-label--inactive"
                     }`}
                   >
                     {stepNames[s - 1]}
                   </span>
                 </div>
-              )
+              );
             })}
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
