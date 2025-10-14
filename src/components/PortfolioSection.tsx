@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import Typography from "./ui/Typography";
 import Button from "./ui/Button";
-// @ts-expect-error - side-effect CSS import (project uses global CSS files and tokens)
 import "@/styles/components/portfolio.css";
 
 type PortfolioCategory = {
