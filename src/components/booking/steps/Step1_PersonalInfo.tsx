@@ -1,9 +1,11 @@
 "use client"
 import React from 'react'
-import { useTheme } from '@/hooks/useTheme'
 import { Controller, useFormContext } from 'react-hook-form'
+import { motion } from 'framer-motion'
 import { User, Phone, Mail, Lock } from 'lucide-react'
 import type { BookingData } from '@/lib/bookingSchema'
+import Typography from '@/components/ui/Typography'
+import '@/styles/components/step1.css'
 
 function formatPhone(value: string) {
   const v = value.replace(/[^\d+]/g, '')
@@ -44,11 +46,15 @@ const InputField = ({ type = "text", placeholder, icon, field, label, formatValu
 
   return (
     <div className="group">
-      <label className="block text-sm font-medium text-accent-primary mb-2 transition-colors">
+      <Typography as="label" variant="small" className="block font-medium text-accent-primary mb-2 transition-colors">
         {label}
-      </label>
+      </Typography>
       <div className="relative">
-        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-input-placeholder group-focus-within:text-accent-primary transition-colors duration-200">
+        <div className={`absolute left-3 top-1/2 transform -translate-y-1/2 transition-colors duration-200 ${
+          error 
+            ? 'text-red-500' 
+            : 'text-muted group-focus-within:text-accent-primary'
+        }`}>
           {icon}
         </div>
         <input
@@ -59,37 +65,58 @@ const InputField = ({ type = "text", placeholder, icon, field, label, formatValu
           type={type}
           placeholder={placeholder}
           aria-invalid={error ? 'true' : 'false'}
-          className={`w-full pl-11 pr-4 py-4 rounded-xl bg-input border border-input text-input placeholder:text-input-placeholder transition-all duration-200 hover:border-accent-primary/50 focus:outline-none focus:ring-2 focus:ring-input-focus-border focus:border-transparent ${
-            error ? 'border-input-error' : ''
+          style={{
+            WebkitBoxShadow: '0 0 0 30px var(--color-surface-secondary) inset',
+            WebkitTextFillColor: 'var(--color-text-primary)',
+          }}
+          className={`w-full pl-11 pr-4 py-4 rounded-xl bg-input text-input placeholder:text-muted transition-all duration-200 focus:outline-none autofill-input ${
+            error 
+              ? 'border-2 border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
+              : 'border border-input hover:border-accent-primary/50 focus:border-accent-primary focus:ring-2 focus:ring-accent-primary/20'
           }`}
         />
       </div>
-      {error && <p className="mt-2 text-sm text-red-600" role="alert">{error}</p>}
+      {error && (
+        <Typography as="p" variant="caption" className="mt-2 !text-red-500" role="alert">
+          {error}
+        </Typography>
+      )}
     </div>
   )
 }
 
 export default function Step1_PersonalInfo() {
   const { control } = useFormContext<BookingData>()
-  const { isDark } = useTheme()
   
   return (
-    <div className="space-y-8">
+    <motion.div 
+      className="space-y-8"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       {/* Header elegante */}
       <div className="text-center space-y-2">
         <div className="flex justify-center">
           <div className="w-12 h-12 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-full flex items-center justify-center shadow-lg">
-            <User className={`w-6 h-6 ${isDark ? 'text-white' : 'text-black'}`} />
+            <User className="w-6 h-6 text-white" />
           </div>
         </div>
-        <h3 className="text-xl font-serif text-accent-primary">Información Personal</h3>
-        <p className="text-sm text-muted max-w-md mx-auto">
+        <Typography as="h3" variant="h3" className="text-accent-primary font-serif">
+          Información Personal
+        </Typography>
+        <Typography as="p" variant="small" className="text-muted max-w-md mx-auto">
           Comparte tus datos para que podamos crear la experiencia perfecta para ti
-        </p>
+        </Typography>
       </div>
 
       {/* Formulario con espaciado mejorado */}
-      <div className="space-y-6">
+      <motion.div 
+        className="space-y-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+      >
         <Controller
           name="name"
           control={control}
@@ -134,15 +161,22 @@ export default function Step1_PersonalInfo() {
             />
           )}
         />
-      </div>
+      </motion.div>
 
       {/* Mensaje de confianza */}
-      <div className="text-center">
+      <motion.div 
+        className="text-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.4, duration: 0.5 }}
+      >
         <div className="inline-flex items-center space-x-2 px-4 py-2 bg-accent-primary/10 rounded-full">
           <Lock className="w-4 h-4 text-accent-primary" />
-          <span className="text-xs text-muted font-medium">Tu información está segura con nosotros</span>
+          <Typography as="span" variant="caption" className="text-muted font-medium">
+            Tu información está segura con nosotros
+          </Typography>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   )
 }

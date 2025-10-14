@@ -123,10 +123,15 @@ small,
 .text-caption {
   font-size: var(--text-caption);
   line-height: var(--text-caption-lh);
-  color: var(--color-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 500;
+}
+
+/* Default caption color (can be overridden) */
+.caption:not([style*="color"]),
+.text-caption:not([style*="color"]) {
+  color: var(--color-muted);
 }
 
 /* ============================================
