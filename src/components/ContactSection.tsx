@@ -1,46 +1,249 @@
-"use client"
+"use client";
 
-import BookingFlow from './BookingFlow'
-import ThemeToggle from './ThemeToggle'
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
+  Instagram,
+  MessageSquare,
+  Calendar,
+  Star,
+} from "lucide-react";
+import BookingFlow from "./BookingFlow";
+import ThemeToggle from "./ThemeToggle";
+import Typography from "./ui/Typography";
+import Button from "./ui/Button";
+import "@/styles/components/contact.css";
 
 export default function ContactSection() {
-  return (
-    <section id="contacto" className="py-12 sm:py-16">
-      <div className="container mx-auto px-6 max-w-6xl">
-        {/* Encabezado explicativo */}
-        <div className="text-center space-y-3 sm:space-y-4 mb-6 sm:mb-8">
-          <h2 className="font-serif text-2xl sm:text-3xl text-accent-primary">Contacta y Reserva tu Cita</h2>
-          <p className="text-sm sm:text-base text-main max-w-2xl mx-auto">
-            Completa el proceso en cinco pasos: selecciona tus servicios, ingresa tus datos, indica la ubicación, elige fecha y horario, y confirma. Te contactaré para coordinar cualquier detalle adicional.
-          </p>
-          <p className="text-xs sm:text-sm text-muted max-w-2xl mx-auto">
-            Puedes avanzar y retroceder entre pasos sin perder tu selección. Si prefieres asistencia, escríbeme y te guío en el proceso.
-          </p>
-        </div>
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
-        {/* Toggle de tema alineado a la derecha */}
-        <div className="flex justify-end mb-4">
+  const contactInfo = [
+    {
+      label: "Teléfono",
+      value: "+51 989 164 990",
+      href: "tel:+51989164990",
+      icon: Phone,
+    },
+    {
+      label: "Email",
+      value: "contacto@marcelacordero.com",
+      href: "mailto:contacto@marcelacordero.com",
+      icon: Mail,
+    },
+    {
+      label: "Ubicación",
+      value: "Av. Bolívar 1073, Pueblo Libre, Lima",
+      href: "https://maps.google.com/?q=Av.+Bolívar+1073,+Pueblo+Libre,+Lima",
+      icon: MapPin,
+    },
+    {
+      label: "Horarios",
+      value: "Lun - Dom: 9:00 AM - 8:00 PM",
+      href: undefined,
+      icon: Clock,
+    },
+  ];
+
+  const quickActions = [
+    {
+      label: "WhatsApp",
+      href: "https://wa.me/51989164990?text=Hola%20Marcela,%20me%20interesa%20agendar%20una%20cita",
+      variant: "primary" as const,
+      icon: MessageSquare,
+    },
+    {
+      label: "Llamar Ahora",
+      href: "tel:+51989164990",
+      variant: "secondary" as const,
+      icon: Phone,
+    },
+  ];
+
+  return (
+    <section id="contacto" className="contact-section" ref={sectionRef}>
+      {/* Elementos decorativos */}
+      <div className="contact-decoration contact-decoration--1" />
+      <div className="contact-decoration contact-decoration--2" />
+
+      <div className="contact-container">
+        {/* Header */}
+        <motion.div
+          className="contact-header"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="contact-badge">
+            <Calendar className="w-4 h-4" />
+            <span>Reserva tu Cita</span>
+          </div>
+
+          <Typography
+            as="h2"
+            variant="h2"
+            className="contact-title text-3xl sm:text-4xl lg:text-5xl font-bold"
+          >
+            Contacta y Reserva tu Cita
+          </Typography>
+
+          <Typography
+            as="p"
+            variant="p"
+            className="contact-description text-base sm:text-lg"
+          >
+            Completa el proceso en cinco pasos: selecciona tus servicios,
+            ingresa tus datos, indica la ubicación, elige fecha y horario, y
+            confirma. Te contactaré para coordinar cualquier detalle adicional.
+          </Typography>
+
+          <Typography
+            as="p"
+            variant="p"
+            className="contact-subtitle text-sm sm:text-base"
+          >
+            Puedes avanzar y retroceder entre pasos sin perder tu selección. Si
+            prefieres asistencia, escríbeme y te guío en el proceso.
+          </Typography>
+        </motion.div>
+
+        {/* Theme Toggle */}
+        <div className="contact-theme-toggle">
           <ThemeToggle />
         </div>
 
-        {/* Fila compacta de contacto (solo móvil) */}
-        <div className="sm:hidden mb-4">
-          <div className="flex items-center gap-3 text-sm flex-col">
-            <a href="tel:+51989164990" className="inline-flex items-center gap-2 text-accent-primary font-medium whitespace-nowrap">
-              <span className="inline-block w-4 h-4 rounded-full bg-[color:var(--color-accent-primary)]" aria-hidden="true" />
-              +51 989 164 990
-            </a>
-            <span className="text-muted">•</span>
-            <a href="mailto:contacto@marcelacordero.com" className="inline-flex items-center gap-2 text-accent-primary font-medium whitespace-nowrap">
-              <span className="inline-block w-4 h-4 rounded-full bg-[color:var(--color-accent-secondary)]" aria-hidden="true" />
-              contacto@marcelacordero.com
-            </a>
-          </div>
-        </div>
+        {/* Layout principal */}
+        <div className="contact-layout">
+          {/* Información de contacto */}
+          <motion.div
+            className="contact-info"
+            initial={{ opacity: 0, x: -20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            {/* Información de contacto */}
+            <div className="contact-info-card">
+              <Typography
+                as="h3"
+                variant="h3"
+                className="contact-info-title text-xl"
+              >
+                <Star className="contact-info-icon" />
+                Información de Contacto
+              </Typography>
 
-        {/* Flujo de reserva centrado y con ancho limitado en desktop */}
-        <div className="mt-2">
-          <BookingFlow />
+              <ul className="contact-info-list">
+                {contactInfo.map((info, index) => {
+                  const IconComponent = info.icon;
+                  return (
+                    <li key={index} className="contact-info-item">
+                      <IconComponent className="contact-info-icon" />
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium text-[color:var(--contact-accent)]">
+                          {info.label}
+                        </span>
+                        {info.href ? (
+                          <a
+                            href={info.href}
+                            className="contact-info-link"
+                            target={
+                              info.href.startsWith("http")
+                                ? "_blank"
+                                : undefined
+                            }
+                            rel={
+                              info.href.startsWith("http")
+                                ? "noopener noreferrer"
+                                : undefined
+                            }
+                          >
+                            {info.value}
+                          </a>
+                        ) : (
+                          <span>{info.value}</span>
+                        )}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              {/* Redes sociales */}
+              <div className="contact-social">
+                <a
+                  href="https://www.instagram.com/marcelacorderobeauty/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-social-link"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://wa.me/51989164990"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-social-link"
+                  aria-label="WhatsApp"
+                >
+                  <MessageSquare className="w-5 h-5" />
+                </a>
+              </div>
+            </div>
+
+            {/* Acciones rápidas */}
+            <div className="contact-info-card">
+              <Typography
+                as="h3"
+                variant="h3"
+                className="contact-info-title text-xl"
+              >
+                <MessageSquare className="contact-info-icon" />
+                Contacto Directo
+              </Typography>
+
+              <div className="contact-quick-actions">
+                {quickActions.map((action, index) => {
+                  const IconComponent = action.icon;
+                  return (
+                    <Button
+                      key={index}
+                      variant={action.variant}
+                      size="md"
+                      as="a"
+                      href={action.href}
+                      className="flex-1 justify-center gap-2"
+                      target={
+                        action.href.startsWith("http") ? "_blank" : undefined
+                      }
+                      rel={
+                        action.href.startsWith("http")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                    >
+                      <IconComponent className="w-4 h-4" />
+                      {action.label}
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Formulario de reserva */}
+          <motion.div
+            className="contact-form-wrapper"
+            initial={{ opacity: 0, x: 20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <BookingFlow />
+          </motion.div>
         </div>
       </div>
     </section>
