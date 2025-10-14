@@ -1,251 +1,254 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Instagram, MapPin } from "lucide-react";
+import { motion, useInView } from "framer-motion";
+import { Instagram, MapPin, Mail, ArrowUp } from "lucide-react";
 import Link from "next/link";
+import { useRef } from "react";
+import Typography from "./ui/Typography";
+import Button from "./ui/Button";
+import "@/styles/components/footer.css";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const navigationLinks = {
+    services: [
+      { href: "/#services", label: "Maquillaje de Novia" },
+      { href: "/#services", label: "Eventos Sociales" },
+      { href: "/#services", label: "Maquillaje de Gala" },
+      { href: "/#services", label: "Piel Madura" },
+    ],
+    company: [
+      { href: "/#about", label: "Sobre mí" },
+      { href: "/#portfolio", label: "Portafolio" },
+      { href: "/#testimonials", label: "Testimonios" },
+    ],
+    legal: [
+      { href: "/politicas-privacidad", label: "Políticas de Privacidad" },
+      { href: "/terminos-condiciones", label: "Términos y Condiciones" },
+      { href: "/libro-reclamaciones", label: "Libro de Reclamaciones" },
+    ],
+  };
+
   return (
-    <footer className="bg-[#1F1F1F] dark:bg-[#0A0A0A] text-[#F3F4F6]">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+    <footer className="footer-section" ref={sectionRef}>
+      <div className="footer-container">
+        <div className="footer-grid">
           {/* Brand Column */}
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="space-y-4 order-1 lg:order-1"
+            className="footer-brand"
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6 }}
           >
-            <Link href="/" className="inline-block" aria-label="Inicio">
-              <h3 className="text-2xl md:text-3xl font-serif">
+            <Link href="/" className="footer-logo" aria-label="Inicio">
+              <Typography
+                as="h3"
+                variant="h3"
+                className="text-2xl md:text-3xl font-serif"
+              >
                 Marcela Cordero
-              </h3>
+              </Typography>
             </Link>
-            <p className="text-sm max-w-md leading-relaxed text-[#F3F4F6]">
+
+            <Typography
+              as="p"
+              variant="p"
+              className="footer-description text-sm"
+            >
               Maquillaje profesional para novias, eventos y fotografía —
               sofisticación natural y servicio personalizado.
-            </p>
+            </Typography>
 
-            <div className="flex items-center gap-3 mt-2">
+            <div className="footer-social">
               <a
                 href="https://www.instagram.com/marcelacorderobeauty/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
-                className="w-10 h-10 rounded-full flex items-center justify-center transition-colors text-[#FF007F] hover:text-[#FFC72C]"
+                className="footer-social-link"
               >
                 <Instagram className="w-5 h-5" />
               </a>
 
               <a
-                href="https://www.tiktok.com/"
+                href="https://wa.me/51989164990"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="TikTok"
-                className="w-10 h-10 rounded-full flex items-center justify-center transition-colors text-[#FF007F] hover:text-[#FFC72C]"
+                aria-label="WhatsApp"
+                className="footer-social-link"
               >
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
                   className="w-5 h-5"
+                  viewBox="0 0 24 24"
                   fill="currentColor"
-                  aria-hidden
+                  aria-hidden="true"
                 >
-                  <path d="M12 2v8.25A4.75 4.75 0 1114.75 15H18a6 6 0 10-6-13z" />
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488" />
                 </svg>
               </a>
             </div>
           </motion.div>
 
-          {/* Navigation Column */}
-          <motion.nav
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.05 }}
-            className="grid grid-cols-2 sm:grid-cols-3 gap-6 order-3 lg:order-2"
-            aria-label="Navegación del sitio"
+          {/* Navigation Columns */}
+          <motion.div
+            className="footer-nav"
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <div>
-              <h5 className="text-sm font-semibold text-[#FFC72C]">
-                Servicios
-              </h5>
-              <ul className="mt-3 space-y-2">
-                <li>
-                  <Link
-                    href="/services/makeup-bridal"
-                    className="text-sm hover:text-[#FF007F] transition-colors"
-                  >
-                    Novias
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/services/event"
-                    className="text-sm hover:text-[#FF007F] transition-colors"
-                  >
-                    Eventos
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/services/editorial"
-                    className="text-sm hover:text-[#FF007F] transition-colors"
-                  >
-                    Fotografía
-                  </Link>
-                </li>
-              </ul>
-            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+              <div>
+                <Typography
+                  as="h4"
+                  variant="h4"
+                  className="footer-nav-title text-sm"
+                >
+                  Servicios
+                </Typography>
+                <ul className="footer-nav-list">
+                  {navigationLinks.services.map((link, index) => (
+                    <li key={index}>
+                      <Link href={link.href} className="footer-nav-link">
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-            <div>
-              <h5 className="text-sm font-semibold text-[#FFC72C]">Empresa</h5>
-              <ul className="mt-3 space-y-2">
-                <li>
-                  <Link
-                    href="/about"
-                    className="text-sm hover:text-[#FF007F] transition-colors"
-                  >
-                    Sobre mí
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/portfolio"
-                    className="text-sm hover:text-[#FF007F] transition-colors"
-                  >
-                    Portafolio
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/testimonials"
-                    className="text-sm hover:text-[#FF007F] transition-colors"
-                  >
-                    Testimonios
-                  </Link>
-                </li>
-              </ul>
+              <div>
+                <Typography
+                  as="h4"
+                  variant="h4"
+                  className="footer-nav-title text-sm"
+                >
+                  Empresa
+                </Typography>
+                <ul className="footer-nav-list">
+                  {navigationLinks.company.map((link, index) => (
+                    <li key={index}>
+                      <Link href={link.href} className="footer-nav-link">
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-
-            <div>
-              <h5 className="text-sm font-semibold text-[#FFC72C]">Ayuda</h5>
-              <ul className="mt-3 space-y-2">
-                <li>
-                  <Link
-                    href="/politicas-privacidad"
-                    className="text-sm hover:text-[#FF007F] transition-colors"
-                  >
-                    Políticas de Privacidad
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/terminos-condiciones"
-                    className="text-sm hover:text-[#FF007F] transition-colors"
-                  >
-                    Términos y Condiciones
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/libro-reclamaciones"
-                    className="text-sm hover:text-[#FF007F] transition-colors"
-                  >
-                    Libro de Reclamaciones
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </motion.nav>
+          </motion.div>
 
           {/* Contact & CTA Column */}
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="space-y-4 order-2 lg:order-3"
+            className="footer-contact"
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h4 className="text-lg font-semibold">Contacto</h4>
-            <div className="text-sm space-y-2">
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
+            <Typography
+              as="h4"
+              variant="h4"
+              className="footer-nav-title text-lg"
+            >
+              Contacto
+            </Typography>
+
+            <div className="space-y-3">
+              <div className="footer-contact-item">
+                <MapPin className="w-4 h-4 flex-shrink-0" />
                 <span>Av. Bolívar 1073, Pueblo Libre, Lima</span>
               </div>
-              <div className="flex items-center gap-2">
-                <svg
-                  className="w-4 h-4"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  aria-hidden
-                >
-                  <path d="M2 4v16h20V4H2zm18 2v.01L12 11 4 6.01V6h16zM4 18V8.99l8 4.99 8-4.99V18H4z" />
-                </svg>
+
+              <div className="footer-contact-item">
+                <Mail className="w-4 h-4 flex-shrink-0" />
                 <a
                   href="mailto:contacto@marcelacordero.com"
-                  className="hover:text-[#FF007F] transition-colors"
+                  className="footer-contact-link"
                 >
                   contacto@marcelacordero.com
                 </a>
               </div>
+
+              <div className="footer-contact-item">
+                <svg
+                  className="w-4 h-4 flex-shrink-0"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488" />
+                </svg>
+                <a href="tel:+51989164990" className="footer-contact-link">
+                  +51 989 164 990
+                </a>
+              </div>
             </div>
 
-            <div className="mt-4">
-              <Link
-                href="/#booking"
-                className="inline-block w-full text-center bg-[#FFC72C] text-black font-medium py-3 px-4 rounded-md shadow-md hover:opacity-95 transition-all"
-                aria-label="Reservar Ahora"
+            <div className="footer-cta">
+              <Button
+                variant="primary"
+                size="md"
+                as="a"
+                href="https://wa.me/51989164990?text=Hola%20Marcela,%20me%20interesa%20agendar%20una%20cita"
+                className="w-full text-center"
+                aria-label="Reservar Ahora por WhatsApp"
               >
                 Reservar Ahora
-              </Link>
+              </Button>
+            </div>
+
+            {/* Legal Links */}
+            <div className="mt-6">
+              <Typography
+                as="h5"
+                variant="h4"
+                className="footer-nav-title text-sm mb-3"
+              >
+                Legal
+              </Typography>
+              <ul className="footer-nav-list">
+                {navigationLinks.legal.map((link, index) => (
+                  <li key={index}>
+                    <Link href={link.href} className="footer-nav-link">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           </motion.div>
         </div>
       </div>
 
       {/* Copyright Bar */}
-      <div className="border-t border-[rgba(255,255,255,0.06)]">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-3 text-center sm:text-left">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
-            <div className="text-sm text-[#A3A3A3]">
-              © {currentYear} Marcela Cordero. Todos los derechos reservados.
-            </div>
-            <div className="text-sm text-[#A3A3A3]">Hecho con ❤️ en Lima</div>
-          </div>
+      <div className="footer-bottom">
+        <div className="footer-bottom-content">
+          <Typography as="p" variant="p" className="footer-copyright">
+            © {currentYear} Marcela Cordero. Todos los derechos reservados.
+          </Typography>
+          <Typography as="p" variant="p" className="footer-made-with">
+            Hecho con ❤️ en Lima
+          </Typography>
         </div>
       </div>
 
       {/* Back to Top */}
       <motion.button
         onClick={scrollToTop}
-        className="fixed bottom-6 right-6 p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-50"
+        className="back-to-top"
         aria-label="Volver arriba"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
-        style={{ background: "#FF007F", color: "#fff" }}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-5 h-5"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-        >
-          <path
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M5 15l7-7 7 7"
-          />
-        </svg>
+        <ArrowUp className="w-5 h-5" />
       </motion.button>
     </footer>
   );
