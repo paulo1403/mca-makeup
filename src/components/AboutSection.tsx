@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import Image from 'next/image';
+import Image from "next/image";
 import {
   User,
   Heart,
@@ -17,7 +17,6 @@ import {
 import { motion, useInView } from "framer-motion";
 import Typography from "./ui/Typography";
 import Button from "./ui/Button";
-// @ts-expect-error - side-effect CSS import for tokens
 import "@/styles/components/about.css";
 
 type Specialty = {
@@ -100,13 +99,19 @@ export default function AboutSection() {
             <div className="relative mb-8">
               <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20 shadow-xl">
                 {/* Foto real de Marcela */}
-                <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                <div
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
                   <Image
                     src="https://marcelacorderomakeup.my.canva.site/_assets/media/6d0773b57fb0bc5f1db1ada4d9461476.jpg"
                     alt="Marcela Cordero"
                     fill
                     className="about-image"
-                    style={{ objectPosition: '50% 40%' }}
+                    style={{ objectPosition: "50% 40%" }}
                     priority
                   />
                 </div>
