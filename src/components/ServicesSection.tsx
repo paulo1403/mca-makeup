@@ -1,152 +1,273 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
-import { MapPin, Clock } from "lucide-react";
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { MapPin, Clock, Brush, Sparkles, Check, ArrowRight, Star } from "lucide-react";
 import Button from "./ui/Button";
-import useServiceGroups from '@/hooks/useServiceGroups';
+import Typography from "./ui/Typography";
+import useServiceGroups from "@/hooks/useServiceGroups";
 
+type ServiceGroup = {
+  title: string;
+  price: string;
+  features: string[];
+  portfolioUrl: string;
+};
 
+function ServiceCard({ service, index }: { service: ServiceGroup; index: number }) {
+  const isPopular = index === 1;
+  
+  return (
+    <motion.article
+      className={`relative group ${isPopular ? 'service-card-featured' : 'service-card'}`}
+      whileHover={{ y: -6, transition: { duration: 0.3 } }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.08 }}
+    >
+      {isPopular && (
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+          <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)] text-white text-xs font-semibold shadow-lg">
+            <Star className="w-3 h-3 fill-current" />
+            Más Popular
+          </div>
+        </div>
+      )}
+
+      <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-[color:var(--color-primary)]/10 via-transparent to-[color:var(--color-accent)]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+      <div className="relative p-5 sm:p-6">
+        {/* Header - Más compacto */}
+        <header className="mb-4">
+          <div className="flex items-start justify-between gap-3 mb-3">
+            <motion.div 
+              className="p-2.5 rounded-lg bg-gradient-to-br from-[color:var(--color-primary)]/10 to-[color:var(--color-accent)]/10 border border-[color:var(--color-accent)]/20 flex-shrink-0"
+              whileHover={{ rotate: 360, scale: 1.05 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Brush className="w-4 h-4 text-[color:var(--color-primary)]" />
+            </motion.div>
+            <div className="flex-1 min-w-0">
+              <Typography as="h3" variant="h3" className="text-lg sm:text-xl font-bold text-[color:var(--color-heading)] mb-0.5 leading-tight">
+                {service.title}
+              </Typography>
+              <Typography as="p" variant="small" className="text-xs text-[color:var(--color-muted)]">
+                Servicio profesional
+              </Typography>
+            </div>
+          </div>
+        </header>
+
+        {/* Features - Más compactas */}
+        <div className="mb-4 space-y-2">
+          {service.features.map((feature, i) => (
+            <motion.div
+              key={i}
+              className="flex items-start gap-2.5 group/item"
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.08 + i * 0.04 }}
+            >
+              <div className="flex-shrink-0 mt-0.5">
+                <div className="w-4 h-4 rounded-full bg-[color:var(--color-accent)]/15 flex items-center justify-center group-hover/item:bg-[color:var(--color-accent)]/25 transition-colors">
+                  <Check className="w-2.5 h-2.5 text-[color:var(--color-primary)]" strokeWidth={3} />
+                </div>
+              </div>
+              <Typography as="p" variant="p" className="text-sm text-[color:var(--color-body)] leading-snug group-hover/item:text-[color:var(--color-heading)] transition-colors">
+                {feature}
+              </Typography>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Divider */}
+        <div className="h-px bg-gradient-to-r from-transparent via-[color:var(--color-accent)]/25 to-transparent mb-4" />
+
+        {/* Footer - Más compacto */}
+        <div className="flex items-end justify-between gap-3">
+          <div>
+            <Typography as="div" variant="small" className="text-[10px] text-[color:var(--color-muted)] mb-0.5 uppercase tracking-wider font-medium">
+              Desde
+            </Typography>
+            <Typography as="div" variant="h4" className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)] bg-clip-text text-transparent">
+              {service.price}
+            </Typography>
+          </div>
+
+          <Button
+            variant={isPopular ? "primary" : "secondary"}
+            size="sm"
+            onClick={() => window.open(service.portfolioUrl, "_blank")}
+            className="group/btn whitespace-nowrap"
+          >
+            <span className="text-sm">Ver trabajos</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 transition-transform" />
+          </Button>
+        </div>
+      </div>
+
+      <motion.div
+        className="absolute top-3 right-3 text-[color:var(--color-accent)]/20"
+        animate={{
+          scale: [1, 1.15, 1],
+          rotate: [0, 45, 0],
+          opacity: [0.2, 0.4, 0.2],
+        }}
+        transition={{
+          duration: 3.5,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      >
+        <Sparkles className="w-3.5 h-3.5" />
+      </motion.div>
+    </motion.article>
+  );
+}
 
 export default function ServicesSection() {
-  const { data: services = [], isLoading: loading } = useServiceGroups();
-
+  const { data: services = [], isLoading } = useServiceGroups();
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 50, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-    },
-  };
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
     <section
       id="servicios"
-      className="py-16 sm:py-20 section-bg-services"
+      className="relative py-16 sm:py-20 overflow-hidden"
       ref={ref}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-        {/* Header - Más minimalista */}
+      {/* Background - más sutil */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-20 left-10 w-48 h-48 bg-[color:var(--color-primary)]/3 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-64 h-64 bg-[color:var(--color-accent)]/3 rounded-full blur-3xl" />
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl relative z-10">
+        {/* Header - Más compacto */}
         <motion.div
-          className="text-center mb-8 sm:mb-12 lg:mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6 }}
+          className="text-center mb-10 sm:mb-12"
+          initial={{ opacity: 0, y: 15 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+          transition={{ duration: 0.5 }}
         >
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl section-title text-heading mb-3 sm:mb-4">
-            Descubre Nuestros Servicios Premium
-          </h2>
-          <p className="text-base sm:text-lg text-main max-w-2xl mx-auto leading-relaxed px-2">
-            Maquillaje profesional para novias y eventos con atención personalizada
-          </p>
+          <motion.div
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[color:var(--color-accent)]/10 border border-[color:var(--color-accent)]/20 mb-4"
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={isInView ? { scale: 1, opacity: 1 } : { scale: 0.95, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Sparkles className="w-3.5 h-3.5 text-[color:var(--color-primary)]" />
+            <span className="text-xs font-medium text-[color:var(--color-primary)]">
+              Servicios Profesionales
+            </span>
+          </motion.div>
+
+          <Typography as="h2" variant="h2" className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[color:var(--color-heading)] mb-3">
+            Nuestros <span className="text-transparent bg-clip-text bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)]">Servicios</span>
+          </Typography>
+          
+          <Typography as="p" variant="p" className="text-sm sm:text-base text-[color:var(--color-body)] max-w-xl mx-auto leading-relaxed">
+            Maquillaje y servicios estéticos diseñados para cada ocasión, con atención personalizada.
+          </Typography>
         </motion.div>
 
-        {/* Services Grid - Diseño más limpio y responsivo */}
-        <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-        >
-          {loading
-            ? // Loading skeleton
-              Array.from({ length: 3 }).map((_, index) => (
-                <div key={index} className="text-center">
-                  <div className="service-card animate-pulse">
-                    <div className="h-5 sm:h-6 bg-[color:var(--color-surface-2)] rounded mb-3 sm:mb-4 mx-auto w-3/4"></div>
-                    <div className="space-y-2 mb-4 sm:mb-6">
-                      <div className="h-3 sm:h-4 bg-[color:var(--color-surface-2)] rounded"></div>
-                      <div className="h-3 sm:h-4 bg-[color:var(--color-surface-2)] rounded"></div>
-                      <div className="h-3 sm:h-4 bg-[color:var(--color-surface-2)] rounded"></div>
-                    </div>
-                    <div className="h-6 sm:h-8 bg-[color:var(--color-surface-2)] rounded mb-3 sm:mb-4 mx-auto w-1/2"></div>
-                    <div className="h-10 bg-[color:var(--color-surface-2)] rounded mx-auto w-3/4"></div>
-                  </div>
-                </div>
+        {/* Cards Grid - Grid más compacto */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 mb-12 sm:mb-14">
+          {isLoading
+            ? Array.from({ length: 3 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-80 rounded-xl bg-[color:var(--color-surface)] animate-pulse"
+                />
               ))
             : services.map((service, index) => (
-                <motion.div
-                  key={index}
-                  variants={itemVariants}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="text-center group"
-                >
-                  <div className="service-card transition-all duration-300 hover:shadow-lg active:scale-[0.98] relative">
-                    {/* Indicador visual de que es clickeable en mobile */}
-                    <div className="absolute top-3 right-3 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                      <div className="w-2 h-2 bg-accent-primary rounded-full"></div>
-                    </div>
-                    
-                    <h3 className="text-lg sm:text-xl section-title text-heading mb-3 sm:mb-4">
-                      {service.title}
-                    </h3>
-
-                    <div className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-6">
-                      {service.features.map((feature, idx) => (
-                        <p key={idx} className="text-xs sm:text-sm text-main leading-relaxed flex items-start">
-                          <span className="feature-bullet mt-1 mr-3 flex-shrink-0" />
-                          <span>{feature}</span>
-                        </p>
-                      ))}
-                    </div>
-
-                    <div className="service-price text-xl sm:text-2xl font-light text-accent-primary mb-4">
-                      {service.price}
-                    </div>
-
-                    <div className="w-full sm:w-auto">
-                      <Button
-                        variant="secondary"
-                        size="md"
-                        className="w-full sm:w-auto"
-                        onClick={() => window.open(service.portfolioUrl, "_blank")}
-                      >
-                        Ver portafolio
-                      </Button>
-                    </div>
-                  </div>
-                </motion.div>
+                <ServiceCard
+                  key={service.title}
+                  service={service}
+                  index={index}
+                />
               ))}
-        </motion.div>
+        </div>
 
-        {/* Contact Information - Optimizado para mobile */}
+        {/* Bottom CTA - Más compacto */}
         <motion.div
-          className="mt-12 sm:mt-16 lg:mt-20 text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <div className="attention-card max-w-2xl mx-auto">
-            <h3 className="text-lg sm:text-xl font-playfair mb-3 sm:mb-4 text-heading">
-              Atención Personalizada
-            </h3>
-            <p className="text-sm sm:text-base text-main mb-4 sm:mb-6 leading-relaxed px-2 sm:px-0">
-              Servicios profesionales en nuestro estudio en Av. Bolívar 1073,
-              Pueblo Libre o en la ubicación de tu preferencia
-            </p>
-            <div className="flex flex-col xs:flex-row gap-4 sm:gap-6 justify-center items-center text-xs sm:text-sm text-main">
-              <div className="flex items-center min-h-[44px]">
-                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-accent-primary mr-2 flex-shrink-0" />
-                <span>Servicio a domicilio</span>
-              </div>
-              <div className="flex items-center min-h-[44px]">
-                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-accent-primary mr-2 flex-shrink-0" />
-                <span>Horarios flexibles</span>
+          <div className="relative max-w-4xl mx-auto">
+            <div className="absolute inset-0 bg-gradient-to-br from-[color:var(--color-primary)]/8 via-[color:var(--color-accent)]/4 to-transparent rounded-2xl blur-xl" />
+            
+            <div className="relative p-6 sm:p-8 rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-accent)]/20 backdrop-blur-sm">
+              <div className="grid md:grid-cols-[1.2fr,1fr] gap-6 items-center">
+                {/* Left content */}
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[color:var(--color-accent)]/10 text-xs font-medium text-[color:var(--color-primary)] mb-3">
+                    <Sparkles className="w-3 h-3" />
+                    Atención Personalizada
+                  </div>
+                  
+                  <Typography as="h3" variant="h3" className="text-xl sm:text-2xl font-bold text-[color:var(--color-heading)] mb-2">
+                    Te atendemos donde prefieras
+                  </Typography>
+                  
+                  <Typography as="p" variant="p" className="text-sm text-[color:var(--color-body)] leading-relaxed mb-5">
+                    Visítanos en Av. Bolívar 1073, Pueblo Libre, o agenda una cita a domicilio.
+                  </Typography>
+
+                  <Button
+                    variant="primary"
+                    size="md"
+                    onClick={() => {
+                      const el = document.getElementById("contacto");
+                      el?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    className="group/cta"
+                  >
+                    <Sparkles className="w-4 h-4 group-hover/cta:rotate-12 transition-transform" />
+                    Agendar Ahora
+                    <ArrowRight className="w-4 h-4 group-hover/cta:translate-x-0.5 transition-transform" />
+                  </Button>
+                </div>
+
+                {/* Right info cards */}
+                <div className="grid gap-3">
+                  <motion.div
+                    className="flex items-center gap-3 p-4 rounded-xl bg-[color:var(--color-background)] border border-[color:var(--color-accent)]/10"
+                    whileHover={{ scale: 1.02, borderColor: "var(--color-accent)" }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div className="p-2 rounded-lg bg-[color:var(--color-accent)]/10 flex-shrink-0">
+                      <MapPin className="w-5 h-5 text-[color:var(--color-primary)]" />
+                    </div>
+                    <div>
+                      <Typography as="h4" variant="h4" className="text-sm font-semibold text-[color:var(--color-heading)] mb-0.5">
+                        Servicio a domicilio
+                      </Typography>
+                      <Typography as="p" variant="small" className="text-xs text-[color:var(--color-muted)]">
+                        En toda Lima
+                      </Typography>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    className="flex items-center gap-3 p-4 rounded-xl bg-[color:var(--color-background)] border border-[color:var(--color-accent)]/10"
+                    whileHover={{ scale: 1.02, borderColor: "var(--color-accent)" }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div className="p-2 rounded-lg bg-[color:var(--color-accent)]/10 flex-shrink-0">
+                      <Clock className="w-5 h-5 text-[color:var(--color-primary)]" />
+                    </div>
+                    <div>
+                      <Typography as="h4" variant="h4" className="text-sm font-semibold text-[color:var(--color-heading)] mb-0.5">
+                        Horarios flexibles
+                      </Typography>
+                      <Typography as="p" variant="small" className="text-xs text-[color:var(--color-muted)]">
+                        Según tu evento
+                      </Typography>
+                    </div>
+                  </motion.div>
+                </div>
               </div>
             </div>
           </div>

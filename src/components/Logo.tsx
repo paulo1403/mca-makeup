@@ -7,9 +7,9 @@ export default function Logo() {
       {/* Desktop Logo */}
       <div className="logo-wrapper logo-desktop">
         <svg 
-          width="180" 
+          width="200" 
           height="44" 
-          viewBox="0 0 180 44" 
+          viewBox="0 0 200 44" 
           fill="none" 
           xmlns="http://www.w3.org/2000/svg"
           className="brand-logo"
