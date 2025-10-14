@@ -5,6 +5,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Toaster } from 'react-hot-toast';
 import './globals.css';
+import GlobalParticles from '@/components/GlobalParticles';
 
 const playfair = Playfair_Display({
   variable: '--font-playfair',
@@ -211,6 +212,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${playfair.variable} ${allura.variable} antialiased overflow-x-hidden max-w-full`}
       >
+        <GlobalParticles />
         <QueryProvider>
           {children}
         </QueryProvider>
