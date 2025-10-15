@@ -20,6 +20,9 @@
   --color-body: #4C4960;              /* Gris morado */
   --color-muted: #6B7280;             /* Gris neutro */
 
+  /* Borders */
+  --color-border: #E5E1F5;            /* Borde suave morado */
+
   /* Semantic */
   --color-cta-bg: #7C3AED;
   --color-cta-hover: #6D28D9;
@@ -124,6 +127,9 @@
   --color-heading: #F5F3FF;           /* Títulos blancos */
   --color-body: #E5E1F5;              /* Texto body */
   --color-muted: #A1A1B5;             /* Texto secundario */
+
+  /* Borders */
+  --color-border: #2D2A3A;            /* Borde oscuro morado */
 
   /* Semantic */
   --color-cta-bg: #8B5CF6;

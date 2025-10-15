@@ -1,9 +1,10 @@
 import React from 'react';
+import Link from 'next/link';
 import '../styles/components/logo.css'
 
 export default function Logo() {
   return (
-    <>
+    <Link href="/" className="cursor-pointer">
       {/* Desktop Logo */}
       <div className="logo-wrapper logo-desktop">
         <svg 
@@ -179,6 +180,6 @@ export default function Logo() {
           </defs>
         </svg>
       </div>
-    </>
+    </Link>
   );
 }

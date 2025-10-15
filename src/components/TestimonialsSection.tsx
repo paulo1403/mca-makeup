@@ -236,6 +236,7 @@ export default function TestimonialsSection() {
     <section
       id="testimonials"
       className="py-16 sm:py-24 testimonials-section relative overflow-hidden"
+      style={{ scrollMarginTop: '120px' }}
       ref={sectionRef}
     >
       {/* Elementos decorativos de fondo */}

@@ -100,7 +100,6 @@ p,
   font-family: var(--font-body);
   font-size: var(--text-body);
   line-height: var(--text-body-lh);
-  color: var(--color-body);
 }
 
 /* Lead text (intro paragraphs) */

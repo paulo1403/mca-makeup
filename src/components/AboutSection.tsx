@@ -17,7 +17,6 @@ import {
 import { motion, useInView } from "framer-motion";
 import Typography from "./ui/Typography";
 import Button from "./ui/Button";
-import "@/styles/components/about.css";
 
 type Specialty = {
   id: string;
@@ -51,6 +50,7 @@ export default function AboutSection() {
     <section
       id="about"
       className="py-16 sm:py-20 about-section relative overflow-hidden"
+      style={{ scrollMarginTop: '120px' }}
       ref={sectionRef}
     >
       {/* Elementos decorativos de fondo */}
@@ -160,10 +160,10 @@ export default function AboutSection() {
                 onClick={() =>
                   window.open("https://wa.me/51989164990", "_blank")
                 }
-                className="flex items-center justify-center gap-2 px-4 py-2 rounded-full border border-[color:var(--color-border)]/20"
+                className="flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-colors"
               >
                 <Phone className="w-4 h-4" />
-                <span className="hidden sm:inline">WhatsApp</span>
+                <span className="font-medium">WhatsApp</span>
               </Button>
               <Button
                 variant="ghost"
@@ -174,10 +174,10 @@ export default function AboutSection() {
                     "_blank"
                   )
                 }
-                className="flex items-center justify-center gap-2 px-4 py-2 rounded-full border border-[color:var(--color-border)]/20"
+                className="flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-colors"
               >
                 <Instagram className="w-4 h-4" />
-                <span className="hidden sm:inline">Instagram</span>
+                <span className="font-medium">Instagram</span>
               </Button>
             </div>
           </motion.div>
@@ -270,12 +270,23 @@ export default function AboutSection() {
               <Button
                 variant="primary"
                 size="lg"
-                onClick={() =>
-                  window.open(
-                    "https://wa.me/51989164990?text=Hola%20Marcela,%20me%20gustar%C3%ADa%20agendar%20una%20consulta",
-                    "_blank"
-                  )
-                }
+                onClick={() => {
+                  const element = document.querySelector("#contacto");
+                  if (element) {
+                    const header = document.querySelector('header');
+                    const headerHeight = header ? header.offsetHeight : 80;
+                    const isMobile = window.innerWidth < 768;
+                    const extraMargin = isMobile ? 60 : 30;
+                    
+                    const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+                    const offsetPosition = elementPosition - headerHeight - extraMargin;
+                    
+                    window.scrollTo({
+                      top: offsetPosition,
+                      behavior: "smooth"
+                    });
+                  }
+                }}
                 className="px-6 py-3 rounded-full flex items-center justify-center gap-2"
               >
                 <Mail className="w-4 h-4" />
@@ -285,12 +296,14 @@ export default function AboutSection() {
                 variant="ghost"
                 size="lg"
                 onClick={() =>
-                  document
-                    .getElementById("portfolio")
-                    ?.scrollIntoView({ behavior: "smooth" })
+                  window.open(
+                    "https://www.instagram.com/marcelacorderobeauty/",
+                    "_blank"
+                  )
                 }
-                className="px-6 py-3 rounded-full border border-[color:var(--color-border)]/20"
+                className="px-6 py-3 rounded-full border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-colors"
               >
+                <Instagram className="w-4 h-4" />
                 Ver Mi Trabajo
               </Button>
             </div>

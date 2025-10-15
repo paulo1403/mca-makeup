@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import Typography from "./ui/Typography";
 import Button from "./ui/Button";
-import "@/styles/components/portfolio.css";
 
 type PortfolioCategory = {
   title: string;
@@ -64,7 +63,8 @@ export default function PortfolioSection() {
   return (
     <section
       id="portafolio"
-      className="py-20 sm:py-28 section-bg-portfolio"
+      className="py-20 sm:py-28 bg-[color:var(--color-background)]"
+      style={{ scrollMarginTop: '120px' }}
       ref={ref}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
@@ -134,12 +134,12 @@ export default function PortfolioSection() {
               custom={i}
               variants={cardVariants}
             >
-              <div className="portfolio-card p-6 rounded-2xl h-full flex flex-col">
+              <div className="p-6 rounded-2xl h-full flex flex-col bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/20 group-hover:border-[color:var(--color-primary)]/50 transition-all duration-300">
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 rounded-xl bg-[color:var(--color-accent)]/10 text-[color:var(--color-primary)]">
                     {cat.icon}
                   </div>
-                  <div className="portfolio-count text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)]">
+                  <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)]">
                     {cat.count}
                   </div>
                 </div>
@@ -147,16 +147,16 @@ export default function PortfolioSection() {
                 <Typography
                   as="h3"
                   variant="h3"
-                  className="portfolio-title text-xl font-bold text-[color:var(--color-heading)] mb-2"
+                  className="text-xl font-bold text-[color:var(--color-heading)] mb-2"
                 >
                   {cat.title}
                 </Typography>
 
-                <p className="portfolio-desc text-[color:var(--color-body)] mb-6 flex-grow">
+                <p className="text-[color:var(--color-body)] mb-6 flex-grow">
                   {cat.description}
                 </p>
 
-                <div className="portfolio-meta mt-auto">
+                <div className="mt-auto">
                   <Button
                     as="a"
                     href={cat.url}
@@ -175,7 +175,7 @@ export default function PortfolioSection() {
         </motion.div>
 
         <motion.div
-          className="text-center portfolio-quote max-w-3xl mx-auto rounded-2xl p-10 border border-[color:var(--color-accent)]/8"
+          className="text-center max-w-3xl mx-auto rounded-2xl p-10 bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/20"
           initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -198,7 +198,7 @@ export default function PortfolioSection() {
               MC
             </div>
             <div className="text-left">
-              <p className="quote-author font-semibold text-[color:var(--color-heading)]">
+              <p className="font-semibold text-[color:var(--color-heading)]">
                 Marcela Cordero
               </p>
               <p className="text-sm text-[color:var(--color-body)]">

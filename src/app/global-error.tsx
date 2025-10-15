@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
 import { useEffect } from 'react';
 import ErrorPage from '@/components/ErrorPage';
+import QueryProvider from '@/providers/QueryProvider';
 
 export default function GlobalError({
   error,
@@ -18,13 +19,15 @@ export default function GlobalError({
   return (
     <html>
       <body>
-        <ErrorPage
-          error={error}
-          reset={reset}
-          statusCode={500}
-          title="Error crítico del sistema"
-          description="Ha ocurrido un error inesperado en el sistema. Nuestro equipo técnico ha sido notificado automáticamente."
-        />
+        <QueryProvider>
+          <ErrorPage
+            error={error}
+            reset={reset}
+            statusCode={500}
+            title="Error crítico del sistema"
+            description="Ha ocurrido un error inesperado en el sistema. Nuestro equipo técnico ha sido notificado automáticamente."
+          />
+        </QueryProvider>
       </body>
     </html>
   );

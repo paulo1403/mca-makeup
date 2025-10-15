@@ -193,10 +193,25 @@ export default function Footer() {
               <Button
                 variant="primary"
                 size="md"
-                as="a"
-                href="https://wa.me/51989164990?text=Hola%20Marcela,%20me%20interesa%20agendar%20una%20cita"
+                onClick={() => {
+                  const element = document.querySelector("#contacto");
+                  if (element) {
+                    const header = document.querySelector('header');
+                    const headerHeight = header ? header.offsetHeight : 80;
+                    const isMobile = window.innerWidth < 768;
+                    const extraMargin = isMobile ? 60 : 30;
+                    
+                    const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+                    const offsetPosition = elementPosition - headerHeight - extraMargin;
+                    
+                    window.scrollTo({
+                      top: offsetPosition,
+                      behavior: "smooth"
+                    });
+                  }
+                }}
                 className="w-full text-center"
-                aria-label="Reservar Ahora por WhatsApp"
+                aria-label="Reservar Ahora - Ir al Formulario"
               >
                 Reservar Ahora
               </Button>

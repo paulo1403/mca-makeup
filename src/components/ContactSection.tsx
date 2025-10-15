@@ -13,7 +13,6 @@ import {
   Star,
 } from "lucide-react";
 import BookingFlow from "./BookingFlow";
-import ThemeToggle from "./ThemeToggle";
 import Typography from "./ui/Typography";
 import Button from "./ui/Button";
 import "@/styles/components/contact.css";
@@ -65,7 +64,7 @@ export default function ContactSection() {
   ];
 
   return (
-    <section id="contacto" className="contact-section" ref={sectionRef}>
+    <section id="contacto" className="contact-section" style={{ scrollMarginTop: '120px' }} ref={sectionRef}>
       {/* Elementos decorativos */}
       <div className="contact-decoration contact-decoration--1" />
       <div className="contact-decoration contact-decoration--2" />
@@ -110,11 +109,6 @@ export default function ContactSection() {
             prefieres asistencia, escríbeme y te guío en el proceso.
           </Typography>
         </motion.div>
-
-        {/* Theme Toggle */}
-        <div className="contact-theme-toggle">
-          <ThemeToggle />
-        </div>
 
         {/* Layout principal */}
         <div className="contact-layout">

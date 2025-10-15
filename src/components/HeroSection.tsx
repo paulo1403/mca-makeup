@@ -5,16 +5,20 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
-import { MapPin, Truck, Instagram, Clock, Sparkles } from "lucide-react";
+import { MapPin, Truck, Instagram, Clock, Sparkles, Star } from "lucide-react";
 
 export default function HeroSection() {
   return (
-    <section className="relative bg-background overflow-hidden">
+    <section
+      id="hero"
+      className="relative bg-[color:var(--color-surface)] overflow-hidden"
+      style={{ scrollMarginTop: "120px" }}
+    >
       {/* Decorative Background Elements */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {/* Gradient Orbs */}
         <motion.div
-          className="absolute top-0 -left-20 w-72 h-72 bg-[color:var(--color-accent)] opacity-20 rounded-full blur-3xl"
+          className="absolute top-0 -left-20 w-72 h-72 bg-[color:var(--color-primary)] opacity-20 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.2, 1],
             opacity: [0.2, 0.3, 0.2],
@@ -26,7 +30,7 @@ export default function HeroSection() {
           }}
         />
         <motion.div
-          className="absolute top-40 right-0 w-96 h-96 bg-[color:var(--color-primary)] opacity-15 rounded-full blur-3xl"
+          className="absolute bottom-0 right-0 w-96 h-96 bg-[color:var(--color-accent)] opacity-15 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.15, 1],
             opacity: [0.15, 0.25, 0.15],
@@ -57,51 +61,59 @@ export default function HeroSection() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[calc(100vh-80px)] py-16 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[calc(100vh-80px)] pt-24 pb-16 lg:py-24">
           {/* Left: Content */}
           <div className="flex flex-col gap-8">
-            {/* Badges and stats removed by request */}
-
-            {/* Decorative sparkles */}
-            <span className="hero-sparkle sparkle-1" aria-hidden></span>
-            <span className="hero-sparkle sparkle-2" aria-hidden></span>
-            <span className="hero-sparkle sparkle-3" aria-hidden></span>
-
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[color:var(--color-accent)]/10 border border-[color:var(--color-accent)]/20 backdrop-blur-sm w-fit">
-              <Sparkles className="w-4 h-4 text-[color:var(--color-accent)]" />
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[color:var(--color-primary)]/10 border border-[color:var(--color-primary)]/20 backdrop-blur-sm w-fit"
+            >
+              <Sparkles className="w-4 h-4 text-[color:var(--color-primary)]" />
               <span className="text-sm font-medium text-[color:var(--color-primary)]">
                 Makeup Artist Profesional
               </span>
-            </div>
+            </motion.div>
 
             {/* Title with gradient */}
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              style={{ overflow: 'visible' }}
+              transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <Typography as="h1" variant="display" className="relative overflow-visible">
-                <span className="block mb-2 text-[color:var(--color-heading)]">
-                  Marcela Cordero
-                </span>
+              <Typography
+                as="h1"
+                variant="h1"
+                className="text-[color:var(--color-heading)] font-serif text-3xl sm:text-4xl lg:text-5xl leading-tight"
+              >
+                <span className="block mb-2">Marcela Cordero</span>
                 <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)]">
                   Beauty Studio
                 </span>
               </Typography>
             </motion.div>
 
-            {/* Description with better spacing */}
+            {/* Description */}
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
               className="space-y-4"
             >
-              <p className="text-lg text-[color:var(--color-body)] max-w-xl leading-relaxed">
+              <Typography
+                as="p"
+                variant="p"
+                className="text-[color:var(--color-body)] text-lg max-w-xl leading-relaxed"
+              >
                 Realzando tu belleza para momentos inolvidables.
-              </p>
-              <p className="text-base text-[color:var(--color-muted)] max-w-xl">
+              </Typography>
+              <Typography
+                as="p"
+                variant="p"
+                className="text-[color:var(--color-body)]/80 max-w-xl"
+              >
                 Especialista en{" "}
                 <span className="text-[color:var(--color-primary)] font-semibold">
                   Soft Glam
@@ -111,22 +123,88 @@ export default function HeroSection() {
                   Maquillaje Nupcial
                 </span>
                 , personalizado para resaltar tu belleza natural.
-              </p>
+              </Typography>
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="grid grid-cols-3 gap-4 py-4"
+            >
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
+                  5.0
+                </div>
+                <div className="flex items-center justify-center gap-1 mt-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className="w-4 h-4 text-[color:var(--color-accent)] fill-current"
+                    />
+                  ))}
+                </div>
+                <Typography
+                  as="p"
+                  variant="small"
+                  className="text-[color:var(--color-body)] mt-1"
+                >
+                  Calificación
+                </Typography>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
+                  370+
+                </div>
+                <Typography
+                  as="p"
+                  variant="small"
+                  className="text-[color:var(--color-body)] mt-1"
+                >
+                  Clientes
+                </Typography>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
+                  8+
+                </div>
+                <Typography
+                  as="p"
+                  variant="small"
+                  className="text-[color:var(--color-body)] mt-1"
+                >
+                  Años Exp.
+                </Typography>
+              </div>
             </motion.div>
 
             {/* CTAs */}
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex flex-col xs:flex-row gap-4"
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="flex flex-col sm:flex-row gap-4"
             >
               <Button
                 variant="primary"
                 size="lg"
                 onClick={() => {
-                  const el = document.getElementById("contacto");
-                  el?.scrollIntoView({ behavior: "smooth" });
+                  const element = document.querySelector("#contacto");
+                  if (element) {
+                    const header = document.querySelector('header');
+                    const headerHeight = header ? header.offsetHeight : 80;
+                    const isMobile = window.innerWidth < 768;
+                    const extraMargin = isMobile ? 60 : 30;
+                    
+                    const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+                    const offsetPosition = elementPosition - headerHeight - extraMargin;
+                    
+                    window.scrollTo({
+                      top: offsetPosition,
+                      behavior: "smooth"
+                    });
+                  }
                 }}
                 className="group"
               >
@@ -138,11 +216,11 @@ export default function HeroSection() {
                 variant="secondary"
                 size="lg"
                 onClick={() => {
-                  const el = document.getElementById("portfolio");
+                  const el = document.getElementById("portafolio");
                   el?.scrollIntoView({ behavior: "smooth" });
                 }}
               >
-                Ver Portfolio
+                Ver Portafolio
               </Button>
             </motion.div>
 
@@ -150,54 +228,72 @@ export default function HeroSection() {
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="info-cards grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4"
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="grid grid-cols-1 sm:grid-cols-3 gap-4"
             >
-              <div className="info-card flex items-start gap-3 p-3 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-accent)]/10 hover:border-[color:var(--color-accent)]/30 transition-colors">
-                <div className="info-icon p-1 rounded-md bg-[color:var(--color-accent)]/10">
-                  <MapPin className="w-4 h-4 text-[color:var(--color-primary)]" />
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-[color:var(--color-surface-secondary)] border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-all duration-300">
+                <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/10 flex items-center justify-center flex-shrink-0">
+                  <MapPin className="w-5 h-5 text-[color:var(--color-primary)]" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-[color:var(--color-muted)] mb-1">
+                  <Typography
+                    as="p"
+                    variant="small"
+                    className="text-[color:var(--color-muted)] font-medium mb-1"
+                  >
                     Ubicación
-                  </p>
-                  <p className="text-sm text-[color:var(--color-body)] leading-tight">
-                    Av. Bolívar 1073
-                    <br />
-                    Pueblo Libre, Lima
-                  </p>
+                  </Typography>
+                  <Typography
+                    as="p"
+                    variant="p"
+                    className="text-[color:var(--color-body)] text-sm leading-tight"
+                  >
+                    Av. Bolívar 1073, Pueblo Libre
+                  </Typography>
                 </div>
               </div>
 
-              <div className="info-card flex items-start gap-3 p-3 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-accent)]/10 hover:border-[color:var(--color-accent)]/30 transition-colors">
-                <div className="info-icon p-1 rounded-md bg-[color:var(--color-accent)]/10">
-                  <Truck className="w-4 h-4 text-[color:var(--color-primary)]" />
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-[color:var(--color-surface-secondary)] border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-all duration-300">
+                <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/10 flex items-center justify-center flex-shrink-0">
+                  <Truck className="w-5 h-5 text-[color:var(--color-primary)]" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-[color:var(--color-muted)] mb-1">
+                  <Typography
+                    as="p"
+                    variant="small"
+                    className="text-[color:var(--color-muted)] font-medium mb-1"
+                  >
                     Servicio
-                  </p>
-                  <p className="text-sm text-[color:var(--color-body)] leading-tight">
-                    A domicilio
-                    <br />
-                    disponible
-                  </p>
+                  </Typography>
+                  <Typography
+                    as="p"
+                    variant="p"
+                    className="text-[color:var(--color-body)] text-sm leading-tight"
+                  >
+                    A domicilio disponible
+                  </Typography>
                 </div>
               </div>
 
-              <div className="info-card flex items-start gap-3 p-3 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-accent)]/10 hover:border-[color:var(--color-accent)]/30 transition-colors">
-                <div className="info-icon p-1 rounded-md bg-[color:var(--color-accent)]/10">
-                  <Clock className="w-4 h-4 text-[color:var(--color-primary)]" />
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-[color:var(--color-surface-secondary)] border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-all duration-300">
+                <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/10 flex items-center justify-center flex-shrink-0">
+                  <Clock className="w-5 h-5 text-[color:var(--color-primary)]" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-[color:var(--color-muted)] mb-1">
+                  <Typography
+                    as="p"
+                    variant="small"
+                    className="text-[color:var(--color-muted)] font-medium mb-1"
+                  >
                     Horarios
-                  </p>
-                  <p className="text-sm text-[color:var(--color-body)] leading-tight">
-                    Flexibles
-                    <br />
-                    según tu evento
-                  </p>
+                  </Typography>
+                  <Typography
+                    as="p"
+                    variant="p"
+                    className="text-[color:var(--color-body)] text-sm leading-tight"
+                  >
+                    Flexibles según tu evento
+                  </Typography>
                 </div>
               </div>
             </motion.div>
@@ -211,10 +307,10 @@ export default function HeroSection() {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             {/* Decorative border */}
-            <div className="absolute -inset-4 bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)] rounded-3xl opacity-20 blur-2xl" />
+            <div className="absolute -inset-4 bg-gradient-to-r from-[color:var(--color-primary)]/20 to-[color:var(--color-accent)]/20 rounded-3xl opacity-60 blur-xl" />
 
             {/* Main image container */}
-            <div className="relative h-[500px] lg:h-[600px] rounded-2xl overflow-hidden shadow-2xl border border-[color:var(--color-accent)]/20">
+            <div className="relative h-[400px] sm:h-[500px] lg:h-[600px] rounded-2xl overflow-hidden shadow-2xl border border-[color:var(--color-border)]/20">
               <Image
                 src="/marcela-hero.jpg"
                 alt="Marcela Cordero - Makeup Artist Profesional"
@@ -225,46 +321,56 @@ export default function HeroSection() {
               />
 
               {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
 
-              {/* Floating badge */}
+              {/* Floating badge - CORREGIDO */}
               <motion.div
                 className="absolute top-6 right-6"
                 initial={{ x: 20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
               >
-                <div className="rating-pill">
-                  <p className="text-sm font-semibold text-[color:var(--color-primary)]">
-                    ⭐ 5.0 Rating
-                  </p>
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[color:var(--color-surface)]/90 backdrop-blur-sm border border-[color:var(--color-border)]/50">
+                  <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className="w-4 h-4 text-[color:var(--color-accent)] fill-current"
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm font-semibold text-[color:var(--color-heading)]">
+                    5.0
+                  </span>
                 </div>
               </motion.div>
 
-              {/* Social links */}
+              {/* Social links - CORREGIDO */}
               <motion.div
-                className="absolute bottom-6 left-6 flex items-center gap-3"
+                className="absolute bottom-6 left-6"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.9 }}
               >
-                <a
-                  href="https://www.instagram.com/marcelacorderobeauty/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Instagram de Marcela Cordero"
-                  className="p-3 rounded-xl social-pill group"
-                >
-                  <Instagram className="w-5 h-5 text-[color:var(--color-primary)] group-hover:text-[color:var(--color-accent)] transition-colors" />
-                </a>
+                <div className="flex items-center gap-3">
+                  <a
+                    href="https://www.instagram.com/marcelacorderobeauty/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Instagram de Marcela Cordero"
+                    className="p-3 rounded-xl bg-[color:var(--color-surface)]/90 backdrop-blur-sm border border-[color:var(--color-border)]/50 hover:bg-[color:var(--color-surface)] transition-colors"
+                  >
+                    <Instagram className="w-5 h-5 text-[color:var(--color-primary)]" />
+                  </a>
 
-                <div className="px-4 py-2 rounded-xl social-info-pill">
-                  <p className="text-xs font-medium text-[color:var(--color-muted)]">
-                    Sígueme
-                  </p>
-                  <p className="text-sm font-semibold text-[color:var(--color-heading)]">
-                    @marcelacorderobeauty
-                  </p>
+                  <div className="px-3 py-2 rounded-xl bg-[color:var(--color-surface)]/90 backdrop-blur-sm border border-[color:var(--color-border)]/50">
+                    <p className="text-xs font-medium text-[color:var(--color-muted)]">
+                      Sígueme
+                    </p>
+                    <p className="text-sm font-semibold text-[color:var(--color-heading)]">
+                      @marcelacorderobeauty
+                    </p>
+                  </div>
                 </div>
               </motion.div>
 
@@ -273,7 +379,7 @@ export default function HeroSection() {
                 className="absolute top-1/4 left-8"
                 animate={{
                   y: [0, -10, 0],
-                  opacity: [0.5, 1, 0.5],
+                  opacity: [0.7, 1, 0.7],
                 }}
                 transition={{
                   duration: 3,
@@ -281,14 +387,19 @@ export default function HeroSection() {
                   ease: "easeInOut",
                 }}
               >
-                <Sparkles className="w-6 h-6 text-white/80" />
+                <div className="relative">
+                  <div className="absolute inset-0 bg-[color:var(--color-primary)]/20 rounded-full blur-md"></div>
+                  <div className="relative p-2 rounded-full bg-[color:var(--color-primary)]/80 backdrop-blur-sm border border-white/30">
+                    <Sparkles className="w-6 h-6 text-white" />
+                  </div>
+                </div>
               </motion.div>
 
               <motion.div
                 className="absolute top-1/3 right-12"
                 animate={{
                   y: [0, -15, 0],
-                  opacity: [0.4, 0.8, 0.4],
+                  opacity: [0.6, 1, 0.6],
                 }}
                 transition={{
                   duration: 4,
@@ -297,14 +408,62 @@ export default function HeroSection() {
                   delay: 1,
                 }}
               >
-                <Sparkles className="w-5 h-5 text-white/70" />
+                <div className="relative">
+                  <div className="absolute inset-0 bg-[color:var(--color-accent)]/20 rounded-full blur-md"></div>
+                  <div className="relative p-2 rounded-full bg-[color:var(--color-accent)]/80 backdrop-blur-sm border border-white/30">
+                    <Sparkles className="w-5 h-5 text-white" />
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Sparkles adicionales */}
+              <motion.div
+                className="absolute bottom-1/4 right-8"
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.5, 0.8, 0.5],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 2,
+                }}
+              >
+                <div className="relative">
+                  <div className="absolute inset-0 bg-[color:var(--color-primary)]/15 rounded-full blur-sm"></div>
+                  <div className="relative p-1.5 rounded-full bg-[color:var(--color-primary)]/70 backdrop-blur-sm border border-white/20">
+                    <Sparkles className="w-4 h-4 text-white/90" />
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                className="absolute top-1/2 left-12"
+                animate={{
+                  scale: [1, 1.1, 1],
+                  opacity: [0.4, 0.7, 0.4],
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 3,
+                }}
+              >
+                <div className="relative">
+                  <div className="absolute inset-0 bg-[color:var(--color-accent)]/15 rounded-full blur-sm"></div>
+                  <div className="relative p-1.5 rounded-full bg-[color:var(--color-accent)]/70 backdrop-blur-sm border border-white/20">
+                    <Sparkles className="w-4 h-4 text-white/90" />
+                  </div>
+                </div>
               </motion.div>
             </div>
           </motion.div>
         </div>
       </div>
 
-      {/* Bottom wave separator (optional) */}
+      {/* Bottom wave separator */}
       <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[color:var(--color-surface)] to-transparent" />
     </section>
   );
