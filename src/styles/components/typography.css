@@ -115,7 +115,6 @@ small,
 .text-small {
   font-size: var(--text-small);
   line-height: var(--text-small-lh);
-  color: var(--color-muted);
 }
 
 /* Caption */

@@ -1,127 +1,393 @@
-"use client"
-import React, { useState } from 'react'
-import { useFormContext, Controller } from 'react-hook-form'
-import type { BookingData } from '@/lib/bookingSchema'
-import { ShieldCheck, CreditCard, Copy } from 'lucide-react'
-import useServicesQuery from '@/hooks/useServicesQuery'
-import { useBookingSummary } from '@/hooks/useBookingSummary'
+"use client";
+import React, { useState } from "react";
+import { useFormContext, Controller } from "react-hook-form";
+import {
+  ShieldCheck,
+  CreditCard,
+  Copy,
+  Check,
+  FileText,
+  Sparkles,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import type { BookingData } from "@/lib/bookingSchema";
+import useServicesQuery from "@/hooks/useServicesQuery";
+import { useBookingSummary } from "@/hooks/useBookingSummary";
+import Typography from "@/components/ui/Typography";
+import Button from "@/components/ui/Button";
+
+// Diccionario de traducciones
+const translations = {
+  title: "Confirmación y Pago",
+  subtitle: "Revisa tu pedido y sigue la guía de pago",
+  costSummary: "Resumen de costos",
+  services: "Servicios",
+  transport: "Transporte",
+  totalCost: "Total",
+  depositRequired: "Depósito",
+  confirmationProcess: "Proceso de Pago",
+  copyPlin: "Copiar",
+  copied: "Copiado",
+  additionalNotes: "Notas (Opcional)",
+  notesPlaceholder: "Cuéntame sobre tu evento...",
+  acceptTerms: "Acepto los términos",
+  requiredToSend: "Requerido",
+  step1: "Envía tu solicitud",
+  step2: "Te contactaré para confirmar",
+  step3: "Deposita S/ 150 por PLIN",
+  step4: "Paga el resto el día de la cita",
+  importantInfo: "Importante",
+  depositInfo: "El depósito confirma tu reserva",
+};
+
+const useTranslations = () => {
+  return {
+    t: (key: string, fallback?: string) => {
+      const value = translations[key as keyof typeof translations];
+      return value || fallback || key;
+    },
+  };
+};
 
 export default function Step5_Confirmation() {
-  const { control, watch } = useFormContext<BookingData>()
-  const [copied, setCopied] = useState(false)
-  const deposit = 150
-  const plinNumber = '+51999209880'
+  const { control, watch } = useFormContext<BookingData>();
+  const [copied, setCopied] = useState(false);
+  const deposit = 150;
+  const plinNumber = "+51999209880";
+  const { t } = useTranslations();
 
-  // Pricing breakdown (servicios, transporte, total)
-  const { data: services = [] } = useServicesQuery()
-  const selected = watch('selectedServices') || []
-  const transportEnabled = (watch('locationType') || 'STUDIO') === 'HOME'
-  const { subtotal, transport, total } = useBookingSummary(selected, services, transportEnabled)
+  // Pricing breakdown
+  const { data: services = [] } = useServicesQuery();
+  const selected = watch("selectedServices") || [];
+  const transportEnabled = (watch("locationType") || "STUDIO") === "HOME";
+  const { subtotal, transport, total } = useBookingSummary(
+    selected,
+    services,
+    transportEnabled
+  );
+
+  const handleCopyPlin = async () => {
+    try {
+      await navigator.clipboard.writeText(plinNumber);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error("Error al copiar:", error);
+    }
+  };
 
   return (
-    <div className="space-y-8">
-      {/* Header simplificado */}
-      <div className="text-center space-y-2">
+    <div className="w-full space-y-5 px-2">
+      {/* Encabezado compacto */}
+      <motion.div
+        className="text-center space-y-2"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="flex justify-center">
-          <div className="w-12 h-12 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-full flex items-center justify-center shadow-lg">
-            <ShieldCheck className="w-6 h-6 text-white drop-shadow-sm" />
+          <div className="w-10 h-10 bg-gradient-to-br from-[color:var(--color-primary)] to-[color:var(--color-accent)] rounded-full flex items-center justify-center">
+            <ShieldCheck className="w-5 h-5 text-white" />
           </div>
         </div>
-        <h3 className="text-xl font-serif text-heading">Paso 5: Confirmación y Pago</h3>
-        <p className="text-sm text-muted max-w-md mx-auto">Revisa tu pedido y sigue la guía de pago.</p>
-      </div>
 
-      {/* Desglose de Precios (bloque destacado) */}
-      <div className="rounded-xl border-2 border-border bg-card p-6 shadow-sm">
-        <h4 className="font-serif text-lg text-heading mb-3">Resumen de costos</h4>
-        <div className="space-y-2">
-          <div className="grid grid-cols-2 text-sm">
-            <span className="text-main">Servicios</span>
-            <span className="text-main text-right">S/ {subtotal || 0}</span>
-          </div>
-          <div className="grid grid-cols-2 text-sm">
-            <span className="text-main">Transporte</span>
-            <span className="text-main text-right">S/ {transport || 0}</span>
-          </div>
-        </div>
-        <div className="mt-3 border-t border-input" />
-        <div className="mt-4 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
-          <div className="flex flex-col">
-            <span className="text-xs text-muted">Costo Total</span>
-            <span className="text-3xl sm:text-4xl font-bold text-accent-primary">S/ {total || 0}</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-xs text-muted">Depósito requerido</span>
-            <span className="text-2xl sm:text-3xl font-bold text-accent-secondary">S/ {deposit}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Tarjeta de Instrucciones de Pago (separada del desglose) */}
-      <div className="rounded-xl border border-border bg-card p-6">
-        <div className="flex items-center gap-3 mb-3">
-          <CreditCard className="w-5 h-5 text-accent-primary" />
-          <h4 className="font-serif text-lg text-accent-primary">Proceso de Confirmación</h4>
-        </div>
-        <div className="flex items-center gap-3 flex-wrap">
-          <span className="text-sm text-neutral">PLIN:</span>
-          <code className="text-sm font-mono bg-surface border border-border rounded px-3 py-2">{plinNumber}</code>
-          <button
-            type="button"
-            onClick={async () => { try { await navigator.clipboard.writeText(plinNumber); setCopied(true); setTimeout(() => setCopied(false), 1500) } catch { } }}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-lg border border-[color:var(--color-accent-secondary)]/40 bg-card text-accent-secondary hover:bg-surface-2 focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent-secondary)]"
-            aria-label="Copiar número PLIN"
+        <div className="space-y-1">
+          <Typography
+            as="h2"
+            variant="h2"
+            className="text-[color:var(--color-heading)] font-serif text-base"
           >
-            <Copy className="w-4 h-4 text-accent-secondary" /> Copiar PLIN
-          </button>
-          {copied && <span className="text-xs text-accent-secondary">Copiado</span>}
+            {t("title")}
+          </Typography>
+          <Typography
+            as="p"
+            variant="p"
+            className="text-[color:var(--color-body)] text-xs"
+          >
+            {t("subtitle")}
+          </Typography>
         </div>
-        <ol className="mt-4 space-y-2 text-sm text-main list-decimal list-inside">
-          <li>Envía tu solicitud completando este formulario.</li>
-          <li>Te contactaré para confirmar disponibilidad y coordinar el depósito de S/ 150.</li>
-          <li>Realiza el depósito vía PLIN usando el número indicado.</li>
-          <li>El saldo restante se paga el día de la cita.</li>
-        </ol>
-      </div>
+      </motion.div>
 
-      {/* Campo de notas (opcional) */}
-      <Controller
-        name="additionalNotes"
-        control={control}
-        render={({ field }) => (
-          <div>
-            <label className="block text-sm font-medium text-accent-primary mb-2">Mensaje Adicional (Opcional)</label>
-            <textarea
-              {...field}
-              placeholder="Cuéntame sobre tu evento o preferencias especiales..."
-              rows={5}
-              className="w-full bg-input border border-input rounded-lg px-3 py-2 placeholder:text-input-placeholder text-main outline-none shadow-sm transition-all duration-200 focus:shadow-md focus:border-input-focus"
-            />
+      {/* Desglose de Precios - Compacto */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className="p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
+      >
+        <Typography
+          as="h4"
+          variant="h4"
+          className="text-[color:var(--color-heading)] font-medium mb-3 text-sm"
+        >
+          {t("costSummary")}
+        </Typography>
+
+        <div className="space-y-2">
+          <div className="flex justify-between items-center">
+            <Typography
+              as="span"
+              variant="small"
+              className="text-[color:var(--color-body)] text-xs"
+            >
+              {t("services")}
+            </Typography>
+            <Typography
+              as="span"
+              variant="small"
+              className="text-[color:var(--color-heading)] font-medium text-xs"
+            >
+              S/ {subtotal || 0}
+            </Typography>
           </div>
-        )}
-      />
 
-      {/* Aceptación de términos */}
-      <Controller
-        name="agreedToTerms"
-        control={control}
-        render={({ field }) => (
-          <label className="flex items-start gap-3 p-4 rounded-lg bg-card border border-border cursor-pointer">
-            <input
-              type="checkbox"
-              checked={Boolean(field.value)}
-              onChange={(e) => field.onChange(e.target.checked)}
-              className="w-5 h-5 accent-[var(--color-accent-primary)]"
-            />
-            <span className="text-sm text-neutral">
-              Acepto los <a href="/terminos-condiciones" target="_blank" rel="noopener noreferrer" className="text-accent-primary underline hover:opacity-80">términos y condiciones</a>
-            </span>
-            {!field.value && (
-              <span className="ml-auto text-xs text-muted">Requerido para enviar</span>
-            )}
-          </label>
-        )}
-      />
+          <div className="flex justify-between items-center">
+            <Typography
+              as="span"
+              variant="small"
+              className="text-[color:var(--color-body)] text-xs"
+            >
+              {t("transport")}
+            </Typography>
+            <Typography
+              as="span"
+              variant="small"
+              className="text-[color:var(--color-heading)] font-medium text-xs"
+            >
+              S/ {transport || 0}
+            </Typography>
+          </div>
+
+          <div className="border-t border-[color:var(--color-border)]/20 pt-2 mt-2">
+            <div className="flex justify-between items-end gap-2">
+              <div>
+                <Typography
+                  as="span"
+                  variant="small"
+                  className="text-[color:var(--color-body)] text-xs"
+                >
+                  {t("totalCost")}
+                </Typography>
+                <Typography
+                  as="span"
+                  variant="h3"
+                  className="text-xl font-bold text-[color:var(--color-primary)]"
+                >
+                  S/ {total || 0}
+                </Typography>
+              </div>
+
+              <div className="text-right">
+                <Typography
+                  as="span"
+                  variant="small"
+                  className="text-[color:var(--color-body)] text-xs"
+                >
+                  {t("depositRequired")}
+                </Typography>
+                <Typography
+                  as="span"
+                  variant="h3"
+                  className="text-lg font-bold text-[color:var(--color-accent)]"
+                >
+                  S/ {deposit}
+                </Typography>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Proceso de Pago - Optimizado */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+        className="p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
+      >
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-6 h-6 rounded-lg bg-[color:var(--color-primary)]/20 flex items-center justify-center">
+            <CreditCard className="w-3 h-3 text-[color:var(--color-primary)]" />
+          </div>
+          <Typography
+            as="h4"
+            variant="h4"
+            className="text-[color:var(--color-heading)] font-medium text-sm"
+          >
+            {t("confirmationProcess")}
+          </Typography>
+        </div>
+
+        <div className="space-y-3">
+          {/* PLIN Number */}
+          <div className="bg-[color:var(--color-surface-secondary)] border border-[color:var(--color-border)] rounded-lg p-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Typography
+                  as="span"
+                  variant="small"
+                  className="text-[color:var(--color-body)] text-xs"
+                >
+                  PLIN:
+                </Typography>
+                <code className="text-sm font-mono text-[color:var(--color-heading)]">
+                  {plinNumber}
+                </code>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleCopyPlin}
+                className="px-3 py-2 text-xs rounded-lg min-w-[80px]"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-3 h-3 text-green-500" />
+                    <span className="text-green-500">{t("copied")}</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3 h-3" />
+                    <span>{t("copyPlin")}</span>
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+
+          {/* Pasos */}
+          <div className="space-y-2">
+            <ol className="space-y-2 text-xs text-[color:var(--color-body)] list-decimal list-inside">
+              <li>{t("step1")}</li>
+              <li>{t("step2")}</li>
+              <li>{t("step3")}</li>
+              <li>{t("step4")}</li>
+            </ol>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Campo de notas - Compacto */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.4, duration: 0.5 }}
+      >
+        <Controller
+          name="additionalNotes"
+          control={control}
+          render={({ field }) => (
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <FileText className="w-4 h-4 text-[color:var(--color-primary)]" />
+                <Typography
+                  as="label"
+                  variant="small"
+                  className="font-medium text-[color:var(--color-heading)] text-sm"
+                >
+                  {t("additionalNotes")}
+                </Typography>
+              </div>
+              <textarea
+                {...field}
+                placeholder={t("notesPlaceholder")}
+                rows={3}
+                className="w-full bg-[color:var(--color-surface)] border border-[color:var(--color-border)] rounded-lg px-3 py-2.5 placeholder:text-[color:var(--color-body)]/50 text-[color:var(--color-text-primary)] outline-none transition-all duration-200 focus:border-[color:var(--color-primary)] text-sm resize-none"
+              />
+            </div>
+          )}
+        />
+      </motion.div>
+
+      {/* Aceptación de términos - Optimizado */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+      >
+        <Controller
+          name="agreedToTerms"
+          control={control}
+          render={({ field }) => (
+            <label className="flex items-start gap-3 p-3 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]">
+              <div className="flex-shrink-0 mt-0.5">
+                <input
+                  type="checkbox"
+                  checked={Boolean(field.value)}
+                  onChange={(e) => field.onChange(e.target.checked)}
+                  className="w-5 h-5 text-[color:var(--color-primary)] border-[color:var(--color-border)] rounded focus:ring-[color:var(--color-primary)]"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <Typography
+                  as="span"
+                  variant="small"
+                  className="text-[color:var(--color-body)] text-xs"
+                >
+                  {t("acceptTerms")}{" "}
+                  <a
+                    href="/terminos-condiciones"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[color:var(--color-primary)] underline hover:opacity-80"
+                  >
+                    términos
+                  </a>
+                </Typography>
+                <AnimatePresence>
+                  {!field.value && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -5 }}
+                      className="mt-1"
+                    >
+                      <Typography
+                        as="span"
+                        variant="caption"
+                        className="!text-red-500 text-xs"
+                      >
+                        {t("requiredToSend")}
+                      </Typography>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </label>
+          )}
+        />
+      </motion.div>
+
+      {/* Información importante - Compacta */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6, duration: 0.5 }}
+        className="p-3 bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)]"
+      >
+        <div className="flex items-start gap-2">
+          <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[color:var(--color-primary)]/20 flex items-center justify-center mt-0.5">
+            <Sparkles className="w-2.5 h-2.5 text-[color:var(--color-primary)]" />
+          </div>
+          <div className="flex-1">
+            <Typography
+              as="h4"
+              variant="h4"
+              className="text-[color:var(--color-heading)] mb-1 text-xs font-medium"
+            >
+              {t("importantInfo")}
+            </Typography>
+            <Typography
+              as="p"
+              variant="p"
+              className="text-[color:var(--color-body)] text-xs leading-relaxed"
+            >
+              {t("depositInfo")}
+            </Typography>
+          </div>
+        </div>
+      </motion.div>
     </div>
-  )
+  );
 }

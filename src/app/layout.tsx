@@ -185,7 +185,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="es">
+    <html lang="es" className={plusJakarta.variable}>
       <head>
         <script
           type="application/ld+json"
@@ -199,9 +199,7 @@ export default function RootLayout({
         />
         <link rel="canonical" href="https://marcelacordero.com" />
       </head>
-      <body
-        className={`${plusJakarta.variable} antialiased overflow-x-hidden max-w-full`}
-      >
+      <body className="antialiased overflow-x-hidden max-w-full">
         <GlobalParticles />
         <NavBar />
         <QueryProvider>{children}</QueryProvider>

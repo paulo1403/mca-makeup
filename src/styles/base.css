@@ -99,6 +99,11 @@
   --section-padding-x: var(--space-6);
   --card-padding: var(--space-6);
   --element-gap: var(--space-4);
+
+  /* Font variable fallback: ensures --font-plusjakarta is defined at root
+     in case the next/font variable class isn't present yet. The
+     generated next/font class on <html> will override this when applied. */
+  --font-plusjakarta: "Plus Jakarta Sans", system-ui;
 }
 
 /* Dark theme variables */
@@ -134,6 +139,9 @@
   --color-accent-primary: var(--color-primary);
   --color-accent-secondary: var(--color-accent);
   --on-accent-contrast: var(--color-cta-text);
+
+  /* Dark theme fallback for the font variable as well */
+  --font-plusjakarta: "Plus Jakarta Sans", system-ui;
 }
 
 /* Minimal global resets relevant to layout */

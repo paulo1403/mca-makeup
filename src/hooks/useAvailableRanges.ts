@@ -5,22 +5,20 @@ import { ServiceSelection } from "@/types";
 export function useAvailableRanges(
   date: Date | null,
   serviceSelection: ServiceSelection,
-  locationType: "STUDIO" | "HOME",
+  locationType: "STUDIO" | "HOME"
 ) {
   const formattedDate = date ? format(date, "yyyy-MM-dd") : "";
-  
-  // Convertir ServiceSelection a array expandido con cantidades
+
   const expandedServiceIds: string[] = [];
-  Object.keys(serviceSelection).forEach(serviceId => {
+  Object.keys(serviceSelection).forEach((serviceId) => {
     const quantity = serviceSelection[serviceId];
     if (quantity > 0) {
-      // Agregar el servicio tantas veces como su cantidad
       for (let i = 0; i < quantity; i++) {
         expandedServiceIds.push(serviceId);
       }
     }
   });
-  
+
   const serviceTypesString = expandedServiceIds.join(",");
 
   return useQuery({
