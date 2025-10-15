@@ -8,7 +8,6 @@ import {
   Plus,
   Minus,
   X,
-  ChevronUp,
   ChevronDown,
 } from "lucide-react";
 import { useFormContext } from "react-hook-form";
@@ -152,10 +151,13 @@ export default function ServiceCategoryGroup({
   const [isExpanded, setIsExpanded] = useState(true);
 
   const selectedServices = watch(fieldName) || [];
-  const selectedServicesMap = selectedServices.reduce((acc: any, item: any) => {
-    acc[item.id] = item.quantity;
-    return acc;
-  }, {});
+  const selectedServicesMap = selectedServices.reduce(
+    (acc: Record<string, number>, item: { id: string; quantity: number }) => {
+      acc[item.id] = item.quantity;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
   // Función corregida para agregar/eliminar servicios
   const handleToggle = (serviceId: string) => {

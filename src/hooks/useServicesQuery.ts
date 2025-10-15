@@ -7,6 +7,7 @@ export type Service = {
   price: number
   duration: number
   category: 'BRIDAL' | 'SOCIAL' | 'MATURE_SKIN' | 'HAIRSTYLE' | 'OTHER'
+  rating?: number
 }
 
 async function fetchServices() {

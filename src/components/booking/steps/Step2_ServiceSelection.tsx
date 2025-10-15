@@ -77,15 +77,24 @@ const translations = {
 // Hook para obtener traducciones
 const useTranslations = () => {
   return {
-    t: (key: string, fallback?: string) => {
+    t: (key: string, fallback?: string): string => {
       const keys = key.split(".");
-      let value: any = translations;
+      let value: unknown = translations;
 
       for (const k of keys) {
-        value = value?.[k];
+        if (
+          typeof value === "object" &&
+          value !== null &&
+          k in (value as Record<string, unknown>)
+        ) {
+          value = (value as Record<string, unknown>)[k];
+        } else {
+          value = undefined;
+          break;
+        }
       }
 
-      return value || fallback || key;
+      return typeof value === "string" ? value : fallback || key;
     },
 
     // Funciones helper para pluralización
@@ -107,7 +116,7 @@ export default function Step2_ServiceSelection() {
   const [query, setQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const { t, pluralize, formatCount } = useTranslations();
+  const { t, formatCount } = useTranslations();
 
   const selectedArr = (watch("selectedServices") || []) as Array<{
     id: string;
@@ -361,7 +370,7 @@ export default function Step2_ServiceSelection() {
                 <span>{t("activeFilters")}</span>
                 {query && (
                   <span className="px-2 py-0.5 bg-[color:var(--color-surface-secondary)] rounded text-xs">
-                    "{query}"
+                    &quot;{query}&quot;
                   </span>
                 )}
                 {selectedCategory && (
