@@ -67,13 +67,13 @@ export const formatDateTime = (
 
 export const getStatusColor = (status: RecentAppointment["status"]): string => {
   const statusColors = {
-    PENDING: "bg-amber-50 text-amber-700 border-amber-200",
-    CONFIRMED: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    COMPLETED: "bg-blue-50 text-blue-700 border-blue-200",
-    CANCELLED: "bg-red-50 text-red-700 border-red-200",
-  };
+    PENDING: "bg-[color:var(--status-pending-bg)] text-[color:var(--status-pending-text)] border-[color:var(--status-pending-border)]",
+    CONFIRMED: "bg-[color:var(--status-confirmed-bg)] text-[color:var(--status-confirmed-text)] border-[color:var(--status-confirmed-border)]",
+    COMPLETED: "bg-[color:var(--status-completed-bg)] text-[color:var(--status-completed-text)] border-[color:var(--status-completed-border)]",
+    CANCELLED: "bg-[color:var(--status-cancelled-bg)] text-[color:var(--status-cancelled-text)] border-[color:var(--status-cancelled-border)]",
+  } as const;
 
-  return statusColors[status] || "bg-gray-50 text-gray-700 border-gray-200";
+  return statusColors[status] || "bg-[color:var(--color-surface-elevated)] text-[color:var(--color-heading)] border-[color:var(--color-border)]/40";
 };
 
 export const getStatusText = (status: RecentAppointment["status"]): string => {

@@ -78,22 +78,22 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
       <aside
         className={`${
           isOpen ? 'translate-x-0' : '-translate-x-full'
-        } fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg border-r border-gray-200 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 admin-sidebar`}
+        } fixed inset-y-0 left-0 z-50 w-64 bg-[color:var(--color-surface)] shadow-lg border-r border-[color:var(--color-border)] transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 admin-sidebar`}
       >
         <div className="flex flex-col h-full">
           {/* Sidebar Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0">
+          <div className="flex items-center justify-between p-4 border-b border-[color:var(--color-border)] flex-shrink-0">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 font-montserrat">
+              <h2 className="text-lg font-semibold text-[color:var(--color-heading)] font-montserrat">
                 Admin Panel
               </h2>
-              <p className="text-xs text-gray-500 font-montserrat">
+              <p className="text-xs text-[color:var(--color-body)] font-montserrat">
                 Marcela Cordero
               </p>
             </div>
             <button
               onClick={onClose}
-              className="md:hidden p-1 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+              className="md:hidden p-1 rounded-md text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface-elevated)] transition-colors"
             >
               <X className="h-5 w-5" />
             </button>
@@ -113,11 +113,11 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
                   className={`flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium font-montserrat transition-all duration-200 group ${
                     isActive
                       ? "bg-[#D4AF37] text-white shadow-sm"
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                      : "text-[color:var(--color-body)] hover:text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface-elevated)]"
                   }`}
                 >
                   <Icon className={`h-5 w-5 flex-shrink-0 transition-colors ${
-                    isActive ? "text-white" : "text-gray-500 group-hover:text-gray-700"
+                    isActive ? "text-white" : "text-[color:var(--color-muted)] group-hover:text-[color:var(--color-heading)]"
                   }`} />
                   <span className="truncate">{item.label}</span>
                   {isActive && (

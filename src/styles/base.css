@@ -28,6 +28,23 @@
   --color-cta-hover: #6D28D9;
   --color-cta-text: #FFFFFF;
 
+  /* Status pills (light) */
+  --status-pending-bg: #FEF3C7;      /* amber-50 */
+  --status-pending-text: #92400E;    /* amber-800 */
+  --status-pending-border: #FDE68A;  /* amber-200 */
+
+  --status-confirmed-bg: #ECFDF5;    /* emerald-50 */
+  --status-confirmed-text: #065F46;  /* emerald-800 */
+  --status-confirmed-border: #A7F3D0;/* emerald-200 */
+
+  --status-completed-bg: #EFF6FF;    /* blue-50 */
+  --status-completed-text: #1D4ED8;  /* blue-700 */
+  --status-completed-border: #BFDBFE;/* blue-200 */
+
+  --status-cancelled-bg: #FEF2F2;    /* red-50 */
+  --status-cancelled-text: #B91C1C;  /* red-700 */
+  --status-cancelled-border: #FECACA;/* red-200 */
+
   /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.8);
   --glass-border: rgba(124, 58, 237, 0.15);
@@ -107,6 +124,12 @@
      in case the next/font variable class isn't present yet. The
      generated next/font class on <html> will override this when applied. */
   --font-plusjakarta: "Plus Jakarta Sans", system-ui;
+  --color-card: var(--color-surface);
+  --color-surface-2: var(--color-surface-elevated);
+  --color-accent-tertiary: var(--color-accent-soft);
+  --color-selected: color-mix(in srgb, var(--color-primary) 15%, transparent);
+  --color-neutral: var(--color-muted);
+  --color-whatsapp: #25D366;
 }
 
 /* Dark theme variables */
@@ -136,6 +159,23 @@
   --color-cta-hover: #7C3AED;
   --color-cta-text: #FFFFFF;
 
+  /* Status pills (dark) */
+  --status-pending-bg: color-mix(in srgb, #F59E0B 16%, var(--color-surface));
+  --status-pending-text: #FBBF24;
+  --status-pending-border: color-mix(in srgb, #F59E0B 30%, transparent);
+
+  --status-confirmed-bg: color-mix(in srgb, #10B981 16%, var(--color-surface));
+  --status-confirmed-text: #34D399;
+  --status-confirmed-border: color-mix(in srgb, #10B981 30%, transparent);
+
+  --status-completed-bg: color-mix(in srgb, #3B82F6 16%, var(--color-surface));
+  --status-completed-text: #60A5FA;
+  --status-completed-border: color-mix(in srgb, #3B82F6 30%, transparent);
+
+  --status-cancelled-bg: color-mix(in srgb, #EF4444 16%, var(--color-surface));
+  --status-cancelled-text: #F87171;
+  --status-cancelled-border: color-mix(in srgb, #EF4444 30%, transparent);
+
   /* Glassmorphism */
   --glass-bg: rgba(19, 17, 31, 0.75);
   --glass-border: rgba(139, 92, 246, 0.2);
@@ -148,6 +188,12 @@
 
   /* Dark theme fallback for the font variable as well */
   --font-plusjakarta: "Plus Jakarta Sans", system-ui;
+  --color-card: var(--color-surface);
+  --color-surface-2: var(--color-surface-elevated);
+  --color-accent-tertiary: var(--color-accent-soft);
+  --color-selected: color-mix(in srgb, var(--color-primary) 25%, transparent);
+  --color-neutral: var(--color-muted);
+  --color-whatsapp: #25D366;
 }
 
 /* Minimal global resets relevant to layout */

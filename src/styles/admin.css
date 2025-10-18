@@ -154,3 +154,8 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
+
+/* Ocultar NavBar global (header.fixed) en páginas de administración */
+.admin-mode header.fixed {
+  display: none !important;
+}

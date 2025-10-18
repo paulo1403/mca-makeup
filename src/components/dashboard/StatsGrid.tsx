@@ -11,11 +11,11 @@ interface StatCardProps {
 
 function StatCard({ title, value, icon, color, bgColor }: StatCardProps) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 hover:shadow-md hover:border-[#D4AF37]/20 transition-all duration-200 hover-lift smooth-transition">
+    <div className="bg-[color:var(--color-surface)] rounded-xl shadow-sm border border-[color:var(--color-border)]/30 p-4 sm:p-6 hover:shadow-md hover:border-[color:var(--color-primary)]/30 transition-all duration-200 hover-lift smooth-transition">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 mobile-text">{title}</p>
-          <p className="text-xl sm:text-2xl font-bold text-gray-900">{value.toLocaleString()}</p>
+          <p className="text-xs sm:text-sm font-medium text-[color:var(--color-muted)] mb-1 mobile-text">{title}</p>
+          <p className="text-xl sm:text-2xl font-bold text-[color:var(--color-heading)]">{value.toLocaleString()}</p>
         </div>
         <div className={`p-2 sm:p-3 ${bgColor} rounded-lg flex-shrink-0 smooth-transition hover:scale-105`}>
           <div className={`w-5 h-5 sm:w-6 sm:h-6 ${color}`}>
@@ -38,28 +38,28 @@ export default function StatsGrid({ stats }: StatsGridProps) {
       value: stats.totalAppointments,
       icon: <Calendar className="w-full h-full" />,
       color: 'text-blue-600',
-      bgColor: 'bg-blue-50',
+      bgColor: 'bg-[color:var(--color-surface-elevated)]',
     },
     {
       title: 'Pendientes',
       value: stats.pendingAppointments,
       icon: <Clock className="w-full h-full" />,
       color: 'text-amber-600',
-      bgColor: 'bg-amber-50',
+      bgColor: 'bg-[color:var(--color-surface-elevated)]',
     },
     {
       title: 'Confirmadas',
       value: stats.confirmedAppointments,
       icon: <CheckCircle className="w-full h-full" />,
       color: 'text-emerald-600',
-      bgColor: 'bg-emerald-50',
+      bgColor: 'bg-[color:var(--color-surface-elevated)]',
     },
     {
       title: 'Este Mes',
       value: stats.thisMonthAppointments,
       icon: <TrendingUp className="w-full h-full" />,
-      color: 'text-[#D4AF37]',
-      bgColor: 'bg-[#D4AF37]/10',
+      color: 'text-[color:var(--color-primary)]',
+      bgColor: 'bg-[color:var(--color-surface-elevated)]',
     },
   ];
 

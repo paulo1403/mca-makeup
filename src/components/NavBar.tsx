@@ -60,7 +60,7 @@ const NavBar = () => {
           <div className="hidden md:flex items-center space-x-8">
             <Link 
               href="/#servicios"
-              className="text-[color:var(--color-text-muted)] hover:text-[color:var(--color-primary)] transition-colors"
+              className="text-[color:var(--color-muted)] hover:text-[color:var(--color-primary)] transition-colors"
               onClick={(e) => {
                 e.preventDefault();
                 handleNavClick("#servicios");
@@ -70,7 +70,7 @@ const NavBar = () => {
             </Link>
             <Link 
               href="/#portafolio"
-              className="text-[color:var(--color-text-muted)] hover:text-[color:var(--color-primary)] transition-colors"
+              className="text-[color:var(--color-muted)] hover:text-[color:var(--color-primary)] transition-colors"
               onClick={(e) => {
                 e.preventDefault();
                 handleNavClick("#portafolio");
@@ -80,7 +80,7 @@ const NavBar = () => {
             </Link>
             <Link 
               href="/#testimonials"
-              className="text-[color:var(--color-text-muted)] hover:text-[color:var(--color-primary)] transition-colors"
+              className="text-[color:var(--color-muted)] hover:text-[color:var(--color-primary)] transition-colors"
               onClick={(e) => {
                 e.preventDefault();
                 handleNavClick("#testimonials");
@@ -90,7 +90,7 @@ const NavBar = () => {
             </Link>
             <Link 
               href="/#about"
-              className="text-[color:var(--color-text-muted)] hover:text-[color:var(--color-primary)] transition-colors"
+              className="text-[color:var(--color-muted)] hover:text-[color:var(--color-primary)] transition-colors"
               onClick={(e) => {
                 e.preventDefault();
                 handleNavClick("#about");
@@ -100,7 +100,7 @@ const NavBar = () => {
             </Link>
             <Link 
               href="/#contacto"
-              className="text-[color:var(--color-text-muted)] hover:text-[color:var(--color-primary)] transition-colors"
+              className="text-[color:var(--color-muted)] hover:text-[color:var(--color-primary)] transition-colors"
               onClick={(e) => {
                 e.preventDefault();
                 handleNavClick("#contacto");
