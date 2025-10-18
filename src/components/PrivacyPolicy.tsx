@@ -78,7 +78,7 @@ export default function PrivacyPolicy() {
               
               <div className="bg-[color:var(--color-primary)]/10 p-4 rounded-lg border border-[color:var(--color-primary)]/20">
                 <p className="text-[color:var(--color-body)] text-sm">
-                  <strong>Contacto:</strong> marcela@marcelamakeup.com
+                  <strong>Contacto:</strong> marcelacordero.bookings@gmail.com
                 </p>
               </div>
             </section>

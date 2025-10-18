@@ -369,7 +369,7 @@ export default function ComplaintBook() {
             <div className="grid md:grid-cols-2 gap-4 text-sm text-[color:var(--color-body)]">
               <div>
                 <p><strong>Empresa:</strong> Marcela Cordero - Makeup Artist</p>
-                <p><strong>Email:</strong> marcela@marcelamakeup.com</p>
+                <p><strong>Email:</strong> marcelacordero.bookings@gmail.com</p>
               </div>
               <div>
                 <p><strong>WhatsApp:</strong> +51 989 164 990</p>

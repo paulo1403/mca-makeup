@@ -133,7 +133,7 @@ export default function RootLayout({
       "Servicios profesionales de maquillaje para bodas, eventos sociales y sesiones fotográficas.",
     url: "https://marcelacordero.com",
     telephone: "+51-989-164-990",
-    email: "info@marcelacordero.com",
+    email: "marcelacordero.bookings@gmail.com",
     image: "https://marcelacordero.com/images/og-image.jpg",
     logo: "https://marcelacordero.com/images/logo.png",
     address: {

@@ -242,7 +242,7 @@ export default function TermsAndConditions() {
                 </p>
                 <div className="space-y-2 text-[color:var(--color-body)]">
                   <p><strong>Empresa:</strong> Marcela Cordero - Makeup Artist</p>
-                  <p><strong>Email:</strong> <span className="text-[color:var(--color-primary)]">marcela@marcelamakeup.com</span></p>
+                  <p><strong>Email:</strong> <span className="text-[color:var(--color-primary)]">marcelacordero.bookings@gmail.com</span></p>
                   <p><strong>WhatsApp:</strong> +51 989 164 990</p>
                   <p><strong>Ubicación:</strong> Lima, Perú</p>
                   <p><strong>Horarios de atención:</strong> Lunes a Domingo, 9:00 AM - 8:00 PM</p>

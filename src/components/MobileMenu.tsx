@@ -205,7 +205,7 @@ export default function MobileMenu({
                         variant="small"
                         className="text-[color:var(--color-heading)]"
                       >
-                        contacto@marcelacordero.com
+                        marcelacordero.bookings@gmail.com
                       </Typography>
                     </div>
                   </div>

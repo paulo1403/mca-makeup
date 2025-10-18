@@ -168,10 +168,10 @@ export default function Footer() {
               <div className="footer-contact-item">
                 <Mail className="w-4 h-4 flex-shrink-0" />
                 <a
-                  href="mailto:contacto@marcelacordero.com"
+                  href="mailto:marcelacordero.bookings@gmail.com"
                   className="footer-contact-link"
                 >
-                  contacto@marcelacordero.com
+                  marcelacordero.bookings@gmail.com
                 </a>
               </div>
 

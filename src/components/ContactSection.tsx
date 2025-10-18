@@ -30,8 +30,8 @@ export default function ContactSection() {
     },
     {
       label: "Email",
-      value: "contacto@marcelacordero.com",
-      href: "mailto:contacto@marcelacordero.com",
+      value: "marcelacordero.bookings@gmail.com",
+      href: "mailto:marcelacordero.bookings@gmail.com",
       icon: Mail,
     },
     {
