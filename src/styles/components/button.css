@@ -115,6 +115,23 @@
   transform: translateY(-1px);
 }
 
+/* Destructive / Danger */
+.btn-danger {
+  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px -4px rgba(239, 68, 68, 0.4),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -6px rgba(239, 68, 68, 0.5),
+    0 4px 8px rgba(0, 0, 0, 0.15);
+}
+.btn-danger:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px -2px rgba(239, 68, 68, 0.4);
+}
+
 .btn-glass {
   background: var(--glass-bg);
   backdrop-filter: blur(12px) saturate(140%);

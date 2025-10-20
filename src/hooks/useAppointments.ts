@@ -54,6 +54,7 @@ interface UseAppointmentsParams {
   page: number;
   filter: string;
   searchTerm: string;
+  id?: string;
 }
 
 // Hook para obtener citas
@@ -61,9 +62,10 @@ export const useAppointments = ({
   page,
   filter,
   searchTerm,
+  id,
 }: UseAppointmentsParams) => {
   return useQuery({
-    queryKey: ["appointments", page, filter, searchTerm],
+    queryKey: ["appointments", page, filter, searchTerm, id ?? null],
     queryFn: async (): Promise<AppointmentsResponse> => {
       const params = new URLSearchParams({
         page: page.toString(),
@@ -73,6 +75,37 @@ export const useAppointments = ({
           : { status: filter }),
         ...(searchTerm && { search: searchTerm }),
       });
+
+      // Fetch base list and, if id provided, also fetch the single appointment
+      if (id) {
+        const [baseResponse, singleResponse] = await Promise.all([
+          fetch(`/api/admin/appointments?${params}`),
+          fetch(`/api/admin/appointments?id=${id}&limit=10`),
+        ]);
+
+        const baseResult = await baseResponse.json();
+        const singleResult = await singleResponse.json();
+
+        if (!baseResult.success) {
+          throw new Error(baseResult.message || "Error fetching appointments");
+        }
+        if (!singleResult.success) {
+          throw new Error(singleResult.message || "Error fetching appointment by id");
+        }
+
+        const baseData: AppointmentsResponse = baseResult.data;
+        const singleList: Appointment[] = singleResult.data.appointments || [];
+        const single = singleList[0];
+
+        const merged = single
+          ? [single, ...baseData.appointments.filter((a: Appointment) => a.id !== single.id)]
+          : baseData.appointments;
+
+        return {
+          appointments: merged,
+          pagination: baseData.pagination,
+        };
+      }
 
       const response = await fetch(`/api/admin/appointments?${params}`);
       const result = await response.json();
@@ -85,7 +118,7 @@ export const useAppointments = ({
     },
     staleTime: 1000 * 60 * 5, // 5 minutos
   });
-};
+}
 
 // Hook para actualizar estado de cita
 export const useUpdateAppointmentStatus = () => {
@@ -151,7 +184,8 @@ export const useAppointmentUrlParams = () => {
   const searchParams = useSearchParams();
 
   const filterParam = searchParams.get("filter");
-  const highlightParam = searchParams.get("highlight");
+  // Edit: usar "highlightId" para mantener consistencia
+  const highlightParam = searchParams.get("highlightId");
   const showDetailParam = searchParams.get("showDetail");
 
   return {

@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { LoginFormData, loginSchema, RateLimitInfo, formatTime } from '@/lib/auth-utils';
+import Button from '@/components/ui/Button';
 
 interface LoginFormProps {
   onSubmit: (data: LoginFormData) => void;
@@ -48,7 +49,7 @@ export const LoginForm = ({ onSubmit, onEmailChange, isLoading, rateLimitInfo, c
           </label>
           <div className='relative'>
             <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
-              <Mail className='h-5 w-5 text-gray-400' />
+              <Mail className='h-5 w-5 text-[var(--color-muted)]' />
             </div>
             <input
               {...register('email')}
@@ -56,10 +57,10 @@ export const LoginForm = ({ onSubmit, onEmailChange, isLoading, rateLimitInfo, c
               type='email'
               autoComplete='email'
               disabled={isBlocked}
-              className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-accent focus:border-transparent transition-colors ${
+              className={`block w-full pl-10 pr-3 py-3 border rounded-xl bg-[var(--color-surface-elevated)] text-[var(--color-heading)] placeholder:text-[var(--color-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-colors ${
                 errors.email 
-                  ? 'border-red-500' 
-                  : 'border-gray-600'
+                  ? 'border-[var(--status-cancelled-border)]' 
+                  : 'border-[var(--color-border)]'
               } ${
                 isBlocked ? 'opacity-50 cursor-not-allowed' : ''
               }`}
@@ -67,7 +68,7 @@ export const LoginForm = ({ onSubmit, onEmailChange, isLoading, rateLimitInfo, c
             />
           </div>
           {errors.email && (
-            <p className='mt-1 text-sm text-red-400'>{errors.email.message}</p>
+            <p className='mt-1 text-sm text-[var(--status-cancelled-text)]'>{errors.email.message}</p>
           )}
         </div>
 
@@ -78,7 +79,7 @@ export const LoginForm = ({ onSubmit, onEmailChange, isLoading, rateLimitInfo, c
           </label>
           <div className='relative'>
             <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
-              <Lock className='h-5 w-5 text-gray-400' />
+              <Lock className='h-5 w-5 text-[var(--color-muted)]' />
             </div>
             <input
               {...register('password')}
@@ -86,10 +87,10 @@ export const LoginForm = ({ onSubmit, onEmailChange, isLoading, rateLimitInfo, c
               type={showPassword ? 'text' : 'password'}
               autoComplete='current-password'
               disabled={isBlocked}
-              className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-accent focus:border-transparent transition-colors ${
+              className={`block w-full pl-10 pr-12 py-3 border rounded-xl bg-[var(--color-surface-elevated)] text-[var(--color-heading)] placeholder:text-[var(--color-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-colors ${
                 errors.password 
-                  ? 'border-red-500' 
-                  : 'border-gray-600'
+                  ? 'border-[var(--status-cancelled-border)]' 
+                  : 'border-[var(--color-border)]'
               } ${
                 isBlocked ? 'opacity-50 cursor-not-allowed' : ''
               }`}
@@ -102,31 +103,30 @@ export const LoginForm = ({ onSubmit, onEmailChange, isLoading, rateLimitInfo, c
               disabled={isBlocked}
             >
               {showPassword ? (
-                <EyeOff className='h-5 w-5 text-gray-400 hover:text-white transition-colors' />
+                <EyeOff className='h-5 w-5 text-[var(--color-muted)] hover:text-[var(--color-heading)] transition-colors' />
               ) : (
-                <Eye className='h-5 w-5 text-gray-400 hover:text-white transition-colors' />
+                <Eye className='h-5 w-5 text-[var(--color-muted)] hover:text-[var(--color-heading)] transition-colors' />
               )}
             </button>
           </div>
           {errors.password && (
-            <p className='mt-1 text-sm text-red-400'>{errors.password.message}</p>
+            <p className='mt-1 text-sm text-[var(--status-cancelled-text)]'>{errors.password.message}</p>
           )}
         </div>
       </div>
 
       {/* Submit Button */}
-      <button
+      <Button
+        as='button'
         type='submit'
+        variant='primary'
+        size='lg'
+        className='w-full'
         disabled={isLoading || isBlocked}
-        className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white transition-all duration-200 ${
-          isLoading || isBlocked
-            ? 'bg-gray-600 cursor-not-allowed'
-            : 'bg-primary-accent hover:bg-primary-accent/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-accent focus:ring-offset-gray-800'
-        }`}
       >
         {isLoading ? (
           <div className='flex items-center space-x-2'>
-            <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white'></div>
+            <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--color-cta-text)]'></div>
             <span>Iniciando sesión...</span>
           </div>
         ) : isBlocked ? (
@@ -134,7 +134,7 @@ export const LoginForm = ({ onSubmit, onEmailChange, isLoading, rateLimitInfo, c
         ) : (
           'Iniciar Sesión'
         )}
-      </button>
+      </Button>
     </form>
   );
 };

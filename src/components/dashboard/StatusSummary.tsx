@@ -41,9 +41,9 @@ export default function StatusSummary({ stats }: StatusSummaryProps) {
       {summaryItems.map((item) => (
         <div
           key={item.label}
-          className={`${item.bgColor} ${item.borderColor} rounded-lg border p-3 sm:p-4 text-center hover:shadow-sm transition-shadow duration-200`}
+          className={`${item.bgColor} ${item.borderColor} rounded-lg border p-3 sm:p-4 text-center hover:shadow-md transition-shadow duration-250 transform-gpu hover:-translate-y-0.5`}
         >
-          <div className={`text-xl sm:text-2xl font-bold ${item.color} mb-1`}>
+          <div className={`text-lg sm:text-xl font-semibold ${item.color} mb-1`}>
             {item.value.toLocaleString()}
           </div>
           <div className="text-xs sm:text-sm text-[color:var(--color-muted)] leading-tight">

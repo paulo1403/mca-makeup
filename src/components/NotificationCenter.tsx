@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Bell } from 'lucide-react';
 
 interface Notification {
   id: string;
@@ -11,9 +13,13 @@ interface Notification {
   link?: string;
   createdAt: string;
   read: boolean;
+  // Añadido: referencia directa a la cita
+  appointmentId?: string;
+  appointment?: { id: string };
 }
 
 export default function NotificationCenter() {
+  const router = useRouter();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -76,25 +82,26 @@ export default function NotificationCenter() {
     <div className="relative">
       <button
         onClick={() => setShowDropdown(!showDropdown)}
-        className="relative p-2 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 rounded-lg"
+        className="relative p-2 text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)] focus:ring-offset-2 focus:ring-offset-[color:var(--color-surface)] rounded-lg"
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
+        <Bell className="w-5 h-5" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+          <span className="absolute -top-1 -right-1 bg-[color:var(--color-primary)] text-[color:var(--on-accent-contrast)] text-xs rounded-full h-5 w-5 flex items-center justify-center">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
       </button>
 
       {showDropdown && (
-        <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border z-50">
-          <div className="p-4 border-b border-gray-200">
+        <div className="absolute right-0 mt-2 w-80 bg-[color:var(--color-surface)] rounded-xl shadow-lg border border-[color:var(--color-border)] z-50">
+          <div className="p-3 border-b border-[color:var(--color-border)]">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">Notificaciones</h3>
+              <div className="flex items-center gap-2">
+                <Bell className="w-4 h-4 text-[color:var(--color-primary)]" />
+                <span className="text-sm font-semibold text-[color:var(--color-heading)]">Notificaciones</span>
+              </div>
               {unreadCount > 0 && (
-                <span className="text-sm text-gray-500">{unreadCount} nuevas</span>
+                <span className="px-2 py-0.5 text-xs rounded-full bg-[color:var(--color-selected)] text-[color:var(--color-heading)]">{unreadCount} nuevas</span>
               )}
             </div>
           </div>
@@ -102,16 +109,16 @@ export default function NotificationCenter() {
           <div className="max-h-96 overflow-y-auto">
             {notifications.length === 0 ? (
               <div className="p-6 text-center">
-                <div className="text-gray-400 mb-3">
+                <div className="text-[color:var(--color-muted)] mb-3">
                   <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <p className="text-gray-500 text-sm mb-4">No hay citas pendientes</p>
+                <p className="text-[color:var(--color-muted)] text-sm mb-4">No hay citas pendientes</p>
                 <Link
                   href="/admin/appointments"
                   onClick={() => setShowDropdown(false)}
-                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-[#D4AF37] hover:bg-[#B8941F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D4AF37]"
+                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-[color:var(--on-accent-contrast)] bg-[color:var(--color-primary)] hover:bg-[color:var(--color-primary-hover)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[color:var(--color-primary)] focus:ring-offset-[color:var(--color-surface)]"
                 >
                   Ver todas las citas
                 </Link>
@@ -120,43 +127,47 @@ export default function NotificationCenter() {
               notifications.map((notification) => (
                 <div
                   key={notification.id}
-                  className={`p-4 border-b border-gray-100 hover:bg-gray-50 ${
-                    !notification.read ? 'bg-blue-50' : ''
+                  className={`p-4 border-b border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-elevated)] ${
+                    !notification.read ? 'bg-[color:var(--color-selected)]' : ''
                   }`}
                 >
                   <div className="flex items-start space-x-3">
                     <div className={`w-2 h-2 rounded-full mt-2 ${
-                      !notification.read ? 'bg-blue-500' : 'bg-gray-300'
+                      !notification.read ? 'bg-[color:var(--color-primary)]' : 'bg-[color:var(--color-border)]'
                     }`} />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium text-gray-900 truncate">
+                        <p className="text-sm font-medium text-[color:var(--color-heading)] truncate">
                           {notification.title}
                         </p>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-[color:var(--color-muted)]">
                           {formatTime(notification.createdAt)}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-sm text-[color:var(--color-body)] mt-1">
                         {notification.message}
                       </p>
                       <div className="flex items-center space-x-2 mt-2">
                         {notification.link && (
-                          <Link
-                            href={`${notification.link}?highlight=${notification.id.replace('appointment-', '')}&showDetail=true`}
-                            onClick={() => {
+                          <button
+                            onClick={async () => {
                               markAsRead(notification.id);
                               setShowDropdown(false);
+                              const targetId = notification.appointmentId || notification.appointment?.id;
+                              const url = targetId
+                                ? `${notification.link}?highlightId=${targetId}&showDetail=true`
+                                : `${notification.link}`;
+                              await router.push(url);
                             }}
-                            className="text-xs text-[#D4AF37] hover:text-[#B8941F] font-medium"
+                            className="text-xs text-[color:var(--color-primary)] hover:text-[color:var(--color-primary-hover)] font-medium"
                           >
                             Ver detalles
-                          </Link>
+                          </button>
                         )}
                         {!notification.read && (
                           <button
                             onClick={() => markAsRead(notification.id)}
-                            className="text-xs text-gray-500 hover:text-gray-700"
+                            className="text-xs text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)]"
                           >
                             Marcar como leída
                           </button>
@@ -170,11 +181,11 @@ export default function NotificationCenter() {
           </div>
 
           {notifications.length > 0 && (
-            <div className="p-4 border-t border-gray-200">
+            <div className="p-4 border-t border-[color:var(--color-border)]">
               <Link
                 href="/admin/appointments?filter=PENDING"
                 onClick={() => setShowDropdown(false)}
-                className="text-sm text-[#D4AF37] hover:text-[#B8941F] font-medium"
+                className="text-sm text-[color:var(--color-primary)] hover:text-[color:var(--color-primary-hover)] font-medium"
               >
                 Ver todas las citas pendientes →
               </Link>

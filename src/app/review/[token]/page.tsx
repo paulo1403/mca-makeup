@@ -154,7 +154,7 @@ export default function ReviewPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#1C1C1C] to-[#5A5A5A] flex items-center justify-center">
         <div className="text-center text-white">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D4AF37] mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[color:var(--color-primary)] mx-auto mb-4"></div>
           <p>Cargando información de la reseña...</p>
         </div>
       </div>
@@ -165,12 +165,12 @@ export default function ReviewPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#1C1C1C] to-[#5A5A5A] flex items-center justify-center">
         <div className="bg-white rounded-lg shadow-xl p-8 max-w-md mx-4 text-center">
-          <AlertCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Error</h1>
-          <p className="text-gray-600 mb-6">{error}</p>
+          <AlertCircle className="h-16 w-16 text-[color:var(--status-cancelled-text)] mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-[color:var(--color-heading)] mb-4">Error</h1>
+          <p className="text-[color:var(--color-muted)] mb-6">{error}</p>
           <button
             onClick={() => router.push("/")}
-            className="bg-[#D4AF37] text-white px-6 py-2 rounded-lg hover:bg-[#B8941F] transition-colors"
+            className="bg-[color:var(--color-primary)] text-white px-6 py-2 rounded-lg hover:opacity-90 transition-colors"
           >
             Volver al inicio
           </button>
@@ -183,17 +183,17 @@ export default function ReviewPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#1C1C1C] to-[#5A5A5A] flex items-center justify-center">
         <div className="bg-white rounded-lg shadow-xl p-8 max-w-md mx-4 text-center">
-          <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+          <CheckCircle className="h-16 w-16 text-[color:var(--status-confirmed-text)] mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-[color:var(--color-heading)] mb-4">
             ¡Gracias por tu reseña!
           </h1>
-          <p className="text-gray-600 mb-6">
+          <p className="text-[color:var(--color-muted)] mb-6">
             Tu reseña ha sido enviada exitosamente. Será revisada antes de ser
             publicada.
           </p>
           <button
             onClick={() => router.push("/")}
-            className="bg-[#D4AF37] text-white px-6 py-2 rounded-lg hover:bg-[#B8941F] transition-colors"
+            className="bg-[color:var(--color-primary)] text-white px-6 py-2 rounded-lg hover:opacity-90 transition-colors"
           >
             Volver al inicio
           </button>
@@ -205,9 +205,9 @@ export default function ReviewPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1C1C1C] to-[#5A5A5A] py-12 px-4">
       <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-lg shadow-xl overflow-hidden">
+        <div className="bg-[color:var(--color-surface)] rounded-lg border border-[color:var(--color-border)]/30 overflow-hidden">
           {/* Header */}
-          <div className="bg-[#D4AF37] text-white p-6 text-center">
+          <div className="bg-[color:var(--color-primary)] text-white p-6 text-center">
             <h1 className="text-3xl font-bold mb-2">Reseña de Servicio</h1>
             <p className="text-lg opacity-90">
               Marcela Cordero - Makeup Artist
@@ -216,20 +216,20 @@ export default function ReviewPage() {
 
           {/* Appointment Info */}
           {reviewData && (
-            <div className="p-6 bg-gray-50 border-b">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="p-6 bg-[color:var(--color-surface)] border-b border-[color:var(--color-border)]/30">
+              <h2 className="text-lg font-semibold text-[color:var(--color-heading)] mb-4">
                 Información de tu cita
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-600">Fecha</p>
-                  <p className="font-medium text-gray-900">
+                  <p className="text-sm text-[color:var(--color-muted)]">Fecha</p>
+                  <p className="font-medium text-[color:var(--color-heading)]">
                     {formatDate(reviewData.appointment.appointmentDate)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Servicios</p>
-                  <p className="font-medium text-gray-900">
+                  <p className="text-sm text-[color:var(--color-muted)]">Servicios</p>
+                  <p className="font-medium text-[color:var(--color-heading)]">
                     {getServiceNames(
                       reviewData.appointment.services,
                       reviewData.appointment.serviceType,
@@ -245,7 +245,7 @@ export default function ReviewPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Rating */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-[color:var(--color-heading)] mb-2">
                   Calificación general *
                 </label>
                 <div className="flex items-center space-x-1">
@@ -256,18 +256,18 @@ export default function ReviewPage() {
                       onClick={() => setFormData({ ...formData, rating: star })}
                       onMouseEnter={() => setHoveredRating(star)}
                       onMouseLeave={() => setHoveredRating(0)}
-                      className="focus:outline-none focus:ring-2 focus:ring-[#D4AF37] rounded p-1"
+                      className="focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)] rounded p-1"
                     >
                       <Star
                         className={`h-8 w-8 ${
                           star <= (hoveredRating || formData.rating)
-                            ? "text-[#D4AF37] fill-current"
-                            : "text-gray-300"
+                            ? "text-[color:var(--color-primary)] fill-current"
+                            : "text-[color:var(--color-border)]/40"
                         } transition-colors`}
                       />
                     </button>
                   ))}
-                  <span className="ml-2 text-sm text-gray-600">
+                  <span className="ml-2 text-sm text-[color:var(--color-muted)]">
                     (
                     {formData.rating > 0
                       ? `${formData.rating} estrella${formData.rating !== 1 ? "s" : ""}`
@@ -281,7 +281,7 @@ export default function ReviewPage() {
               <div>
                 <label
                   htmlFor="reviewText"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-[color:var(--color-heading)] mb-2"
                 >
                   Tu experiencia (opcional)
                 </label>
@@ -293,7 +293,7 @@ export default function ReviewPage() {
                     setFormData({ ...formData, reviewText: e.target.value })
                   }
                   placeholder="Cuéntanos sobre tu experiencia con nuestro servicio..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-[#D4AF37] resize-none"
+                  className="w-full px-3 py-2 border border-[color:var(--color-border)]/30 rounded-lg focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-[color:var(--color-primary)] resize-none"
                 />
               </div>
 
@@ -301,7 +301,7 @@ export default function ReviewPage() {
               <div>
                 <label
                   htmlFor="reviewerName"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-[color:var(--color-heading)] mb-2"
                 >
                   Tu nombre *
                 </label>
@@ -313,7 +313,7 @@ export default function ReviewPage() {
                     setFormData({ ...formData, reviewerName: e.target.value })
                   }
                   placeholder="Ingresa tu nombre"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-[#D4AF37]"
+                  className="w-full px-3 py-2 border border-[color:var(--color-border)]/30 rounded-lg focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-[color:var(--color-primary)]"
                   required
                 />
               </div>
@@ -322,7 +322,7 @@ export default function ReviewPage() {
               <div>
                 <label
                   htmlFor="reviewerEmail"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-[color:var(--color-heading)] mb-2"
                 >
                   Tu email *
                 </label>
@@ -334,15 +334,15 @@ export default function ReviewPage() {
                     setFormData({ ...formData, reviewerEmail: e.target.value })
                   }
                   placeholder="tu@email.com"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-[#D4AF37]"
+                  className="w-full px-3 py-2 border border-[color:var(--color-border)]/30 rounded-lg focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-[color:var(--color-primary)]"
                   required
                 />
               </div>
 
               {/* Error Message */}
               {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                  <p className="text-red-600 text-sm">{error}</p>
+                <div className="bg-[color:var(--color-surface)] border border-[color:var(--status-cancelled-text)]/30 rounded-lg p-4">
+                  <p className="text-[color:var(--status-cancelled-text)] text-sm">{error}</p>
                 </div>
               )}
 
@@ -350,7 +350,7 @@ export default function ReviewPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-[#D4AF37] text-white py-3 px-4 rounded-lg font-medium hover:bg-[#B8941F] focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="w-full bg-[color:var(--color-primary)] text-white py-3 px-4 rounded-lg font-medium hover:opacity-90 focus:ring-2 focus:ring-[color:var(--color-primary)] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
               >
                 {submitting ? (
                   <>
@@ -367,8 +367,8 @@ export default function ReviewPage() {
             </form>
 
             {/* Privacy Note */}
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <p className="text-xs text-gray-600">
+            <div className="mt-6 p-4 bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/30 rounded-lg">
+              <p className="text-xs text-[color:var(--color-muted)]">
                 <strong>Nota de privacidad:</strong> Tu reseña será revisada
                 antes de ser publicada. Nos reservamos el derecho de no publicar
                 reseñas que contengan contenido inapropiado.

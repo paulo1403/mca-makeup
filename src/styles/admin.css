@@ -93,7 +93,7 @@
   left: 50%;
   width: 0;
   height: 2px;
-  background-color: #D4AF37;
+  background-color: var(--color-primary);
   transition: all 0.3s ease-in-out;
   transform: translateX(-50%);
 }
@@ -120,7 +120,7 @@
 /* Estilos personalizados para el scrollbar */
 .scrollbar-thin {
   scrollbar-width: thin;
-  scrollbar-color: rgb(209 213 219) rgb(243 244 246);
+  scrollbar-color: var(--color-border) var(--color-surface-elevated);
 }
 
 .scrollbar-thin::-webkit-scrollbar {
@@ -128,31 +128,63 @@
 }
 
 .scrollbar-thin::-webkit-scrollbar-track {
-  background: rgb(243 244 246);
+  background: var(--color-surface-elevated);
   border-radius: 3px;
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: rgb(209 213 219);
+  background: var(--color-border);
   border-radius: 3px;
   transition: background-color 0.2s ease;
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background: rgb(156 163 175);
+  background: color-mix(in srgb, var(--color-border) 60%, var(--color-heading) 40%);
 }
 
-/* Asegurar que el sidebar tenga altura completa */
-.admin-sidebar {
-  height: 100dvh;
-  max-height: 100dvh;
+/* Admin layout helpers */
+.admin-layout {
+  height: 100%;
 }
 
-/* Contenedor de navegación scrolleable del sidebar */
+/* Sidebar active indicator line */
+.admin-sidebar .nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 60%;
+  background: var(--color-primary);
+  border-radius: 2px;
+}
+
+/* Scrollbar styling tied to theme */
 .admin-sidebar-nav {
-  height: calc(100dvh - 140px); /* Altura total menos header y footer */
+  height: calc(100dvh - 140px);
   overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-width: thin;
+}
+.admin-sidebar-nav::-webkit-scrollbar {
+  width: 8px;
+}
+.admin-sidebar-nav::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+.admin-sidebar-nav::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 8px;
+  border: 2px solid var(--color-surface);
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .admin-sidebar {
+    width: 85vw;
+    max-width: 320px;
+  }
 }
 
 /* Ocultar NavBar global (header.fixed) en páginas de administración */

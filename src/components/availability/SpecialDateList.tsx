@@ -24,16 +24,14 @@ export default function SpecialDateList({
   isLoading = false,
 }: SpecialDateListProps) {
   const handleDelete = (id: string) => {
-    if (confirm("¿Estás segura de que quieres eliminar esta fecha especial?")) {
-      onDeleteAction(id);
-    }
+    onDeleteAction(id);
   };
 
   if (specialDates.length === 0) {
     return (
       <div className="text-center py-8">
-        <Calendar className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-        <p className="text-gray-600 mb-4">
+        <Calendar className="mx-auto h-12 w-12 text-[color:var(--color-muted)] mb-4" />
+        <p className="text-[color:var(--color-body)] mb-4">
           No tienes fechas especiales configuradas. Puedes agregar días libres o
           horarios especiales.
         </p>
@@ -63,23 +61,36 @@ export default function SpecialDateList({
       {sortedDates.map((specialDate) => (
         <div
           key={specialDate.id}
-          className={`p-4 rounded-lg border transition-all ${
+          className={`p-4 rounded-lg border transition-all`}
+          style={
             specialDate.isAvailable
-              ? "bg-blue-50 border-blue-200"
-              : "bg-red-50 border-red-200"
-          }`}
+              ? {
+                  backgroundColor: "var(--status-confirmed-bg)",
+                  borderColor: "var(--status-confirmed-border)",
+                }
+              : {
+                  backgroundColor: "var(--status-cancelled-bg)",
+                  borderColor: "var(--status-cancelled-border)",
+                }
+          }
         >
           <div className="flex flex-col space-y-3">
             <div className="flex-1">
               {/* Fecha y estado */}
               <div className="flex items-center space-x-3 mb-2">
                 {specialDate.isAvailable ? (
-                  <CheckCircle className="h-5 w-5 text-blue-500" />
+                  <CheckCircle
+                    className="h-5 w-5"
+                    style={{ color: "var(--status-confirmed-text)" }}
+                  />
                 ) : (
-                  <XCircle className="h-5 w-5 text-red-500" />
+                  <XCircle
+                    className="h-5 w-5"
+                    style={{ color: "var(--status-cancelled-text)" }}
+                  />
                 )}
                 <div>
-                  <div className="font-medium text-gray-900">
+                  <div className="font-medium text-[color:var(--color-heading)]">
                     {(() => {
                       // Crear la fecha manualmente para evitar problemas de zona horaria
                       const [year, month, day] = specialDate.date.split("-");
@@ -97,11 +108,20 @@ export default function SpecialDateList({
                     })()}
                   </div>
                   <span
-                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-1 ${
+                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-1 border`}
+                    style={
                       specialDate.isAvailable
-                        ? "bg-blue-100 text-blue-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
+                        ? {
+                            backgroundColor: "var(--status-confirmed-bg)",
+                            color: "var(--status-confirmed-text)",
+                            borderColor: "var(--status-confirmed-border)",
+                          }
+                        : {
+                            backgroundColor: "var(--status-cancelled-bg)",
+                            color: "var(--status-cancelled-text)",
+                            borderColor: "var(--status-cancelled-border)",
+                          }
+                    }
                   >
                     {specialDate.isAvailable ? "Disponible" : "No Disponible"}
                   </span>
@@ -110,10 +130,10 @@ export default function SpecialDateList({
 
               {/* Horario especial */}
               {specialDate.startTime && specialDate.endTime && (
-                <div className="flex items-center space-x-2 mb-2 text-sm text-gray-600">
+                <div className="flex items-center space-x-2 mb-2 text-sm text-[color:var(--color-body)]">
                   <Clock className="h-4 w-4" />
                   <span>
-                    <strong>Horario especial:</strong> {specialDate.startTime} -{" "}
+                    <strong>Horario especial:</strong> {specialDate.startTime} - {""}
                     {specialDate.endTime}
                   </span>
                 </div>
@@ -121,22 +141,20 @@ export default function SpecialDateList({
 
               {/* Nota */}
               {specialDate.note && (
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-[color:var(--color-body)]">
                   <strong>Nota:</strong> {specialDate.note}
                 </div>
               )}
             </div>
 
             {/* Botones de acción */}
-            <div
-              className={`flex gap-2 ${onEditAction ? "space-x-0" : "space-x-0"}`}
-            >
+            <div className={`flex gap-2 ${onEditAction ? "space-x-0" : "space-x-0"}`}>
               {/* Botón Editar */}
               {onEditAction && (
                 <button
                   onClick={() => onEditAction(specialDate)}
                   disabled={isLoading}
-                  className="flex items-center justify-center px-3 py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors disabled:opacity-50 text-xs sm:text-sm font-medium"
+                  className="flex items-center justify-center px-3 py-2 bg-[color:var(--color-accent)]/10 text-[color:var(--color-primary)] hover:bg-[color:var(--color-accent)]/15 border border-[color:var(--color-accent)]/20 rounded-lg transition-colors disabled:opacity-50 text-xs sm:text-sm font-medium"
                   title="Editar fecha especial"
                 >
                   <Edit2 className="h-4 w-4" />
@@ -148,8 +166,13 @@ export default function SpecialDateList({
               <button
                 onClick={() => handleDelete(specialDate.id)}
                 disabled={isLoading}
-                className="flex items-center justify-center px-3 py-2 bg-[#B06579] bg-opacity-10 text-[#9A5A6B] hover:bg-[#B06579] hover:bg-opacity-20 border border-[#B06579] border-opacity-30 rounded-lg transition-colors disabled:opacity-50 text-xs sm:text-sm font-medium"
+                className="flex items-center justify-center px-3 py-2 rounded-lg transition-colors disabled:opacity-50 text-xs sm:text-sm font-medium border"
                 title="Eliminar fecha especial"
+                style={{
+                  backgroundColor: "var(--status-cancelled-bg)",
+                  color: "var(--status-cancelled-text)",
+                  borderColor: "var(--status-cancelled-border)",
+                }}
               >
                 <Trash2 className="h-4 w-4" />
                 <span className="hidden xs:inline ml-1">Eliminar</span>

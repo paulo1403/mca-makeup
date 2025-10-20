@@ -9,9 +9,11 @@ import {
   Eye,
   EyeOff,
   Trash2,
+  ChevronDown,
   Filter,
   Search,
 } from "lucide-react";
+import { getReviewStatusColor, getReviewStatusText } from "@/utils/reviewHelpers";
 
 interface Review {
   id: string;
@@ -155,31 +157,7 @@ export default function AdminReviewsPage() {
     setShowModal(true);
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "PENDING":
-        return "bg-yellow-100 text-yellow-800";
-      case "APPROVED":
-        return "bg-green-100 text-green-800";
-      case "REJECTED":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "PENDING":
-        return "Pendiente";
-      case "APPROVED":
-        return "Aprobada";
-      case "REJECTED":
-        return "Rechazada";
-      default:
-        return status;
-    }
-  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("es-ES", {
@@ -195,9 +173,8 @@ export default function AdminReviewsPage() {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        className={`h-4 w-4 ${
-          i < rating ? "text-[#D4AF37] fill-current" : "text-gray-300"
-        }`}
+        className={`h-4 w-4 ${i < rating ? "text-[color:var(--color-accent)] fill-current" : "text-[color:var(--color-muted)]"
+          }`}
       />
     ));
   };
@@ -217,53 +194,57 @@ export default function AdminReviewsPage() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-[color:var(--color-heading)]">
             Gestión de Reseñas
           </h1>
-          <p className="text-gray-600">
+          <p className="text-[color:var(--color-muted)]">
             Administra las reseñas de tus clientes
           </p>
         </div>
       </div>
 
       {/* Filters and Search */}
-      <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+      <div className="bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)]/30 p-4 mb-6">
         <div className="flex flex-col md:flex-row gap-4">
           {/* Status Filter */}
           <div className="relative">
             <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-gray-500" />
-              <select
-                value={filter}
-                onChange={(e) =>
-                  setFilter(
-                    e.target.value as
+              <Filter className="h-4 w-4 text-[color:var(--color-muted)]" />
+              <div className="relative inline-block">
+                <select
+                  value={filter}
+                  onChange={(e) =>
+                    setFilter(
+                      e.target.value as
                       | "ALL"
                       | "PENDING"
                       | "APPROVED"
                       | "REJECTED",
-                  )
-                }
-                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#D4AF37] focus:border-[#D4AF37]"
-              >
-                <option value="ALL">Todas</option>
-                <option value="PENDING">Pendientes</option>
-                <option value="APPROVED">Aprobadas</option>
-                <option value="REJECTED">Rechazadas</option>
-              </select>
+                    )
+                  }
+                  className="appearance-none pr-8 border border-[color:var(--color-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-surface)] focus:border-[color:var(--color-primary)] bg-[color:var(--color-surface)] text-[color:var(--color-heading)]"
+                >
+                  <option value="ALL">Todas</option>
+                  <option value="PENDING">Pendientes</option>
+                  <option value="APPROVED">Aprobadas</option>
+                  <option value="REJECTED">Rechazadas</option>
+                </select>
+
+                <ChevronDown className="h-4 w-4 absolute right-3 top-1/2 transform -translate-y-1/2 text-[color:var(--color-muted)] pointer-events-none" />
+              </div>
             </div>
           </div>
 
           {/* Search */}
           <div className="flex-1">
             <div className="relative">
-              <Search className="h-4 w-4 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
+              <Search className="h-4 w-4 text-[color:var(--color-muted)] absolute left-3 top-1/2 transform -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Buscar por nombre del cliente o contenido de la reseña..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#D4AF37] focus:border-[#D4AF37]"
+                className="w-full pl-9 pr-3 py-2 border border-[color:var(--color-border)] rounded-lg text-sm appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-surface)] focus:border-[color:var(--color-primary)] bg-[color:var(--color-surface)] text-[color:var(--color-heading)]"
               />
             </div>
           </div>
@@ -271,34 +252,34 @@ export default function AdminReviewsPage() {
       </div>
 
       {/* Reviews List */}
-      <div className="bg-white rounded-lg shadow-sm">
+      <div className="bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)]/30">
         {loading ? (
           <div className="p-8 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D4AF37] mx-auto mb-4"></div>
-            <p className="text-gray-600">Cargando reseñas...</p>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[color:var(--color-primary)] mx-auto mb-4"></div>
+            <p className="text-[color:var(--color-muted)]">Cargando reseñas...</p>
           </div>
         ) : filteredReviews.length === 0 ? (
           <div className="p-8 text-center">
-            <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600">No se encontraron reseñas</p>
+            <MessageSquare className="h-12 w-12 text-[color:var(--color-muted)] mx-auto mb-4" />
+            <p className="text-[color:var(--color-muted)]">No se encontraron reseñas</p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-200">
+          <div className="divide-y divide-[color:var(--color-border)]/30">
             {filteredReviews.map((review) => (
               <div key={review.id} className="p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="font-semibold text-gray-900">
+                      <h3 className="font-semibold text-[color:var(--color-heading)]">
                         {review.reviewerName}
                       </h3>
                       <span
-                        className={`px-2 py-1 text-xs rounded-full font-medium ${getStatusColor(review.status)}`}
+                        className={`px-2 py-1 text-xs rounded-full font-medium ${getReviewStatusColor(review.status)}`}
                       >
-                        {getStatusText(review.status)}
+                        {getReviewStatusText(review.status)}
                       </span>
                       {review.isPublic && review.status === "APPROVED" && (
-                        <span className="px-2 py-1 text-xs rounded-full font-medium bg-blue-100 text-blue-800">
+                        <span className="px-2 py-1 text-xs rounded-full font-medium bg-[color:var(--color-primary)]/12 text-[color:var(--color-primary)]">
                           Pública
                         </span>
                       )}
@@ -309,24 +290,24 @@ export default function AdminReviewsPage() {
                         ({review.rating}/5)
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">
+                    <p className="text-sm text-[color:var(--color-muted)] mb-2">
                       Cliente: {review.appointment.clientName} •{" "}
                       {formatDate(review.appointment.appointmentDate)}
                     </p>
                     {review.reviewText && (
-                      <p className="text-gray-700 bg-gray-50 p-3 rounded-lg mb-3">
+                      <p className="text-[color:var(--color-heading)] bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/30 p-3 rounded-lg mb-3">
                         &ldquo;{review.reviewText}&rdquo;
                       </p>
                     )}
                     {review.adminResponse && (
-                      <div className="bg-[#D4AF37]/10 p-3 rounded-lg border-l-4 border-[#D4AF37]">
-                        <p className="text-sm font-medium text-gray-900 mb-1">
+                      <div className="bg-[color:var(--color-accent)]/12 p-3 rounded-lg border-l-4 border-[color:var(--color-accent)]">
+                        <p className="text-sm font-medium text-[color:var(--color-heading)] mb-1">
                           Tu respuesta:
                         </p>
-                        <p className="text-sm text-gray-700">
+                        <p className="text-sm text-[color:var(--color-muted)]">
                           {review.adminResponse}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-[color:var(--color-muted)] mt-1">
                           Respondido el {formatDate(review.respondedAt!)}
                         </p>
                       </div>
@@ -336,7 +317,7 @@ export default function AdminReviewsPage() {
                   <div className="flex items-center gap-2 ml-4">
                     <button
                       onClick={() => openModal(review)}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      className="p-2 text-[color:var(--color-primary)] hover:bg-[color:var(--color-primary)]/10 rounded-lg transition-colors"
                       title="Ver detalles y responder"
                     >
                       <MessageSquare className="h-4 w-4" />
@@ -348,7 +329,7 @@ export default function AdminReviewsPage() {
                           onClick={() =>
                             updateReviewStatus(review.id, "APPROVED", true)
                           }
-                          className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                          className="p-2 text-[color:var(--status-confirmed-text)] hover:bg-[color:var(--status-confirmed-bg)] rounded-lg transition-colors"
                           title="Aprobar y hacer pública"
                         >
                           <CheckCircle className="h-4 w-4" />
@@ -357,7 +338,7 @@ export default function AdminReviewsPage() {
                           onClick={() =>
                             updateReviewStatus(review.id, "REJECTED")
                           }
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          className="p-2 text-[color:var(--status-cancelled-text)] hover:bg-[color:var(--status-cancelled-bg)] rounded-lg transition-colors"
                           title="Rechazar"
                         >
                           <XCircle className="h-4 w-4" />
@@ -374,7 +355,7 @@ export default function AdminReviewsPage() {
                             !review.isPublic,
                           )
                         }
-                        className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+                        className="p-2 text-[color:var(--color-primary)] hover:bg-[color:var(--color-primary)]/10 rounded-lg transition-colors"
                         title={
                           review.isPublic
                             ? "Ocultar de público"
@@ -391,7 +372,7 @@ export default function AdminReviewsPage() {
 
                     <button
                       onClick={() => deleteReview(review.id)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-2 text-[color:var(--status-cancelled-text)] hover:bg-[color:var(--status-cancelled-bg)] rounded-lg transition-colors"
                       title="Eliminar reseña"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -399,7 +380,7 @@ export default function AdminReviewsPage() {
                   </div>
                 </div>
 
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-[color:var(--color-muted)]">
                   Enviada el {formatDate(review.createdAt)}
                 </div>
               </div>
@@ -409,9 +390,9 @@ export default function AdminReviewsPage() {
 
         {/* Pagination */}
         {pagination.totalPages > 1 && (
-          <div className="border-t border-gray-200 px-6 py-4">
+          <div className="border-t border-[color:var(--color-border)]/30 px-6 py-4">
             <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-700">
+              <div className="text-sm text-[color:var(--color-muted)]">
                 Mostrando {(pagination.page - 1) * pagination.limit + 1} a{" "}
                 {Math.min(pagination.page * pagination.limit, pagination.total)}{" "}
                 de {pagination.total} reseñas
@@ -422,11 +403,11 @@ export default function AdminReviewsPage() {
                     setPagination((prev) => ({ ...prev, page: prev.page - 1 }))
                   }
                   disabled={pagination.page === 1}
-                  className="px-3 py-1 text-sm border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                  className="px-3 py-1 text-sm border border-[color:var(--color-border)]/30 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[color:var(--color-surface)] text-[color:var(--color-heading)]"
                 >
                   Anterior
                 </button>
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-[color:var(--color-muted)]">
                   Página {pagination.page} de {pagination.totalPages}
                 </span>
                 <button
@@ -434,7 +415,7 @@ export default function AdminReviewsPage() {
                     setPagination((prev) => ({ ...prev, page: prev.page + 1 }))
                   }
                   disabled={pagination.page === pagination.totalPages}
-                  className="px-3 py-1 text-sm border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                  className="px-3 py-1 text-sm border border-[color:var(--color-border)]/30 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[color:var(--color-surface)] text-[color:var(--color-heading)]"
                 >
                   Siguiente
                 </button>
@@ -447,15 +428,15 @@ export default function AdminReviewsPage() {
       {/* Modal for Review Details and Response */}
       {showModal && selectedReview && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)]/30 shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-start mb-6">
-                <h2 className="text-xl font-bold text-gray-900">
+                <h2 className="text-xl font-bold text-[color:var(--color-heading)]">
                   Detalle de Reseña
                 </h2>
                 <button
                   onClick={() => setShowModal(false)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)]"
                 >
                   <XCircle className="h-6 w-6" />
                 </button>
@@ -464,29 +445,29 @@ export default function AdminReviewsPage() {
               {/* Review Details */}
               <div className="space-y-4 mb-6">
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
+                  <h3 className="font-semibold text-[color:var(--color-heading)] mb-2">
                     {selectedReview.reviewerName}
                   </h3>
                   <div className="flex items-center gap-2 mb-2">
                     {renderStars(selectedReview.rating)}
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-[color:var(--color-muted)]">
                       ({selectedReview.rating}/5)
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 mb-3">
+                  <p className="text-sm text-[color:var(--color-muted)] mb-3">
                     {selectedReview.reviewerEmail} •{" "}
                     {formatDate(selectedReview.createdAt)}
                   </p>
                 </div>
 
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">
+                  <h4 className="font-medium text-[color:var(--color-heading)] mb-2">
                     Información de la cita:
                   </h4>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-[color:var(--color-muted)]">
                     Cliente: {selectedReview.appointment.clientName}
                     <br />
-                    Fecha:{" "}
+                    Fecha: {" "}
                     {formatDate(selectedReview.appointment.appointmentDate)}
                     <br />
                     Servicio: {selectedReview.appointment.serviceType}
@@ -495,10 +476,10 @@ export default function AdminReviewsPage() {
 
                 {selectedReview.reviewText && (
                   <div>
-                    <h4 className="font-medium text-gray-900 mb-2">
+                    <h4 className="font-medium text-[color:var(--color-heading)] mb-2">
                       Comentarios:
                     </h4>
-                    <p className="text-gray-700 bg-gray-50 p-3 rounded-lg">
+                    <p className="text-[color:var(--color-heading)] bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/30 p-3 rounded-lg">
                       &ldquo;{selectedReview.reviewText}&rdquo;
                     </p>
                   </div>
@@ -509,7 +490,7 @@ export default function AdminReviewsPage() {
               <div className="mb-6">
                 <label
                   htmlFor="adminResponse"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-[color:var(--color-heading)] mb-2"
                 >
                   Tu respuesta (opcional):
                 </label>
@@ -519,7 +500,7 @@ export default function AdminReviewsPage() {
                   value={adminResponse}
                   onChange={(e) => setAdminResponse(e.target.value)}
                   placeholder="Escribe una respuesta para el cliente..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-[#D4AF37]"
+                  className="w-full px-3 py-2 border border-[color:var(--color-border)]/30 rounded-lg focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-[color:var(--color-primary)] bg-[color:var(--color-surface)] text-[color:var(--color-heading)]"
                 />
               </div>
 
@@ -532,7 +513,7 @@ export default function AdminReviewsPage() {
                         updateReviewStatus(selectedReview.id, "APPROVED", true)
                       }
                       disabled={submitting}
-                      className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      className="flex-1 bg-[color:var(--status-confirmed-text)] text-white py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       {submitting ? "Procesando..." : "Aprobar y Publicar"}
                     </button>
@@ -541,7 +522,7 @@ export default function AdminReviewsPage() {
                         updateReviewStatus(selectedReview.id, "APPROVED", false)
                       }
                       disabled={submitting}
-                      className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      className="flex-1 bg-[color:var(--color-primary)] text-white py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       {submitting ? "Procesando..." : "Aprobar (Privada)"}
                     </button>
@@ -550,7 +531,7 @@ export default function AdminReviewsPage() {
                         updateReviewStatus(selectedReview.id, "REJECTED")
                       }
                       disabled={submitting}
-                      className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      className="flex-1 bg-[color:var(--status-cancelled-text)] text-white py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       {submitting ? "Procesando..." : "Rechazar"}
                     </button>
@@ -567,7 +548,7 @@ export default function AdminReviewsPage() {
                       )
                     }
                     disabled={submitting}
-                    className="flex-1 bg-[#D4AF37] text-white py-2 px-4 rounded-lg hover:bg-[#B8941F] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="flex-1 bg-[color:var(--color-primary)] text-white py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {submitting
                       ? "Procesando..."
@@ -579,7 +560,7 @@ export default function AdminReviewsPage() {
 
                 <button
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2 border border-[color:var(--color-border)]/30 text-[color:var(--color-heading)] rounded-lg hover:bg-[color:var(--color-surface)] transition-colors"
                 >
                   Cancelar
                 </button>

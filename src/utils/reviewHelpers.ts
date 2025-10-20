@@ -36,13 +36,13 @@ export const getReviewUrl = (reviewToken: string): string => {
 export const getReviewStatusColor = (status: "PENDING" | "APPROVED" | "REJECTED"): string => {
   switch (status) {
     case "PENDING":
-      return "bg-yellow-100 text-yellow-800";
+      return "bg-[color:var(--status-pending-bg)] text-[color:var(--status-pending-text)] border border-[color:var(--status-pending-border)]";
     case "APPROVED":
-      return "bg-green-100 text-green-800";
+      return "bg-[color:var(--status-confirmed-bg)] text-[color:var(--status-confirmed-text)] border border-[color:var(--status-confirmed-border)]";
     case "REJECTED":
-      return "bg-red-100 text-red-800";
+      return "bg-[color:var(--status-cancelled-bg)] text-[color:var(--status-cancelled-text)] border border-[color:var(--status-cancelled-border)]";
     default:
-      return "bg-gray-100 text-gray-800";
+      return "bg-[color:var(--color-surface-elevated)] text-[color:var(--color-muted)] border border-[color:var(--color-border)]";
   }
 };
 

@@ -13,6 +13,9 @@ import {
   Globe,
   Smartphone
 } from 'lucide-react';
+import Modal, { ModalHeader, ModalBody, ModalFooter } from '@/components/ui/Modal';
+import Typography from '@/components/ui/Typography';
+import Button from '@/components/ui/Button';
 
 interface ErrorReport {
   id: string;
@@ -74,22 +77,22 @@ export default function ErrorReportsPage() {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'CRITICAL': return 'text-red-600 bg-red-50 border-red-200';
-      case 'HIGH': return 'text-orange-600 bg-orange-50 border-orange-200';
-      case 'MEDIUM': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-      case 'LOW': return 'text-green-600 bg-green-50 border-green-200';
-      default: return 'text-gray-600 bg-gray-50 border-gray-200';
+      case 'CRITICAL': return 'text-red-500 bg-red-500/10 border-red-400/30';
+      case 'HIGH': return 'text-orange-500 bg-orange-500/10 border-orange-400/30';
+      case 'MEDIUM': return 'text-yellow-600 bg-yellow-500/10 border-yellow-400/30';
+      case 'LOW': return 'text-green-500 bg-green-500/10 border-green-400/30';
+      default: return 'text-[color:var(--color-muted)] bg-[color:var(--color-surface-elevated)] border-[color:var(--color-border)]';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'PENDING': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-      case 'ACKNOWLEDGED': return 'text-blue-600 bg-blue-50 border-blue-200';
-      case 'IN_PROGRESS': return 'text-purple-600 bg-purple-50 border-purple-200';
-      case 'RESOLVED': return 'text-green-600 bg-green-50 border-green-200';
-      case 'CLOSED': return 'text-gray-600 bg-gray-50 border-gray-200';
-      default: return 'text-gray-600 bg-gray-50 border-gray-200';
+      case 'PENDING': return 'text-yellow-600 bg-yellow-500/10 border-yellow-400/30';
+      case 'ACKNOWLEDGED': return 'text-blue-500 bg-blue-500/10 border-blue-400/30';
+      case 'IN_PROGRESS': return 'text-purple-500 bg-purple-500/10 border-purple-400/30';
+      case 'RESOLVED': return 'text-green-500 bg-green-500/10 border-green-400/30';
+      case 'CLOSED': return 'text-[color:var(--color-muted)] bg-[color:var(--color-surface-elevated)] border-[color:var(--color-border)]';
+      default: return 'text-[color:var(--color-muted)] bg-[color:var(--color-surface-elevated)] border-[color:var(--color-border)]';
     }
   };
 
@@ -129,55 +132,55 @@ export default function ErrorReportsPage() {
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[#1C1C1C] mb-2">Reportes de Errores</h1>
-        <p className="text-gray-600">Gestiona y resuelve los problemas reportados por los usuarios</p>
+        <Typography as='h1' variant='h2' className='text-[color:var(--color-heading)] mb-2'>Reportes de Errores</Typography>
+        <Typography className='text-[color:var(--color-body)]'>Gestiona y resuelve los problemas reportados por los usuarios</Typography>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-lg p-4 border border-gray-200">
-          <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
-          <div className="text-sm text-gray-600">Total de reportes</div>
+        <div className="bg-[color:var(--color-surface-elevated)] rounded-lg p-4 border border-[color:var(--color-border)]">
+          <div className="text-2xl font-bold text-[color:var(--color-heading)]">{stats.total}</div>
+          <Typography variant='caption' className="text-[color:var(--color-muted)]">Total de reportes</Typography>
         </div>
-        <div className="bg-white rounded-lg p-4 border border-gray-200">
-          <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
-          <div className="text-sm text-gray-600">Pendientes</div>
+        <div className="bg-[color:var(--color-surface-elevated)] rounded-lg p-4 border border-[color:var(--color-border)]">
+          <div className="text-2xl font-bold text-yellow-500">{stats.pending}</div>
+          <Typography variant='caption' className="text-[color:var(--color-muted)]">Pendientes</Typography>
         </div>
-        <div className="bg-white rounded-lg p-4 border border-gray-200">
-          <div className="text-2xl font-bold text-red-600">{stats.critical}</div>
-          <div className="text-sm text-gray-600">Críticos</div>
+        <div className="bg-[color:var(--color-surface-elevated)] rounded-lg p-4 border border-[color:var(--color-border)]">
+          <div className="text-2xl font-bold text-red-500">{stats.critical}</div>
+          <Typography variant='caption' className="text-[color:var(--color-muted)]">Críticos</Typography>
         </div>
-        <div className="bg-white rounded-lg p-4 border border-gray-200">
-          <div className="text-2xl font-bold text-green-600">{stats.resolved}</div>
-          <div className="text-sm text-gray-600">Resueltos</div>
+        <div className="bg-[color:var(--color-surface-elevated)] rounded-lg p-4 border border-[color:var(--color-border)]">
+          <div className="text-2xl font-bold text-green-500">{stats.resolved}</div>
+          <Typography variant='caption' className="text-[color:var(--color-muted)]">Resueltos</Typography>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg p-6 mb-8 border border-gray-200">
+      <div className="bg-[color:var(--color-surface-elevated)] rounded-lg p-6 mb-8 border border-[color:var(--color-border)]">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <Typography as='label' variant='small' className='block text-sm font-medium text-[color:var(--color-heading)] mb-2'>
               <Search className="w-4 h-4 inline mr-1" />
               Buscar
-            </label>
+            </Typography>
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="ID, usuario, descripción..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
+              className="w-full px-3 py-2 border rounded-lg border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[color:var(--color-body)] focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-[color:var(--color-primary)]"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <Typography as='label' variant='small' className='block text-sm font-medium text-[color:var(--color-heading)] mb-2'>
               <Filter className="w-4 h-4 inline mr-1" />
               Estado
-            </label>
+            </Typography>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
+              className="w-full px-3 py-2 border rounded-lg border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[color:var(--color-body)] focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-[color:var(--color-primary)]"
             >
               <option value="all">Todos</option>
               <option value="PENDING">Pendiente</option>
@@ -188,13 +191,13 @@ export default function ErrorReportsPage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <Typography as='label' variant='small' className='block text-sm font-medium text-[color:var(--color-heading)] mb-2'>
               Gravedad
-            </label>
+            </Typography>
             <select
               value={severityFilter}
               onChange={(e) => setSeverityFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
+              className="w-full px-3 py-2 border rounded-lg border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[color:var(--color-body)] focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-[color:var(--color-primary)]"
             >
               <option value="all">Todas</option>
               <option value="CRITICAL">Crítica</option>
@@ -207,52 +210,52 @@ export default function ErrorReportsPage() {
       </div>
 
       {/* Reports List */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+      <div className="bg-[color:var(--color-surface)] rounded-lg border border-[color:var(--color-border)] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-[color:var(--color-surface-elevated)] border-b border-[color:var(--color-border)]">
               <tr>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-3 text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
                   Reporte
                 </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-3 text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
                   Usuario
                 </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-3 text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
                   Tipo
                 </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-3 text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
                   Gravedad
                 </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-3 text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
                   Estado
                 </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-3 text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
                   Fecha
                 </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-6 py-3 text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
                   Acciones
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-[color:var(--color-border)]">
               {filteredReports.map((report) => (
-                <tr key={report.id} className="hover:bg-gray-50">
+                <tr key={report.id} className="hover:bg-[color:var(--color-surface-elevated)]">
                   <td className="px-6 py-4">
                     <div>
-                      <div className="font-medium text-gray-900">{report.reportId}</div>
-                      <div className="text-sm text-gray-500 truncate max-w-xs">
+                      <div className="font-medium text-[color:var(--color-heading)]">{report.reportId}</div>
+                      <div className="text-sm text-[color:var(--color-muted)] truncate max-w-xs">
                         {report.userDescription}
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center">
-                      <User className="w-4 h-4 text-gray-400 mr-2" />
+                      <User className="w-4 h-4 text-[color:var(--color-muted)] mr-2" />
                       <div>
-                        <div className="text-sm font-medium text-gray-900">{report.userName}</div>
+                        <div className="text-sm font-medium text-[color:var(--color-heading)]">{report.userName}</div>
                         {report.userEmail && (
-                          <div className="text-sm text-gray-500">{report.userEmail}</div>
+                          <div className="text-sm text-[color:var(--color-muted)]">{report.userEmail}</div>
                         )}
                       </div>
                     </div>
@@ -260,7 +263,7 @@ export default function ErrorReportsPage() {
                   <td className="px-6 py-4">
                     <div className="flex items-center">
                       {getTypeIcon(report.errorType)}
-                      <span className="ml-2 text-sm text-gray-900">{report.errorType}</span>
+                      <span className="ml-2 text-sm text-[color:var(--color-heading)]">{report.errorType}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -273,17 +276,20 @@ export default function ErrorReportsPage() {
                       {report.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
+                  <td className="px-6 py-4 text-sm text-[color:var(--color-heading)]">
                     {new Date(report.createdAt).toLocaleDateString('es-ES')}
                   </td>
                   <td className="px-6 py-4">
-                    <button
+                    <Button
+                      as='button'
                       onClick={() => setSelectedReport(report)}
-                      className="text-[#D4AF37] hover:text-[#B8941F] text-sm font-medium flex items-center"
+                      variant='soft'
+                      size='sm'
+                      className='inline-flex items-center gap-1'
                     >
-                      <Eye className="w-4 h-4 mr-1" />
+                      <Eye className="w-4 h-4" />
                       Ver
-                    </button>
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -293,113 +299,99 @@ export default function ErrorReportsPage() {
 
         {filteredReports.length === 0 && (
           <div className="text-center py-12">
-            <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500">No se encontraron reportes</p>
+            <AlertCircle className="w-12 h-12 text-[color:var(--color-muted)] mx-auto mb-4" />
+            <Typography className="text-[color:var(--color-muted)]">No se encontraron reportes</Typography>
           </div>
         )}
       </div>
 
       {/* Report Detail Modal */}
       {selectedReport && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            {/* Modal content would go here */}
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-6">
+        <Modal open={!!selectedReport} onClose={() => setSelectedReport(null)} size='xl' ariaLabelledBy='error-report-title'>
+          <ModalHeader
+            title={
+              <Typography as='span' id='error-report-title' variant='h3'>
+                Reporte: {selectedReport.reportId}
+              </Typography>
+            }
+            onClose={() => setSelectedReport(null)}
+          />
+          <ModalBody>
+            {/* Badges */}
+            <div className="flex items-center gap-3 mb-6">
+              <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${getSeverityColor(selectedReport.severity)}`}>
+                {selectedReport.severity}
+              </span>
+              <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(selectedReport.status)}`}>
+                {selectedReport.status}
+              </span>
+            </div>
+
+            {/* Detailed report content */}
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                    Reporte: {selectedReport.reportId}
-                  </h3>
-                  <div className="flex items-center space-x-4">
-                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${getSeverityColor(selectedReport.severity)}`}>
-                      {selectedReport.severity}
-                    </span>
-                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(selectedReport.status)}`}>
-                      {selectedReport.status}
-                    </span>
+                  <Typography variant='small' className="font-semibold text-[color:var(--color-heading)] mb-2">Información del Usuario</Typography>
+                  <div className="bg-[color:var(--color-surface-elevated)] rounded-lg p-4 space-y-2 text-[color:var(--color-body)] border border-[color:var(--color-border)]">
+                    <div><span className="font-semibold text-[color:var(--color-heading)]">Nombre:</span> {selectedReport.userName}</div>
+                    {selectedReport.userEmail && (
+                      <div><span className="font-semibold text-[color:var(--color-heading)]">Email:</span> {selectedReport.userEmail}</div>
+                    )}
+                    <div><span className="font-semibold text-[color:var(--color-heading)]">IP:</span> {selectedReport.ipAddress || 'No disponible'}</div>
+                    <div><span className="font-semibold text-[color:var(--color-heading)]">Fecha:</span> {new Date(selectedReport.timestamp).toLocaleString('es-ES')}</div>
                   </div>
                 </div>
-                <button
-                  onClick={() => setSelectedReport(null)}
-                  className="text-gray-400 hover:text-gray-600 text-2xl"
-                >
-                  ×
-                </button>
+                <div>
+                  <Typography variant='small' className="font-semibold text-[color:var(--color-heading)] mb-2">Información Técnica</Typography>
+                  <div className="bg-[color:var(--color-surface-elevated)] rounded-lg p-4 space-y-2 text-[color:var(--color-body)] border border-[color:var(--color-border)]">
+                    <div><span className="font-semibold text-[color:var(--color-heading)]">URL:</span> <code className="text-xs bg-[color:var(--color-surface)] px-1 rounded text-[color:var(--color-body)] border border-[color:var(--color-border)]">{selectedReport.url}</code></div>
+                    <div><span className="font-semibold text-[color:var(--color-heading)]">Tipo:</span> {selectedReport.errorType}</div>
+                    <div><span className="font-semibold text-[color:var(--color-heading)]">User Agent:</span> <code className="text-xs bg-[color:var(--color-surface)] px-1 rounded break-all text-[color:var(--color-body)] border border-[color:var(--color-border)]">{selectedReport.userAgent}</code></div>
+                  </div>
+                </div>
               </div>
 
-              {/* Detailed report content */}
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Información del Usuario</h4>
-                    <div className="bg-gray-50 rounded-lg p-4 space-y-2 text-gray-800">
-                      <div><strong className="text-gray-900">Nombre:</strong> {selectedReport.userName}</div>
-                      {selectedReport.userEmail && (
-                        <div><strong className="text-gray-900">Email:</strong> {selectedReport.userEmail}</div>
-                      )}
-                      <div><strong className="text-gray-900">IP:</strong> {selectedReport.ipAddress || 'No disponible'}</div>
-                      <div><strong className="text-gray-900">Fecha:</strong> {new Date(selectedReport.timestamp).toLocaleString('es-ES')}</div>
+              <div>
+                <Typography variant='small' className="font-semibold text-[color:var(--color-heading)] mb-2">Descripción del Usuario</Typography>
+                <div className="bg-[color:var(--color-surface-elevated)] rounded-lg p-4 border border-[color:var(--color-border)]">
+                  <Typography className="text-[color:var(--color-body)]">{selectedReport.userDescription}</Typography>
+                </div>
+              </div>
+
+              <div>
+                <Typography variant='small' className="font-semibold text-[color:var(--color-heading)] mb-2">Error Técnico</Typography>
+                <div className="bg-[color:var(--color-surface-elevated)] rounded-lg p-4 border border-[color:var(--color-border)]">
+                  <div className="mb-2 text-[color:var(--color-body)]"><span className="font-semibold text-[color:var(--color-heading)]">Mensaje:</span> {selectedReport.errorMessage}</div>
+                  {selectedReport.errorStack && (
+                    <div className="text-[color:var(--color-body)]">
+                      <span className="font-semibold text-[color:var(--color-heading)]">Stack Trace:</span>
+                      <pre className="text-xs bg-[color:var(--color-surface)] p-2 rounded mt-2 overflow-x-auto whitespace-pre-wrap text-[color:var(--color-body)] border border-[color:var(--color-border)]">
+                        {selectedReport.errorStack}
+                      </pre>
                     </div>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Información Técnica</h4>
-                    <div className="bg-gray-50 rounded-lg p-4 space-y-2 text-gray-800">
-                      <div><strong className="text-gray-900">URL:</strong> <code className="text-xs bg-white px-1 rounded text-gray-800">{selectedReport.url}</code></div>
-                      <div><strong className="text-gray-900">Tipo:</strong> {selectedReport.errorType}</div>
-                      <div><strong className="text-gray-900">User Agent:</strong> <code className="text-xs bg-white px-1 rounded break-all text-gray-800">{selectedReport.userAgent}</code></div>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Descripción del Usuario</h4>
-                  <div className="bg-blue-50 rounded-lg p-4">
-                    <p className="text-gray-900">{selectedReport.userDescription}</p>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Error Técnico</h4>
-                  <div className="bg-red-50 rounded-lg p-4">
-                    <div className="mb-2 text-gray-800"><strong className="text-gray-900">Mensaje:</strong> {selectedReport.errorMessage}</div>
-                    {selectedReport.errorStack && (
-                      <div className="text-gray-800">
-                        <strong className="text-gray-900">Stack Trace:</strong>
-                        <pre className="text-xs bg-white p-2 rounded mt-2 overflow-x-auto whitespace-pre-wrap text-gray-800">
-                          {selectedReport.errorStack}
-                        </pre>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Status update */}
-                <div className="border-t pt-6">
-                  <h4 className="font-semibold text-gray-900 mb-4">Actualizar Estado</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {['ACKNOWLEDGED', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'].map((status) => (
-                      <button
-                        key={status}
-                        onClick={() => updateStatusMutation.mutate({ 
-                          reportId: selectedReport.id, 
-                          status 
-                        })}
-                        disabled={updateStatusMutation.isPending}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                          selectedReport.status === status
-                            ? 'bg-[#D4AF37] text-white'
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        } disabled:opacity-50`}
-                      >
-                        {status.replace('_', ' ')}
-                      </button>
-                    ))}
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </ModalBody>
+          <ModalFooter>
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-end">
+              {['ACKNOWLEDGED', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'].map((status) => (
+                <Button
+                  key={status}
+                  type='button'
+                  onClick={() => updateStatusMutation.mutate({ reportId: selectedReport.id, status })}
+                  disabled={updateStatusMutation.isPending}
+                  variant={selectedReport.status === status ? 'primary' : 'soft'}
+                  size='md'
+                  className='min-w-[140px]'
+                >
+                  {status.replace('_', ' ')}
+                </Button>
+              ))}
+            </div>
+          </ModalFooter>
+        </Modal>
       )}
     </div>
   );

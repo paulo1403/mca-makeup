@@ -3,7 +3,7 @@
 import React from "react";
 import clsx from "clsx";
 
-type Variant = "primary" | "secondary" | "ghost" | "soft" | "glass" | "whatsapp";
+type Variant = "primary" | "secondary" | "ghost" | "soft" | "glass" | "whatsapp" | "danger";
 type Size = "xs" | "sm" | "md" | "lg";
 
 type AsProp<T extends React.ElementType> = {
