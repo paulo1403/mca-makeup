@@ -169,67 +169,11 @@ function ServiceCard({
 }
 
 export default function ServicesSection() {
-  const { isLoading } = useServiceGroups();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
-  // Datos de ejemplo con iconos y badges
-  const exampleServices: ServiceGroup[] = [
-    {
-      title: "Novias",
-      price: "S/ 480",
-      features: [
-        "Maquillaje elegante y duradero para el día más especial",
-        "Prueba de maquillaje incluida",
-        "Asesoría personalizada de estilo y colores",
-        "Duración aproximada de 4 horas",
-      ],
-      portfolioUrl: "https://marcelacorderomakeup.my.canva.site/#page-0",
-      icon: <Heart className="w-5 h-5 text-[color:var(--color-primary)]" />,
-      badge: "Más Popular",
-    },
-    {
-      title: "Eventos Sociales",
-      price: "S/ 280",
-      features: [
-        "Looks sofisticados para celebraciones importantes",
-        "Maquillaje que dura toda la noche",
-        "Técnicas de alta definición para fotos",
-        "Asesoría de estilo según tu evento",
-      ],
-      portfolioUrl: "https://marcelacorderomakeup.my.canva.site/2/#page-0",
-      icon: <Calendar className="w-5 h-5 text-[color:var(--color-primary)]" />,
-    },
-    {
-      title: "Piel Madura",
-      price: "S/ 200",
-      features: [
-        "Técnicas especializadas para pieles maduras",
-        "Productos de alta calidad para cuidar tu piel",
-        "Realza tu belleza natural con elegancia",
-        "Maquillaje que resalta tus mejores rasgos",
-      ],
-      portfolioUrl: "https://marcelacorderomakeup.my.canva.site/#page-2",
-      icon: <Award className="w-5 h-5 text-[color:var(--color-primary)]" />,
-    },
-    {
-      title: "Soft Glam",
-      price: "S/ 180",
-      features: [
-        "Maquillaje natural con un toque de glamour",
-        "Perfecto para eventos diurnos y profesionales",
-        "Resalta tus mejores rasgos sin exagerar",
-        "Técnica de alta definición",
-      ],
-      portfolioUrl: "https://marcelacorderomakeup.my.canva.site/#page-0",
-      icon: <Sparkles className="w-5 h-5 text-[color:var(--color-primary)]" />,
-    },
-  ];
-
-  // Mostrar solo servicios que maneja Marcela
-  const visibleServices = exampleServices.filter(
-    (s) => s.title === "Novias" || s.title === "Eventos Sociales"
-  );
+  const { data: serviceGroups = [], isLoading } = useServiceGroups();
+  const visibleServices = serviceGroups;
 
   return (
     <section
@@ -356,18 +300,14 @@ export default function ServicesSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-10">
           {isLoading
             ? Array.from({ length: visibleServices.length || 2 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-80 rounded-xl bg-[color:var(--color-surface)] animate-pulse"
-              />
-            ))
+                <div
+                  key={i}
+                  className="h-80 rounded-xl bg-[color:var(--color-surface)] animate-pulse"
+                />
+              ))
             : visibleServices.map((service, index) => (
-              <ServiceCard
-                key={service.title}
-                service={service}
-                index={index}
-              />
-            ))}
+                <ServiceCard key={service.title} service={service as any} index={index} />
+              ))}
         </div>
 
         {/* Bottom CTA */}

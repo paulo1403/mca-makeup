@@ -48,7 +48,6 @@ export default function ServicesPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  // Form states
   const [formData, setFormData] = useState<ServiceFormData>({
     name: "",
     description: "",
@@ -94,6 +93,7 @@ export default function ServicesPage() {
       }
 
       await queryClient.invalidateQueries({ queryKey: ["admin-services"] });
+      await queryClient.invalidateQueries({ queryKey: ["services"] });
       closeModal();
     } catch (error) {
       console.error("Error saving service:", error);
@@ -143,6 +143,7 @@ export default function ServicesPage() {
       }
 
       await queryClient.invalidateQueries({ queryKey: ["admin-services"] });
+      await queryClient.invalidateQueries({ queryKey: ["services"] });
     } catch (error) {
       console.error("Error toggling service status:", error);
       setError(error instanceof Error ? error.message : "Error al actualizar");
@@ -250,6 +251,7 @@ export default function ServicesPage() {
               throw new Error(data.error || "Error al eliminar el servicio");
             }
             await queryClient.invalidateQueries({ queryKey: ["admin-services"] });
+            await queryClient.invalidateQueries({ queryKey: ["services"] });
             setShowDeleteModal(false);
             setDeleteId(null);
           } catch (error) {

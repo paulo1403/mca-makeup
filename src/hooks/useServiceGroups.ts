@@ -49,29 +49,18 @@ async function fetchServiceGroups(): Promise<ServiceGroup[]> {
       })
     }
 
-    if (!formatted.find((s) => s.title === 'Piel Madura')) {
-      formatted.push({
-        title: 'Piel Madura',
-        price: 'Desde S/ 230',
-        features: ['Técnicas especializadas', 'Acabado natural luminoso', 'Cuidado personalizado'],
-        portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/2/#page-0',
-      })
-    }
-
     if (formatted.length === 0) {
       return [
-        { title: 'Maquillaje de Novia', price: 'Desde S/ 480', features: ['Prueba previa incluida', 'Maquillaje de larga duración', 'Peinado profesional'], portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/#page-0' },
-        { title: 'Eventos Sociales', price: 'Desde S/ 200', features: ['Maquillaje natural o glamoroso', 'Duración 1h30 - 2h', 'Pestañas incluidas'], portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/2/#page-0' },
-        { title: 'Piel Madura', price: 'Desde S/ 230', features: ['Técnicas especializadas', 'Acabado natural luminoso', 'Cuidado personalizado'], portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/2/#page-0' },
+        { title: 'Maquillaje de Novia', price: 'Desde S/ 380', features: ['Prueba previa incluida', 'Maquillaje de larga duración', 'Peinado profesional'], portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/#page-0' },
+        { title: 'Eventos Sociales', price: 'Desde S/ 190', features: ['Maquillaje natural o glamoroso', 'Duración 1h30 - 2h', 'Pestañas incluidas'], portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/2/#page-0' },
       ]
     }
 
     return formatted
   } catch {
     return [
-      { title: 'Maquillaje de Novia', price: 'Desde S/ 480', features: ['Prueba previa incluida', 'Maquillaje de larga duración', 'Peinado profesional'], portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/#page-0' },
-      { title: 'Eventos Sociales', price: 'Desde S/ 200', features: ['Maquillaje natural o glamoroso', 'Duración 1h30 - 2h', 'Pestañas incluidas'], portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/2/#page-0' },
-      { title: 'Piel Madura', price: 'Desde S/ 230', features: ['Técnicas especializadas', 'Acabado natural luminoso', 'Cuidado personalizado'], portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/2/#page-0' },
+      { title: 'Maquillaje de Novia', price: 'Desde S/ 380', features: ['Prueba previa incluida', 'Maquillaje de larga duración', 'Peinado profesional'], portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/#page-0' },
+      { title: 'Eventos Sociales', price: 'Desde S/ 190', features: ['Maquillaje natural o glamoroso', 'Duración 1h30 - 2h', 'Pestañas incluidas'], portfolioUrl: 'https://marcelacorderomakeup.my.canva.site/2/#page-0' }
     ]
   }
 }
