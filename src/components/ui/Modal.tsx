@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import Typography from "@/components/ui/Typography";
@@ -40,6 +41,12 @@ export default function Modal({
     if (closeOnBackdrop) onClose();
   });
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     if (!open || !closeOnEsc) return;
     const handleKey = (e: KeyboardEvent) => {
@@ -53,7 +60,7 @@ export default function Modal({
 
   if (!open) return null;
 
-  return (
+  const content = (
     <div
       className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
       aria-hidden={!open}
@@ -70,6 +77,12 @@ export default function Modal({
       </div>
     </div>
   );
+
+  if (typeof document !== "undefined" && mounted) {
+    return createPortal(content, document.body);
+  }
+
+  return content;
 }
 
 export function ModalHeader({
@@ -83,7 +96,11 @@ export function ModalHeader({
 }) {
   return (
     <div className="flex items-center justify-between p-4 sm:p-6 border-b border-[color:var(--color-border)]">
-      <Typography as="h2" variant="h3" className="flex items-center text-[color:var(--color-heading)] font-bold">
+      <Typography
+        as="h2"
+        variant="h3"
+        className="flex items-center text-[color:var(--color-heading)] font-bold"
+      >
         {icon && <span className="mr-2">{icon}</span>}
         {title}
       </Typography>

@@ -81,6 +81,7 @@ export default function Step5_Confirmation() {
     transportCost?.cost,
     nightShiftCost
   );
+  const remaining = Math.max(0, (total || 0) - 150);
 
   const handleCopyPlin = async () => {
     try {
@@ -230,6 +231,14 @@ export default function Step5_Confirmation() {
                 </Typography>
               </div>
             </div>
+            <div className="flex justify-between items-center mt-2">
+              <Typography as="span" variant="small" className="text-[color:var(--color-body)] text-xs">
+                Restante a pagar
+              </Typography>
+              <Typography as="span" variant="small" className="text-[color:var(--color-heading)] font-medium text-xs">
+                S/ {remaining}
+              </Typography>
+            </div>
           </div>
         </div>
       </motion.div>
@@ -294,10 +303,9 @@ export default function Step5_Confirmation() {
           {/* Pasos */}
           <div className="space-y-2">
             <ol className="space-y-2 text-xs text-[color:var(--color-body)] list-decimal list-inside">
-              <li>{t("step1")}</li>
-              <li>{t("step2")}</li>
-              <li>{t("step3")}</li>
-              <li>{t("step4")}</li>
+              <li>Enviar la captura del adelanto al WhatsApp (989164990)</li>
+              <li>Espera la confirmación de tu reserva</li>
+              <li>El restante lo cancelas el día de la cita</li>
             </ol>
           </div>
         </div>

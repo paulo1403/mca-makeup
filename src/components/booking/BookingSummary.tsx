@@ -125,6 +125,10 @@ export default function BookingSummary() {
           <span className="text-muted">Depósito requerido</span>
           <span className="text-neutral text-right">S/ {deposit}</span>
         </div>
+        <div className="grid grid-cols-2 text-sm">
+          <span className="text-muted">Restante a pagar</span>
+          <span className="text-neutral text-right">S/ {Math.max(0, (total || 0) - (deposit || 0))}</span>
+        </div>
       </div>
     </div>
   )

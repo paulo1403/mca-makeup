@@ -143,7 +143,7 @@ function ServiceCard({
             onClick={() => window.open(service.portfolioUrl, "_blank")}
             className="group/btn whitespace-nowrap"
           >
-            <span className="text-sm">Ver trabajos</span>
+            <span className="text-sm">Ver</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 transition-transform" />
           </Button>
         </div>
@@ -197,7 +197,7 @@ export default function ServicesSection() {
         "Técnicas de alta definición para fotos",
         "Asesoría de estilo según tu evento",
       ],
-      portfolioUrl: "https://marcelacorderomakeup.my.canva.site/#page-0",
+      portfolioUrl: "https://marcelacorderomakeup.my.canva.site/2/#page-0",
       icon: <Calendar className="w-5 h-5 text-[color:var(--color-primary)]" />,
     },
     {
@@ -225,6 +225,11 @@ export default function ServicesSection() {
       icon: <Sparkles className="w-5 h-5 text-[color:var(--color-primary)]" />,
     },
   ];
+
+  // Mostrar solo servicios que maneja Marcela
+  const visibleServices = exampleServices.filter(
+    (s) => s.title === "Novias" || s.title === "Eventos Sociales"
+  );
 
   return (
     <section
@@ -350,13 +355,13 @@ export default function ServicesSection() {
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-10">
           {isLoading
-            ? Array.from({ length: 4 }).map((_, i) => (
+            ? Array.from({ length: visibleServices.length || 2 }).map((_, i) => (
               <div
                 key={i}
                 className="h-80 rounded-xl bg-[color:var(--color-surface)] animate-pulse"
               />
             ))
-            : exampleServices.map((service, index) => (
+            : visibleServices.map((service, index) => (
               <ServiceCard
                 key={service.title}
                 service={service}

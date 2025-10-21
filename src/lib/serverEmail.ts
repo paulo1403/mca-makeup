@@ -124,23 +124,36 @@ const generateInlineEmailStructure = (content: string) => `
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Marcela Cordero Makeup</title>
+  <style>
+    /* Dark-mode friendly overrides for email clients that support prefers-color-scheme */
+    @media (prefers-color-scheme: dark) {
+      body { background-color: #0F0B08 !important; }
+      .email-container { background-color: #16110D !important; color: #E9DED3 !important; }
+      .accent { background-color: #D0B9A7 !important; }
+      .accent-text { color: #D0B9A7 !important; }
+      .divider { background-color: #D0B9A7 !important; }
+      .info-box { background-color: #1E1712 !important; border-left-color: #D0B9A7 !important; color: #E9DED3 !important; }
+      a.button-primary { background-color: #D0B9A7 !important; color: #0F0B08 !important; }
+      .signature { color: #E9DED3 !important; }
+    }
+  </style>
 </head>
-<body style="margin: 0; padding: 0; font-family: Georgia, 'Times New Roman', serif; background-color: #fef7f7;">
-  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #fef7f7;">
+<body style="margin: 0; padding: 0; font-family: Georgia, 'Times New Roman', serif; background-color: #F6EFE8;">
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #F6EFE8;">
     <tr>
       <td align="center" style="padding: 20px 10px;">
-        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 20px; box-shadow: 0 8px 32px rgba(176, 101, 121, 0.15); overflow: hidden;">
+        <table role="presentation" class="email-container" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 20px; box-shadow: 0 8px 32px rgba(176, 132, 99, 0.12); overflow: hidden;">
           <!-- Header Decorativo -->
           <tr>
-            <td style="height: 4px; background-color: #B06579;"></td>
+            <td class="accent" style="height: 6px; background-color: #B08463;"></td>
           </tr>
           
           <!-- Header Principal -->
           <tr>
             <td style="padding: 40px 30px 20px; text-align: center; background-color: #ffffff;">
-              <h1 style="margin: 0; font-size: 32px; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; color: #1C1C1C; font-family: Georgia, serif;">MARCELA CORDERO</h1>
-              <p style="margin: 8px 0 0; font-size: 16px; font-weight: 400; font-style: italic; letter-spacing: 1px; color: #B06579;">Makeup Artist</p>
-              <div style="width: 60px; height: 2px; background-color: #D4AF37; margin: 20px auto 0; border-radius: 1px;"></div>
+              <h1 style="margin: 0; font-size: 32px; font-weight: 400; letter-spacing: 1px; text-transform: none; color: #0F1724; font-family: Georgia, serif;">MARCELA CORDERO</h1>
+              <p class="accent-text" style="margin: 8px 0 0; font-size: 15px; font-weight: 500; font-style: italic; letter-spacing: 0.4px; color: #B08463;">Makeup Artist</p>
+              <div class="divider" style="width: 72px; height: 3px; background-color: #B08463; margin: 18px auto 0; border-radius: 2px;"></div>
             </td>
           </tr>
           
@@ -155,7 +168,7 @@ const generateInlineEmailStructure = (content: string) => `
           <tr>
             <td style="padding: 25px 30px; text-align: center; border-top: 2px solid #f0f0f0; background-color: #ffffff;">
               <p style="margin: 0; font-size: 14px; color: #8a8a8a;">© 2024 Marcela Cordero Makeup</p>
-              <p style="margin: 5px 0 0; font-size: 12px; color: #aaa;">Av. Bolívar 1073, Pueblo Libre, Lima</p>
+              <p style="margin: 5px 0 0; font-size: 12px; color: #aaa;">Av. Bolívar 1075 , Pueblo Libre, Lima</p>
             </td>
           </tr>
         </table>
@@ -168,25 +181,25 @@ const generateInlineEmailStructure = (content: string) => `
 
 // Función helper para crear botones compatibles con email
 const createEmailButton = (text: string, href?: string, style: 'primary' | 'secondary' = 'primary') => {
-  const baseStyle = "display: inline-block; padding: 15px 30px; text-decoration: none; border-radius: 25px; font-size: 14px; font-weight: 600; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; margin: 10px 5px;";
+  const baseStyle = "display: inline-block; padding: 12px 22px; text-decoration: none; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center; text-transform: none; letter-spacing: 0.2px; margin: 8px 6px;";
   
-  const primaryStyle = `${baseStyle} background-color: #B06579; color: #ffffff; border: none;`;
-  const secondaryStyle = `${baseStyle} background-color: #f8f9fa; color: #5a5a5a; border: 1px solid #dee2e6;`;
+  const primaryStyle = `${baseStyle} background-color: #B08463; color: #ffffff; border: none; box-shadow: 0 8px 24px rgba(176,132,99,0.12);`;
+  const secondaryStyle = `${baseStyle} background-color: #ffffff; color: #374151; border: 1px solid #e9e7ff;`;
   
   const buttonStyle = style === 'primary' ? primaryStyle : secondaryStyle;
   
   if (href) {
-    return `<a href="${href}" style="${buttonStyle}">${text}</a>`;
+    return `<a href="${href}" style="${buttonStyle}" target="_blank" rel="noopener noreferrer">${text}</a>`;
   }
   return `<span style="${buttonStyle}">${text}</span>`;
 };
 
 // Función helper para crear cajas de información
 const createInfoBox = (content: string, type: 'info' | 'success' | 'warning' = 'info') => {
-  const baseStyle = "padding: 20px; border-radius: 12px; margin: 20px 0; border-left: 4px solid;";
+  const baseStyle = "padding: 18px; border-radius: 12px; margin: 18px 0; border-left: 4px solid;";
   
   const styles = {
-    info: `${baseStyle} background-color: #fef7f7; border-left-color: #B06579;`,
+  info: `${baseStyle} background-color: #fbf8ff; border-left-color: #B08463;`,
     success: `${baseStyle} background-color: #f0fdf4; border-left-color: #10b981;`,
     warning: `${baseStyle} background-color: #fffbeb; border-left-color: #f59e0b;`
   };
@@ -209,14 +222,14 @@ export const emailTemplates = {
   ) => ({
     subject: "¡Tu cita ha sido confirmada! - Marcela Cordero Makeup",
     html: generateInlineEmailStructure(`
-      <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B06579;">¡Hola ${clientName}!</h2>
+  <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B08463;">¡Hola ${clientName}!</h2>
 
       <p style="font-size: 16px; line-height: 1.7; margin-bottom: 20px; color: #5a5a5a;">
-        Me complace confirmar tu cita para <strong style="color: #B06579;">${serviceType}</strong>.
+  Me complace confirmar tu cita para <strong style="color: #B08463;">${serviceType}</strong>.
       </p>
 
       ${createInfoBox(`
-        <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 600; color: #B06579;">💄 Detalles de tu cita:</h3>
+  <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 600; color: #B08463;">💄 Detalles de tu cita:</h3>
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
           <tr>
             <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
@@ -235,7 +248,7 @@ export const emailTemplates = {
           </tr>
           <tr>
             <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Ubicación:</strong> ${locationType === "STUDIO" ? "Av. Bolívar 1073, Pueblo Libre" : "A domicilio"}
+              <strong style="color: #1C1C1C;">Ubicación:</strong> ${locationType === "STUDIO" ? "Av. Bolívar 1075 , Pueblo Libre" : "A domicilio"}
             </td>
           </tr>
           ${locationType === "HOME" && district ? `
@@ -276,8 +289,8 @@ export const emailTemplates = {
       </p>
 
       <div style="text-align: center; margin: 30px 0;">
-        <p style="font-size: 18px; font-weight: 600; color: #B06579; margin: 0;">¡Nos vemos pronto!</p>
-        <p style="font-size: 16px; font-style: italic; color: #D4AF37; margin: 10px 0 0;">Marcela Cordero</p>
+  <p style="font-size: 18px; font-weight: 600; color: #B08463; margin: 0;">¡Nos vemos pronto!</p>
+  <p style="font-size: 16px; font-style: italic; color: #6b7280; margin: 10px 0 0;">Marcela Cordero</p>
       </div>
     `),
     text: `
@@ -289,7 +302,7 @@ export const emailTemplates = {
       - Servicio: ${serviceType}
       - Fecha: ${date}
       - Hora: ${time}
-      - Ubicación: ${locationType === "STUDIO" ? "Av. Bolívar 1073, Pueblo Libre" : "A domicilio"}
+      - Ubicación: ${locationType === "STUDIO" ? "Av. Bolívar 1075 , Pueblo Libre" : "A domicilio"}
       ${locationType === "HOME" && district ? `- Distrito: ${district}` : ""}
       ${locationType === "HOME" && address ? `- Dirección: ${address}` : ""}
       ${locationType === "HOME" && addressReference ? `- Referencia: ${addressReference}` : ""}
@@ -313,7 +326,7 @@ export const emailTemplates = {
   ) => ({
     subject: "Cita cancelada - Marcela Cordero Makeup",
     html: generateInlineEmailStructure(`
-      <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B06579;">Hola ${clientName},</h2>
+  <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B08463;">Hola ${clientName},</h2>
 
       <p style="font-size: 16px; line-height: 1.7; margin-bottom: 20px; color: #5a5a5a;">
         Lamento informarte que he tenido que cancelar tu cita programada.
@@ -349,7 +362,7 @@ export const emailTemplates = {
       </p>
 
       <div style="text-align: center; margin: 30px 0;">
-        <p style="font-size: 16px; font-style: italic; color: #B06579; margin: 0;">Marcela Cordero</p>
+  <p style="font-size: 16px; font-style: italic; color: #6b7280; margin: 0;">Marcela Cordero</p>
       </div>
     `),
     text: `
@@ -385,10 +398,10 @@ export const emailTemplates = {
   ) => ({
     subject: "Nueva solicitud de cita pendiente - Marcela Cordero Makeup",
     html: generateInlineEmailStructure(`
-      <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B06579;">🔔 Nueva solicitud de cita pendiente</h2>
+  <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B08463;">🔔 Nueva solicitud de cita pendiente</h2>
 
       ${createInfoBox(`
-        <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 600; color: #B06579;">👤 Detalles del cliente:</h3>
+  <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 600; color: #B08463;">👤 Detalles del cliente:</h3>
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
           <tr>
             <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
@@ -424,11 +437,11 @@ export const emailTemplates = {
       `, 'info')}
 
       ${createInfoBox(`
-        <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 600; color: #B06579;">📍 Detalles del servicio:</h3>
+  <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 600; color: #B08463;">📍 Detalles del servicio:</h3>
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
           <tr>
             <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Ubicación:</strong> ${locationType === "STUDIO" ? "Av. Bolívar 1073, Pueblo Libre" : "Servicio a domicilio"}
+              <strong style="color: #1C1C1C;">Ubicación:</strong> ${locationType === "STUDIO" ? "Av. Bolívar 1075 , Pueblo Libre" : "Servicio a domicilio"}
             </td>
           </tr>
           ${locationType === "HOME" && district ? `
@@ -477,7 +490,7 @@ export const emailTemplates = {
       - Hora solicitada: ${time}
 
       Detalles del servicio:
-      - Ubicación: ${locationType === "STUDIO" ? "Av. Bolívar 1073, Pueblo Libre" : "Servicio a domicilio"}
+      - Ubicación: ${locationType === "STUDIO" ? "Av. Bolívar 1075 , Pueblo Libre" : "Servicio a domicilio"}
       ${locationType === "HOME" && district ? `- Distrito: ${district}` : ""}
       ${locationType === "HOME" && address ? `- Dirección: ${address}` : ""}
       ${locationType === "HOME" && addressReference ? `- Referencia: ${addressReference}` : ""}
@@ -502,10 +515,10 @@ export const emailTemplates = {
   ) => ({
     subject: "Solicitud de cita recibida - Marcela Cordero Makeup",
     html: generateInlineEmailStructure(`
-      <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B06579;">¡Hola ${clientName}!</h2>
+  <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B08463;">¡Hola ${clientName}!</h2>
 
       <p style="font-size: 16px; line-height: 1.7; margin-bottom: 20px; color: #5a5a5a;">
-        He recibido tu solicitud de cita para <strong style="color: #B06579;">${serviceType}</strong>. Te contactaré pronto para confirmar la disponibilidad y finalizar los detalles.
+  He recibido tu solicitud de cita para <strong style="color: #B08463;">${serviceType}</strong>. Te contactaré pronto para confirmar la disponibilidad y finalizar los detalles.
       </p>
 
       ${createInfoBox(`
@@ -528,7 +541,7 @@ export const emailTemplates = {
           </tr>
           <tr>
             <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Ubicación:</strong> ${locationType === "STUDIO" ? "Av. Bolívar 1073, Pueblo Libre" : "A domicilio"}
+              <strong style="color: #1C1C1C;">Ubicación:</strong> ${locationType === "STUDIO" ? "Av. Bolívar 1075 , Pueblo Libre" : "A domicilio"}
             </td>
           </tr>
           ${locationType === "HOME" && district ? `
@@ -570,8 +583,8 @@ export const emailTemplates = {
       </p>
 
       <div style="text-align: center; margin: 30px 0;">
-        <p style="font-size: 18px; font-weight: 600; color: #B06579; margin: 0;">¡Gracias por contactarme!</p>
-        <p style="font-size: 16px; font-style: italic; color: #D4AF37; margin: 10px 0 0;">Marcela Cordero</p>
+  <p style="font-size: 18px; font-weight: 600; color: #B08463; margin: 0;">¡Gracias por contactarme!</p>
+  <p style="font-size: 16px; font-style: italic; color: #6b7280; margin: 10px 0 0;">Marcela Cordero</p>
       </div>
     `),
     text: `
@@ -583,7 +596,7 @@ export const emailTemplates = {
       - Servicio: ${serviceType}
       - Fecha solicitada: ${date}
       - Hora solicitada: ${time}
-      - Ubicación: ${locationType === "STUDIO" ? "Av. Bolívar 1073, Pueblo Libre" : "A domicilio"}
+      - Ubicación: ${locationType === "STUDIO" ? "Av. Bolívar 1075 , Pueblo Libre" : "A domicilio"}
       ${locationType === "HOME" && district ? `- Distrito: ${district}` : ""}
       ${locationType === "HOME" && address ? `- Dirección: ${address}` : ""}
       ${locationType === "HOME" && addressReference ? `- Referencia: ${addressReference}` : ""}
@@ -608,10 +621,10 @@ export const emailTemplates = {
   ) => ({
     subject: "¡Comparte tu experiencia! - Marcela Cordero Makeup",
     html: generateInlineEmailStructure(`
-      <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B06579;">¡Hola ${clientName}!</h2>
+  <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B08463;">¡Hola ${clientName}!</h2>
 
       <p style="font-size: 16px; line-height: 1.7; margin-bottom: 20px; color: #5a5a5a;">
-        Espero que hayas disfrutado tu experiencia con mi servicio de <strong style="color: #B06579;">${serviceType}</strong> el día <strong>${date}</strong>.
+  Espero que hayas disfrutado tu experiencia con mi servicio de <strong style="color: #B08463;">${serviceType}</strong> el día <strong>${date}</strong>.
       </p>
 
       <p style="font-size: 16px; line-height: 1.7; margin-bottom: 30px; color: #5a5a5a;">
@@ -648,8 +661,8 @@ export const emailTemplates = {
       </p>
 
       <div style="text-align: center; margin: 30px 0;">
-        <p style="font-size: 18px; font-weight: 600; color: #D4AF37; margin: 0;">¡Gracias por elegirme!</p>
-        <p style="font-size: 16px; font-style: italic; color: #B06579; margin: 10px 0 0;">Marcela Cordero</p>
+  <p style="font-size: 18px; font-weight: 600; color: #B08463; margin: 0;">¡Gracias por elegirme!</p>
+  <p style="font-size: 16px; font-style: italic; color: #6b7280; margin: 10px 0 0;">Marcela Cordero</p>
       </div>
     `),
     text: `

@@ -15,6 +15,7 @@ import BookingSummary from "./booking/BookingSummary";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import SuccessModal from "./booking/SuccessModal";
+import { useServicesList } from "@/hooks/useServices";
 import {
   Send,
   Calendar,
@@ -26,7 +27,6 @@ import {
 import Typography from "./ui/Typography";
 import Button from "./ui/Button";
 
-// Diccionario de traducciones
 const translations = {
   title: "Reserva tu Cita",
   subtitle: "Completa el formulario para agendar tu cita",
@@ -87,7 +87,9 @@ export default function BookingFlow() {
   const [successClientName, setSuccessClientName] = useState<
     string | undefined
   >(undefined);
-  const { t } = useTranslations();
+  const [successServiceNames, setSuccessServiceNames] = useState<string[]>([]);
+   const { t } = useTranslations();
+  const { data: allServices = [] } = useServicesList();
 
   // Iconos para cada paso
   const stepIcons = [User, Calendar, MapPin, CreditCard, Sparkles];
@@ -140,12 +142,23 @@ export default function BookingFlow() {
         additionalNotes: "",
         agreedToTerms: false,
       };
+      // Compute selected service names
+      const selected = methods.getValues("selectedServices") || [];
+      const names = selected
+        .filter((s: { id: string; quantity: number }) => s.quantity > 0)
+        .map((s: { id: string }) => {
+          const svc = allServices.find((x: { id: string; name: string }) => x.id === s.id);
+          return svc?.name;
+        })
+        .filter(Boolean) as string[];
+
+      setSuccessServiceNames(names);
       methods.reset(defaults);
       setCurrentStep(1);
       setSuccessPricing(data?.pricing);
       setSuccessClientName(methods.getValues("name"));
-      setShowSuccess(true);
-      toast.success(t("successMessage"));
+       setShowSuccess(true);
+       toast.success(t("successMessage"));
     },
     onError: (err: unknown) => {
       const message = err instanceof Error ? err.message : t("errorSending");
@@ -338,7 +351,8 @@ export default function BookingFlow() {
         open={showSuccess}
         onClose={() => setShowSuccess(false)}
         clientName={successClientName}
-        pricing={successPricing ?? undefined}
+  pricing={successPricing ?? undefined}
+  serviceNames={successServiceNames}
       />
     </FormProvider>
   );
