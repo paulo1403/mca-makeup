@@ -101,8 +101,8 @@ export default function Logo() {
           {/* Gradient Definition */}
           <defs>
             <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#8B5CF6" />
-              <stop offset="100%" stopColor="#7C3AED" />
+              <stop offset="0%" stopColor="var(--color-primary)" />
+              <stop offset="100%" stopColor="var(--color-primary-hover)" />
             </linearGradient>
           </defs>
         </svg>
@@ -174,8 +174,8 @@ export default function Logo() {
           {/* Gradient Definition Mobile */}
           <defs>
             <linearGradient id="logoGradientMobile" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#8B5CF6" />
-              <stop offset="100%" stopColor="#7C3AED" />
+              <stop offset="0%" stopColor="var(--color-primary)" />
+              <stop offset="100%" stopColor="var(--color-primary-hover)" />
             </linearGradient>
           </defs>
         </svg>

@@ -107,7 +107,7 @@ export default function HeroSection() {
                 variant="p"
                 className="text-[color:var(--color-body)] text-lg max-w-xl leading-relaxed"
               >
-                Realzando tu belleza para momentos inolvidables.
+                Maquilladora profesional, diseñadora de maquillajes exclusivos para Novias y eventos sociales
               </Typography>
               <Typography
                 as="p"

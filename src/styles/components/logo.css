@@ -40,21 +40,21 @@
 
 /* Circle glow animation on hover */
 .logo-circle {
-  filter: drop-shadow(0 4px 12px rgba(124, 58, 237, 0.25));
+  filter: drop-shadow(0 4px 12px color-mix(in oklab, var(--color-primary) 40%, transparent));
   transition: filter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .brand-logo:hover .logo-circle {
-  filter: drop-shadow(0 6px 20px rgba(124, 58, 237, 0.5));
+  filter: drop-shadow(0 6px 20px color-mix(in oklab, var(--color-primary) 60%, transparent));
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
 @keyframes pulse-glow {
   0%, 100% {
-    filter: drop-shadow(0 6px 20px rgba(124, 58, 237, 0.5));
+    filter: drop-shadow(0 6px 20px color-mix(in oklab, var(--color-primary) 60%, transparent));
   }
   50% {
-    filter: drop-shadow(0 8px 24px rgba(124, 58, 237, 0.65));
+    filter: drop-shadow(0 8px 24px color-mix(in oklab, var(--color-primary) 72%, transparent));
   }
 }
 
@@ -182,20 +182,20 @@
    ============================================ */
 
 [data-theme="dark"] .logo-circle {
-  filter: drop-shadow(0 4px 16px rgba(139, 92, 246, 0.4));
+  filter: drop-shadow(0 4px 16px color-mix(in oklab, var(--color-primary) 50%, transparent));
 }
 
 [data-theme="dark"] .brand-logo:hover .logo-circle {
-  filter: drop-shadow(0 6px 22px rgba(139, 92, 246, 0.6));
+  filter: drop-shadow(0 6px 22px color-mix(in oklab, var(--color-primary) 70%, transparent));
   animation: pulse-glow-dark 2s ease-in-out infinite;
 }
 
 @keyframes pulse-glow-dark {
   0%, 100% {
-    filter: drop-shadow(0 6px 22px rgba(139, 92, 246, 0.6));
+    filter: drop-shadow(0 6px 22px color-mix(in oklab, var(--color-primary) 70%, transparent));
   }
   50% {
-    filter: drop-shadow(0 8px 26px rgba(139, 92, 246, 0.75));
+    filter: drop-shadow(0 8px 26px color-mix(in oklab, var(--color-primary) 82%, transparent));
   }
 }
 
@@ -226,12 +226,12 @@
   
   .brand-logo:hover .logo-circle {
     animation: none;
-    filter: drop-shadow(0 5px 16px rgba(124, 58, 237, 0.4));
+    filter: drop-shadow(0 5px 16px color-mix(in oklab, var(--color-primary) 55%, transparent));
   }
   
   [data-theme="dark"] .brand-logo:hover .logo-circle {
     animation: none;
-    filter: drop-shadow(0 5px 18px rgba(139, 92, 246, 0.5));
+    filter: drop-shadow(0 5px 18px color-mix(in oklab, var(--color-primary) 65%, transparent));
   }
 }
 

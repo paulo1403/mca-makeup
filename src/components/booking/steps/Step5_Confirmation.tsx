@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import {
   ShieldCheck,
@@ -13,18 +13,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { BookingData } from "@/lib/bookingSchema";
 import useServicesQuery from "@/hooks/useServicesQuery";
 import { useBookingSummary } from "@/hooks/useBookingSummary";
+import { useTransportCost } from "@/hooks/useTransportCost";
 import Typography from "@/components/ui/Typography";
 import Button from "@/components/ui/Button";
+import { calculateNightShiftCost } from "@/utils/nightShift";
 
-// Diccionario de traducciones
 const translations = {
   title: "Confirmación y Pago",
-  subtitle: "Revisa tu pedido y sigue la guía de pago",
+  subtitle: "Revisa tu solicitud y sigue la guía de pago",
   costSummary: "Resumen de costos",
   services: "Servicios",
   transport: "Transporte",
   totalCost: "Total",
   depositRequired: "Depósito",
+  nightShift: "Horario nocturno",
   confirmationProcess: "Proceso de Pago",
   copyPlin: "Copiar",
   copied: "Copiado",
@@ -60,10 +62,24 @@ export default function Step5_Confirmation() {
   const { data: services = [] } = useServicesQuery();
   const selected = watch("selectedServices") || [];
   const transportEnabled = (watch("locationType") || "STUDIO") === "HOME";
-  const { subtotal, transport, total } = useBookingSummary(
+  const district = watch("district") || "";
+  const { transportCost, getTransportCost } = useTransportCost();
+
+  useEffect(() => {
+    if (transportEnabled && district) {
+      getTransportCost(district);
+    }
+  }, [transportEnabled, district, getTransportCost]);
+
+  const timeSlot = watch("timeSlot") || "";
+  const nightShiftCost = timeSlot ? calculateNightShiftCost(timeSlot) : 0;
+
+  const { subtotal, transport, nightShift, total } = useBookingSummary(
     selected,
     services,
-    transportEnabled
+    transportEnabled,
+    transportCost?.cost,
+    nightShiftCost
   );
 
   const handleCopyPlin = async () => {
@@ -158,6 +174,25 @@ export default function Step5_Confirmation() {
               S/ {transport || 0}
             </Typography>
           </div>
+
+          {nightShift > 0 && (
+            <div className="flex justify-between items-center">
+              <Typography
+                as="span"
+                variant="small"
+                className="text-[color:var(--color-body)] text-xs"
+              >
+                {t("nightShift")}
+              </Typography>
+              <Typography
+                as="span"
+                variant="small"
+                className="text-[color:var(--color-heading)] font-medium text-xs"
+              >
+                S/ {nightShift}
+              </Typography>
+            </div>
+          )}
 
           <div className="border-t border-[color:var(--color-border)]/20 pt-2 mt-2">
             <div className="flex justify-between items-end gap-2">

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Package,
@@ -36,6 +36,24 @@ const ServiceCard = ({
   onToggle: (serviceId: string) => void;
   onQuantityChange: (serviceId: string, quantity: number) => void;
 }) => {
+  const [showFull, setShowFull] = useState(false);
+  const [isClamped, setIsClamped] = useState(false);
+  const descRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const checkClamped = () => {
+      const el = descRef.current;
+      if (!el) return;
+      const clamped = !showFull && (el.scrollHeight > el.clientHeight + 1);
+      setIsClamped(clamped);
+    };
+    checkClamped();
+    window.addEventListener('resize', checkClamped);
+    return () => window.removeEventListener('resize', checkClamped);
+  }, [service.description, showFull]);
+
+  const needsToggle = isClamped || showFull || ((service.description?.length ?? 0) > 60);
+
   return (
     <div
       className={`border rounded-xl p-4 transition-all ${
@@ -64,14 +82,23 @@ const ServiceCard = ({
         </div>
       </div>
 
-      {/* Descripción y detalles - mejor para mobile */}
-      <Typography
-        as="p"
-        variant="p"
-        className="text-[color:var(--color-body)] text-sm mb-3 line-clamp-2"
+      {/* Descripción con Ver más / Ver menos */}
+      <p
+        ref={descRef}
+        className={`text-[color:var(--color-body)] text-sm mb-2 ${showFull ? "" : "line-clamp-2"}`}
       >
         {service.description}
-      </Typography>
+      </p>
+      {needsToggle && (
+        <button
+          type="button"
+          aria-expanded={showFull}
+          onClick={() => setShowFull(!showFull)}
+          className="text-[color:var(--color-primary)] text-xs font-semibold hover:underline mb-3"
+        >
+          {showFull ? "Ver menos" : "Ver más"}
+        </button>
+      )}
 
       {/* Detalles en una sola línea para mobile */}
       <div className="flex items-center gap-3 text-xs text-[color:var(--color-body)] mb-4 pb-3 border-b border-[color:var(--color-border)]/20">
@@ -148,7 +175,7 @@ export default function ServiceCategoryGroup({
 }: Props) {
   const { watch, setValue } = useFormContext();
   const label = CATEGORY_LABELS[category] ?? category;
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const selectedServices = watch(fieldName) || [];
   const selectedServicesMap = selectedServices.reduce(

@@ -5,7 +5,7 @@ import { useGroupedServicesQuery } from "@/hooks/useServicesQuery";
 import ServiceCategoryGroup from "../../booking/ServiceCategoryGroup";
 import ValidationToast from "../ValidationToast";
 import type { BookingData } from "@/lib/bookingSchema";
-import { validateSelection } from "@/lib/serviceRules";
+import { validateSelection, CATEGORY_LABELS } from "@/lib/serviceRules";
 import toast from "react-hot-toast";
 import {
   Search,
@@ -349,7 +349,7 @@ export default function Step2_ServiceSelection() {
                         : "bg-[color:var(--color-surface-secondary)] text-[color:var(--color-body)] hover:text-[color:var(--color-heading)]"
                     }`}
                   >
-                    {category}
+                    {CATEGORY_LABELS[category as keyof typeof CATEGORY_LABELS] ?? category}
                   </button>
                 ))}
               </div>
@@ -375,7 +375,7 @@ export default function Step2_ServiceSelection() {
                 )}
                 {selectedCategory && (
                   <span className="px-2 py-0.5 bg-[color:var(--color-surface-secondary)] rounded text-xs">
-                    {selectedCategory}
+                    {CATEGORY_LABELS[selectedCategory as keyof typeof CATEGORY_LABELS] ?? selectedCategory}
                   </span>
                 )}
               </div>

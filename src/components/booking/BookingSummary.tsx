@@ -1,23 +1,35 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import useServicesQuery from '../../hooks/useServicesQuery'
 import { useBookingSummary } from '../../hooks/useBookingSummary'
 import { format } from 'date-fns'
 import type { BookingData } from '@/lib/bookingSchema'
 import type { Service } from '@/types'
+import { useTransportCost } from '@/hooks/useTransportCost'
+import { calculateNightShiftCost } from '@/utils/nightShift'
 
 export default function BookingSummary() {
   const { watch } = useFormContext<BookingData>()
   const { data: services = [] } = useServicesQuery()
   const selected = watch('selectedServices') || []
   const transportEnabled = (watch('locationType') || 'STUDIO') === 'HOME'
-  const { subtotal, duration, transport, total } = useBookingSummary(selected, services, transportEnabled)
+  const district: string = watch('district') || ''
+
+  const { transportCost, getTransportCost } = useTransportCost()
+  useEffect(() => {
+    if (transportEnabled && district) {
+      getTransportCost(district)
+    }
+  }, [transportEnabled, district, getTransportCost])
+
+  const timeSlot: string = watch('timeSlot') || ''
+  const nightShiftCost = timeSlot ? calculateNightShiftCost(timeSlot) : 0
+
+  const { subtotal, duration, transport, nightShift, total } = useBookingSummary(selected, services, transportEnabled, transportCost?.cost, nightShiftCost)
 
   const date: Date | undefined = watch('date')
-  const timeSlot: string = watch('timeSlot') || ''
   const locationType: 'HOME' | 'STUDIO' = watch('locationType') || 'STUDIO'
-  const district: string = watch('district') || ''
   const address: string = watch('address') || ''
   const name: string = watch('name') || ''
   const email: string = watch('email') || ''
@@ -99,6 +111,12 @@ export default function BookingSummary() {
           <span className="text-muted">Transporte</span>
           <span className="text-neutral text-right">S/ {transport}</span>
         </div>
+        {nightShift > 0 && (
+          <div className="grid grid-cols-2 text-sm">
+            <span className="text-muted">Horario nocturno</span>
+            <span className="text-neutral text-right">S/ {nightShift}</span>
+          </div>
+        )}
         <div className="grid grid-cols-2 font-serif text-lg mt-2">
           <span className="text-heading">Total</span>
           <span className="text-accent-primary text-right">S/ {total}</span>

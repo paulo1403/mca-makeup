@@ -4,28 +4,28 @@
 :root,
 :root[data-theme="light"] {
   /* Backgrounds */
-  --color-background: #FAF9FD;        /* Lavanda muy suave */
+  --color-background: #F6EFE8;        /* Beige cálido suave */
   --color-surface: #FFFFFF;           /* Blanco puro */
-  --color-surface-elevated: #F8F7FF;  /* Lavanda casi blanco */
+  --color-surface-elevated: #F4ECE6;  /* Beige casi blanco */
 
-  /* Purple Palette */
-  --color-primary: #7C3AED;           /* Purple principal */
-  --color-primary-hover: #6D28D9;     /* Purple hover */
-  --color-primary-light: #8B5CF6;     /* Purple suave */
-  --color-accent: #A78BFA;            /* Purple acento */
-  --color-accent-soft: #DDD6FE;       /* Purple muy suave */
+  /* Brown Palette */
+  --color-primary: #B08463;           /* Marrón principal */
+  --color-primary-hover: #A37352;     /* Marrón hover */
+  --color-primary-light: #D0B9A7;     /* Marrón suave */
+  --color-accent: #B9937B;            /* Acento camel */
+  --color-accent-soft: #E6D7C9;       /* Acento muy suave */
 
   /* Text */
-  --color-heading: #1E1B2E;           /* Casi negro */
-  --color-body: #4C4960;              /* Gris morado */
-  --color-muted: #6B7280;             /* Gris neutro */
+  --color-heading: #2D221B;           /* Casi negro cálido */
+  --color-body: #5A4A3E;              /* Gris/marrón cuerpo */
+  --color-muted: #8B7A6D;             /* Texto secundario */
 
   /* Borders */
-  --color-border: #E5E1F5;            /* Borde suave morado */
+  --color-border: #E5D6C8;            /* Borde suave cálido */
 
   /* Semantic */
-  --color-cta-bg: #7C3AED;
-  --color-cta-hover: #6D28D9;
+  --color-cta-bg: var(--color-primary);
+  --color-cta-hover: var(--color-primary-hover);
   --color-cta-text: #FFFFFF;
 
   /* Status pills (light) */
@@ -47,7 +47,7 @@
 
   /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(124, 58, 237, 0.15);
+  --glass-border: rgba(176, 132, 99, 0.15);
 
   /* Backwards compatible aliases (used in older CSS files) */
   --color-foreground: var(--color-body);
@@ -135,28 +135,28 @@
 /* Dark theme variables */
 :root[data-theme="dark"] {
   /* Backgrounds */
-  --color-background: #0B0A1A;        /* Navy profundo */
-  --color-surface: #13111F;           /* Surface cards */
-  --color-surface-elevated: #1A1729;  /* Elevated elements */
+  --color-background: #0F0B08;        /* Café casi negro */
+  --color-surface: #16110D;           /* Surface cards */
+  --color-surface-elevated: #1E1712;  /* Elevated elements */
 
-  /* Purple Palette */
-  --color-primary: #8B5CF6;           /* Purple principal */
-  --color-primary-hover: #7C3AED;     /* Purple hover */
-  --color-primary-light: #A78BFA;     /* Purple suave */
-  --color-accent: #C084FC;            /* Purple claro/acento */
-  --color-accent-soft: #E9D5FF;       /* Purple muy suave */
+  /* Brown Palette */
+  --color-primary: #D0B9A7;           /* Marrón claro en oscuro */
+  --color-primary-hover: #B9937B;     /* Hover cálido */
+  --color-primary-light: #E6D7C9;     /* Suave para fondos */
+  --color-accent: #B08463;            /* Marrón medio/acento */
+  --color-accent-soft: #D9C5B4;       /* Acento muy suave */
 
   /* Text */
-  --color-heading: #F5F3FF;           /* Títulos blancos */
-  --color-body: #E5E1F5;              /* Texto body */
-  --color-muted: #A1A1B5;             /* Texto secundario */
+  --color-heading: #F4ECE6;           /* Títulos cálidos */
+  --color-body: #E9DED3;              /* Texto body */
+  --color-muted: #B8A89A;             /* Texto secundario */
 
   /* Borders */
-  --color-border: #2D2A3A;            /* Borde oscuro morado */
+  --color-border: #2A211B;            /* Borde oscuro cálido */
 
   /* Semantic */
-  --color-cta-bg: #8B5CF6;
-  --color-cta-hover: #7C3AED;
+  --color-cta-bg: var(--color-primary);
+  --color-cta-hover: var(--color-primary-hover);
   --color-cta-text: #FFFFFF;
 
   /* Status pills (dark) */
@@ -178,7 +178,7 @@
 
   /* Glassmorphism */
   --glass-bg: rgba(19, 17, 31, 0.75);
-  --glass-border: rgba(139, 92, 246, 0.2);
+  --glass-border: rgba(176, 132, 99, 0.2);
 
   /* Backwards compatible aliases */
   --color-foreground: var(--color-body);
