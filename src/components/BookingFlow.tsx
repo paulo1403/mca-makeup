@@ -182,7 +182,7 @@ export default function BookingFlow() {
             <Typography
               as="h1"
               variant="h1"
-              className="text-[color:var(--color-heading)] font-serif text-2xl sm:text-3xl mb-2"
+              className="text-[color:var(--color-heading)] font-serif text-xl sm:text-3xl mb-2"
             >
               {t("title")}
             </Typography>

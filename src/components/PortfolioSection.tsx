@@ -63,18 +63,18 @@ export default function PortfolioSection() {
   return (
     <section
       id="portafolio"
-      className="py-20 sm:py-28 bg-[color:var(--color-background)]"
+      className="py-12 sm:py-28 bg-[color:var(--color-background)]"
       style={{ scrollMarginTop: '120px' }}
       ref={ref}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
         <motion.div
-          className="text-center mb-16 sm:mb-20"
+          className="text-center mb-12 sm:mb-20"
           initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[color:var(--color-surface)]/80 border border-[color:var(--color-accent)]/10 mb-6">
+          <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[color:var(--color-surface)]/80 border border-[color:var(--color-accent)]/10 mb-6">
             <ImageIcon className="w-4 h-4 text-[color:var(--color-primary)]" />
             <span className="text-sm font-semibold text-[color:var(--color-primary)]">
               Portafolio
@@ -84,7 +84,7 @@ export default function PortfolioSection() {
           <Typography
             as="h2"
             variant="h2"
-            className="section-title text-3xl sm:text-4xl font-bold text-[color:var(--color-heading)] mb-3"
+            className="section-title text-2xl sm:text-4xl font-bold text-[color:var(--color-heading)] mb-2 sm:mb-3"
           >
             Mi{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)]">
@@ -95,12 +95,12 @@ export default function PortfolioSection() {
           <Typography
             as="p"
             variant="p"
-            className="text-base text-[color:var(--color-body)] max-w-2xl mx-auto leading-relaxed mb-6"
+            className="hidden sm:block text-base text-[color:var(--color-body)] max-w-2xl mx-auto leading-relaxed sm:mb-6"
           >
             Transformando miradas, realzando belleza natural
           </Typography>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-6">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-4 sm:mt-6">
             <Button
               as="a"
               href="https://www.instagram.com/marcelacorderobeauty/"
@@ -114,7 +114,7 @@ export default function PortfolioSection() {
               Ver Portafolio Completo
             </Button>
 
-            <div className="flex items-center gap-2 text-sm text-[color:var(--color-body)] bg-[color:var(--color-surface)]/80 px-4 py-2 rounded-full border border-[color:var(--color-accent)]/10">
+            <div className="hidden sm:flex items-center gap-2 text-sm text-[color:var(--color-body)] bg-[color:var(--color-surface)]/80 px-4 py-2 rounded-full border border-[color:var(--color-accent)]/10">
               <Sparkles className="w-4 h-4 text-[color:var(--color-accent)]" />
               <span>+370 clientes satisfechas</span>
             </div>
@@ -122,7 +122,7 @@ export default function PortfolioSection() {
         </motion.div>
 
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"
+          className="hidden md:grid md:grid-cols-3 md:gap-8 md:mb-16"
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
           variants={{ visible: { transition: { staggerChildren: 0.12 } } }}
@@ -175,7 +175,7 @@ export default function PortfolioSection() {
         </motion.div>
 
         <motion.div
-          className="text-center max-w-3xl mx-auto rounded-2xl p-10 bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/20"
+          className="hidden sm:block text-center max-w-3xl mx-auto rounded-2xl p-6 sm:p-10 bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/20"
           initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
           transition={{ duration: 0.6, delay: 0.4 }}

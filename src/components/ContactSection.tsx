@@ -64,20 +64,20 @@ export default function ContactSection() {
   ];
 
   return (
-    <section id="contacto" className="contact-section" style={{ scrollMarginTop: '120px' }} ref={sectionRef}>
+    <section id="contacto" className="contact-section py-10 sm:py-20 relative overflow-hidden" style={{ scrollMarginTop: '120px' }} ref={sectionRef}>
       {/* Elementos decorativos */}
-      <div className="contact-decoration contact-decoration--1" />
-      <div className="contact-decoration contact-decoration--2" />
+      <div className="contact-decoration contact-decoration--1 hidden sm:block" />
+      <div className="contact-decoration contact-decoration--2 hidden sm:block" />
 
-      <div className="contact-container">
+      <div className="contact-container px-4 sm:px-6">
         {/* Header */}
         <motion.div
-          className="contact-header"
+          className="contact-header mb-8 sm:mb-12"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="contact-badge">
+          <div className="contact-badge hidden sm:inline-flex">
             <Calendar className="w-4 h-4" />
             <span>Reserva tu Cita</span>
           </div>
@@ -93,7 +93,7 @@ export default function ContactSection() {
           <Typography
             as="p"
             variant="p"
-            className="contact-description text-base sm:text-lg"
+            className="contact-description hidden sm:block text-base sm:text-lg"
           >
             Completa el proceso en cinco pasos: selecciona tus servicios,
             ingresa tus datos, indica la ubicación, elige fecha y horario, y
@@ -103,7 +103,7 @@ export default function ContactSection() {
           <Typography
             as="p"
             variant="p"
-            className="contact-subtitle text-sm sm:text-base"
+            className="contact-subtitle hidden sm:block text-sm sm:text-base"
           >
             Puedes avanzar y retroceder entre pasos sin perder tu selección. Si
             prefieres asistencia, escríbeme y te guío en el proceso.
@@ -111,10 +111,10 @@ export default function ContactSection() {
         </motion.div>
 
         {/* Layout principal */}
-        <div className="contact-layout">
+        <div className="contact-layout gap-6 sm:gap-10">
           {/* Información de contacto */}
           <motion.div
-            className="contact-info"
+            className="contact-info hidden sm:block"
             initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
             transition={{ duration: 0.6, delay: 0.1 }}

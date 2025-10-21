@@ -15,7 +15,7 @@ export default function HeroSection() {
       style={{ scrollMarginTop: "120px" }}
     >
       {/* Decorative Background Elements */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden hidden md:block">
         {/* Gradient Orbs */}
         <motion.div
           className="absolute top-0 -left-20 w-72 h-72 bg-[color:var(--color-primary)] opacity-20 rounded-full blur-3xl"
@@ -61,7 +61,7 @@ export default function HeroSection() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[calc(100vh-80px)] pt-24 pb-16 lg:py-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[calc(100vh-80px)] pt-24 sm:pt-24 pb-12 lg:py-24">
           {/* Left: Content */}
           <div className="flex flex-col gap-8">
             {/* Badge */}
@@ -112,7 +112,7 @@ export default function HeroSection() {
               <Typography
                 as="p"
                 variant="p"
-                className="text-[color:var(--color-body)]/80 max-w-xl"
+                className="text-[color:var(--color-body)]/80 max-w-xl hidden sm:block"
               >
                 Especialista en{" "}
                 <span className="text-[color:var(--color-primary)] font-semibold">
@@ -131,7 +131,7 @@ export default function HeroSection() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="grid grid-cols-3 gap-4 py-4"
+              className="hidden sm:grid grid-cols-3 gap-4 py-4"
             >
               <div className="text-center">
                 <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
@@ -215,6 +215,7 @@ export default function HeroSection() {
               <Button
                 variant="secondary"
                 size="lg"
+                className="hidden sm:inline-flex"
                 onClick={() => {
                   const el = document.getElementById("portafolio");
                   el?.scrollIntoView({ behavior: "smooth" });
@@ -229,7 +230,7 @@ export default function HeroSection() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+              className="hidden sm:grid grid-cols-1 sm:grid-cols-3 gap-4"
             >
               <div className="flex items-start gap-3 p-4 rounded-xl bg-[color:var(--color-surface-secondary)] border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-all duration-300">
                 <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/10 flex items-center justify-center flex-shrink-0">

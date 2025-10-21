@@ -49,9 +49,9 @@ const ServiceCard = ({
         <div className="flex-1 pr-3">
           <div className="flex items-center gap-2 mb-1">
             <Typography
-              as="h3"
-              variant="h3"
-              className="text-[color:var(--color-heading)] font-semibold text-base"
+              as="h5"
+              variant="h5"
+              className="text-[color:var(--color-heading)] font-semibold"
             >
               {service.name}
             </Typography>
@@ -203,9 +203,9 @@ export default function ServiceCategoryGroup({
             </div>
             <div className="min-w-0">
               <Typography
-                as="h3"
-                variant="h3"
-                className="text-[color:var(--color-heading)] font-semibold text-base"
+                as="h4"
+                variant="h4"
+                className="text-[color:var(--color-heading)] font-semibold"
               >
                 {label}
               </Typography>

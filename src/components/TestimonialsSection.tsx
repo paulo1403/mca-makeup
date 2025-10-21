@@ -235,22 +235,22 @@ export default function TestimonialsSection() {
   return (
     <section
       id="testimonials"
-      className="py-16 sm:py-24 testimonials-section relative overflow-hidden"
+      className="py-12 sm:py-24 testimonials-section relative overflow-hidden"
       style={{ scrollMarginTop: '120px' }}
       ref={sectionRef}
     >
       {/* Elementos decorativos de fondo */}
-      <div className="absolute top-10 left-10 w-32 h-32 bg-[color:var(--color-primary)]/10 rounded-full filter blur-3xl"></div>
-      <div className="absolute bottom-10 right-10 w-40 h-40 bg-[color:var(--color-accent)]/10 rounded-full filter blur-3xl"></div>
+      <div className="hidden sm:block absolute top-10 left-10 w-32 h-32 bg-[color:var(--color-primary)]/10 rounded-full filter blur-3xl"></div>
+      <div className="hidden sm:block absolute bottom-10 right-10 w-40 h-40 bg-[color:var(--color-accent)]/10 rounded-full filter blur-3xl"></div>
 
-      <div className="container mx-auto px-6 lg:px-12 max-w-7xl relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl relative z-10">
         <motion.div
-          className="text-center mb-12"
+          className="text-center mb-10 sm:mb-12"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[color:var(--color-surface)]/80 border border-[color:var(--color-accent)]/20 mb-6">
+          <div className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[color:var(--color-surface)]/80 border border-[color:var(--color-accent)]/20 mb-6">
             <Quote className="w-4 h-4 text-[color:var(--color-primary)]" />
             <span className="text-sm font-semibold text-[color:var(--color-primary)]">
               Testimonios
@@ -260,7 +260,7 @@ export default function TestimonialsSection() {
           <Typography
             as="h2"
             variant="h2"
-            className="text-4xl sm:text-5xl font-bold text-[color:var(--color-heading)] mb-4"
+            className="text-2xl sm:text-5xl font-bold text-[color:var(--color-heading)] mb-2 sm:mb-4"
           >
             Experiencias que Inspiran
           </Typography>
@@ -268,7 +268,7 @@ export default function TestimonialsSection() {
           <Typography
             as="p"
             variant="p"
-            className="text-lg text-[color:var(--color-body)] max-w-2xl mx-auto"
+            className="hidden sm:block text-lg text-[color:var(--color-body)] max-w-2xl mx-auto"
           >
             Descubre por qué más de 370 clientas confían en mi arte para sus
             momentos más especiales
@@ -277,7 +277,7 @@ export default function TestimonialsSection() {
 
         {/* Estadísticas rápidas */}
         <motion.div
-          className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10"
+          className="hidden sm:grid sm:grid-cols-4 gap-4 sm:mb-10"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -318,7 +318,7 @@ export default function TestimonialsSection() {
 
         {/* Controles de vista y filtro */}
         <motion.div
-          className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8"
+          className="hidden sm:flex sm:flex-row justify-between items-center gap-4 mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -463,7 +463,7 @@ export default function TestimonialsSection() {
 
               {/* Controles de navegación */}
               {displayItems.length > 1 && (
-                <div className="flex justify-between items-center mt-8">
+                <div className="flex justify-between items-center mt-6 sm:mt-8">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -511,7 +511,7 @@ export default function TestimonialsSection() {
         {/* Vista Cuadrícula */}
         {viewMode === "grid" && (
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.3 }}
@@ -560,7 +560,7 @@ export default function TestimonialsSection() {
 
         {/* Llamada a la acción */}
         <motion.div
-          className="text-center mt-12"
+          className="hidden sm:block text-center sm:mt-12"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.4 }}

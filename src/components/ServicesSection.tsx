@@ -59,7 +59,7 @@ function ServiceCard({
 
       <div className="relative p-5 sm:p-6 bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)]/20 group-hover:border-[color:var(--color-primary)]/50 transition-all duration-300">
         {/* Header */}
-        <header className="mb-4">
+        <header className="mb-3 sm:mb-4">
           <div className="flex items-start justify-between gap-3 mb-3">
             <motion.div
               className="p-3 rounded-xl bg-gradient-to-br from-[color:var(--color-primary)]/10 to-[color:var(--color-accent)]/10 border border-[color:var(--color-accent)]/20 flex-shrink-0"
@@ -88,7 +88,7 @@ function ServiceCard({
         </header>
 
         {/* Features */}
-        <div className="mb-4 space-y-2">
+        <div className="hidden sm:block mb-4 space-y-2">
           {service.features.map((feature, i) => (
             <motion.div
               key={i}
@@ -230,12 +230,12 @@ export default function ServicesSection() {
   return (
     <section
       id="servicios"
-      className="relative py-16 sm:py-20 overflow-hidden"
+      className="relative py-12 sm:py-20 overflow-hidden"
       style={{ scrollMarginTop: '120px' }}
       ref={ref}
     >
       {/* Background */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none hidden md:block">
         <div className="absolute top-20 left-10 w-48 h-48 bg-[color:var(--color-primary)]/3 rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-64 h-64 bg-[color:var(--color-accent)]/3 rounded-full blur-3xl" />
       </div>
@@ -288,7 +288,7 @@ export default function ServicesSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10"
+          className="hidden sm:grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10"
         >
           <div className="text-center p-4 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
             <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
@@ -349,7 +349,7 @@ export default function ServicesSection() {
         </motion.div>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-10">
           {isLoading
             ? Array.from({ length: 4 }).map((_, i) => (
                 <div
@@ -430,7 +430,7 @@ export default function ServicesSection() {
                 </div>
 
                 {/* Right info cards */}
-                <div className="grid grid-cols-1 gap-3">
+                <div className="hidden md:grid grid-cols-1 gap-3">
                   <motion.div
                     className="flex items-center gap-3 p-4 rounded-xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-all duration-300"
                     whileHover={{ scale: 1.02 }}

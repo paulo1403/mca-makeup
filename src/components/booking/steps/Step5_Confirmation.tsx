@@ -95,14 +95,14 @@ export default function Step5_Confirmation() {
           <Typography
             as="h2"
             variant="h2"
-            className="text-[color:var(--color-heading)] font-serif text-base"
+            className="text-[color:var(--color-heading)] font-serif !text-base sm:!text-lg"
           >
             {t("title")}
           </Typography>
           <Typography
             as="p"
             variant="p"
-            className="text-[color:var(--color-body)] text-xs"
+            className="text-[color:var(--color-body)] text-xs sm:text-sm leading-tight"
           >
             {t("subtitle")}
           </Typography>
@@ -114,7 +114,7 @@ export default function Step5_Confirmation() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}
-        className="p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
+        className="p-3 sm:p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
       >
         <Typography
           as="h4"
@@ -172,7 +172,7 @@ export default function Step5_Confirmation() {
                 <Typography
                   as="span"
                   variant="h3"
-                  className="text-xl font-bold text-[color:var(--color-primary)]"
+                  className="!text-lg sm:!text-xl font-bold text-[color:var(--color-primary)]"
                 >
                   S/ {total || 0}
                 </Typography>
@@ -189,7 +189,7 @@ export default function Step5_Confirmation() {
                 <Typography
                   as="span"
                   variant="h3"
-                  className="text-lg font-bold text-[color:var(--color-accent)]"
+                  className="!text-base sm:!text-lg font-bold text-[color:var(--color-accent)]"
                 >
                   S/ {deposit}
                 </Typography>
@@ -204,7 +204,7 @@ export default function Step5_Confirmation() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.5 }}
-        className="p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
+        className="p-3 sm:p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
       >
         <div className="flex items-center gap-2 mb-3">
           <div className="w-6 h-6 rounded-lg bg-[color:var(--color-primary)]/20 flex items-center justify-center">

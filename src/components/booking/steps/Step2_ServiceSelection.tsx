@@ -233,7 +233,7 @@ export default function Step2_ServiceSelection() {
           <Typography
             as="h2"
             variant="h2"
-            className="text-[color:var(--color-heading)] font-serif"
+            className="text-[color:var(--color-heading)] font-serif text-lg sm:text-xl"
           >
             {t("title")}
           </Typography>

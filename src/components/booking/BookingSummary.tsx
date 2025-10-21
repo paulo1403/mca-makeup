@@ -39,7 +39,7 @@ export default function BookingSummary() {
         <h5 className="font-serif text-heading">Cliente</h5>
         <div className="grid grid-cols-2 gap-3 text-sm">
           <div className="text-muted">Nombre</div><div className="text-neutral">{name || '—'}</div>
-          <div className="text-muted">Email</div><div className="text-neutral">{email || '—'}</div>
+          <div className="text-muted">Email</div><div className="text-neutral break-words">{email || '—'}</div>
           <div className="text-muted">Teléfono</div><div className="text-neutral">{phone || '—'}</div>
         </div>
       </div>

@@ -49,22 +49,22 @@ export default function AboutSection() {
   return (
     <section
       id="about"
-      className="py-16 sm:py-20 about-section relative overflow-hidden"
+      className="py-10 sm:py-20 about-section relative overflow-hidden"
       style={{ scrollMarginTop: '120px' }}
       ref={sectionRef}
     >
       {/* Elementos decorativos de fondo */}
-      <div className="absolute top-10 right-10 w-32 h-32 bg-[color:var(--color-primary)]/10 rounded-full filter blur-3xl"></div>
-      <div className="absolute bottom-10 left-10 w-40 h-40 bg-[color:var(--color-accent)]/10 rounded-full filter blur-3xl"></div>
+      <div className="hidden sm:block absolute top-10 right-10 w-32 h-32 bg-[color:var(--color-primary)]/10 rounded-full filter blur-3xl"></div>
+      <div className="hidden sm:block absolute bottom-10 left-10 w-40 h-40 bg-[color:var(--color-accent)]/10 rounded-full filter blur-3xl"></div>
 
-      <div className="container mx-auto px-6 lg:px-12 max-w-6xl relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12 max-w-6xl relative z-10">
         <motion.div
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[color:var(--color-surface)]/80 border border-[color:var(--color-accent)]/20 mb-6">
+          <div className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[color:var(--color-surface)]/80 border border-[color:var(--color-accent)]/20 mb-6">
             <User className="w-4 h-4 text-[color:var(--color-primary)]" />
             <span className="text-sm font-semibold text-[color:var(--color-primary)]">
               Sobre Mí
@@ -74,7 +74,7 @@ export default function AboutSection() {
           <Typography
             as="h2"
             variant="h2"
-            className="text-3xl sm:text-4xl font-bold text-[color:var(--color-heading)] mb-4"
+            className="text-2xl sm:text-4xl font-bold text-[color:var(--color-heading)] mb-3 sm:mb-4"
           >
             Marcela Cordero
           </Typography>
@@ -82,13 +82,13 @@ export default function AboutSection() {
           <Typography
             as="p"
             variant="p"
-            className="text-lg text-[color:var(--color-body)] max-w-2xl mx-auto"
+            className="hidden sm:block text-lg text-[color:var(--color-body)] max-w-2xl mx-auto"
           >
             Maquilladora profesional especializada en realzar tu belleza natural
           </Typography>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
           {/* Columna izquierda: Foto y stats */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -118,14 +118,14 @@ export default function AboutSection() {
               </div>
 
               {/* Badge de verificación */}
-              <div className="absolute top-4 right-4 bg-[color:var(--color-primary)] text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+              <div className="hidden sm:flex absolute top-4 right-4 bg-[color:var(--color-primary)] text-white px-3 py-1 rounded-full text-xs font-medium items-center gap-1">
                 <CheckCircle className="w-3 h-3" />
                 Verificado
               </div>
             </div>
 
             {/* Stats optimizados para móvil */}
-            <div className="grid grid-cols-3 gap-3 mb-6">
+            <div className="hidden sm:grid grid-cols-3 gap-3 mb-6">
               <div className="text-center p-3 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
                 <div className="text-xl sm:text-2xl font-bold text-[color:var(--color-primary)]">
                   8+
@@ -153,7 +153,7 @@ export default function AboutSection() {
             </div>
 
             {/* Información de contacto simplificada */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="hidden sm:flex gap-3 justify-center">
               <Button
                 variant="ghost"
                 size="sm"
@@ -174,7 +174,7 @@ export default function AboutSection() {
                     "_blank"
                   )
                 }
-                className="flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-colors"
+                className="hidden sm:inline-flex px-6 py-3 rounded-full border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-colors"
               >
                 <Instagram className="w-4 h-4" />
                 <span className="font-medium">Instagram</span>
@@ -189,7 +189,7 @@ export default function AboutSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="order-1 lg:order-2"
           >
-            <div className="mb-8">
+            <div className="hidden sm:block mb-8">
               <Typography
                 as="h3"
                 variant="h3"
@@ -222,7 +222,7 @@ export default function AboutSection() {
             </div>
 
             {/* Especialidades */}
-            <div className="mb-8">
+            <div className="hidden sm:block mb-8">
               <Typography
                 as="h3"
                 variant="h3"
@@ -249,7 +249,7 @@ export default function AboutSection() {
             </div>
 
             {/* Certificación destacada */}
-            <div className="p-4 rounded-xl bg-gradient-to-r from-[color:var(--color-primary)]/10 to-[color:var(--color-accent)]/10 border border-[color:var(--color-primary)]/20 mb-8">
+            <div className="hidden sm:block mb-8">
               <div className="flex items-center gap-3">
                 <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[color:var(--color-primary)]/20 flex items-center justify-center">
                   <Award className="w-5 h-5 text-[color:var(--color-primary)]" />
@@ -301,7 +301,7 @@ export default function AboutSection() {
                     "_blank"
                   )
                 }
-                className="px-6 py-3 rounded-full border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-colors"
+                className="hidden sm:inline-flex px-6 py-3 rounded-full border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-colors"
               >
                 <Instagram className="w-4 h-4" />
                 Ver Mi Trabajo
@@ -312,7 +312,7 @@ export default function AboutSection() {
 
         {/* Ubicación simplificada */}
         <motion.div
-          className="mt-12 text-center"
+          className="mt-8 sm:mt-12 text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.3 }}
