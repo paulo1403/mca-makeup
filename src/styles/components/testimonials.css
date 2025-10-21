@@ -1,0 +1,98 @@
+/* Token-aware styles for the Testimonials section */
+:root {
+  --testimonials-bg: var(--color-surface);
+  --testimonials-border: color-mix(
+    in srgb,
+    var(--color-accent) 20%,
+    transparent
+  );
+  --testimonial-quote-color: var(--color-heading);
+  --testimonial-body: var(--color-body);
+}
+
+.testimonials-section {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-surface) 90%, transparent),
+    transparent
+  );
+}
+
+.testimonials-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.testimonial-card {
+  background: var(--testimonials-bg);
+  border: 1px solid var(--testimonials-border);
+  padding: 2rem;
+  border-radius: 1rem;
+  text-align: center;
+}
+
+.testimonial-quote {
+  color: var(--testimonial-quote-color);
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.testimonial-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  margin: 0 auto 0.75rem;
+}
+
+.testimonial-meta {
+  color: var(--testimonial-body);
+}
+
+.testimonial-stars {
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.testimonial-dots {
+  display: flex;
+  gap: 0.5rem;
+}
+.testimonial-dots .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-body) 20%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+}
+.testimonial-dots .dot.active {
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+}
+
+@media (min-width: 768px) {
+  .testimonials-container {
+    /* En desktop, usar una sola columna centrada para el carrusel */
+    grid-template-columns: 1fr;
+    max-width: 1000px;
+    margin: 0 auto;
+    justify-items: center;
+  }
+
+  /* Centrar y limitar el ancho de la tarjeta de testimonio */
+  .testimonial-card {
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+
+
+

@@ -1,65 +1,217 @@
-/* Variables CSS - Paleta de colores y configuración base */
-:root {
-  /* Modern Color Palette */
-  --primary-dark: #0A0A0A;        /* Negro más profundo */
-  --secondary-dark: #1A1A1A;      /* Gris oscuro para variedad */
-  --light-contrast: #FFFFFF;      /* Blanco puro mantener */
-  --primary-accent: #6366F1;      /* Indigo moderno (más tech/profesional) */
-  --secondary-accent: #10B981;    /* Verde esmeralda (sofisticado) */
-  --tertiary-accent: #F59E0B;     /* Ámbar cálido (para acentos especiales) */
-  --neutral: #6B7280;             /* Gris más suave */
-  --neutral-light: #9CA3AF;       /* Gris claro para texto secundario */
-  --background: #ffffff;
-  --foreground: #1C1C1C;
+/* Nuevo tema base morado (light/dark) enfocado en NavBar y tokens esenciales */
+
+/* Light theme variables (default) */
+:root,
+:root[data-theme="light"] {
+  /* Backgrounds */
+  --color-background: #F6EFE8;        /* Beige cálido suave */
+  --color-surface: #FFFFFF;           /* Blanco puro */
+  --color-surface-elevated: #F4ECE6;  /* Beige casi blanco */
+
+  /* Brown Palette */
+  --color-primary: #B08463;           /* Marrón principal */
+  --color-primary-hover: #A37352;     /* Marrón hover */
+  --color-primary-light: #D0B9A7;     /* Marrón suave */
+  --color-accent: #B9937B;            /* Acento camel */
+  --color-accent-soft: #E6D7C9;       /* Acento muy suave */
+
+  /* Text */
+  --color-heading: #2D221B;           /* Casi negro cálido */
+  --color-body: #5A4A3E;              /* Gris/marrón cuerpo */
+  --color-muted: #8B7A6D;             /* Texto secundario */
+
+  /* Borders */
+  --color-border: #E5D6C8;            /* Borde suave cálido */
+
+  /* Semantic */
+  --color-cta-bg: var(--color-primary);
+  --color-cta-hover: var(--color-primary-hover);
+  --color-cta-text: #FFFFFF;
+
+  /* Status pills (light) */
+  --status-pending-bg: #FEF3C7;      /* amber-50 */
+  --status-pending-text: #92400E;    /* amber-800 */
+  --status-pending-border: #FDE68A;  /* amber-200 */
+
+  --status-confirmed-bg: #ECFDF5;    /* emerald-50 */
+  --status-confirmed-text: #065F46;  /* emerald-800 */
+  --status-confirmed-border: #A7F3D0;/* emerald-200 */
+
+  --status-completed-bg: #EFF6FF;    /* blue-50 */
+  --status-completed-text: #1D4ED8;  /* blue-700 */
+  --status-completed-border: #BFDBFE;/* blue-200 */
+
+  --status-cancelled-bg: #FEF2F2;    /* red-50 */
+  --status-cancelled-text: #B91C1C;  /* red-700 */
+  --status-cancelled-border: #FECACA;/* red-200 */
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(176, 132, 99, 0.15);
+
+  /* Backwards compatible aliases (used in older CSS files) */
+  --color-foreground: var(--color-body);
+  --color-accent-primary: var(--color-primary);
+  --color-accent-secondary: var(--color-accent);
+  --on-accent-contrast: var(--color-cta-text);
+
+  /* Typographic scale */
+  --text-display: clamp(2.5rem, 5vw, 4rem);
+  --text-display-lh: 1.1;
+
+  --text-h1: clamp(2rem, 4vw, 3rem);
+  --text-h1-lh: 1.2;
+
+  --text-h2: clamp(1.75rem, 3vw, 2.25rem);
+  --text-h2-lh: 1.3;
+
+  --text-h3: clamp(1.5rem, 2.5vw, 1.875rem);
+  --text-h3-lh: 1.4;
+
+  --text-h4: clamp(1.25rem, 2vw, 1.5rem);
+  --text-h4-lh: 1.4;
+
+  --text-body: clamp(1rem, 1.5vw, 1.125rem);
+  --text-body-lh: 1.6;
+
+  --text-small: clamp(0.875rem, 1.2vw, 0.938rem);
+  --text-small-lh: 1.5;
+
+  --text-caption: 0.75rem;
+  --text-caption-lh: 1.4;
+
+  /* Button sizes */
+  --btn-lg-height: 56px;
+  --btn-lg-padding: 24px 32px;
+  --btn-lg-font: 1.125rem;
+  --btn-lg-radius: 14px;
+
+  --btn-md-height: 48px;
+  --btn-md-padding: 16px 24px;
+  --btn-md-font: 1rem;
+  --btn-md-radius: 12px;
+
+  --btn-sm-height: 40px;
+  --btn-sm-padding: 12px 20px;
+  --btn-sm-font: 0.875rem;
+  --btn-sm-radius: 10px;
+
+  --btn-xs-height: 32px;
+  --btn-xs-padding: 8px 16px;
+  --btn-xs-font: 0.813rem;
+  --btn-xs-radius: 8px;
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  --section-padding-y: var(--space-20);
+  --section-padding-x: var(--space-6);
+  --card-padding: var(--space-6);
+  --element-gap: var(--space-4);
+
+  /* Font variable fallback: ensures --font-plusjakarta is defined at root
+     in case the next/font variable class isn't present yet. The
+     generated next/font class on <html> will override this when applied. */
+  --font-plusjakarta: "Plus Jakarta Sans", system-ui;
+  --color-card: var(--color-surface);
+  --color-surface-2: var(--color-surface-elevated);
+  --color-accent-tertiary: var(--color-accent-soft);
+  --color-selected: color-mix(in srgb, var(--color-primary) 15%, transparent);
+  --color-neutral: var(--color-muted);
+  --color-whatsapp: #25D366;
 }
 
-/* Prevent horizontal scroll globally */
-html, body {
+/* Dark theme variables */
+:root[data-theme="dark"] {
+  /* Backgrounds */
+  --color-background: #0F0B08;        /* Café casi negro */
+  --color-surface: #16110D;           /* Surface cards */
+  --color-surface-elevated: #1E1712;  /* Elevated elements */
+
+  /* Brown Palette */
+  --color-primary: #D0B9A7;           /* Marrón claro en oscuro */
+  --color-primary-hover: #B9937B;     /* Hover cálido */
+  --color-primary-light: #E6D7C9;     /* Suave para fondos */
+  --color-accent: #B08463;            /* Marrón medio/acento */
+  --color-accent-soft: #D9C5B4;       /* Acento muy suave */
+
+  /* Text */
+  --color-heading: #F4ECE6;           /* Títulos cálidos */
+  --color-body: #E9DED3;              /* Texto body */
+  --color-muted: #B8A89A;             /* Texto secundario */
+
+  /* Borders */
+  --color-border: #2A211B;            /* Borde oscuro cálido */
+
+  /* Semantic */
+  --color-cta-bg: var(--color-primary);
+  --color-cta-hover: var(--color-primary-hover);
+  --color-cta-text: #FFFFFF;
+
+  /* Status pills (dark) */
+  --status-pending-bg: color-mix(in srgb, #F59E0B 16%, var(--color-surface));
+  --status-pending-text: #FBBF24;
+  --status-pending-border: color-mix(in srgb, #F59E0B 30%, transparent);
+
+  --status-confirmed-bg: color-mix(in srgb, #10B981 16%, var(--color-surface));
+  --status-confirmed-text: #34D399;
+  --status-confirmed-border: color-mix(in srgb, #10B981 30%, transparent);
+
+  --status-completed-bg: color-mix(in srgb, #3B82F6 16%, var(--color-surface));
+  --status-completed-text: #60A5FA;
+  --status-completed-border: color-mix(in srgb, #3B82F6 30%, transparent);
+
+  --status-cancelled-bg: color-mix(in srgb, #EF4444 16%, var(--color-surface));
+  --status-cancelled-text: #F87171;
+  --status-cancelled-border: color-mix(in srgb, #EF4444 30%, transparent);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(19, 17, 31, 0.75);
+  --glass-border: rgba(176, 132, 99, 0.2);
+
+  /* Backwards compatible aliases */
+  --color-foreground: var(--color-body);
+  --color-accent-primary: var(--color-primary);
+  --color-accent-secondary: var(--color-accent);
+  --on-accent-contrast: var(--color-cta-text);
+
+  /* Dark theme fallback for the font variable as well */
+  --font-plusjakarta: "Plus Jakarta Sans", system-ui;
+  --color-card: var(--color-surface);
+  --color-surface-2: var(--color-surface-elevated);
+  --color-accent-tertiary: var(--color-accent-soft);
+  --color-selected: color-mix(in srgb, var(--color-primary) 25%, transparent);
+  --color-neutral: var(--color-muted);
+  --color-whatsapp: #25D366;
+}
+
+/* Minimal global resets relevant to layout */
+html,
+body {
   overflow-x: hidden;
   max-width: 100vw;
 }
 
-/* Ensure all containers respect viewport width */
 * {
   box-sizing: border-box;
 }
 
-.container {
-  max-width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Fix for elements that might cause horizontal overflow */
-img, video, iframe, embed, object {
-  max-width: 100%;
-  height: auto;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #1C1C1C;
-    --foreground: #ffffff;
-  }
-}
-
-/* Configuración base del body */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-montserrat), Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
 }
 
-/* Smooth scroll behavior */
 html {
   scroll-behavior: smooth;
-}
-
-/* Tipografía base */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-playfair);
-}
-
-.font-artistic {
-  font-family: var(--font-allura);
 }

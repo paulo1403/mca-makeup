@@ -1,22 +1,34 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Star, Quote } from "lucide-react";
-import { motion } from "framer-motion";
+import React, { useEffect, useState, useRef } from "react";
+import {
+  Star,
+  Quote,
+  Calendar,
+  Heart,
+  ArrowLeft,
+  ArrowRight,
+  Grid,
+  Sliders,
+} from "lucide-react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import Typography from "./ui/Typography";
+import Button from "./ui/Button";
+import "@/styles/components/testimonials.css";
 
-interface Review {
+type ReviewShape = {
   id: string;
   rating: number;
-  reviewText: string;
+  reviewText?: string;
   reviewerName: string;
-  appointment: {
-    serviceType: string;
-    appointmentDate: string;
+  appointment?: {
+    serviceType?: string;
+    appointmentDate?: string;
     services?: { name?: string; serviceName?: string }[];
   };
-}
+};
 
-interface Testimonial {
+type Testimonial = {
   id: string;
   name: string;
   text: string;
@@ -24,243 +36,549 @@ interface Testimonial {
   service: string;
   date: string;
   initials: string;
-}
+  featured?: boolean;
+};
 
-// Testimonios de respaldo en caso de que no haya reviews
 const fallbackTestimonials: Testimonial[] = [
   {
-    id: "1",
+    id: "novia-1",
     name: "Isabella Martínez",
-    text: "Marcela transformó completamente mi look para mi boda. Su atención al detalle y profesionalismo son excepcionales. El maquillaje duró todo el día perfecto.",
+    text: "Marcela transformó completamente mi look para mi boda. Su atención al detalle y profesionalismo me hicieron lucir radiante.",
     rating: 5,
     service: "Maquillaje de Novia",
-    date: "2024",
+    date: "Jun 2025",
     initials: "IM",
+    featured: true,
   },
   {
-    id: "2",
+    id: "novia-2",
+    name: "Camila López",
+    text: "El maquillaje duró todo el día y las fotos quedaron espectaculares. ¡Recomendada al 100% para novias exigentes!",
+    rating: 5,
+    service: "Maquillaje de Novia",
+    date: "May 2025",
+    initials: "CL",
+    featured: true,
+  },
+  {
+    id: "social-1",
     name: "Sofía García",
-    text: "Increíble trabajo! Marcela entendió exactamente lo que quería y el resultado superó mis expectativas. Definitivamente la recomiendo.",
+    text: "Increíble trabajo para mi evento social: natural, elegante y perfecto para la cámara.",
     rating: 5,
     service: "Maquillaje Social",
-    date: "2024",
+    date: "Jul 2025",
     initials: "SG",
+    featured: true,
   },
   {
-    id: "3",
-    name: "Camila López",
-    text: "El mejor maquillaje que he tenido! Marcela es una artista increíble, muy profesional y el resultado fue espectacular.",
+    id: "social-2",
+    name: "Lucía Fernández",
+    text: "Marcela supo adaptar el look a mi estilo y tipo de piel. Mucha confianza y profesionalismo.",
     rating: 5,
-    service: "Maquillaje de Novia",
-    date: "2024",
-    initials: "CL",
+    service: "Maquillaje Social",
+    date: "Apr 2025",
+    initials: "LF",
+  },
+  {
+    id: "gala-1",
+    name: "Valentina Rojas",
+    text: "Mi maquillaje para la gala fue sofisticado y duradero. Recibí muchos cumplidos durante la noche.",
+    rating: 5,
+    service: "Maquillaje de Gala",
+    date: "Sep 2025",
+    initials: "VR",
+  },
+  {
+    id: "gala-2",
+    name: "Alejandra Cruz",
+    text: "Profesionalismo total: maquillaje impecable, atención personalizada y un resultado que superó mis expectativas.",
+    rating: 5,
+    service: "Maquillaje de Gala",
+    date: "Aug 2025",
+    initials: "AC",
+  },
+  {
+    id: "madura-1",
+    name: "Daniela Castro",
+    text: "Como mujer de 50 años encontré un look natural y favorecedor. Marcela entendió mis necesidades y cuidó cada detalle.",
+    rating: 5,
+    service: "Maquillaje para Piel Madura",
+    date: "Feb 2025",
+    initials: "DC",
+  },
+  {
+    id: "madura-2",
+    name: "Patricia Gómez",
+    text: "Resultados elegantes y modernos, con productos que respetaron mi piel. Muy recomendable para pieles maduras.",
+    rating: 5,
+    service: "Maquillaje para Piel Madura",
+    date: "Jan 2025",
+    initials: "PG",
   },
 ];
 
-export default function TestimonialsSection() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
-  const [testimonials, setTestimonials] =
-    useState<Testimonial[]>(fallbackTestimonials);
-  const [loading, setLoading] = useState(true);
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((n) => n.charAt(0))
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+}
 
-  const getInitials = (name: string): string => {
-    return name
-      .split(" ")
-      .map((word) => word.charAt(0))
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
-
-  const getServiceName = (
-    services: { name?: string; serviceName?: string }[] | undefined,
-    serviceType: string,
-  ): string => {
-    if (services && Array.isArray(services) && services.length > 0) {
-      return services
-        .map((service) => service.name || service.serviceName)
-        .join(", ");
-    }
+function formatService(
+  services?: { name?: string; serviceName?: string }[],
+  serviceType?: string
+) {
+  if (!services || services.length === 0)
     return serviceType || "Servicio de maquillaje";
-  };
+  return services.map((s) => s.name || s.serviceName).join(", ");
+}
 
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    return date.getFullYear().toString();
-  };
+const serviceCategories = [
+  { id: "all", name: "Todos", icon: Grid },
+  { id: "novia", name: "Novias", icon: Heart },
+  { id: "social", name: "Eventos Sociales", icon: Calendar },
+  { id: "gala", name: "Gala", icon: Star },
+  { id: "madura", name: "Piel Madura", icon: Star },
+];
+
+export default function TestimonialsSection() {
+  const [items, setItems] = useState<Testimonial[]>(fallbackTestimonials);
+  const [filteredItems, setFilteredItems] =
+    useState<Testimonial[]>(fallbackTestimonials);
+  const [index, setIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<"carousel" | "grid">("carousel");
+  const [selectedService, setSelectedService] = useState("all");
+  const timerRef = useRef<number | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   useEffect(() => {
-    const fetchReviews = async () => {
+    let mounted = true;
+    (async () => {
       try {
-        const response = await fetch("/api/reviews");
-        const data = await response.json();
-
-        if (data.success && data.reviews && data.reviews.length > 0) {
-          const formattedReviews: Testimonial[] = data.reviews.map(
-            (review: Review) => ({
-              id: review.id,
-              name: review.reviewerName,
-              text: review.reviewText || "Excelente servicio, muy recomendado!",
-              rating: review.rating,
-              service: getServiceName(
-                review.appointment.services,
-                review.appointment.serviceType,
-              ),
-              date: formatDate(review.appointment.appointmentDate),
-              initials: getInitials(review.reviewerName),
-            }),
-          );
-
-          setTestimonials(formattedReviews);
+        const res = await fetch("/api/reviews");
+        const data = await res.json();
+        if (!mounted) return;
+        if (
+          data?.success &&
+          Array.isArray(data.reviews) &&
+          data.reviews.length > 0
+        ) {
+          const list = data.reviews.map((r: ReviewShape) => ({
+            id: r.id,
+            name: r.reviewerName,
+            text: r.reviewText || "Excelente servicio, muy recomendado!",
+            rating: r.rating || 5,
+            service: formatService(
+              r.appointment?.services,
+              r.appointment?.serviceType
+            ),
+            date: r.appointment?.appointmentDate
+              ? new Date(r.appointment!.appointmentDate!)
+                  .getFullYear()
+                  .toString()
+              : "2024",
+            initials: getInitials(r.reviewerName),
+          }));
+          setItems(list);
+          setFilteredItems(list);
         }
-      } catch (error) {
-        console.error("Error fetching reviews:", error);
-        // Mantener testimonios de respaldo en caso de error
+      } catch {
+        // fallback
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
+    })();
+    return () => {
+      mounted = false;
     };
-
-    fetchReviews();
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-    }, 6000);
-
-    return () => clearInterval(interval);
-  }, [testimonials.length]);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
-
-    if (isLeftSwipe) {
-      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-    }
-    if (isRightSwipe) {
-      setCurrentIndex(
-        (prev) => (prev - 1 + testimonials.length) % testimonials.length,
+    if (viewMode === "carousel") {
+      if (timerRef.current) window.clearInterval(timerRef.current);
+      timerRef.current = window.setInterval(
+        () => setIndex((i) => (i + 1) % filteredItems.length),
+        6000
       );
+      return () => {
+        if (timerRef.current) window.clearInterval(timerRef.current);
+      };
     }
-  };
+  }, [filteredItems.length, viewMode]);
+
+  useEffect(() => {
+    if (selectedService === "all") {
+      setFilteredItems(items);
+    } else {
+      const filtered = items.filter((item) =>
+        item.service.toLowerCase().includes(selectedService.toLowerCase())
+      );
+      setFilteredItems(filtered);
+    }
+    setIndex(0);
+  }, [selectedService, items]);
+
+  const featuredTestimonials = filteredItems.filter((item) => item.featured);
+  // If user selected a specific service, prioritize featured items for the carousel.
+  // If 'all' is selected, show all filtered items so "Todos" truly shows everything.
+  const displayItems =
+    viewMode === "carousel" &&
+    selectedService !== "all" &&
+    featuredTestimonials.length > 0
+      ? featuredTestimonials
+      : filteredItems;
 
   return (
-    <section id="testimonials" className="py-20 bg-white">
-      <div className="container mx-auto px-6 lg:px-12">
-        {/* Header minimalista y compacto */}
+    <section
+      id="testimonials"
+      className="py-12 sm:py-24 testimonials-section relative overflow-hidden"
+      style={{ scrollMarginTop: '120px' }}
+      ref={sectionRef}
+    >
+      {/* Elementos decorativos de fondo */}
+      <div className="hidden sm:block absolute top-10 left-10 w-32 h-32 bg-[color:var(--color-primary)]/10 rounded-full filter blur-3xl"></div>
+      <div className="hidden sm:block absolute bottom-10 right-10 w-40 h-40 bg-[color:var(--color-accent)]/10 rounded-full filter blur-3xl"></div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl relative z-10">
         <motion.div
+          className="text-center mb-10 sm:mb-12"
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-playfair text-heading">
-            Lo que Dicen mis Clientas
-          </h2>
+          <div className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[color:var(--color-surface)]/80 border border-[color:var(--color-accent)]/20 mb-6">
+            <Quote className="w-4 h-4 text-[color:var(--color-primary)]" />
+            <span className="text-sm font-semibold text-[color:var(--color-primary)]">
+              Testimonios
+            </span>
+          </div>
+
+          <Typography
+            as="h2"
+            variant="h2"
+            className="text-2xl sm:text-5xl font-bold text-[color:var(--color-heading)] mb-2 sm:mb-4"
+          >
+            Experiencias que Inspiran
+          </Typography>
+
+          <Typography
+            as="p"
+            variant="p"
+            className="hidden sm:block text-lg text-[color:var(--color-body)] max-w-2xl mx-auto"
+          >
+            Descubre por qué más de 370 clientas confían en mi arte para sus
+            momentos más especiales
+          </Typography>
         </motion.div>
 
-        {/* Testimonial destacado */}
-        {loading ? (
-          <div className="max-w-4xl mx-auto mb-16">
-            <div className="bg-light-background p-8 md:p-12 rounded-xl text-center">
-              <div className="animate-pulse">
-                <div className="w-16 h-16 bg-gray-300 rounded-full mx-auto mb-6"></div>
-                <div className="h-4 bg-gray-300 rounded w-32 mx-auto mb-6"></div>
-                <div className="h-6 bg-gray-300 rounded w-3/4 mx-auto mb-4"></div>
-                <div className="h-6 bg-gray-300 rounded w-1/2 mx-auto mb-8"></div>
-                <div className="w-14 h-14 bg-gray-300 rounded-full mx-auto mb-4"></div>
-                <div className="h-4 bg-gray-300 rounded w-48 mx-auto"></div>
-              </div>
+        {/* Estadísticas rápidas */}
+        <motion.div
+          className="hidden sm:grid sm:grid-cols-4 gap-4 sm:mb-10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          <div className="text-center p-4 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
+            <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)] mb-1">
+              5.0
+            </div>
+            <div className="text-xs sm:text-sm text-[color:var(--color-body)]">
+              Calificación
             </div>
           </div>
-        ) : (
+          <div className="text-center p-4 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
+            <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)] mb-1">
+              370+
+            </div>
+            <div className="text-xs sm:text-sm text-[color:var(--color-body)]">
+              Reseñas
+            </div>
+          </div>
+          <div className="text-center p-4 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
+            <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)] mb-1">
+              98%
+            </div>
+            <div className="text-xs sm:text-sm text-[color:var(--color-body)]">
+              Satisfacción
+            </div>
+          </div>
+          <div className="text-center p-4 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
+            <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)] mb-1">
+              8+
+            </div>
+            <div className="text-xs sm:text-sm text-[color:var(--color-body)]">
+              Años Exp.
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Controles de vista y filtro */}
+        <motion.div
+          className="hidden sm:flex sm:flex-row justify-between items-center gap-4 mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <div className="flex gap-2 p-1 bg-[color:var(--color-surface)]/50 rounded-lg border border-[color:var(--color-border)]/20">
+            <button
+              onClick={() => setViewMode("carousel")}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                viewMode === "carousel"
+                  ? "bg-[color:var(--color-primary)] text-white"
+                  : "text-[color:var(--color-body)] hover:text-[color:var(--color-heading)]"
+              }`}
+            >
+              <Sliders className="w-4 h-4 inline mr-2" />
+              Carrusel
+            </button>
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                viewMode === "grid"
+                  ? "bg-[color:var(--color-primary)] text-white"
+                  : "text-[color:var(--color-body)] hover:text-[color:var(--color-heading)]"
+              }`}
+            >
+              <Grid className="w-4 h-4 inline mr-2" />
+              Cuadrícula
+            </button>
+          </div>
+
+          <div className="flex gap-2 flex-wrap justify-center">
+            {serviceCategories.map((category) => {
+              const Icon = category.icon;
+              return (
+                <button
+                  key={category.id}
+                  onClick={() => setSelectedService(category.id)}
+                  className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all flex items-center gap-1 ${
+                    selectedService === category.id
+                      ? "bg-[color:var(--color-primary)] text-white"
+                      : "bg-[color:var(--color-surface)]/50 text-[color:var(--color-body)] border border-[color:var(--color-border)]/20 hover:text-[color:var(--color-heading)]"
+                  }`}
+                >
+                  <Icon className="w-3 h-3" />
+                  {category.name}
+                </button>
+              );
+            })}
+          </div>
+        </motion.div>
+
+        {/* Vista Carrusel */}
+        {viewMode === "carousel" && (
           <motion.div
-            key={currentIndex}
+            className="testimonials-container"
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="max-w-4xl mx-auto mb-16"
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <div className="bg-light-background p-8 md:p-12 rounded-xl text-center">
-              {/* Quote icon */}
-              <div className="flex justify-center mb-6">
-                <div className="w-16 h-16 bg-accent-primary rounded-full flex items-center justify-center">
-                  <Quote className="w-8 h-8 text-white" />
-                </div>
-              </div>
+            <div className="relative">
+              <AnimatePresence mode="wait">
+                {loading ? (
+                  <motion.div
+                    key="loading"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="testimonial-card"
+                  >
+                    <div className="animate-pulse">
+                      <div className="w-20 h-20 bg-gray-300 rounded-full mx-auto mb-6"></div>
+                      <div className="h-4 bg-gray-300 rounded w-32 mx-auto mb-6"></div>
+                      <div className="space-y-2">
+                        <div className="h-4 bg-gray-300 rounded w-3/4 mx-auto"></div>
+                        <div className="h-4 bg-gray-300 rounded w-2/3 mx-auto"></div>
+                        <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto"></div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ) : (
+                  displayItems.length > 0 && (
+                    <motion.div
+                      key={displayItems[index].id}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.45 }}
+                      className="testimonial-card max-w-4xl mx-auto"
+                    >
+                      <div className="relative">
+                        <div className="absolute -top-4 -left-4 text-6xl text-[color:var(--color-primary)]/20">
+                          <Quote />
+                        </div>
 
-              {/* Stars */}
-              <div className="flex justify-center mb-6">
-                {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="w-5 h-5 text-accent-primary mx-0.5"
-                    fill="currentColor"
-                  />
-                ))}
-              </div>
+                        <div className="flex justify-center mb-6">
+                          <div className="testimonial-avatar-enhanced">
+                            <span>{displayItems[index].initials}</span>
+                          </div>
+                        </div>
 
-              {/* Testimonial text */}
-              <blockquote className="text-xl md:text-2xl text-heading italic mb-8 leading-relaxed font-light">
-                &ldquo;{testimonials[currentIndex].text}&rdquo;
-              </blockquote>
+                        <div className="testimonial-stars mb-4">
+                          {[...Array(displayItems[index].rating)].map(
+                            (_, i) => (
+                              <Star
+                                key={i}
+                                className="w-5 h-5 mx-0.5 text-[color:var(--color-accent)] fill-current"
+                              />
+                            )
+                          )}
+                        </div>
 
-              {/* Client info */}
-              <div className="flex flex-col items-center">
-                <div className="w-14 h-14 bg-accent-primary rounded-full flex items-center justify-center mb-4">
-                  <span className="text-white font-bold text-lg">
-                    {testimonials[currentIndex].initials}
-                  </span>
-                </div>
+                        <div className="testimonial-quote mb-6 px-4">
+                          <Typography
+                            as="blockquote"
+                            variant="p"
+                            className="text-xl sm:text-2xl font-light text-[color:var(--color-heading)] leading-relaxed"
+                          >
+                            &ldquo;{displayItems[index].text}&rdquo;
+                          </Typography>
+                        </div>
 
-                <div className="text-center">
-                  <div className="font-playfair text-xl font-semibold text-heading">
-                    {testimonials[currentIndex].name}
+                        <div className="flex flex-col items-center">
+                          <Typography
+                            as="div"
+                            variant="h4"
+                            className="text-xl font-semibold text-[color:var(--color-heading)] mb-1"
+                          >
+                            {displayItems[index].name}
+                          </Typography>
+                          <div className="testimonial-meta text-sm text-[color:var(--color-body)] flex items-center gap-2">
+                            <span className="px-2 py-1 bg-[color:var(--color-surface)]/50 rounded-full text-xs">
+                              {displayItems[index].service}
+                            </span>
+                            <span>•</span>
+                            <span>{displayItems[index].date}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )
+                )}
+              </AnimatePresence>
+
+              {/* Controles de navegación */}
+              {displayItems.length > 1 && (
+                <div className="flex justify-between items-center mt-6 sm:mt-8">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      setIndex(
+                        (i) =>
+                          (i - 1 + displayItems.length) % displayItems.length
+                      )
+                    }
+                    className="rounded-full p-2"
+                  >
+                    <ArrowLeft className="w-5 h-5" />
+                  </Button>
+
+                  <div className="flex gap-2">
+                    {displayItems.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setIndex(i)}
+                        className={`w-2 h-2 rounded-full transition-all ${
+                          i === index
+                            ? "bg-[color:var(--color-primary)] w-8"
+                            : "bg-[color:var(--color-border)]"
+                        }`}
+                      />
+                    ))}
                   </div>
-                  <div className="text-main">
-                    {testimonials[currentIndex].service} •{" "}
-                    {testimonials[currentIndex].date}
-                  </div>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      setIndex((i) => (i + 1) % displayItems.length)
+                    }
+                    className="rounded-full p-2"
+                  >
+                    <ArrowRight className="w-5 h-5" />
+                  </Button>
                 </div>
-              </div>
+              )}
             </div>
           </motion.div>
         )}
 
-        {/* Indicadores */}
-        <div className="flex justify-center mb-16">
-          <div className="flex gap-2">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentIndex(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  index === currentIndex
-                    ? "bg-accent-primary"
-                    : "bg-gray-300 hover:bg-gray-400"
-                }`}
-              />
-            ))}
-          </div>
-        </div>
+        {/* Vista Cuadrícula */}
+        {viewMode === "grid" && (
+          <motion.div
+            className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <AnimatePresence>
+              {filteredItems.map((item, i) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3, delay: i * 0.05 }}
+                  className="testimonial-card-grid p-6 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20 hover:shadow-lg transition-all"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="testimonial-avatar-small">
+                      <span>{item.initials}</span>
+                    </div>
+                    <div className="flex">
+                      {[...Array(item.rating)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className="w-4 h-4 text-[color:var(--color-accent)] fill-current"
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <blockquote className="text-[color:var(--color-heading)] mb-4 text-sm leading-relaxed">
+                    &ldquo;{item.text}&rdquo;
+                  </blockquote>
+
+                  <div className="border-t border-[color:var(--color-border)]/20 pt-4">
+                    <div className="font-semibold text-[color:var(--color-heading)] mb-1">
+                      {item.name}
+                    </div>
+                    <div className="text-xs text-[color:var(--color-body)]">
+                      {item.service} • {item.date}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        )}
+
+        {/* Llamada a la acción */}
+        <motion.div
+          className="hidden sm:block text-center sm:mt-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={() =>
+              window.open(
+                "https://www.instagram.com/marcelacorderobeauty/",
+                "_blank"
+              )
+            }
+            className="px-8 py-3 rounded-full"
+          >
+            Ver más reseñas en Instagram
+          </Button>
+        </motion.div>
       </div>
     </section>
   );

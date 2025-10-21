@@ -1,0 +1,302 @@
+/* ============================================
+   TYPOGRAPHY SYSTEM - Marcela Cordero
+   Optimized for readability and hierarchy
+   ============================================ */
+
+/* Base font settings */
+html,
+body {
+  font-family: var(--font-body, system-ui, -apple-system, sans-serif);
+  font-size: var(--text-body);
+  line-height: var(--text-body-lh);
+  color: var(--color-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   HEADINGS
+   ============================================ */
+
+h1,
+.text-h1 {
+  font-family: var(--font-heading);
+  font-size: var(--text-h1);
+  line-height: var(--text-h1-lh);
+  font-weight: 700;
+  color: var(--color-heading);
+  letter-spacing: -0.02em;
+}
+
+h2,
+.text-h2 {
+  font-family: var(--font-heading);
+  font-size: var(--text-h2);
+  line-height: var(--text-h2-lh);
+  font-weight: 700;
+  color: var(--color-heading);
+  letter-spacing: -0.01em;
+}
+
+h3,
+.text-h3 {
+  font-family: var(--font-heading);
+  font-size: var(--text-h3);
+  line-height: var(--text-h3-lh);
+  font-weight: 600;
+  color: var(--color-heading);
+  letter-spacing: -0.01em;
+}
+
+h4,
+.text-h4 {
+  font-family: var(--font-heading);
+  font-size: var(--text-h4);
+  line-height: var(--text-h4-lh);
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+h5,
+.text-h5 {
+  font-family: var(--font-heading);
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+h6,
+.text-h6 {
+  font-family: var(--font-heading);
+  font-size: 1rem; /* 16px */
+  line-height: 1.5;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+/* ============================================
+   DISPLAY (Hero titles)
+   ============================================ */
+
+.display,
+.text-display {
+  font-family: var(--font-heading);
+  font-size: var(--text-display);
+  line-height: var(--text-display-lh);
+  font-weight: 800;
+  color: var(--color-heading);
+  letter-spacing: -0.03em;
+  overflow: visible;
+  padding-bottom: 0.06em;
+}
+
+/* ============================================
+   BODY TEXT
+   ============================================ */
+
+p,
+.text-p {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--text-body-lh);
+}
+
+/* Lead text (intro paragraphs) */
+.text-lead {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.7;
+  color: var(--color-body);
+}
+
+/* Small text */
+small,
+.text-small {
+  font-size: var(--text-small);
+  line-height: var(--text-small-lh);
+}
+
+/* Caption */
+.caption,
+.text-caption {
+  font-size: var(--text-caption);
+  line-height: var(--text-caption-lh);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+/* Default caption color (can be overridden) */
+.caption:not([style*="color"]),
+.text-caption:not([style*="color"]) {
+  color: var(--color-muted);
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Font weights */
+.font-light {
+  font-weight: 300;
+}
+.font-normal {
+  font-weight: 400;
+}
+.font-medium {
+  font-weight: 500;
+}
+.font-semibold {
+  font-weight: 600;
+}
+.font-bold {
+  font-weight: 700;
+}
+.font-extrabold {
+  font-weight: 800;
+}
+
+/* Colors */
+.text-heading {
+  color: var(--color-heading);
+}
+.text-body {
+  color: var(--color-body);
+}
+.text-muted {
+  color: var(--color-muted);
+}
+.text-primary {
+  color: var(--color-primary);
+}
+.text-accent {
+  color: var(--color-accent);
+}
+
+/* Letter spacing */
+.tracking-tight {
+  letter-spacing: -0.02em;
+}
+.tracking-normal {
+  letter-spacing: 0;
+}
+.tracking-wide {
+  letter-spacing: 0.05em;
+}
+
+/* Text alignment */
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  .display,
+  .text-display {
+    font-size: clamp(2rem, 8vw, 2.5rem); /* Smaller on mobile */
+    line-height: 1.15;
+  }
+
+  h1,
+  .text-h1 {
+    font-size: clamp(1.75rem, 6vw, 2rem);
+  }
+
+  h2,
+  .text-h2 {
+    font-size: clamp(1.5rem, 5vw, 1.75rem);
+  }
+
+  .text-lead {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+}
+
+/* Desktop tweak: reduce overall scale slightly on large viewports so typography doesn't feel oversized */
+@media (min-width: 1024px) {
+  :root {
+    /* base text sizing - slightly increased for better legibility on desktop */
+    --text-body: 1.02rem; /* ~16.3px */
+    --text-h1: 2.5rem; /* ~40px */
+    --text-h2: 1.875rem; /* ~30px */
+    --text-h3: 1.25rem; /* ~20px */
+    --text-h4: 1.125rem; /* ~18px */
+    --text-display: 3rem;
+  }
+
+  /* Ensure specific headings inherit the smaller sizes reliably */
+  h1,
+  .text-h1 {
+    font-size: var(--text-h1);
+  }
+  h2,
+  .text-h2 {
+    font-size: var(--text-h2);
+  }
+  h3,
+  .text-h3 {
+    font-size: var(--text-h3);
+  }
+  h4,
+  .text-h4 {
+    font-size: var(--text-h4);
+  }
+  .display,
+  .text-display {
+    font-size: var(--text-display);
+  }
+}
+
+/* Also explicitly override the light theme root variables (higher specificity) so the desktop reduction applies in light mode */
+@media (min-width: 1024px) {
+  :root[data-theme="light"] {
+    /* Light theme desktop sizes — keep slightly larger for readability */
+    --text-body: 1.02rem;
+    --text-h1: 2.5rem;
+    --text-h2: 1.875rem;
+    --text-h3: 1.25rem;
+    --text-h4: 1.125rem;
+    --text-display: 3rem;
+  }
+}
+
+/* ============================================
+   LISTS
+   ============================================ */
+
+ul,
+ol {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--text-body-lh);
+  color: var(--color-body);
+}
+
+ul li,
+ol li {
+  margin-bottom: 0.5rem;
+}
+
+/* ============================================
+   SELECTION
+   ============================================ */
+
+::selection {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+::-moz-selection {
+  background-color: var(--color-primary);
+  color: white;
+}

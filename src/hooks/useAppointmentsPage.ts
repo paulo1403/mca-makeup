@@ -22,7 +22,8 @@ export const useAppointmentsPage = () => {
   const { data, isLoading, error } = useAppointments({ 
     page: currentPage, 
     filter, 
-    searchTerm 
+    searchTerm,
+    id: highlightId || undefined,
   });
 
   const appointments = useMemo(() => data?.appointments || [], [data?.appointments]);
@@ -90,9 +91,9 @@ export const useAppointmentsPage = () => {
     
     // Limpiar parámetros de URL si están presentes
     const params = new URLSearchParams(window.location.search);
-    if (params.has('showDetail') || params.has('highlight')) {
+    if (params.has('showDetail') || params.has('highlightId')) {
       params.delete('showDetail');
-      params.delete('highlight');
+      params.delete('highlightId');
       const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
       router.replace(newUrl);
     }

@@ -1,0 +1,274 @@
+/* ============================================
+   LOGO COMPONENT STYLES - Marcela Cordero
+   ============================================ */
+
+/* Base wrapper */
+.logo-wrapper {
+  display: inline-flex;
+  align-items: center;
+  animation: initial-fade-in 0.6s ease-out;
+}
+
+/* Desktop logo visible by default, mobile hidden */
+.logo-desktop {
+  display: inline-flex;
+}
+
+.logo-mobile {
+  display: none;
+}
+
+/* SVG base styles */
+.brand-logo {
+  height: 40px;
+  width: auto;
+  color: var(--color-heading);
+  transition: transform 0.3s ease;
+}
+
+.brand-logo-mobile {
+  height: 38px;
+}
+
+/* ============================================
+   HOVER ANIMATIONS
+   ============================================ */
+
+.brand-logo:hover {
+  transform: translateY(-2px);
+}
+
+/* Circle glow animation on hover */
+.logo-circle {
+  filter: drop-shadow(0 4px 12px color-mix(in oklab, var(--color-primary) 40%, transparent));
+  transition: filter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.brand-logo:hover .logo-circle {
+  filter: drop-shadow(0 6px 20px color-mix(in oklab, var(--color-primary) 60%, transparent));
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    filter: drop-shadow(0 6px 20px color-mix(in oklab, var(--color-primary) 60%, transparent));
+  }
+  50% {
+    filter: drop-shadow(0 8px 24px color-mix(in oklab, var(--color-primary) 72%, transparent));
+  }
+}
+
+/* Monogram letter animation */
+.logo-monogram {
+  transition: transform 0.3s ease;
+  transform-origin: center;
+}
+
+.brand-logo:hover .logo-monogram {
+  animation: monogram-pop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes monogram-pop {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Brush stroke animation (desktop only) */
+.logo-brush-stroke {
+  color: var(--color-accent-secondary);
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 0.8s ease;
+}
+
+.brand-logo:hover .logo-brush-stroke {
+  animation: draw-brush 1.2s ease forwards;
+}
+
+@keyframes draw-brush {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Name fade-in stagger effect */
+.logo-name-primary {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.logo-name-secondary {
+  transition: opacity 0.3s ease 0.1s;
+}
+
+.brand-logo:hover .logo-name-primary {
+  animation: text-shimmer 0.8s ease;
+}
+
+.brand-logo:hover .logo-name-secondary {
+  animation: text-shimmer 0.8s ease 0.1s;
+}
+
+@keyframes text-shimmer {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Decorative dots bounce (desktop only) */
+.logo-dot {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform-origin: center;
+}
+
+.brand-logo:hover .logo-dot-1 {
+  animation: dot-bounce 0.6s ease 0s;
+}
+
+.brand-logo:hover .logo-dot-2 {
+  animation: dot-bounce 0.6s ease 0.1s;
+}
+
+.brand-logo:hover .logo-dot-3 {
+  animation: dot-bounce 0.6s ease 0.2s;
+}
+
+@keyframes dot-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-3px);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(0);
+  }
+}
+
+/* Subtitle subtle fade (desktop only) */
+.logo-subtitle {
+  transition: opacity 0.3s ease;
+}
+
+.brand-logo:hover .logo-subtitle {
+  opacity: 1 !important;
+}
+
+/* ============================================
+   INITIAL LOAD ANIMATION
+   ============================================ */
+
+@keyframes initial-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   DARK THEME ADJUSTMENTS
+   ============================================ */
+
+[data-theme="dark"] .logo-circle {
+  filter: drop-shadow(0 4px 16px color-mix(in oklab, var(--color-primary) 50%, transparent));
+}
+
+[data-theme="dark"] .brand-logo:hover .logo-circle {
+  filter: drop-shadow(0 6px 22px color-mix(in oklab, var(--color-primary) 70%, transparent));
+  animation: pulse-glow-dark 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow-dark {
+  0%, 100% {
+    filter: drop-shadow(0 6px 22px color-mix(in oklab, var(--color-primary) 70%, transparent));
+  }
+  50% {
+    filter: drop-shadow(0 8px 26px color-mix(in oklab, var(--color-primary) 82%, transparent));
+  }
+}
+
+/* ============================================
+   MOBILE RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  /* Switch to mobile logo */
+  .logo-desktop {
+    display: none;
+  }
+  
+  .logo-mobile {
+    display: inline-flex;
+  }
+  
+  /* Simplify animations on mobile for performance */
+  .brand-logo:hover {
+    transform: translateY(-1px);
+  }
+  
+  /* Keep only essential animations on mobile */
+  .logo-brush-stroke,
+  .logo-dot {
+    animation: none !important;
+  }
+  
+  .brand-logo:hover .logo-circle {
+    animation: none;
+    filter: drop-shadow(0 5px 16px color-mix(in oklab, var(--color-primary) 55%, transparent));
+  }
+  
+  [data-theme="dark"] .brand-logo:hover .logo-circle {
+    animation: none;
+    filter: drop-shadow(0 5px 18px color-mix(in oklab, var(--color-primary) 65%, transparent));
+  }
+}
+
+/* Smaller mobile devices */
+@media (max-width: 480px) {
+  .brand-logo-mobile {
+    height: 36px;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .logo-wrapper,
+  .brand-logo,
+  .logo-circle,
+  .logo-monogram,
+  .logo-brush-stroke,
+  .logo-name-primary,
+  .logo-name-secondary,
+  .logo-dot,
+  .logo-subtitle {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .brand-logo:hover {
+    transform: none;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+.navbar-brand:focus-visible .logo-circle {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 4px;
+  border-radius: 50%;
+}

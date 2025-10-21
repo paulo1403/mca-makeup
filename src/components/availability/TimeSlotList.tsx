@@ -46,9 +46,7 @@ export default function TimeSlotList({
   const [activeTab, setActiveTab] = useState<"STUDIO" | "HOME">("STUDIO");
 
   const handleDelete = (id: string) => {
-    if (confirm("¿Estás segura de que quieres eliminar este horario?")) {
-      onDeleteAction(id);
-    }
+    onDeleteAction(id);
   };
 
   // Agrupar por tipo de ubicación
@@ -62,7 +60,7 @@ export default function TimeSlotList({
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D4AF37]"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[color:var(--color-primary)]"></div>
       </div>
     );
   }
@@ -71,22 +69,25 @@ export default function TimeSlotList({
     <div
       className={`p-3 sm:p-4 rounded-lg border transition-all ${
         slot.isActive
-          ? "bg-white border-green-200 shadow-sm"
-          : "bg-gray-50 border-gray-200"
+          ? "bg-[color:var(--color-card)] border-[color:var(--color-primary)]/30 shadow-sm"
+          : "bg-[color:var(--color-card)] border-[color:var(--color-border)]"
       }`}
     >
       {/* Horario */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-2">
-          <Clock className="h-4 w-4 text-gray-500" />
-          <span className="font-medium text-gray-900 text-sm sm:text-base">
+          <Clock className="h-4 w-4 text-[color:var(--color-muted)]" />
+          <span className="font-medium text-[color:var(--color-heading)] text-sm sm:text-base">
             {slot.startTime} - {slot.endTime}
           </span>
         </div>
         <div
-          className={`w-3 h-3 rounded-full ${
-            slot.isActive ? "bg-green-400" : "bg-gray-300"
-          }`}
+          className="w-3 h-3 rounded-full"
+          style={{
+            backgroundColor: slot.isActive
+              ? "var(--status-confirmed-text)"
+              : "var(--color-muted)",
+          }}
         />
       </div>
 
@@ -95,10 +96,10 @@ export default function TimeSlotList({
         <button
           onClick={() => onToggleAction(slot.id)}
           disabled={isLoading}
-          className={`flex-1 flex items-center justify-center space-x-1 px-3 py-2 rounded-md text-xs font-medium transition-all disabled:opacity-50 ${
+          className={`flex-1 flex items-center justify-center space-x-1 px-3 py-2 rounded-md text-xs font-medium transition-all disabled:opacity-50 border ${
             slot.isActive
-              ? "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300"
-              : "bg-[#D4AF37] bg-opacity-10 text-black hover:bg-[#D4AF37] hover:bg-opacity-20 border border-[#D4AF37] border-opacity-30"
+              ? "bg-[color:var(--color-surface-elevated)] text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface)] border-[color:var(--color-border)]"
+              : "bg-[color:var(--color-primary)]/10 text-[color:var(--color-primary)] hover:bg-[color:var(--color-primary)]/15 border-[color:var(--color-primary)]/30"
           }`}
         >
           {slot.isActive ? (
@@ -115,7 +116,7 @@ export default function TimeSlotList({
           <button
             onClick={() => onEditAction(slot)}
             disabled={isLoading}
-            className="flex-1 flex items-center justify-center space-x-1 px-3 py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-md transition-colors disabled:opacity-50 text-xs font-medium"
+            className="flex-1 flex items-center justify-center space-x-1 px-3 py-2 bg-[color:var(--color-accent)]/10 text-[color:var(--color-primary)] hover:bg-[color:var(--color-accent)]/15 border border-[color:var(--color-accent)]/20 rounded-md transition-colors disabled:opacity-50 text-xs font-medium"
           >
             <Edit2 className="h-3 w-3" />
             <span className="hidden xs:inline">Editar</span>
@@ -125,7 +126,12 @@ export default function TimeSlotList({
         <button
           onClick={() => handleDelete(slot.id)}
           disabled={isLoading}
-          className="flex-1 flex items-center justify-center space-x-1 px-3 py-2 bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-md transition-colors disabled:opacity-50 text-xs font-medium"
+          className="flex-1 flex items-center justify-center space-x-1 px-3 py-2 rounded-md transition-colors disabled:opacity-50 text-xs font-medium border"
+          style={{
+            backgroundColor: "var(--status-cancelled-bg)",
+            color: "var(--status-cancelled-text)",
+            borderColor: "var(--status-cancelled-border)",
+          }}
         >
           <Trash2 className="h-3 w-3" />
           <span className="hidden xs:inline">Eliminar</span>
@@ -137,14 +143,14 @@ export default function TimeSlotList({
   return (
     <div className="space-y-6">
       {/* Tabs para seleccionar tipo de ubicación */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-[color:var(--color-border)]">
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setActiveTab("STUDIO")}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === "STUDIO"
-                ? "border-[#D4AF37] text-[#D4AF37]"
-                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                ? "border-[color:var(--color-primary)] text-[color:var(--color-primary)]"
+                : "border-transparent text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)] hover:border-[color:var(--color-border)]"
             }`}
           >
             <div className="flex items-center space-x-2">
@@ -153,8 +159,8 @@ export default function TimeSlotList({
               <span
                 className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                   studioSlots.length > 0
-                    ? "bg-blue-100 text-blue-800"
-                    : "bg-gray-100 text-gray-600"
+                    ? "bg-[color:var(--color-primary)]/15 text-[color:var(--color-primary)]"
+                    : "bg-[color:var(--color-surface-elevated)] text-[color:var(--color-muted)]"
                 }`}
               >
                 {studioSlots.length}
@@ -166,8 +172,8 @@ export default function TimeSlotList({
             onClick={() => setActiveTab("HOME")}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === "HOME"
-                ? "border-[#D4AF37] text-[#D4AF37]"
-                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                ? "border-[color:var(--color-primary)] text-[color:var(--color-primary)]"
+                : "border-transparent text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)] hover:border-[color:var(--color-border)]"
             }`}
           >
             <div className="flex items-center space-x-2">
@@ -176,8 +182,8 @@ export default function TimeSlotList({
               <span
                 className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                   homeSlots.length > 0
-                    ? "bg-green-100 text-green-800"
-                    : "bg-gray-100 text-gray-600"
+                    ? "bg-[color:var(--color-accent)]/15 text-[color:var(--color-accent)]"
+                    : "bg-[color:var(--color-surface-elevated)] text-[color:var(--color-muted)]"
                 }`}
               >
                 {homeSlots.length}
@@ -191,25 +197,25 @@ export default function TimeSlotList({
       <div className="space-y-4">
         {/* Información del tipo de servicio */}
         <div
-          className={`p-4 rounded-lg border-2 ${
+          className={`p-4 rounded-lg border ${
             activeTab === "STUDIO"
-              ? "bg-blue-50 border-blue-200"
-              : "bg-green-50 border-green-200"
+              ? "bg-[color:var(--color-primary)]/8 border-[color:var(--color-primary)]/20"
+              : "bg-[color:var(--color-accent)]/8 border-[color:var(--color-accent)]/20"
           }`}
         >
           <div className="flex items-center space-x-2 mb-2">
             {activeTab === "STUDIO" ? (
-              <Building className="h-5 w-5 text-blue-600" />
+              <Building className="h-5 w-5 text-[color:var(--color-primary)]" />
             ) : (
-              <Home className="h-5 w-5 text-green-600" />
+              <Home className="h-5 w-5 text-[color:var(--color-accent)]" />
             )}
-            <h3 className="font-semibold text-gray-900">
+            <h3 className="font-semibold text-[color:var(--color-heading)]">
               {activeTab === "STUDIO"
                 ? "Servicios en Estudio"
                 : "Servicios a Domicilio"}
             </h3>
           </div>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-[color:var(--color-body)]">
             {activeTab === "STUDIO"
               ? "Horarios para clientes que vienen al estudio en Av. Bolívar 1073, Pueblo Libre"
               : "Horarios para servicios a domicilio (incluye tiempo de traslado)"}
@@ -220,16 +226,16 @@ export default function TimeSlotList({
         {currentSlots.length === 0 ? (
           <div className="text-center py-12">
             {activeTab === "STUDIO" ? (
-              <Building className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+              <Building className="mx-auto h-12 w-12 text-[color:var(--color-muted)] mb-4" />
             ) : (
-              <Home className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+              <Home className="mx-auto h-12 w-12 text-[color:var(--color-muted)] mb-4" />
             )}
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No hay horarios configurados para{" "}
+            <h3 className="text-lg font-medium text-[color:var(--color-heading)] mb-2">
+              No hay horarios configurados para {" "}
               {activeTab === "STUDIO" ? "estudio" : "domicilio"}
             </h3>
-            <p className="text-gray-600 mb-4">
-              Agrega horarios para que los clientes puedan reservar{" "}
+            <p className="text-[color:var(--color-body)] mb-4">
+              Agrega horarios para que los clientes puedan reservar {" "}
               {activeTab === "STUDIO"
                 ? "citas en el estudio"
                 : "servicios a domicilio"}
@@ -246,26 +252,34 @@ export default function TimeSlotList({
               return (
                 <div
                   key={dayIndex}
-                  className={`rounded-lg border-2 transition-all duration-200 ${
+                  className={`rounded-lg border transition-all duration-200 ${
                     daySlots.length > 0
                       ? hasActiveSlots
                         ? activeTab === "STUDIO"
-                          ? "bg-blue-50 border-blue-200 shadow-sm"
-                          : "bg-green-50 border-green-200 shadow-sm"
-                        : "bg-orange-50 border-orange-200 shadow-sm"
-                      : "bg-gray-50 border-gray-200"
+                          ? "bg-[color:var(--color-primary)]/8 border-[color:var(--color-primary)]/20 shadow-sm"
+                          : "bg-[color:var(--color-accent)]/8 border-[color:var(--color-accent)]/20 shadow-sm"
+                        : "shadow-sm"
+                      : "bg-[color:var(--color-card)] border-[color:var(--color-border)]"
                   }`}
+                  style={
+                    daySlots.length > 0 && !hasActiveSlots
+                      ? {
+                          backgroundColor: "var(--status-pending-bg)",
+                          borderColor: "var(--status-pending-border)",
+                        }
+                      : undefined
+                  }
                 >
                   {/* Header del día */}
-                  <div className="p-4 border-b border-gray-200">
+                  <div className="p-4 border-b border-[color:var(--color-border)]">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
-                        <Clock className="h-5 w-5 text-gray-500" />
+                        <Clock className="h-5 w-5 text-[color:var(--color-muted)]" />
                         <div>
-                          <h3 className="font-semibold text-gray-900 text-sm">
+                          <h3 className="font-semibold text-[color:var(--color-heading)] text-sm">
                             {dayName}
                           </h3>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-[color:var(--color-muted)]">
                             {daySlots.length} horario
                             {daySlots.length !== 1 ? "s" : ""}
                           </p>
@@ -273,29 +287,52 @@ export default function TimeSlotList({
                       </div>
 
                       {hasActiveSlots ? (
-                        <CheckCircle className="h-5 w-5 text-green-500" />
+                        <CheckCircle
+                          className="h-5 w-5"
+                          style={{ color: "var(--status-confirmed-text)" }}
+                        />
                       ) : daySlots.length > 0 ? (
-                        <Pause className="h-5 w-5 text-orange-500" />
+                        <Pause
+                          className="h-5 w-5"
+                          style={{ color: "var(--status-pending-text)" }}
+                        />
                       ) : (
-                        <XCircle className="h-5 w-5 text-gray-400" />
+                        <XCircle
+                          className="h-5 w-5"
+                          style={{ color: "var(--color-muted)" }}
+                        />
                       )}
                     </div>
 
                     <div className="mt-2">
                       <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border`}
+                        style={
                           hasActiveSlots
-                            ? "bg-green-100 text-green-800"
+                            ? {
+                                backgroundColor: "var(--status-confirmed-bg)",
+                                color: "var(--status-confirmed-text)",
+                                borderColor: "var(--status-confirmed-border)",
+                              }
                             : daySlots.length > 0
-                              ? "bg-orange-100 text-orange-800"
-                              : "bg-gray-100 text-gray-600"
-                        }`}
+                            ? {
+                                backgroundColor: "var(--status-pending-bg)",
+                                color: "var(--status-pending-text)",
+                                borderColor: "var(--status-pending-border)",
+                              }
+                            : {
+                                backgroundColor:
+                                  "var(--color-surface-elevated)",
+                                color: "var(--color-muted)",
+                                borderColor: "var(--color-border)",
+                              }
+                        }
                       >
                         {hasActiveSlots
                           ? "Disponible"
                           : daySlots.length > 0
-                            ? "Pausado"
-                            : "Sin horario"}
+                          ? "Pausado"
+                          : "Sin horario"}
                       </span>
                     </div>
                   </div>
@@ -310,13 +347,16 @@ export default function TimeSlotList({
                       </div>
                     ) : (
                       <div className="text-center py-4">
-                        <XCircle className="mx-auto h-6 w-6 text-gray-400 mb-2" />
-                        <p className="text-xs text-gray-600 mb-2">
+                        <XCircle
+                          className="mx-auto h-6 w-6 mb-2"
+                          style={{ color: "var(--color-muted)" }}
+                        />
+                        <p className="text-xs text-[color:var(--color-body)] mb-2">
                           Sin horarios
                         </p>
                         <button
                           onClick={() => onAddAction?.(dayIndex, activeTab)}
-                          className="inline-flex items-center space-x-1 text-xs text-blue-600 hover:text-blue-800 font-medium"
+                          className="inline-flex items-center space-x-1 text-xs text-[color:var(--color-primary)] hover:text-[color:var(--color-primary-hover)] font-medium"
                         >
                           <Plus className="h-3 w-3" />
                           <span>Agregar</span>

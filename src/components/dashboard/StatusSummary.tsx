@@ -10,29 +10,29 @@ export default function StatusSummary({ stats }: StatusSummaryProps) {
       label: 'Pendientes de revisar',
       value: stats.pendingAppointments,
       color: 'text-amber-600',
-      bgColor: 'bg-amber-50',
-      borderColor: 'border-amber-200',
+      bgColor: 'bg-[color:var(--color-surface-elevated)]',
+      borderColor: 'border-[color:var(--color-border)]/30',
     },
     {
       label: 'Confirmadas',
       value: stats.confirmedAppointments,
       color: 'text-emerald-600',
-      bgColor: 'bg-emerald-50',
-      borderColor: 'border-emerald-200',
+      bgColor: 'bg-[color:var(--color-surface-elevated)]',
+      borderColor: 'border-[color:var(--color-border)]/30',
     },
     {
       label: 'Completadas',
       value: stats.completedAppointments,
       color: 'text-blue-600',
-      bgColor: 'bg-blue-50',
-      borderColor: 'border-blue-200',
+      bgColor: 'bg-[color:var(--color-surface-elevated)]',
+      borderColor: 'border-[color:var(--color-border)]/30',
     },
     {
       label: 'Canceladas',
       value: stats.cancelledAppointments,
       color: 'text-red-600',
-      bgColor: 'bg-red-50',
-      borderColor: 'border-red-200',
+      bgColor: 'bg-[color:var(--color-surface-elevated)]',
+      borderColor: 'border-[color:var(--color-border)]/30',
     },
   ];
 
@@ -41,12 +41,12 @@ export default function StatusSummary({ stats }: StatusSummaryProps) {
       {summaryItems.map((item) => (
         <div
           key={item.label}
-          className={`${item.bgColor} ${item.borderColor} rounded-lg border p-3 sm:p-4 text-center hover:shadow-sm transition-shadow duration-200`}
+          className={`${item.bgColor} ${item.borderColor} rounded-lg border p-3 sm:p-4 text-center hover:shadow-md transition-shadow duration-250 transform-gpu hover:-translate-y-0.5`}
         >
-          <div className={`text-xl sm:text-2xl font-bold ${item.color} mb-1`}>
+          <div className={`text-lg sm:text-xl font-semibold ${item.color} mb-1`}>
             {item.value.toLocaleString()}
           </div>
-          <div className="text-xs sm:text-sm text-gray-600 leading-tight">
+          <div className="text-xs sm:text-sm text-[color:var(--color-muted)] leading-tight">
             {item.label}
           </div>
         </div>

@@ -29,12 +29,12 @@ function AppointmentsContent() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-[color:var(--color-app-bg)] flex items-center justify-center px-4">
         <div className="max-w-md w-full">
-          <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="bg-[color:var(--color-surface)] rounded-xl shadow-lg p-6 text-center border border-[color:var(--color-border)]">
+            <div className="w-16 h-16 bg-danger/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg
-                className="w-8 h-8 text-red-600"
+                className="w-8 h-8 text-danger"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -47,17 +47,17 @@ function AppointmentsContent() {
                 />
               </svg>
             </div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <h2 className="text-xl font-semibold text-heading mb-2">
               Error al cargar las citas
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-muted mb-6">
               {error instanceof Error
                 ? error.message
                 : "Ha ocurrido un error inesperado"}
             </p>
             <button
               onClick={() => window.location.reload()}
-              className="w-full bg-[#D4AF37] text-white px-4 py-2 rounded-lg hover:bg-[#B8941F] transition-colors font-medium"
+              className="w-full bg-[color:var(--color-primary)] text-white px-4 py-2 rounded-lg hover:bg-[color:var(--color-primary-hover)] transition-colors font-medium"
             >
               Reintentar
             </button>
@@ -72,26 +72,26 @@ function AppointmentsContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[color:var(--color-app-bg)]">
       {/* Mobile Header */}
-      <div className="bg-white shadow-sm border-b sticky top-0 z-10">
+      <div className="bg-[color:var(--color-surface)] shadow-sm border-b border-[color:var(--color-border)] sticky top-0 z-10">
         <div className="px-4 py-4">
           <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
             <div>
-              <h1 className="text-xl sm:text-3xl font-bold text-[#1C1C1C] font-playfair">
+              <h1 className="text-xl sm:text-3xl font-bold text-heading font-playfair">
                 Gestión de Citas
               </h1>
               <div className="flex items-center space-x-4 mt-1">
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-muted">
                   Total:{" "}
-                  <span className="font-semibold text-[#D4AF37]">
+                  <span className="font-semibold text-[color:var(--color-primary)]">
                     {pagination?.total || 0}
                   </span>{" "}
                   citas
                 </div>
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-muted">
                   Ingresos:{" "}
-                  <span className="font-semibold text-green-600">
+                  <span className="font-semibold text-[color:var(--color-success)]">
                     {new Intl.NumberFormat("es-PE", {
                       style: "currency",
                       currency: "PEN",
@@ -105,8 +105,8 @@ function AppointmentsContent() {
                 </div>
                 {appointments.length > 0 && (
                   <div className="hidden sm:flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                    <span className="text-xs text-gray-500">
+                    <div className="w-2 h-2 bg-[color:var(--color-success)] rounded-full"></div>
+                    <span className="text-xs text-muted">
                       En tiempo real
                     </span>
                   </div>
@@ -116,23 +116,65 @@ function AppointmentsContent() {
 
             {/* Quick Stats - Mobile Optimized */}
             <div className="grid grid-cols-3 gap-2 sm:flex sm:space-x-3">
-              <div className="bg-blue-50 rounded-lg px-2 py-1 sm:px-3 sm:py-2 text-center">
-                <div className="text-xs sm:text-sm font-semibold text-blue-600">
+              <div
+                className="rounded-lg px-2 py-1 sm:px-3 sm:py-2 text-center border"
+                style={{
+                  backgroundColor: "var(--status-confirmed-bg)",
+                  borderColor: "var(--status-confirmed-border)",
+                }}
+              >
+                <div
+                  className="text-xs sm:text-sm font-semibold"
+                  style={{ color: "var(--status-confirmed-text)" }}
+                >
                   {appointments.filter((a) => a.status === "CONFIRMED").length}
                 </div>
-                <div className="text-xs text-blue-500">Confirmadas</div>
+                <div
+                  className="text-xs"
+                  style={{ color: "var(--status-confirmed-text)" }}
+                >
+                  Confirmadas
+                </div>
               </div>
-              <div className="bg-yellow-50 rounded-lg px-2 py-1 sm:px-3 sm:py-2 text-center">
-                <div className="text-xs sm:text-sm font-semibold text-yellow-600">
+              <div
+                className="rounded-lg px-2 py-1 sm:px-3 sm:py-2 text-center border"
+                style={{
+                  backgroundColor: "var(--status-pending-bg)",
+                  borderColor: "var(--status-pending-border)",
+                }}
+              >
+                <div
+                  className="text-xs sm:text-sm font-semibold"
+                  style={{ color: "var(--status-pending-text)" }}
+                >
                   {appointments.filter((a) => a.status === "PENDING").length}
                 </div>
-                <div className="text-xs text-yellow-500">Pendientes</div>
+                <div
+                  className="text-xs"
+                  style={{ color: "var(--status-pending-text)" }}
+                >
+                  Pendientes
+                </div>
               </div>
-              <div className="bg-green-50 rounded-lg px-2 py-1 sm:px-3 sm:py-2 text-center">
-                <div className="text-xs sm:text-sm font-semibold text-green-600">
+              <div
+                className="rounded-lg px-2 py-1 sm:px-3 sm:py-2 text-center border"
+                style={{
+                  backgroundColor: "var(--status-completed-bg)",
+                  borderColor: "var(--status-completed-border)",
+                }}
+              >
+                <div
+                  className="text-xs sm:text-sm font-semibold"
+                  style={{ color: "var(--status-completed-text)" }}
+                >
                   {appointments.filter((a) => a.status === "COMPLETED").length}
                 </div>
-                <div className="text-xs text-green-500">Completadas</div>
+                <div
+                  className="text-xs"
+                  style={{ color: "var(--status-completed-text)" }}
+                >
+                  Completadas
+                </div>
               </div>
             </div>
           </div>
@@ -142,7 +184,7 @@ function AppointmentsContent() {
       {/* Main Content */}
       <div className="px-4 py-4 space-y-4">
         {/* Filters Section - Mobile First */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+        <div className="bg-[color:var(--color-surface)] rounded-xl shadow-sm border border-[color:var(--color-border)] p-4" data-filters>
           <AppointmentFilters
             searchTerm={searchTerm}
             filter={filter}
@@ -152,12 +194,12 @@ function AppointmentsContent() {
         </div>
 
         {/* Appointments Content */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-[color:var(--color-surface)] rounded-xl shadow-sm border border-[color:var(--color-border)] overflow-hidden">
           {appointments.length === 0 ? (
             <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-[color:var(--color-surface-elevated)] rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
-                  className="w-8 h-8 text-gray-400"
+                  className="w-8 h-8 text-[color:var(--color-muted)]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -170,17 +212,17 @@ function AppointmentsContent() {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-heading mb-2">
                 No hay citas
               </h3>
-              <p className="text-gray-500 mb-6">
+              <p className="text-muted mb-6">
                 {filter !== "all"
                   ? "No se encontraron citas con el filtro seleccionado"
                   : "Aún no tienes citas programadas"}
               </p>
               <button
                 onClick={() => (window.location.href = "/")}
-                className="bg-[#D4AF37] text-white px-6 py-2 rounded-lg hover:bg-[#B8941F] transition-colors font-medium"
+                className="bg-[color:var(--color-primary)] text-white px-6 py-2 rounded-lg hover:bg-[color:var(--color-primary-hover)] transition-colors font-medium"
               >
                 Ver sitio web
               </button>
@@ -196,7 +238,7 @@ function AppointmentsContent() {
 
         {/* Pagination - Mobile Optimized */}
         {pagination && pagination.pages > 1 && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+          <div className="bg-[color:var(--color-surface)] rounded-xl shadow-sm border border-[color:var(--color-border)] p-4">
             <Pagination
               pagination={pagination}
               currentPage={currentPage}
@@ -213,7 +255,7 @@ function AppointmentsContent() {
             const filters = document.querySelector("[data-filters]");
             filters?.scrollIntoView({ behavior: "smooth" });
           }}
-          className="w-14 h-14 bg-[#D4AF37] text-white rounded-full shadow-lg hover:bg-[#B8941F] transition-all duration-200 flex items-center justify-center hover:scale-105 active:scale-95"
+          className="w-14 h-14 bg-[color:var(--color-primary)] text-white rounded-full shadow-lg hover:bg-[color:var(--color-primary-hover)] transition-all duration-200 flex items-center justify-center hover:scale-105 active:scale-95"
         >
           <svg
             className="w-6 h-6"

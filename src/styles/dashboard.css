@@ -54,8 +54,9 @@
 }
 
 /* Focus states for accessibility */
-.focus-ring:focus {
-  outline: 2px solid #d4af37;
+.focus-ring:focus,
+.focus-ring:focus-visible {
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 

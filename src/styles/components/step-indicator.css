@@ -1,0 +1,173 @@
+/* Token-aware styles for the StepIndicator component */
+:root {
+  --stepper-active-bg: var(--color-primary);
+  --stepper-active-ring: color-mix(in srgb, var(--color-primary) 30%, transparent);
+  --stepper-completed-bg: var(--color-accent);
+  --stepper-inactive-bg: color-mix(in srgb, var(--color-heading) 8%, var(--color-surface));
+  --stepper-inactive-border: color-mix(in srgb, var(--color-heading) 25%, transparent);
+  --stepper-inactive-text: color-mix(in srgb, var(--color-heading) 20%, transparent);
+  --stepper-progress-bg: color-mix(in srgb, var(--color-border) 60%, transparent);
+  --stepper-progress-active: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  --stepper-text-active: var(--color-primary);
+  --stepper-text-completed: var(--color-accent);
+  --stepper-text-inactive: color-mix(in srgb, var(--color-body) 60%, transparent);
+}
+
+.step-indicator {
+  margin-bottom: 2rem;
+}
+
+.step-indicator-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .step-indicator-mobile {
+    gap: 0.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .step-indicator-mobile {
+    display: none;
+  }
+}
+
+.step-indicator-desktop {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .step-indicator-desktop {
+    display: block;
+  }
+}
+
+.step-circle {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px -1px color-mix(in srgb, var(--color-primary) 10%, transparent);
+  transition: all 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .step-circle {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+.step-circle--active {
+  background: var(--stepper-active-bg);
+  box-shadow: 0 0 0 4px var(--stepper-active-ring), 0 8px 25px color-mix(in srgb, var(--color-primary) 25%, transparent);
+}
+
+.step-circle--completed {
+  background: var(--stepper-completed-bg);
+  color: white;
+}
+
+.step-circle--inactive {
+  background: var(--stepper-inactive-bg);
+  border: 2px solid var(--stepper-inactive-border);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-heading) 15%, transparent);
+}
+
+.step-progress-container {
+  position: relative;
+}
+
+.step-progress-base {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 0.25rem;
+  transform: translateY(-50%);
+  border-radius: 9999px;
+  background: var(--stepper-progress-bg);
+}
+
+.step-progress-active {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 0.25rem;
+  background: var(--stepper-progress-active);
+  transform: translateY(-50%);
+  border-radius: 9999px;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color-primary) 20%, transparent);
+  transition: width 0.3s ease;
+}
+
+.step-points {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+}
+
+.step-point {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 1.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.step-point-circle {
+  position: absolute;
+  top: -0.75rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px -1px color-mix(in srgb, var(--color-primary) 10%, transparent);
+  transition: all 0.2s ease;
+}
+
+.step-point-circle--active {
+  background: var(--stepper-active-bg);
+  box-shadow: 0 0 0 4px var(--stepper-active-ring), 0 8px 25px color-mix(in srgb, var(--color-primary) 25%, transparent);
+}
+
+.step-point-circle--completed {
+  background: var(--stepper-completed-bg);
+  color: white;
+}
+
+.step-point-circle--inactive {
+  background: var(--stepper-inactive-bg);
+  border: 2px solid var(--stepper-inactive-border);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-heading) 15%, transparent);
+}
+
+.step-label {
+  margin-top: 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: center;
+  transition: color 0.2s ease;
+}
+
+.step-label--active {
+  color: var(--stepper-text-active);
+  font-weight: 600;
+}
+
+.step-label--completed {
+  color: var(--stepper-text-completed);
+}
+
+.step-label--inactive {
+  color: var(--stepper-text-inactive);
+  font-weight: 500;
+}

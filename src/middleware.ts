@@ -5,6 +5,27 @@ import { NextResponse } from "next/server";
 
 export default withAuth(
   function middleware(req) {
+    // Si el usuario intenta acceder a /admin/login y ya tiene un token válido, redirigir server-side a /admin
+    // runtime property injected by next-auth withAuth
+    const nextauth = (req as unknown as { nextauth?: { token?: { sub?: string; role?: string } } }).nextauth;
+
+    if (
+      req.nextUrl.pathname === "/admin/login" &&
+      nextauth?.token?.sub &&
+      nextauth?.token?.role === "ADMIN"
+    ) {
+        // If a callbackUrl was provided (for example: /admin/appointments?highlightId=...&showDetail=true)
+        // prefer redirecting there so we preserve any query params (used by notifications). Otherwise
+        // fall back to the admin root.
+        const callback = req.nextUrl.searchParams.get('callbackUrl');
+        if (callback && typeof callback === 'string' && callback.startsWith('/')) {
+          const dest = new URL(callback, req.url);
+          return NextResponse.redirect(dest);
+        }
+        const url = new URL('/admin', req.url);
+        return NextResponse.redirect(url);
+    }
+
     // Agregar headers de seguridad
     const response = NextResponse.next();
 

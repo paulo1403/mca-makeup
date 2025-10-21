@@ -2,20 +2,18 @@
 
 /* Base y variables */
 @import "./base.css";
-
-/* Utilidades */
-@import "./utils/colors.css";
-@import "./utils/animations.css";
-@import "./utils/scrollbar.css";
+@import "./fonts.css";
 
 /* Componentes */
-@import "./components/buttons.css";
 @import "./components/forms.css";
 @import "./components/datepicker.css";
 @import "./components/about-section.css";
-/* @import "./components/section-dividers.css"; */  /* Deshabilitado - SectionTransition removido */
 @import "./components/inner-dividers.css";
 @import "./components/section-backgrounds.css";
+
+@import "./components/testimonials.css";
+@import "./components/button.css";
+@import "./components/typography.css";
 
 /* Dashboard específico */
 @import "./dashboard.css";

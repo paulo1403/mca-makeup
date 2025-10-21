@@ -241,7 +241,7 @@ export default function ComplaintStatus() {
               <p>• <strong>Quejas:</strong> Respuesta máxima en 5 días hábiles</p>
               <p>• <strong>Reclamos:</strong> Respuesta máxima en 15 días hábiles</p>
               <p>• Si no está conforme con nuestra respuesta, puede acudir a INDECOPI</p>
-              <p>• Para más información, contáctenos al +51 989 164 990 o marcela@marcelamakeup.com</p>
+              <p>• Para más información, contáctenos al +51 989 164 990 o marcelacordero.bookings@gmail.com</p>
             </div>
           </div>
         </motion.div>

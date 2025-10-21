@@ -14,18 +14,22 @@ function QuickActionCard({ href, title, description, icon: Icon, iconColor, icon
   return (
     <Link
       href={href}
-      className="group bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 hover:shadow-md hover:border-[#D4AF37]/20 transition-all duration-200 active:scale-95 smooth-transition hover-lift touch-target focus-ring"
+      className="group bg-[color:var(--color-surface)] rounded-xl shadow-sm border border-[color:var(--color-border)]/20 p-3 hover:shadow-md hover:border-[color:var(--color-border)]/40 transition-transform duration-200 active:scale-95 focus-ring h-full flex flex-col"
     >
-      <div className="flex items-start space-x-3 sm:space-x-4">
-        <div className={`p-2 sm:p-3 ${iconBgColor} rounded-lg flex-shrink-0 group-hover:scale-105 transition-transform duration-200`}>
-          <Icon className={`w-6 h-6 sm:w-8 sm:h-8 ${iconColor}`} />
+      <div className="flex items-start space-x-3">
+        <div className={`flex items-center justify-center ${iconBgColor} rounded-full w-10 h-10 flex-shrink-0 transition-transform duration-200 group-hover:scale-105`}>
+          <Icon className={`w-5 h-5 ${iconColor}`} />
         </div>
         <div className="min-w-0 flex-1">
-          <h3 className="text-base sm:text-lg font-semibold text-gray-900 group-hover:text-[#D4AF37] transition-colors duration-200 mobile-text">
+          <h3 className="text-sm font-medium text-[color:var(--color-heading)] group-hover:text-[color:var(--color-primary)] transition-colors duration-200">
             {title}
           </h3>
-          <p className="text-xs sm:text-sm text-gray-600 mt-1 mobile-text">{description}</p>
+          <p className="text-xs text-[color:var(--color-muted)] mt-1 leading-snug">{description}</p>
         </div>
+      </div>
+
+      <div className="mt-auto pt-3">
+        {/* optional secondary action or spacing to ensure equal heights */}
       </div>
     </Link>
   );
@@ -38,37 +42,37 @@ export default function QuickActions() {
       title: 'Calendario',
       description: 'Vista de calendario con todas las citas',
       icon: CalendarDays,
-      iconColor: 'text-purple-600',
-      iconBgColor: 'bg-purple-50',
+      iconColor: 'text-[color:var(--color-accent)]',
+      iconBgColor: 'bg-[color:var(--color-accent)]/12',
     },
     {
       href: '/admin/appointments',
       title: 'Gestionar Citas',
       description: 'Ver y administrar todas las citas',
       icon: Calendar,
-      iconColor: 'text-[#D4AF37]',
-      iconBgColor: 'bg-[#D4AF37]/10',
+      iconColor: 'text-[color:var(--color-primary)]',
+      iconBgColor: 'bg-[color:var(--color-primary)]/12',
     },
     {
       href: '/admin/availability',
       title: 'Disponibilidad',
       description: 'Configurar horarios disponibles',
       icon: Clock,
-      iconColor: 'text-emerald-600',
-      iconBgColor: 'bg-emerald-50',
+      iconColor: 'text-[color:var(--color-accent)]',
+      iconBgColor: 'bg-[color:var(--color-accent)]/12',
     },
     {
       href: '/admin/change-password',
       title: 'Configuración',
       description: 'Cambiar contraseña y ajustes',
       icon: Settings,
-      iconColor: 'text-blue-600',
-      iconBgColor: 'bg-blue-50',
+      iconColor: 'text-[color:var(--color-accent)]',
+      iconBgColor: 'bg-[color:var(--color-accent)]/12',
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8 items-stretch">
       {actions.map((action) => (
         <QuickActionCard key={action.href} {...action} />
       ))}

@@ -20,7 +20,9 @@
 }
 
 .section-bg-services {
-  background: #F8F8F8;
+  /* Use the theme-aware page background so the section adapts to dark/light themes */
+  background: var(--color-background);
+  background-image: none;
 }
 
 .section-bg-portfolio {

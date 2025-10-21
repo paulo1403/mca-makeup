@@ -14,6 +14,68 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "10");
     const search = searchParams.get("search");
+    const idParam = searchParams.get("id");
+
+    // If an id is provided, return that single appointment formatted
+    if (idParam) {
+      const appointment = await prisma.appointment.findUnique({
+        where: { id: idParam },
+        select: {
+          id: true,
+          clientName: true,
+          clientEmail: true,
+          clientPhone: true,
+          serviceType: true,
+          services: true,
+          appointmentDate: true,
+          appointmentTime: true,
+          duration: true,
+          additionalNotes: true,
+          status: true,
+          address: true,
+          addressReference: true,
+          district: true,
+          locationType: true,
+          servicePrice: true,
+          transportCost: true,
+          nightShiftCost: true,
+          totalPrice: true,
+          createdAt: true,
+          updatedAt: true,
+          review: {
+            select: {
+              reviewToken: true,
+              rating: true,
+              reviewText: true,
+              status: true,
+              isPublic: true,
+            },
+          },
+        },
+      });
+
+      const formatted = appointment
+        ? [{
+            ...appointment,
+            appointmentDate: appointment.appointmentDate.toISOString(),
+            createdAt: appointment.createdAt.toISOString(),
+            updatedAt: appointment.updatedAt.toISOString(),
+          }]
+        : [];
+
+      return NextResponse.json({
+        success: true,
+        data: {
+          appointments: formatted,
+          pagination: {
+            page: 1,
+            limit,
+            total: formatted.length,
+            pages: formatted.length > 0 ? 1 : 0,
+          },
+        },
+      });
+    }
 
     // Build where clause
     const where: Record<string, unknown> = {};
