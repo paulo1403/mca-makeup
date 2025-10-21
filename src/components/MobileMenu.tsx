@@ -170,8 +170,8 @@ export default function MobileMenu({
                 </Link>
               </nav>
 
-              {/* Información de contacto */}
-              <div className="p-4 border-t border-[color:var(--color-border)]/20 mt-auto">
+              {/* Información de contacto (oculta en móvil) */}
+              <div className="hidden p-4 border-t border-[color:var(--color-border)]/20 mt-auto">
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-[color:var(--color-surface)]/50 flex items-center justify-center">

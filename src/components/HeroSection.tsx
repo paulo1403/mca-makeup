@@ -217,11 +217,11 @@ export default function HeroSection() {
                 size="lg"
                 className="hidden sm:inline-flex"
                 onClick={() => {
-                  const el = document.getElementById("portafolio");
+                  const el = document.getElementById("servicios");
                   el?.scrollIntoView({ behavior: "smooth" });
                 }}
               >
-                Ver Portafolio
+                Ver Servicio
               </Button>
             </motion.div>
 

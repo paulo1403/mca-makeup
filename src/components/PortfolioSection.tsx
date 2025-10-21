@@ -63,7 +63,7 @@ export default function PortfolioSection() {
   return (
     <section
       id="portafolio"
-      className="py-12 sm:py-28 bg-[color:var(--color-background)]"
+      className="hidden sm:block py-12 sm:py-28 bg-[color:var(--color-background)]"
       style={{ scrollMarginTop: '120px' }}
       ref={ref}
     >
@@ -84,13 +84,14 @@ export default function PortfolioSection() {
           <Typography
             as="h2"
             variant="h2"
-            className="section-title text-2xl sm:text-4xl font-bold text-[color:var(--color-heading)] mb-2 sm:mb-3"
+            className="hidden sm:block section-title text-2xl sm:text-4xl font-bold text-[color:var(--color-heading)] mb-2 sm:mb-3"
           >
             Mi{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)]">
               Arte
             </span>
-          </Typography>
+          </Typography
+          >
 
           <Typography
             as="p"
@@ -100,7 +101,7 @@ export default function PortfolioSection() {
             Transformando miradas, realzando belleza natural
           </Typography>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-4 sm:mt-6">
+          <div className="hidden sm:flex flex-row gap-4 justify-center items-center mt-4 sm:mt-6">
             <Button
               as="a"
               href="https://www.instagram.com/marcelacorderobeauty/"
@@ -108,7 +109,7 @@ export default function PortfolioSection() {
               rel="noreferrer"
               variant="primary"
               size="md"
-              className="inline-flex items-center gap-2"
+              className="hidden sm:inline-flex items-center gap-2"
             >
               <ExternalLink className="w-4 h-4" />
               Ver Portafolio Completo

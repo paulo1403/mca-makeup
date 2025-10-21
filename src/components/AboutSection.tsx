@@ -49,7 +49,7 @@ export default function AboutSection() {
   return (
     <section
       id="about"
-      className="py-10 sm:py-20 about-section relative overflow-hidden"
+      className="hidden sm:block py-10 sm:py-20 about-section relative overflow-hidden"
       style={{ scrollMarginTop: '120px' }}
       ref={sectionRef}
     >

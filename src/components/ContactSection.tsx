@@ -55,12 +55,6 @@ export default function ContactSection() {
       variant: "primary" as const,
       icon: MessageSquare,
     },
-    {
-      label: "Llamar Ahora",
-      href: "tel:+51989164990",
-      variant: "secondary" as const,
-      icon: Phone,
-    },
   ];
 
   return (
@@ -114,13 +108,13 @@ export default function ContactSection() {
         <div className="contact-layout gap-6 sm:gap-10">
           {/* Información de contacto */}
           <motion.div
-            className="contact-info hidden sm:block"
+            className="contact-info hidden lg:block"
             initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
             {/* Información de contacto */}
-            <div className="contact-info-card">
+            <div className="contact-info-card hidden lg:block">
               <Typography
                 as="h3"
                 variant="h3"

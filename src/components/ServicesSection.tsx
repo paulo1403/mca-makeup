@@ -34,13 +34,12 @@ function ServiceCard({
   service: ServiceGroup;
   index: number;
 }) {
-  const isPopular = index === 0; // Cambiado a 0 para que el primer servicio sea el más popular
+  const isPopular = index === 0;
 
   return (
     <motion.article
-      className={`relative group ${
-        isPopular ? "service-card-featured" : "service-card"
-      }`}
+      className={`relative group ${isPopular ? "service-card-featured" : "service-card"
+        }`}
       whileHover={{ y: -8, transition: { duration: 0.3 } }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -352,18 +351,18 @@ export default function ServicesSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-10">
           {isLoading
             ? Array.from({ length: 4 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-80 rounded-xl bg-[color:var(--color-surface)] animate-pulse"
-                />
-              ))
+              <div
+                key={i}
+                className="h-80 rounded-xl bg-[color:var(--color-surface)] animate-pulse"
+              />
+            ))
             : exampleServices.map((service, index) => (
-                <ServiceCard
-                  key={service.title}
-                  service={service}
-                  index={index}
-                />
-              ))}
+              <ServiceCard
+                key={service.title}
+                service={service}
+                index={index}
+              />
+            ))}
         </div>
 
         {/* Bottom CTA */}
@@ -397,7 +396,7 @@ export default function ServicesSection() {
                     variant="p"
                     className="text-sm text-[color:var(--color-body)] leading-relaxed mb-5"
                   >
-                    Visítanos en Av. Bolívar 1073, Pueblo Libre, o agenda una
+                    Vísitanos en nuestro Room Studio en Pueblo Libre o agenda una
                     cita a domicilio.
                   </Typography>
 
@@ -411,10 +410,10 @@ export default function ServicesSection() {
                         const headerHeight = header ? header.offsetHeight : 80;
                         const isMobile = window.innerWidth < 768;
                         const extraMargin = isMobile ? 60 : 30;
-                        
+
                         const elementPosition = element.getBoundingClientRect().top + window.scrollY;
                         const offsetPosition = elementPosition - headerHeight - extraMargin;
-                        
+
                         window.scrollTo({
                           top: offsetPosition,
                           behavior: "smooth"
