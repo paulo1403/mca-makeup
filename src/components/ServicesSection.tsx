@@ -9,31 +9,16 @@ import {
   Sparkles,
   Check,
   ArrowRight,
-  Star,
-  Calendar,
-  Heart,
-  Award,
+  Star
 } from "lucide-react";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
-import useServiceGroups from "@/hooks/useServiceGroups";
+import useServiceGroups, { ServiceGroup } from "@/hooks/useServiceGroups";
 
-type ServiceGroup = {
-  title: string;
-  price: string;
-  features: string[];
-  portfolioUrl: string;
-  icon?: React.ReactNode;
-  badge?: string;
-};
+// UI type extends API type with optional UI-only props
+type UIServiceGroup = ServiceGroup & { icon?: React.ReactNode; badge?: string };
 
-function ServiceCard({
-  service,
-  index,
-}: {
-  service: ServiceGroup;
-  index: number;
-}) {
+function ServiceCard({ service, index }: { service: UIServiceGroup; index: number }) {
   const isPopular = index === 0;
 
   return (
@@ -173,7 +158,7 @@ export default function ServicesSection() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   const { data: serviceGroups = [], isLoading } = useServiceGroups();
-  const visibleServices = serviceGroups;
+  const visibleServices: UIServiceGroup[] = serviceGroups.map((s) => ({ ...s }));
 
   return (
     <section
@@ -300,14 +285,14 @@ export default function ServicesSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-10">
           {isLoading
             ? Array.from({ length: visibleServices.length || 2 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-80 rounded-xl bg-[color:var(--color-surface)] animate-pulse"
-                />
-              ))
+              <div
+                key={i}
+                className="h-80 rounded-xl bg-[color:var(--color-surface)] animate-pulse"
+              />
+            ))
             : visibleServices.map((service, index) => (
-                <ServiceCard key={service.title} service={service as any} index={index} />
-              ))}
+              <ServiceCard key={service.title} service={service} index={index} />
+            ))}
         </div>
 
         {/* Bottom CTA */}
