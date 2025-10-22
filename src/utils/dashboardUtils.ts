@@ -1,24 +1,31 @@
-import { type RecentAppointment } from "@/hooks/useRecentAppointments";
-import { formatTimeRange, formatDateForDashboard } from "@/utils/dateUtils";
+import type { RecentAppointment } from "@/hooks/useRecentAppointments";
+import { formatDateForDashboard, formatTimeRange } from "@/utils/dateUtils";
 
 export const formatServices = (appointment: RecentAppointment) => {
   // Si hay datos de services con cantidades, usar esos
-  if (appointment.services && Array.isArray(appointment.services) && appointment.services.length > 0) {
+  if (
+    appointment.services &&
+    Array.isArray(appointment.services) &&
+    appointment.services.length > 0
+  ) {
     return appointment.services.map((service) => ({
       name: service.name || service.serviceName || "",
       quantity: service.quantity || 1,
-      displayText: (service.quantity && service.quantity > 1) ? 
-        `${service.name || service.serviceName} x${service.quantity}` : 
-        (service.name || service.serviceName)
+      displayText:
+        service.quantity && service.quantity > 1
+          ? `${service.name || service.serviceName} x${service.quantity}`
+          : service.name || service.serviceName,
     }));
   }
-  
+
   // Fallback al serviceType string
-  return [{
-    name: appointment.serviceType,
-    quantity: 1,
-    displayText: appointment.serviceType
-  }];
+  return [
+    {
+      name: appointment.serviceType,
+      quantity: 1,
+      displayText: appointment.serviceType,
+    },
+  ];
 };
 
 export const formatDate = (dateString: string): string => {
@@ -56,10 +63,7 @@ export const formatTime = (timeString: string): string => {
   }
 };
 
-export const formatDateTime = (
-  dateString: string,
-  timeString: string,
-): string => {
+export const formatDateTime = (dateString: string, timeString: string): string => {
   const formattedDate = formatDate(dateString);
   const formattedTime = formatTime(timeString);
   return `${formattedDate} • ${formattedTime}`;
@@ -67,13 +71,20 @@ export const formatDateTime = (
 
 export const getStatusColor = (status: RecentAppointment["status"]): string => {
   const statusColors = {
-    PENDING: "bg-[color:var(--status-pending-bg)] text-[color:var(--status-pending-text)] border-[color:var(--status-pending-border)]",
-    CONFIRMED: "bg-[color:var(--status-confirmed-bg)] text-[color:var(--status-confirmed-text)] border-[color:var(--status-confirmed-border)]",
-    COMPLETED: "bg-[color:var(--status-completed-bg)] text-[color:var(--status-completed-text)] border-[color:var(--status-completed-border)]",
-    CANCELLED: "bg-[color:var(--status-cancelled-bg)] text-[color:var(--status-cancelled-text)] border-[color:var(--status-cancelled-border)]",
+    PENDING:
+      "bg-[color:var(--status-pending-bg)] text-[color:var(--status-pending-text)] border-[color:var(--status-pending-border)]",
+    CONFIRMED:
+      "bg-[color:var(--status-confirmed-bg)] text-[color:var(--status-confirmed-text)] border-[color:var(--status-confirmed-border)]",
+    COMPLETED:
+      "bg-[color:var(--status-completed-bg)] text-[color:var(--status-completed-text)] border-[color:var(--status-completed-border)]",
+    CANCELLED:
+      "bg-[color:var(--status-cancelled-bg)] text-[color:var(--status-cancelled-text)] border-[color:var(--status-cancelled-border)]",
   } as const;
 
-  return statusColors[status] || "bg-[color:var(--color-surface-elevated)] text-[color:var(--color-heading)] border-[color:var(--color-border)]/40";
+  return (
+    statusColors[status] ||
+    "bg-[color:var(--color-surface-elevated)] text-[color:var(--color-heading)] border-[color:var(--color-border)]/40"
+  );
 };
 
 export const getStatusText = (status: RecentAppointment["status"]): string => {

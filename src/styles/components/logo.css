@@ -50,7 +50,8 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     filter: drop-shadow(0 6px 20px color-mix(in oklab, var(--color-primary) 60%, transparent));
   }
   50% {
@@ -69,7 +70,8 @@
 }
 
 @keyframes monogram-pop {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -114,7 +116,8 @@
 }
 
 @keyframes text-shimmer {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -141,7 +144,8 @@
 }
 
 @keyframes dot-bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   25% {
@@ -191,7 +195,8 @@
 }
 
 @keyframes pulse-glow-dark {
-  0%, 100% {
+  0%,
+  100% {
     filter: drop-shadow(0 6px 22px color-mix(in oklab, var(--color-primary) 70%, transparent));
   }
   50% {
@@ -208,27 +213,27 @@
   .logo-desktop {
     display: none;
   }
-  
+
   .logo-mobile {
     display: inline-flex;
   }
-  
+
   /* Simplify animations on mobile for performance */
   .brand-logo:hover {
     transform: translateY(-1px);
   }
-  
+
   /* Keep only essential animations on mobile */
   .logo-brush-stroke,
   .logo-dot {
     animation: none !important;
   }
-  
+
   .brand-logo:hover .logo-circle {
     animation: none;
     filter: drop-shadow(0 5px 16px color-mix(in oklab, var(--color-primary) 55%, transparent));
   }
-  
+
   [data-theme="dark"] .brand-logo:hover .logo-circle {
     animation: none;
     filter: drop-shadow(0 5px 18px color-mix(in oklab, var(--color-primary) 65%, transparent));
@@ -260,7 +265,7 @@
     animation: none !important;
     transition: none !important;
   }
-  
+
   .brand-logo:hover {
     transform: none;
   }

@@ -1,8 +1,8 @@
 "use client";
-import { useState, useEffect, useRef, useCallback } from "react";
-import { ChevronDown, MapPin, Search, X } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import Typography from "@/components/ui/Typography";
+import { useQuery } from "@tanstack/react-query";
+import { ChevronDown, MapPin, Search, X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface District {
   name: string;
@@ -81,9 +81,7 @@ export default function DistrictSelector({
   const { t } = useTranslations();
   const defaultPlaceholder = placeholder || t("placeholder");
 
-  const filtered = districts.filter((d) =>
-    d.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filtered = districts.filter((d) => d.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
   const selectedDistrict = districts.find((d) => d.name === value);
 
@@ -112,7 +110,7 @@ export default function DistrictSelector({
         openDropdown();
       }
     },
-    [disabled, isOpen, openDropdown, closeDropdown]
+    [disabled, isOpen, openDropdown, closeDropdown],
   );
 
   // Seleccionar distrito
@@ -121,7 +119,7 @@ export default function DistrictSelector({
       onChange(district.name);
       closeDropdown();
     },
-    [onChange, closeDropdown]
+    [onChange, closeDropdown],
   );
 
   // Limpiar selección
@@ -133,16 +131,13 @@ export default function DistrictSelector({
       closeDropdown();
       setTimeout(() => inputRef.current?.focus(), 0);
     },
-    [onChange, closeDropdown]
+    [onChange, closeDropdown],
   );
 
   // Manejo de teclado
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (
-        !isOpen &&
-        (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ")
-      ) {
+      if (!isOpen && (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ")) {
         e.preventDefault();
         openDropdown();
         return;
@@ -174,23 +169,13 @@ export default function DistrictSelector({
           break;
       }
     },
-    [
-      isOpen,
-      filtered,
-      highlightedIndex,
-      openDropdown,
-      closeDropdown,
-      handleSelect,
-    ]
+    [isOpen, filtered, highlightedIndex, openDropdown, closeDropdown, handleSelect],
   );
 
   // Click outside para cerrar
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         closeDropdown();
       }
     };
@@ -300,22 +285,14 @@ export default function DistrictSelector({
           {isLoading ? (
             <div className="px-4 py-6 flex items-center justify-center">
               <div className="w-4 h-4 border-2 border-[color:var(--color-primary)]/30 border-t-[color:var(--color-primary)] rounded-full animate-spin mr-2"></div>
-              <Typography
-                as="span"
-                variant="small"
-                className="text-[color:var(--color-body)]"
-              >
+              <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
                 {t("loading")}
               </Typography>
             </div>
           ) : filtered.length === 0 ? (
             <div className="px-4 py-6 text-center">
               <Search className="h-5 w-5 mx-auto mb-3 text-[color:var(--color-body)]/50" />
-              <Typography
-                as="p"
-                variant="small"
-                className="text-[color:var(--color-body)]"
-              >
+              <Typography as="p" variant="small" className="text-[color:var(--color-body)]">
                 {searchTerm ? (
                   <>
                     {t("noResults")}
@@ -343,8 +320,8 @@ export default function DistrictSelector({
                       isSelected
                         ? "bg-[color:var(--color-primary)]/10"
                         : isHighlighted
-                        ? "bg-[color:var(--color-surface-secondary)]"
-                        : "bg-[color:var(--color-surface)]"
+                          ? "bg-[color:var(--color-surface-secondary)]"
+                          : "bg-[color:var(--color-surface)]"
                     }`}
                 >
                   <div className="flex justify-between items-start">
@@ -358,9 +335,7 @@ export default function DistrictSelector({
                       >
                         <MapPin
                           className={`h-2.5 w-2.5 ${
-                            isSelected
-                              ? "text-white"
-                              : "text-[color:var(--color-primary)]"
+                            isSelected ? "text-white" : "text-[color:var(--color-primary)]"
                           }`}
                         />
                       </div>

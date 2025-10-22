@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { calculateTimeLeft } from '@/lib/auth-utils';
+import { calculateTimeLeft } from "@/lib/auth-utils";
+import { useEffect, useState } from "react";
 
 export const useCountdown = (blockedUntil?: string) => {
   const [timeLeft, setTimeLeft] = useState(0);

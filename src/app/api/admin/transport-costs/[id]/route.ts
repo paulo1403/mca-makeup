@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-import { z } from "zod";
-import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { PrismaClient } from "@prisma/client";
+import { getServerSession } from "next-auth/next";
+import { type NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
 const prisma = new PrismaClient();
 
@@ -15,10 +15,7 @@ const transportCostSchema = z.object({
 });
 
 // PUT - Actualizar costo de transporte
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) {
@@ -67,22 +64,11 @@ export async function PUT(
     }
 
     // Handle Prisma not found error
-    if (
-      error &&
-      typeof error === "object" &&
-      "code" in error &&
-      error.code === "P2025"
-    ) {
-      return NextResponse.json(
-        { error: "Costo de transporte no encontrado" },
-        { status: 404 },
-      );
+    if (error && typeof error === "object" && "code" in error && error.code === "P2025") {
+      return NextResponse.json({ error: "Costo de transporte no encontrado" }, { status: 404 });
     }
 
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
 
@@ -109,30 +95,16 @@ export async function DELETE(
     console.error("Error deleting transport cost:", error);
 
     // Handle Prisma not found error
-    if (
-      error &&
-      typeof error === "object" &&
-      "code" in error &&
-      error.code === "P2025"
-    ) {
-      return NextResponse.json(
-        { error: "Costo de transporte no encontrado" },
-        { status: 404 },
-      );
+    if (error && typeof error === "object" && "code" in error && error.code === "P2025") {
+      return NextResponse.json({ error: "Costo de transporte no encontrado" }, { status: 404 });
     }
 
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
 
 // GET - Obtener costo de transporte específico
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) {
@@ -145,18 +117,12 @@ export async function GET(
     });
 
     if (!transportCost) {
-      return NextResponse.json(
-        { error: "Costo de transporte no encontrado" },
-        { status: 404 },
-      );
+      return NextResponse.json({ error: "Costo de transporte no encontrado" }, { status: 404 });
     }
 
     return NextResponse.json({ transportCost });
   } catch (error) {
     console.error("Error fetching transport cost:", error);
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }

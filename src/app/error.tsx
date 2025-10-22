@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from 'react';
-import ErrorPage from '@/components/ErrorPage';
-import QueryProvider from '@/providers/QueryProvider';
+import ErrorPage from "@/components/ErrorPage";
+import QueryProvider from "@/providers/QueryProvider";
+import { useEffect } from "react";
 
 export default function Error({
   error,
@@ -12,7 +12,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error('Application error:', error);
+    console.error("Application error:", error);
   }, [error]);
 
   return (

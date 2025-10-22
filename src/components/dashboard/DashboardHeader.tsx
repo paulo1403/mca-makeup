@@ -1,17 +1,17 @@
-import { Sparkles } from 'lucide-react';
-import Typography from '@/components/ui/Typography';
+import Typography from "@/components/ui/Typography";
+import { Sparkles } from "lucide-react";
 
 interface DashboardHeaderProps {
   userName?: string;
 }
 
-export default function DashboardHeader({ userName = 'Marcela' }: DashboardHeaderProps) {
+export default function DashboardHeader({ userName = "Marcela" }: DashboardHeaderProps) {
   const currentHour = new Date().getHours();
-  
+
   const getGreeting = () => {
-    if (currentHour < 12) return 'Buenos días';
-    if (currentHour < 18) return 'Buenas tardes';
-    return 'Buenas noches';
+    if (currentHour < 12) return "Buenos días";
+    if (currentHour < 18) return "Buenas tardes";
+    return "Buenas noches";
   };
 
   return (
@@ -23,7 +23,11 @@ export default function DashboardHeader({ userName = 'Marcela' }: DashboardHeade
               <Sparkles className="w-4 h-4 text-[color:var(--color-primary)]" />
             </div>
             <div className="min-w-0">
-              <Typography as="h2" variant="h4" className="text-sm sm:text-base font-semibold text-[color:var(--color-heading)] truncate">
+              <Typography
+                as="h2"
+                variant="h4"
+                className="text-sm sm:text-base font-semibold text-[color:var(--color-heading)] truncate"
+              >
                 Panel de Administración
               </Typography>
               <p className="mt-0.5 text-xs sm:text-sm text-[color:var(--color-muted)] truncate">

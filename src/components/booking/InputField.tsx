@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle, AlertCircle } from "lucide-react";
 import Typography from "@/components/ui/Typography";
+import { AnimatePresence, motion } from "framer-motion";
+import { AlertCircle, CheckCircle } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 
 interface InputFieldProps {
   type?: string;
@@ -10,7 +11,7 @@ interface InputFieldProps {
   icon: React.ReactNode;
   field: {
     value?: string;
-  onChange: (value: unknown) => void;
+    onChange: (value: unknown) => void;
     onBlur: () => void;
     name: string;
   };
@@ -65,9 +66,7 @@ export default function InputField({
           className="font-medium text-[color:var(--color-heading)] flex items-center gap-1"
         >
           {label}
-          {required && (
-            <span className="text-[color:var(--color-accent)]">*</span>
-          )}
+          {required && <span className="text-[color:var(--color-accent)]">*</span>}
         </Typography>
         {hasValue && !error && (
           <motion.div
@@ -86,8 +85,8 @@ export default function InputField({
             error
               ? "text-red-500"
               : isFocused
-              ? "text-[color:var(--color-primary)]"
-              : "text-[color:var(--color-body)]"
+                ? "text-[color:var(--color-primary)]"
+                : "text-[color:var(--color-body)]"
           }`}
         >
           {icon}
@@ -110,8 +109,8 @@ export default function InputField({
             error
               ? "border-2 border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
               : isFocused
-              ? "border-2 border-[color:var(--color-primary)] focus:ring-2 focus:ring-[color:var(--color-primary)]/20"
-              : "border border-[color:var(--color-border)] hover:border-[color:var(--color-primary)]/50"
+                ? "border-2 border-[color:var(--color-primary)] focus:ring-2 focus:ring-[color:var(--color-primary)]/20"
+                : "border border-[color:var(--color-border)] hover:border-[color:var(--color-primary)]/50"
           }`}
         />
 
@@ -159,11 +158,7 @@ export default function InputField({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <Typography
-              as="p"
-              variant="caption"
-              className="mt-2 text-[color:var(--color-body)]"
-            >
+            <Typography as="p" variant="caption" className="mt-2 text-[color:var(--color-body)]">
               {helperText}
             </Typography>
           </motion.div>

@@ -1,11 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { prisma } from "@/lib/prisma";
+import { type NextRequest, NextResponse } from "next/server";
 
 // PUT /api/admin/availability/special/[id] - Update special date
-export async function PUT(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params;
     const body = await request.json();
@@ -16,19 +13,19 @@ export async function PUT(
       return NextResponse.json(
         {
           success: false,
-          message: 'Fecha es requerida',
+          message: "Fecha es requerida",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    if (typeof isAvailable !== 'boolean') {
+    if (typeof isAvailable !== "boolean") {
       return NextResponse.json(
         {
           success: false,
-          message: 'isAvailable debe ser un valor booleano',
+          message: "isAvailable debe ser un valor booleano",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -39,9 +36,9 @@ export async function PUT(
         return NextResponse.json(
           {
             success: false,
-            message: 'Para fechas disponibles, las horas son requeridas',
+            message: "Para fechas disponibles, las horas son requeridas",
           },
-          { status: 400 }
+          { status: 400 },
         );
       }
 
@@ -49,9 +46,9 @@ export async function PUT(
         return NextResponse.json(
           {
             success: false,
-            message: 'La hora de inicio debe ser anterior a la hora de fin',
+            message: "La hora de inicio debe ser anterior a la hora de fin",
           },
-          { status: 400 }
+          { status: 400 },
         );
       }
     }
@@ -72,32 +69,28 @@ export async function PUT(
       success: true,
       ...specialDate,
     });
-
   } catch (error) {
-    console.error('Error updating special date:', error);
-    
-    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
+    console.error("Error updating special date:", error);
+
+    if (error && typeof error === "object" && "code" in error && error.code === "P2025") {
       return NextResponse.json(
         {
           success: false,
-          message: 'Fecha especial no encontrada',
+          message: "Fecha especial no encontrada",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     return NextResponse.json(
-      { success: false, message: 'Error al actualizar la fecha especial' },
-      { status: 500 }
+      { success: false, message: "Error al actualizar la fecha especial" },
+      { status: 500 },
     );
   }
 }
 
 // DELETE /api/admin/availability/special/[id] - Delete special date
-export async function DELETE(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params;
 
@@ -108,25 +101,24 @@ export async function DELETE(
 
     return NextResponse.json({
       success: true,
-      message: 'Fecha especial eliminada exitosamente',
+      message: "Fecha especial eliminada exitosamente",
     });
-
   } catch (error) {
-    console.error('Error deleting special date:', error);
-    
-    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
+    console.error("Error deleting special date:", error);
+
+    if (error && typeof error === "object" && "code" in error && error.code === "P2025") {
       return NextResponse.json(
         {
           success: false,
-          message: 'Fecha especial no encontrada',
+          message: "Fecha especial no encontrada",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     return NextResponse.json(
-      { success: false, message: 'Error al eliminar la fecha especial' },
-      { status: 500 }
+      { success: false, message: "Error al eliminar la fecha especial" },
+      { status: 500 },
     );
   }
 }

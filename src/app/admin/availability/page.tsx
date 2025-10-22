@@ -1,33 +1,26 @@
 "use client";
 
-import { useState } from "react";
-import {
-  useAvailability,
-  TimeSlot,
-  SpecialDate,
-} from "@/hooks/useAvailability";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import AddTimeSlotModal from "@/components/availability/AddTimeSlotModal";
-import EditTimeSlotModal from "@/components/availability/EditTimeSlotModal";
 import AddSpecialDateModal from "@/components/availability/AddSpecialDateModal";
+import AddTimeSlotModal from "@/components/availability/AddTimeSlotModal";
 import EditSpecialDateModal from "@/components/availability/EditSpecialDateModal";
-import TimeSlotList from "@/components/availability/TimeSlotList";
+import EditTimeSlotModal from "@/components/availability/EditTimeSlotModal";
 import SpecialDateList from "@/components/availability/SpecialDateList";
-import { Calendar, Clock, Plus, Trash2, AlertTriangle } from "lucide-react";
-import Typography from "@/components/ui/Typography";
+import TimeSlotList from "@/components/availability/TimeSlotList";
 import Button from "@/components/ui/Button";
 import ConfirmModal from "@/components/ui/ConfirmModal";
+import Typography from "@/components/ui/Typography";
+import { type SpecialDate, type TimeSlot, useAvailability } from "@/hooks/useAvailability";
+import { AlertTriangle, Calendar, Clock, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
 
 export default function AvailabilityPage() {
   const [showAddSlot, setShowAddSlot] = useState(false);
   const [showAddSpecialDate, setShowAddSpecialDate] = useState(false);
   const [editingSlot, setEditingSlot] = useState<string | null>(null);
-  const [editingSpecialDate, setEditingSpecialDate] =
-    useState<SpecialDate | null>(null);
+  const [editingSpecialDate, setEditingSpecialDate] = useState<SpecialDate | null>(null);
   const [preselectedDay, setPreselectedDay] = useState<number | null>(null);
-  const [preselectedLocation, setPreselectedLocation] = useState<
-    "STUDIO" | "HOME" | null
-  >(null);
+  const [preselectedLocation, setPreselectedLocation] = useState<"STUDIO" | "HOME" | null>(null);
   const [deletingSlotId, setDeletingSlotId] = useState<string | null>(null);
   const [deletingSpecialId, setDeletingSpecialId] = useState<string | null>(null);
 
@@ -49,10 +42,7 @@ export default function AvailabilityPage() {
     message,
   } = useAvailability();
 
-  const handleAddFromDay = (
-    dayOfWeek: number,
-    locationType: "STUDIO" | "HOME",
-  ) => {
+  const handleAddFromDay = (dayOfWeek: number, locationType: "STUDIO" | "HOME") => {
     setPreselectedDay(dayOfWeek);
     setPreselectedLocation(locationType);
     setShowAddSlot(true);
@@ -86,14 +76,11 @@ export default function AvailabilityPage() {
             Gestión de Disponibilidad
           </Typography>
         </div>
-        <Typography
-          variant="p"
-          className="text-[color:var(--color-muted)] mb-3 sm:mb-4"
-        >
-          Administra tu horario semanal y fechas especiales para que los
-          clientes puedan agendar citas contigo.
+        <Typography variant="p" className="text-[color:var(--color-muted)] mb-3 sm:mb-4">
+          Administra tu horario semanal y fechas especiales para que los clientes puedan agendar
+          citas contigo.
         </Typography>
-      
+
         <div className="rounded-lg p-3 sm:p-4 border border-[color:var(--color-border)]/30 bg-[color:var(--color-surface-elevated)]">
           <Typography
             as="h3"
@@ -106,7 +93,13 @@ export default function AvailabilityPage() {
             <div className="flex items-center space-x-2 p-2 rounded-md border border-[color:var(--status-confirmed-border)]/50 bg-[color:var(--status-confirmed-bg)]">
               <div className="w-3 h-3 rounded-full bg-[color:var(--status-confirmed-text)]"></div>
               <div>
-                <Typography as="span" variant="small" className="text-[color:var(--status-confirmed-text)] font-semibold">Activo:</Typography>
+                <Typography
+                  as="span"
+                  variant="small"
+                  className="text-[color:var(--status-confirmed-text)] font-semibold"
+                >
+                  Activo:
+                </Typography>
                 <Typography as="span" variant="p" className="text-[color:var(--color-muted)] block">
                   Los clientes pueden reservar
                 </Typography>
@@ -115,7 +108,13 @@ export default function AvailabilityPage() {
             <div className="flex items-center space-x-2 p-2 rounded-md border border-[color:var(--status-pending-border)]/50 bg-[color:var(--status-pending-bg)]">
               <div className="w-3 h-3 rounded-full bg-[color:var(--status-pending-text)]"></div>
               <div>
-                <Typography as="span" variant="small" className="text-[color:var(--status-pending-text)] font-semibold">Pausado:</Typography>
+                <Typography
+                  as="span"
+                  variant="small"
+                  className="text-[color:var(--status-pending-text)] font-semibold"
+                >
+                  Pausado:
+                </Typography>
                 <Typography as="span" variant="p" className="text-[color:var(--color-muted)] block">
                   Temporalmente no disponible
                 </Typography>
@@ -124,14 +123,22 @@ export default function AvailabilityPage() {
             <div className="flex items-center space-x-2 p-2 rounded-md border border-[color:var(--color-border)]/50 bg-[color:var(--color-surface)]">
               <div className="w-3 h-3 rounded-full bg-[color:var(--color-muted)]"></div>
               <div>
-                <Typography as="span" variant="small" className="text-[color:var(--color-heading)] font-semibold">Sin horario:</Typography>
-                <Typography as="span" variant="p" className="text-[color:var(--color-muted)] block">Día libre</Typography>
+                <Typography
+                  as="span"
+                  variant="small"
+                  className="text-[color:var(--color-heading)] font-semibold"
+                >
+                  Sin horario:
+                </Typography>
+                <Typography as="span" variant="p" className="text-[color:var(--color-muted)] block">
+                  Día libre
+                </Typography>
               </div>
             </div>
           </div>
         </div>
       </div>
-      
+
       {/* Mensajes de confirmación */}
       {message && (
         <div
@@ -144,7 +151,7 @@ export default function AvailabilityPage() {
           {message}
         </div>
       )}
-      
+
       {/* Horario Regular Semanal */}
       <div className="bg-[color:var(--color-surface)] rounded-lg border border-[color:var(--color-border)]/30">
         <div className="px-3 sm:px-6 py-3 sm:py-4 border-b border-[color:var(--color-border)]/30 bg-gradient-to-r from-[color:var(--color-primary)]/10 to-[color:var(--color-accent)]/10">
@@ -152,13 +159,17 @@ export default function AvailabilityPage() {
             <div>
               <div className="flex items-center space-x-2 mb-1">
                 <Clock className="h-5 w-5 text-[color:var(--color-primary)]" />
-                <Typography as="h2" variant="h3" className="text-[color:var(--color-heading)] font-semibold">
+                <Typography
+                  as="h2"
+                  variant="h3"
+                  className="text-[color:var(--color-heading)] font-semibold"
+                >
                   Horario Semanal Regular
                 </Typography>
               </div>
               <Typography variant="p" className="text-[color:var(--color-muted)]">
-                Define tus días y horas de trabajo habituales. Puedes
-                pausar/activar horarios según necesites.
+                Define tus días y horas de trabajo habituales. Puedes pausar/activar horarios según
+                necesites.
               </Typography>
             </div>
             <Button
@@ -172,7 +183,7 @@ export default function AvailabilityPage() {
             </Button>
           </div>
         </div>
-      
+
         <div className="p-3 sm:p-6">
           <TimeSlotList
             timeSlots={timeSlots}
@@ -186,7 +197,7 @@ export default function AvailabilityPage() {
             onDeleteAction={(id: string) => setDeletingSlotId(id)}
             onAddAction={handleAddFromDay}
           />
-      
+
           {timeSlots.length === 0 && (
             <div className="text-center">
               <Button
@@ -201,7 +212,7 @@ export default function AvailabilityPage() {
           )}
         </div>
       </div>
-      
+
       {/* Fechas Especiales */}
       <div className="bg-[color:var(--color-surface)] rounded-lg border border-[color:var(--color-border)]/30">
         <div className="px-3 sm:px-6 py-3 sm:py-4 border-b border-[color:var(--color-border)]/30 bg-gradient-to-r from-[color:var(--color-primary)]/10 to-[color:var(--color-accent)]/10">
@@ -209,13 +220,16 @@ export default function AvailabilityPage() {
             <div>
               <div className="flex items-center space-x-2 mb-1">
                 <Calendar className="h-5 w-5 text-[color:var(--color-accent)]" />
-                <Typography as="h2" variant="h3" className="text-[color:var(--color-heading)] font-semibold">
+                <Typography
+                  as="h2"
+                  variant="h3"
+                  className="text-[color:var(--color-heading)] font-semibold"
+                >
                   Fechas Especiales
                 </Typography>
               </div>
               <Typography variant="p" className="text-[color:var(--color-muted)]">
-                Días libres, vacaciones, horarios extendidos para eventos
-                sociales, etc.
+                Días libres, vacaciones, horarios extendidos para eventos sociales, etc.
               </Typography>
             </div>
             <Button
@@ -229,16 +243,14 @@ export default function AvailabilityPage() {
             </Button>
           </div>
         </div>
-      
+
         <div className="p-3 sm:p-6">
           <SpecialDateList
             specialDates={specialDates}
-            onEditAction={(specialDate: SpecialDate) =>
-              setEditingSpecialDate(specialDate)
-            }
+            onEditAction={(specialDate: SpecialDate) => setEditingSpecialDate(specialDate)}
             onDeleteAction={(id: string) => setDeletingSpecialId(id)}
           />
-      
+
           {specialDates.length === 0 && (
             <div className="text-center">
               <Button
@@ -272,11 +284,7 @@ export default function AvailabilityPage() {
           setEditingSlot(null);
         }}
         isLoading={isEditingTimeSlot}
-        slot={
-          editingSlot
-            ? timeSlots.find((slot) => slot.id === editingSlot) || null
-            : null
-        }
+        slot={editingSlot ? timeSlots.find((slot) => slot.id === editingSlot) || null : null}
       />
 
       <EditSpecialDateModal

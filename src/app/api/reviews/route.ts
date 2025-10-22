@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 const createReviewSchema = z.object({
@@ -103,8 +103,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message:
-        "Reseña enviada exitosamente. Será revisada antes de publicarse.",
+      message: "Reseña enviada exitosamente. Será revisada antes de publicarse.",
       review: updatedReview,
     });
   } catch (error) {

@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-import { z } from "zod";
-import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { PrismaClient } from "@prisma/client";
+import { getServerSession } from "next-auth/next";
+import { type NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
 const prisma = new PrismaClient();
 
@@ -23,19 +23,13 @@ export async function GET() {
     }
 
     const transportCosts = await prisma.transportCost.findMany({
-      orderBy: [
-        { isActive: "desc" },
-        { district: "asc" }
-      ],
+      orderBy: [{ isActive: "desc" }, { district: "asc" }],
     });
 
     return NextResponse.json({ transportCosts });
   } catch (error) {
     console.error("Error fetching transport costs:", error);
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
 
@@ -52,13 +46,13 @@ export async function POST(request: NextRequest) {
 
     // Verificar si ya existe un distrito con ese nombre
     const existingDistrict = await prisma.transportCost.findUnique({
-      where: { district: validatedData.district }
+      where: { district: validatedData.district },
     });
 
     if (existingDistrict) {
       return NextResponse.json(
         { error: "Ya existe un costo de transporte para este distrito" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -71,7 +65,7 @@ export async function POST(request: NextRequest) {
         message: "Costo de transporte creado exitosamente",
         transportCost,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.error("Error creating transport cost:", error);
@@ -82,13 +76,10 @@ export async function POST(request: NextRequest) {
           error: "Datos inválidos",
           details: error.errors,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }

@@ -5,11 +5,12 @@
   position: relative;
   width: 100%;
   height: 3px; /* Reducido de 4px */
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(99, 102, 241, 0.3) 20%, 
-    rgba(99, 102, 241, 0.8) 50%, 
-    rgba(99, 102, 241, 0.3) 80%, 
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(99, 102, 241, 0.3) 20%,
+    rgba(99, 102, 241, 0.8) 50%,
+    rgba(99, 102, 241, 0.3) 80%,
     transparent 100%
   );
   margin: 1rem 0; /* Reducido de 2rem */
@@ -24,33 +25,35 @@
 }
 
 .section-divider-multi::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(99, 102, 241, 0.4) 25%, 
-    rgba(16, 185, 129, 0.6) 50%, 
-    rgba(99, 102, 241, 0.4) 75%, 
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(99, 102, 241, 0.4) 25%,
+    rgba(16, 185, 129, 0.6) 50%,
+    rgba(99, 102, 241, 0.4) 75%,
     transparent 100%
   );
 }
 
 .section-divider-multi::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 6px;
   left: 10%;
   right: 10%;
   height: 1px;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(16, 185, 129, 0.3) 30%, 
-    rgba(99, 102, 241, 0.5) 50%, 
-    rgba(16, 185, 129, 0.3) 70%, 
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(16, 185, 129, 0.3) 30%,
+    rgba(99, 102, 241, 0.5) 50%,
+    rgba(16, 185, 129, 0.3) 70%,
     transparent 100%
   );
 }
@@ -61,17 +64,16 @@
   width: 100%;
   height: 3px;
   margin: 2.5rem 0;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(99, 102, 241, 0.2) 20%, 
-    rgba(99, 102, 241, 0.8) 50%, 
-    rgba(99, 102, 241, 0.2) 80%, 
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(99, 102, 241, 0.2) 20%,
+    rgba(99, 102, 241, 0.8) 50%,
+    rgba(99, 102, 241, 0.2) 80%,
     transparent 100%
   );
   border-radius: 2px;
-  box-shadow: 
-    0 0 10px rgba(99, 102, 241, 0.3),
-    0 0 20px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.3), 0 0 20px rgba(99, 102, 241, 0.1);
 }
 
 /* Divisor con partículas decorativas */
@@ -80,24 +82,25 @@
   width: 100%;
   height: 2px;
   margin: 3rem 0;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(99, 102, 241, 0.3) 30%, 
-    rgba(16, 185, 129, 0.6) 50%, 
-    rgba(99, 102, 241, 0.3) 70%, 
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(99, 102, 241, 0.3) 30%,
+    rgba(16, 185, 129, 0.6) 50%,
+    rgba(99, 102, 241, 0.3) 70%,
     transparent 100%
   );
 }
 
 .section-divider-decorated::before {
-  content: '✦';
+  content: "✦";
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  color: #6366F1;
+  color: #6366f1;
   font-size: 1.2rem;
-  background: #0A0A0A;
+  background: #0a0a0a;
   padding: 0.5rem;
   border-radius: 50%;
   width: 2.5rem;
@@ -109,19 +112,17 @@
 }
 
 .section-divider-decorated::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 25%;
   top: 50%;
   transform: translate(-50%, -50%);
   width: 6px;
   height: 6px;
-  background: #10B981;
+  background: #10b981;
   border-radius: 50%;
-  box-shadow: 
-    0 0 8px rgba(16, 185, 129, 0.5),
-    150px 0 0 rgba(16, 185, 129, 0.3),
-    300px 0 0 rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5), 150px 0 0 rgba(16, 185, 129, 0.3), 300px 0 0
+    rgba(16, 185, 129, 0.3);
 }
 
 /* Divisor mínimo y elegante */
@@ -130,11 +131,7 @@
   width: 60%;
   height: 1px;
   margin: 2rem auto;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(99, 102, 241, 0.5) 50%, 
-    transparent 100%
-  );
+  background: linear-gradient(90deg, transparent 0%, rgba(99, 102, 241, 0.5) 50%, transparent 100%);
 }
 
 /* Divisor con animación */
@@ -143,11 +140,12 @@
   width: 100%;
   height: 2px;
   margin: 2.5rem 0;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(99, 102, 241, 0.3) 25%, 
-    rgba(16, 185, 129, 0.6) 50%, 
-    rgba(99, 102, 241, 0.3) 75%, 
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(99, 102, 241, 0.3) 25%,
+    rgba(16, 185, 129, 0.6) 50%,
+    rgba(99, 102, 241, 0.3) 75%,
     transparent 100%
   );
   background-size: 200% 100%;
@@ -155,7 +153,8 @@
 }
 
 @keyframes shimmer-divider {
-  0%, 100% {
+  0%,
+  100% {
     background-position: -200% center;
   }
   50% {
@@ -172,7 +171,7 @@
   .section-divider-animated {
     margin: 1.5rem 0;
   }
-  
+
   .section-divider-decorated::before {
     font-size: 1rem;
     width: 2rem;

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { type NextRequest, NextResponse } from "next/server";
 
 // GET /api/admin/availability - Get availability settings
 export async function GET() {
@@ -66,22 +66,13 @@ export async function POST(request: NextRequest) {
           isActive: true,
           OR: [
             {
-              AND: [
-                { startTime: { lte: startTime } },
-                { endTime: { gt: startTime } },
-              ],
+              AND: [{ startTime: { lte: startTime } }, { endTime: { gt: startTime } }],
             },
             {
-              AND: [
-                { startTime: { lt: endTime } },
-                { endTime: { gte: endTime } },
-              ],
+              AND: [{ startTime: { lt: endTime } }, { endTime: { gte: endTime } }],
             },
             {
-              AND: [
-                { startTime: { gte: startTime } },
-                { endTime: { lte: endTime } },
-              ],
+              AND: [{ startTime: { gte: startTime } }, { endTime: { lte: endTime } }],
             },
           ],
         },
@@ -91,8 +82,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           {
             success: false,
-            message:
-              "Ya existe un horario que se superpone con el que intentas agregar",
+            message: "Ya existe un horario que se superpone con el que intentas agregar",
           },
           { status: 400 },
         );
@@ -132,8 +122,7 @@ export async function POST(request: NextRequest) {
           return NextResponse.json(
             {
               success: false,
-              message:
-                "Para fechas disponibles, hora de inicio y fin son requeridas",
+              message: "Para fechas disponibles, hora de inicio y fin son requeridas",
             },
             { status: 400 },
           );
@@ -178,12 +167,7 @@ export async function POST(request: NextRequest) {
     console.error("Error creating availability:", error);
 
     // Handle unique constraint violations
-    if (
-      error &&
-      typeof error === "object" &&
-      "code" in error &&
-      error.code === "P2002"
-    ) {
+    if (error && typeof error === "object" && "code" in error && error.code === "P2002") {
       const prismaError = error as { meta?: { target?: string[] } };
       if (prismaError.meta?.target?.includes("dayOfWeek")) {
         return NextResponse.json(

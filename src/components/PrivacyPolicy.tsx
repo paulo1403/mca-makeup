@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function PrivacyPolicy() {
   const router = useRouter();
@@ -10,7 +10,7 @@ export default function PrivacyPolicy() {
     if (window.history.length > 1) {
       window.history.back();
     } else {
-      router.push('/');
+      router.push("/");
     }
   };
 
@@ -24,12 +24,17 @@ export default function PrivacyPolicy() {
         >
           {/* Navigation */}
           <div className="mb-8">
-            <button 
-              onClick={handleGoBack} 
+            <button
+              onClick={handleGoBack}
               className="flex items-center gap-2 text-[color:var(--color-body)] hover:text-[color:var(--color-primary)] transition-colors duration-200 mb-6"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
               Volver
             </button>
@@ -40,19 +45,19 @@ export default function PrivacyPolicy() {
               Políticas de Privacidad
             </h1>
             <p className="text-lg text-[color:var(--color-body)]">
-              Última actualización: {new Date().toLocaleDateString('es-PE')}
+              Última actualización: {new Date().toLocaleDateString("es-PE")}
             </p>
           </div>
 
           <div className="bg-[color:var(--color-surface)] rounded-2xl border border-[color:var(--color-border)]/20 p-8 lg:p-12 space-y-8">
-            
             <section>
               <h2 className="text-2xl font-serif text-[color:var(--color-heading)] mb-4">
                 1. Introducción
               </h2>
               <p className="text-[color:var(--color-body)] leading-relaxed mb-4">
-                Marcela Cordero - Makeup Artist se compromete a proteger la privacidad y los datos 
-                personales de nuestros clientes conforme a la Ley N° 29733 de Protección de Datos Personales del Perú.
+                Marcela Cordero - Makeup Artist se compromete a proteger la privacidad y los datos
+                personales de nuestros clientes conforme a la Ley N° 29733 de Protección de Datos
+                Personales del Perú.
               </p>
             </section>
 
@@ -73,16 +78,16 @@ export default function PrivacyPolicy() {
                 3. Sus Derechos
               </h2>
               <p className="text-[color:var(--color-body)] leading-relaxed mb-4">
-                Usted tiene derecho a acceder, rectificar, cancelar y oponerse al tratamiento de sus datos personales.
+                Usted tiene derecho a acceder, rectificar, cancelar y oponerse al tratamiento de sus
+                datos personales.
               </p>
-              
+
               <div className="bg-[color:var(--color-primary)]/10 p-4 rounded-lg border border-[color:var(--color-primary)]/20">
                 <p className="text-[color:var(--color-body)] text-sm">
                   <strong>Contacto:</strong> marcelacordero.bookings@gmail.com
                 </p>
               </div>
             </section>
-
           </div>
         </motion.div>
       </div>

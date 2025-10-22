@@ -16,26 +16,26 @@ export const NIGHT_SHIFT_COST = 50.0;
  */
 export function isNightShift(timeString: string): boolean {
   if (!timeString) return false;
-  
+
   // Extraer la hora de inicio del string
-  const startTimeStr = timeString.includes(' - ') 
-    ? timeString.split(' - ')[0].trim()
+  const startTimeStr = timeString.includes(" - ")
+    ? timeString.split(" - ")[0].trim()
     : timeString.trim();
-  
+
   // Parsear la hora
-  const [hoursStr, minutesStr] = startTimeStr.split(':');
-  const hours = parseInt(hoursStr, 10);
-  const minutes = parseInt(minutesStr, 10);
-  
+  const [hoursStr, minutesStr] = startTimeStr.split(":");
+  const hours = Number.parseInt(hoursStr, 10);
+  const minutes = Number.parseInt(minutesStr, 10);
+
   if (isNaN(hours) || isNaN(minutes)) return false;
-  
+
   // Convertir a minutos desde medianoche
   const totalMinutes = hours * 60 + minutes;
-  
+
   // Horario nocturno: 19:30 (1170 min) hasta 06:00 (360 min del día siguiente)
   const nightStartMinutes = 19 * 60 + 30; // 19:30 = 1170 minutos
   const nightEndMinutes = 6 * 60; // 06:00 = 360 minutos
-  
+
   // Horario nocturno si está después de 19:30 O antes de 06:00
   return totalMinutes >= nightStartMinutes || totalMinutes < nightEndMinutes;
 }

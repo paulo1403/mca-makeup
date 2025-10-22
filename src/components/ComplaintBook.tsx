@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function ComplaintBook() {
   const router = useRouter();
@@ -11,68 +11,68 @@ export default function ComplaintBook() {
     if (window.history.length > 1) {
       window.history.back();
     } else {
-      router.push('/');
+      router.push("/");
     }
   };
 
   const [formData, setFormData] = useState({
-    customerName: '',
-    customerDni: '',
-    customerAddress: '',
-    customerPhone: '',
-    customerEmail: '',
-    serviceDate: '',
-    serviceLocation: '',
-    serviceType: '',
-    serviceAmount: '',
-    complaintType: '',
-    complaintDetail: '',
-    customerRequest: '',
+    customerName: "",
+    customerDni: "",
+    customerAddress: "",
+    customerPhone: "",
+    customerEmail: "",
+    serviceDate: "",
+    serviceLocation: "",
+    serviceType: "",
+    serviceAmount: "",
+    complaintType: "",
+    complaintDetail: "",
+    customerRequest: "",
     hasEvidence: false,
-    evidenceDescription: '',
+    evidenceDescription: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState('');
-  const [complaintNumber, setComplaintNumber] = useState('');
-
-
+  const [submitMessage, setSubmitMessage] = useState("");
+  const [complaintNumber, setComplaintNumber] = useState("");
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
-    
+
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const generateComplaintNumber = () => {
     const date = new Date();
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const random = Math.floor(Math.random() * 1000)
+      .toString()
+      .padStart(3, "0");
     return `MCM-${year}${month}${day}-${random}`;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmitMessage('');
+    setSubmitMessage("");
 
     try {
       const number = generateComplaintNumber();
       setComplaintNumber(number);
 
       // Aquí enviarías los datos a tu API
-      const response = await fetch('/api/complaints', {
-        method: 'POST',
+      const response = await fetch("/api/complaints", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           ...formData,
@@ -82,12 +82,12 @@ export default function ComplaintBook() {
       });
 
       if (response.ok) {
-        setSubmitMessage('Su queja/reclamo ha sido registrado exitosamente.');
+        setSubmitMessage("Su queja/reclamo ha sido registrado exitosamente.");
       } else {
-        throw new Error('Error al enviar el reclamo');
+        throw new Error("Error al enviar el reclamo");
       }
     } catch {
-      setSubmitMessage('Error al enviar el reclamo. Por favor, intente nuevamente.');
+      setSubmitMessage("Error al enviar el reclamo. Por favor, intente nuevamente.");
     } finally {
       setIsSubmitting(false);
     }
@@ -103,12 +103,17 @@ export default function ComplaintBook() {
         >
           {/* Navigation */}
           <div className="mb-8">
-            <button 
-              onClick={handleGoBack} 
+            <button
+              onClick={handleGoBack}
               className="flex items-center gap-2 text-[color:var(--color-body)] hover:text-[color:var(--color-primary)] transition-colors duration-200 mb-6"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
               Volver
             </button>
@@ -126,19 +131,25 @@ export default function ComplaintBook() {
 
           {/* Información importante */}
           <div className="bg-[color:var(--color-surface)] rounded-2xl border border-[color:var(--color-border)]/20 p-8 mb-8">
-            <h2 className="text-2xl font-serif text-[color:var(--color-heading)] mb-4">Información Importante</h2>
-            
+            <h2 className="text-2xl font-serif text-[color:var(--color-heading)] mb-4">
+              Información Importante
+            </h2>
+
             <div className="grid md:grid-cols-2 gap-6 mb-6">
               <div className="bg-[color:var(--color-primary)]/10 p-4 rounded-lg border border-[color:var(--color-primary)]/20">
-                <h3 className="text-lg font-medium mb-2 text-[color:var(--color-primary)]">¿Qué es una QUEJA?</h3>
+                <h3 className="text-lg font-medium mb-2 text-[color:var(--color-primary)]">
+                  ¿Qué es una QUEJA?
+                </h3>
                 <p className="text-sm text-[color:var(--color-body)]">
-                  Disconformidad relacionada con la atención al público, demoras en la atención,
-                  o aspectos que no involucren riesgos para la seguridad.
+                  Disconformidad relacionada con la atención al público, demoras en la atención, o
+                  aspectos que no involucren riesgos para la seguridad.
                 </p>
               </div>
-              
+
               <div className="bg-[color:var(--color-accent)]/10 p-4 rounded-lg border border-[color:var(--color-accent)]/20">
-                <h3 className="text-lg font-medium mb-2 text-[color:var(--color-accent)]">¿Qué es un RECLAMO?</h3>
+                <h3 className="text-lg font-medium mb-2 text-[color:var(--color-accent)]">
+                  ¿Qué es un RECLAMO?
+                </h3>
                 <p className="text-sm text-[color:var(--color-body)]">
                   Disconformidad relacionada con el servicio prestado, productos defectuosos,
                   facturación o problemas que afecten los intereses económicos del consumidor.
@@ -148,8 +159,9 @@ export default function ComplaintBook() {
 
             <div className="bg-[color:var(--color-muted)]/10 p-4 rounded-lg border border-[color:var(--color-border)]">
               <p className="text-sm text-[color:var(--color-body)]">
-                <strong>Importante:</strong> La presentación de este reclamo no impide acudir a otras vías de solución 
-                de controversias ni es requisito previo para interponer una denuncia ante el INDECOPI.
+                <strong>Importante:</strong> La presentación de este reclamo no impide acudir a
+                otras vías de solución de controversias ni es requisito previo para interponer una
+                denuncia ante el INDECOPI.
               </p>
             </div>
           </div>
@@ -169,13 +181,23 @@ export default function ComplaintBook() {
                 </div>
                 <button
                   onClick={() => {
-                    setSubmitMessage('');
-                    setComplaintNumber('');
+                    setSubmitMessage("");
+                    setComplaintNumber("");
                     setFormData({
-                      customerName: '', customerDni: '', customerAddress: '', customerPhone: '', 
-                      customerEmail: '', serviceDate: '', serviceLocation: '', serviceType: '', 
-                      serviceAmount: '', complaintType: '', complaintDetail: '', customerRequest: '', 
-                      hasEvidence: false, evidenceDescription: '',
+                      customerName: "",
+                      customerDni: "",
+                      customerAddress: "",
+                      customerPhone: "",
+                      customerEmail: "",
+                      serviceDate: "",
+                      serviceLocation: "",
+                      serviceType: "",
+                      serviceAmount: "",
+                      complaintType: "",
+                      complaintDetail: "",
+                      customerRequest: "",
+                      hasEvidence: false,
+                      evidenceDescription: "",
                     });
                   }}
                   className="bg-[color:var(--color-primary)] text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity"
@@ -185,16 +207,18 @@ export default function ComplaintBook() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-8">
-                
                 {/* Datos del consumidor */}
                 <section>
                   <h3 className="text-2xl font-serif text-[color:var(--color-heading)] mb-6 border-b border-[color:var(--color-border)] pb-2">
                     1. Datos del Consumidor
                   </h3>
-                  
+
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label htmlFor="customerName" className="block text-[color:var(--color-body)] font-medium mb-2">
+                      <label
+                        htmlFor="customerName"
+                        className="block text-[color:var(--color-body)] font-medium mb-2"
+                      >
                         Nombre Completo *
                       </label>
                       <input
@@ -209,7 +233,10 @@ export default function ComplaintBook() {
                     </div>
 
                     <div>
-                      <label htmlFor="customerDni" className="block text-[color:var(--color-body)] font-medium mb-2">
+                      <label
+                        htmlFor="customerDni"
+                        className="block text-[color:var(--color-body)] font-medium mb-2"
+                      >
                         DNI/Documento de Identidad *
                       </label>
                       <input
@@ -224,7 +251,10 @@ export default function ComplaintBook() {
                     </div>
 
                     <div className="md:col-span-2">
-                      <label htmlFor="customerAddress" className="block text-[color:var(--color-body)] font-medium mb-2">
+                      <label
+                        htmlFor="customerAddress"
+                        className="block text-[color:var(--color-body)] font-medium mb-2"
+                      >
                         Dirección Completa *
                       </label>
                       <input
@@ -239,7 +269,10 @@ export default function ComplaintBook() {
                     </div>
 
                     <div>
-                      <label htmlFor="customerPhone" className="block text-[color:var(--color-body)] font-medium mb-2">
+                      <label
+                        htmlFor="customerPhone"
+                        className="block text-[color:var(--color-body)] font-medium mb-2"
+                      >
                         Teléfono *
                       </label>
                       <input
@@ -254,7 +287,10 @@ export default function ComplaintBook() {
                     </div>
 
                     <div>
-                      <label htmlFor="customerEmail" className="block text-[color:var(--color-body)] font-medium mb-2">
+                      <label
+                        htmlFor="customerEmail"
+                        className="block text-[color:var(--color-body)] font-medium mb-2"
+                      >
                         Correo Electrónico
                       </label>
                       <input
@@ -274,35 +310,41 @@ export default function ComplaintBook() {
                   <h3 className="text-2xl font-serif text-[color:var(--color-heading)] mb-6 border-b border-[color:var(--color-border)] pb-2">
                     2. Tipo de Reclamo
                   </h3>
-                  
+
                   <div className="grid md:grid-cols-2 gap-4">
                     <label className="flex items-center p-4 border border-[color:var(--color-border)] rounded-lg cursor-pointer hover:bg-[color:var(--color-surface-elevated)] transition-colors">
                       <input
                         type="radio"
                         name="complaintType"
                         value="queja"
-                        checked={formData.complaintType === 'queja'}
+                        checked={formData.complaintType === "queja"}
                         onChange={handleInputChange}
                         className="mr-3 text-[color:var(--color-primary)]"
                       />
                       <div>
                         <span className="font-medium text-[color:var(--color-heading)]">QUEJA</span>
-                        <p className="text-sm text-[color:var(--color-body)] mt-1">Disconformidad con la atención al cliente</p>
+                        <p className="text-sm text-[color:var(--color-body)] mt-1">
+                          Disconformidad con la atención al cliente
+                        </p>
                       </div>
                     </label>
-                    
+
                     <label className="flex items-center p-4 border border-[color:var(--color-border)] rounded-lg cursor-pointer hover:bg-[color:var(--color-surface-elevated)] transition-colors">
                       <input
                         type="radio"
                         name="complaintType"
                         value="reclamo"
-                        checked={formData.complaintType === 'reclamo'}
+                        checked={formData.complaintType === "reclamo"}
                         onChange={handleInputChange}
                         className="mr-3 text-[color:var(--color-primary)]"
                       />
                       <div>
-                        <span className="font-medium text-[color:var(--color-heading)]">RECLAMO</span>
-                        <p className="text-sm text-[color:var(--color-body)] mt-1">Disconformidad con el servicio o producto</p>
+                        <span className="font-medium text-[color:var(--color-heading)]">
+                          RECLAMO
+                        </span>
+                        <p className="text-sm text-[color:var(--color-body)] mt-1">
+                          Disconformidad con el servicio o producto
+                        </p>
                       </div>
                     </label>
                   </div>
@@ -313,10 +355,13 @@ export default function ComplaintBook() {
                   <h3 className="text-2xl font-serif text-[color:var(--color-heading)] mb-6 border-b border-[color:var(--color-border)] pb-2">
                     3. Detalle del Reclamo
                   </h3>
-                  
+
                   <div className="space-y-6">
                     <div>
-                      <label htmlFor="complaintDetail" className="block text-[color:var(--color-body)] font-medium mb-2">
+                      <label
+                        htmlFor="complaintDetail"
+                        className="block text-[color:var(--color-body)] font-medium mb-2"
+                      >
                         Descripción del problema *
                       </label>
                       <textarea
@@ -332,7 +377,10 @@ export default function ComplaintBook() {
                     </div>
 
                     <div>
-                      <label htmlFor="customerRequest" className="block text-[color:var(--color-body)] font-medium mb-2">
+                      <label
+                        htmlFor="customerRequest"
+                        className="block text-[color:var(--color-body)] font-medium mb-2"
+                      >
                         Solución solicitada *
                       </label>
                       <textarea
@@ -356,7 +404,7 @@ export default function ComplaintBook() {
                     disabled={isSubmitting}
                     className="bg-[color:var(--color-primary)] hover:bg-[color:var(--color-primary-hover)] text-white font-medium px-8 py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isSubmitting ? 'Enviando...' : 'Registrar Reclamo'}
+                    {isSubmitting ? "Enviando..." : "Registrar Reclamo"}
                   </button>
                 </div>
               </form>
@@ -365,22 +413,31 @@ export default function ComplaintBook() {
 
           {/* Información adicional */}
           <div className="mt-8 bg-[color:var(--color-surface)] rounded-2xl border border-[color:var(--color-border)]/20 p-6">
-            <h3 className="text-lg font-medium text-[color:var(--color-heading)] mb-4">Información de Contacto</h3>
+            <h3 className="text-lg font-medium text-[color:var(--color-heading)] mb-4">
+              Información de Contacto
+            </h3>
             <div className="grid md:grid-cols-2 gap-4 text-sm text-[color:var(--color-body)]">
               <div>
-                <p><strong>Empresa:</strong> Marcela Cordero - Makeup Artist</p>
-                <p><strong>Email:</strong> marcelacordero.bookings@gmail.com</p>
+                <p>
+                  <strong>Empresa:</strong> Marcela Cordero - Makeup Artist
+                </p>
+                <p>
+                  <strong>Email:</strong> marcelacordero.bookings@gmail.com
+                </p>
               </div>
               <div>
-                <p><strong>WhatsApp:</strong> +51 989 164 990</p>
-                <p><strong>Ubicación:</strong> Lima, Perú</p>
+                <p>
+                  <strong>WhatsApp:</strong> +51 989 164 990
+                </p>
+                <p>
+                  <strong>Ubicación:</strong> Lima, Perú
+                </p>
               </div>
             </div>
             <div className="mt-4 text-xs text-[color:var(--color-muted)]">
               <p>Tiempo de respuesta: Quejas (15 días), Reclamos (30 días)</p>
             </div>
           </div>
-
         </motion.div>
       </div>
     </div>

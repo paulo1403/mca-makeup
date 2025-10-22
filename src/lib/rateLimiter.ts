@@ -13,7 +13,7 @@ interface RateLimitConfig {
 
 class RateLimiter {
   private attempts: Map<string, LoginAttempt> = new Map();
-  
+
   // Configuración por defecto
   private config: RateLimitConfig = {
     maxAttempts: 5, // 5 intentos máximo
@@ -41,7 +41,7 @@ class RateLimiter {
   // Verificar si una IP/email está bloqueada
   isBlocked(identifier: string): boolean {
     this.cleanExpiredAttempts();
-    
+
     const attempt = this.attempts.get(identifier);
     if (!attempt) return false;
 
@@ -67,7 +67,7 @@ class RateLimiter {
     resetTime: Date;
   } {
     this.cleanExpiredAttempts();
-    
+
     const now = Date.now();
     const attempt = this.attempts.get(identifier) || {
       count: 0,
@@ -87,9 +87,9 @@ class RateLimiter {
     // Verificar si debe ser bloqueado
     if (attempt.count >= this.config.maxAttempts) {
       attempt.blockedUntil = now + this.config.blockDurationMs;
-      
+
       this.attempts.set(identifier, attempt);
-      
+
       return {
         isBlocked: true,
         attemptsLeft: 0,
@@ -120,7 +120,7 @@ class RateLimiter {
     resetTime?: Date;
   } {
     this.cleanExpiredAttempts();
-    
+
     const attempt = this.attempts.get(identifier);
     if (!attempt) {
       return {
@@ -130,7 +130,7 @@ class RateLimiter {
     }
 
     const now = Date.now();
-    
+
     // Verificar si está bloqueado
     if (attempt.blockedUntil && now < attempt.blockedUntil) {
       return {
@@ -143,7 +143,7 @@ class RateLimiter {
 
     // Si no está bloqueado, calcular intentos restantes
     const attemptsLeft = Math.max(0, this.config.maxAttempts - attempt.count);
-    
+
     return {
       isBlocked: false,
       attemptsLeft,
@@ -163,19 +163,19 @@ class RateLimiter {
 
   // Método genérico para verificar límites personalizados
   async check(
-    request: Request, 
-    action: string, 
-    maxRequests: number, 
-    windowMs: number
+    request: Request,
+    action: string,
+    maxRequests: number,
+    windowMs: number,
   ): Promise<boolean> {
     const ip = getClientIP(request);
     const key = `${action}:${ip}`;
-    
+
     this.cleanExpiredAttempts();
-    
+
     const now = Date.now();
     const attempt = this.attempts.get(key);
-    
+
     if (!attempt) {
       // Primera vez
       this.attempts.set(key, {
@@ -184,7 +184,7 @@ class RateLimiter {
       });
       return true;
     }
-    
+
     // Verificar si la ventana de tiempo ha expirado
     if (now - attempt.lastAttempt > windowMs) {
       // Reset del contador
@@ -194,11 +194,11 @@ class RateLimiter {
       });
       return true;
     }
-    
+
     // Incrementar contador
     attempt.count++;
     attempt.lastAttempt = now;
-    
+
     return attempt.count <= maxRequests;
   }
 }
@@ -227,17 +227,17 @@ export const rateLimiter = new RateLimiter({
 // Función para obtener la IP del cliente
 export function getClientIP(request: Request): string {
   // En producción con proxies/CDN
-  const forwarded = request.headers.get('x-forwarded-for');
-  const realIP = request.headers.get('x-real-ip');
-  
+  const forwarded = request.headers.get("x-forwarded-for");
+  const realIP = request.headers.get("x-real-ip");
+
   if (forwarded) {
-    return forwarded.split(',')[0].trim();
+    return forwarded.split(",")[0].trim();
   }
-  
+
   if (realIP) {
     return realIP;
   }
-  
+
   // Fallback para desarrollo
-  return 'localhost';
+  return "localhost";
 }

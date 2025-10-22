@@ -1,4 +1,4 @@
-import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { AlertTriangle, RefreshCw } from "lucide-react";
 
 interface ErrorStateProps {
   title?: string;
@@ -7,11 +7,11 @@ interface ErrorStateProps {
   className?: string;
 }
 
-export default function ErrorState({ 
-  title = 'Error al cargar datos',
-  message = 'No se pudieron cargar los datos del dashboard. Por favor, intenta recargar la página.',
+export default function ErrorState({
+  title = "Error al cargar datos",
+  message = "No se pudieron cargar los datos del dashboard. Por favor, intenta recargar la página.",
   onRetry,
-  className = ''
+  className = "",
 }: ErrorStateProps) {
   const handleRetry = () => {
     if (onRetry) {
@@ -30,9 +30,7 @@ export default function ErrorState({
           </div>
         </div>
         <h3 className="text-lg font-semibold text-red-800 mb-2">{title}</h3>
-        <p className="text-red-600 text-sm mb-6 leading-relaxed">
-          {message}
-        </p>
+        <p className="text-red-600 text-sm mb-6 leading-relaxed">{message}</p>
         <button
           onClick={handleRetry}
           className="inline-flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors duration-200 focus-ring touch-target"

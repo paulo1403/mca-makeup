@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { prisma } from "@/lib/prisma";
+import { type NextRequest, NextResponse } from "next/server";
 
 // GET /api/admin/notifications - Get notifications for admin
 export async function GET() {
@@ -7,7 +7,7 @@ export async function GET() {
     // Obtener notificaciones de la base de datos
     const notifications = await prisma.notification.findMany({
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
       take: 20,
       include: {
@@ -20,10 +20,10 @@ export async function GET() {
       data: notifications,
     });
   } catch (error) {
-    console.error('Error fetching notifications:', error);
+    console.error("Error fetching notifications:", error);
     return NextResponse.json(
-      { success: false, message: 'Failed to fetch notifications' },
-      { status: 500 }
+      { success: false, message: "Failed to fetch notifications" },
+      { status: 500 },
     );
   }
 }
@@ -42,14 +42,14 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Notification updated successfully',
+      message: "Notification updated successfully",
       data: notification,
     });
   } catch (error) {
-    console.error('Error updating notification:', error);
+    console.error("Error updating notification:", error);
     return NextResponse.json(
-      { success: false, message: 'Failed to update notification' },
-      { status: 500 }
+      { success: false, message: "Failed to update notification" },
+      { status: 500 },
     );
   }
 }

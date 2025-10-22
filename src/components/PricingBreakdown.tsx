@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
-import { useTransportCost } from "@/hooks/useTransportCost";
-import { Calculator, MapPin, Truck, AlertCircle, Moon } from "lucide-react";
-import { ServiceSelection, Service } from "@/types";
-import { calculateNightShiftCost, getNightShiftExplanation } from "@/utils/nightShift";
 import Typography from "@/components/ui/Typography";
+import { useTransportCost } from "@/hooks/useTransportCost";
+import type { Service, ServiceSelection } from "@/types";
+import { calculateNightShiftCost, getNightShiftExplanation } from "@/utils/nightShift";
+import { AlertCircle, Calculator, MapPin, Moon, Truck } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface PricingBreakdownProps {
   selectedServices: ServiceSelection;
@@ -40,13 +40,8 @@ export default function PricingBreakdown({
   const [servicesWithQuantity, setServicesWithQuantity] = useState<ServiceWithQuantity[]>([]);
   const [allServices, setAllServices] = useState<Service[]>([]);
   const [totalServicePrice, setTotalServicePrice] = useState<number>(0);
-  const {
-    transportCost,
-    loading,
-    error,
-    getTransportCost,
-    clearTransportCost,
-  } = useTransportCost();
+  const { transportCost, loading, error, getTransportCost, clearTransportCost } =
+    useTransportCost();
 
   const lastCalculatedRef = useRef({
     totalPrice: 0,
@@ -84,11 +79,11 @@ export default function PricingBreakdown({
 
     Object.entries(selectedServices).forEach(([serviceId, quantity]) => {
       if (quantity > 0) {
-        const service = allServices.find(s => s.id === serviceId);
+        const service = allServices.find((s) => s.id === serviceId);
         if (service) {
           const totalPrice = service.price * quantity;
           const totalDuration = service.duration * quantity;
-          
+
           servicesList.push({
             id: service.id,
             name: service.name,
@@ -98,7 +93,7 @@ export default function PricingBreakdown({
             totalPrice,
             totalDuration,
           });
-          
+
           total += totalPrice;
         }
       }
@@ -117,8 +112,7 @@ export default function PricingBreakdown({
   }, [district, locationType, getTransportCost, clearTransportCost]);
 
   const debouncedPriceCalculation = useCallback(() => {
-    const currentTransportCost =
-      locationType === "HOME" && transportCost ? transportCost.cost : 0;
+    const currentTransportCost = locationType === "HOME" && transportCost ? transportCost.cost : 0;
     const currentNightShiftCost = timeRange ? calculateNightShiftCost(timeRange) : 0;
     const totalPrice = totalServicePrice + currentTransportCost + currentNightShiftCost;
 
@@ -135,7 +129,12 @@ export default function PricingBreakdown({
         transportCost: currentTransportCost,
         nightShiftCost: currentNightShiftCost,
       };
-      onPriceCalculated?.(totalPrice, totalServicePrice, currentTransportCost, currentNightShiftCost);
+      onPriceCalculated?.(
+        totalPrice,
+        totalServicePrice,
+        currentTransportCost,
+        currentNightShiftCost,
+      );
     }
   }, [totalServicePrice, transportCost, locationType, timeRange, onPriceCalculated]);
 
@@ -146,7 +145,7 @@ export default function PricingBreakdown({
 
     debounceTimeoutRef.current = setTimeout(() => {
       debouncedPriceCalculation();
-    }, 100); 
+    }, 100);
 
     return () => {
       if (debounceTimeoutRef.current) {
@@ -155,25 +154,24 @@ export default function PricingBreakdown({
     };
   }, [debouncedPriceCalculation]);
 
-  if (
-    !selectedServices ||
-    selectedServices.length === 0 ||
-    totalServicePrice === 0
-  ) {
+  if (!selectedServices || selectedServices.length === 0 || totalServicePrice === 0) {
     return null;
   }
 
-  const currentTransportCost =
-    locationType === "HOME" && transportCost ? transportCost.cost : 0;
+  const currentTransportCost = locationType === "HOME" && transportCost ? transportCost.cost : 0;
   const currentNightShiftCost = timeRange ? calculateNightShiftCost(timeRange) : 0;
-  
+
   const totalPrice = totalServicePrice + currentTransportCost + currentNightShiftCost;
 
   return (
     <div className="rounded-lg p-3 sm:p-4 border border-[color:var(--color-border)]/30 bg-[color:var(--color-surface)] shadow-sm">
       <div className="flex items-center gap-2 mb-3">
         <Calculator className="h-4 w-4 sm:h-5 sm:w-5 text-[color:var(--color-primary)]" />
-        <Typography as="h3" variant="h3" className="font-semibold text-[color:var(--color-heading)] text-sm sm:text-base">
+        <Typography
+          as="h3"
+          variant="h3"
+          className="font-semibold text-[color:var(--color-heading)] text-sm sm:text-base"
+        >
           Detalle de costos
         </Typography>
       </div>
@@ -181,22 +179,21 @@ export default function PricingBreakdown({
       <div className="space-y-3">
         {/* Servicios seleccionados */}
         <div className="space-y-2">
-                    {servicesWithQuantity.map((service, index) => (
-            <div
-              key={index}
-              className="flex justify-between items-center py-2"
-            >
+          {servicesWithQuantity.map((service, index) => (
+            <div key={index} className="flex justify-between items-center py-2">
               <div className="flex items-center gap-2">
-                  <span className="text-[color:var(--color-heading)] text-sm font-medium">{service.name}</span>
-                  {service.quantity > 1 && (
-                    <span className="bg-[color:var(--color-primary)]/12 text-[color:var(--color-primary)] text-xs px-2 py-1 rounded-full font-medium">
-                      {service.quantity}x
-                    </span>
-                  )}
-                </div>
-                <span className="font-medium text-[color:var(--color-heading)] text-sm">
-                  S/ {service.totalPrice.toFixed(2)}
+                <span className="text-[color:var(--color-heading)] text-sm font-medium">
+                  {service.name}
                 </span>
+                {service.quantity > 1 && (
+                  <span className="bg-[color:var(--color-primary)]/12 text-[color:var(--color-primary)] text-xs px-2 py-1 rounded-full font-medium">
+                    {service.quantity}x
+                  </span>
+                )}
+              </div>
+              <span className="font-medium text-[color:var(--color-heading)] text-sm">
+                S/ {service.totalPrice.toFixed(2)}
+              </span>
             </div>
           ))}
 
@@ -219,26 +216,30 @@ export default function PricingBreakdown({
         {locationType === "HOME" && (
           <div className="border-t border-gray-200 pt-2">
             <div className="flex justify-between items-start sm:items-center gap-2">
-                <div className="flex items-center gap-2 flex-1 min-w-0">
-                  <Truck className="h-3 w-3 sm:h-4 sm:w-4 text-[color:var(--color-accent)] flex-shrink-0" />
-                  <span className="text-xs sm:text-sm text-[color:var(--color-heading)] break-words">
-                    Transporte {district && `(${district})`}
-                  </span>
-                </div>
-                <div className="text-right flex-shrink-0">
-                  {loading ? (
-                    <span className="text-xs sm:text-sm text-[color:var(--color-muted)]">Calculando...</span>
-                  ) : error ? (
-                    <span className="text-xs sm:text-sm text-[color:var(--color-accent)]">Error</span>
-                  ) : transportCost?.hasTransportCost ? (
-                    <span className="font-medium text-[color:var(--color-heading)] text-sm sm:text-base">
-                      S/ {transportCost.cost.toFixed(2)}
-                    </span>
-                  ) : (
-                    <span className="text-xs sm:text-sm text-[color:var(--color-muted)]">No disponible</span>
-                  )}
-                </div>
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                <Truck className="h-3 w-3 sm:h-4 sm:w-4 text-[color:var(--color-accent)] flex-shrink-0" />
+                <span className="text-xs sm:text-sm text-[color:var(--color-heading)] break-words">
+                  Transporte {district && `(${district})`}
+                </span>
               </div>
+              <div className="text-right flex-shrink-0">
+                {loading ? (
+                  <span className="text-xs sm:text-sm text-[color:var(--color-muted)]">
+                    Calculando...
+                  </span>
+                ) : error ? (
+                  <span className="text-xs sm:text-sm text-[color:var(--color-accent)]">Error</span>
+                ) : transportCost?.hasTransportCost ? (
+                  <span className="font-medium text-[color:var(--color-heading)] text-sm sm:text-base">
+                    S/ {transportCost.cost.toFixed(2)}
+                  </span>
+                ) : (
+                  <span className="text-xs sm:text-sm text-[color:var(--color-muted)]">
+                    No disponible
+                  </span>
+                )}
+              </div>
+            </div>
 
             {/* Notas sobre el transporte */}
             {transportCost?.notes && (
@@ -256,11 +257,11 @@ export default function PricingBreakdown({
               !loading &&
               !transportCost?.hasTransportCost && (
                 <div className="flex items-start gap-2 mt-2">
-                    <MapPin className="h-3 w-3 text-[color:var(--color-primary)] mt-0.5 flex-shrink-0" />
-                    <span className="text-xs text-[color:var(--color-muted)] leading-relaxed">
-                      Costo de transporte a coordinar
-                    </span>
-                  </div>
+                  <MapPin className="h-3 w-3 text-[color:var(--color-primary)] mt-0.5 flex-shrink-0" />
+                  <span className="text-xs text-[color:var(--color-muted)] leading-relaxed">
+                    Costo de transporte a coordinar
+                  </span>
+                </div>
               )}
           </div>
         )}
@@ -305,9 +306,7 @@ export default function PricingBreakdown({
         {/* Total */}
         <div className="border-t border-[color:var(--color-border)]/20 pt-3">
           <div className="flex justify-between items-center">
-            <span className="font-bold text-black text-sm sm:text-base">
-              Total:
-            </span>
+            <span className="font-bold text-black text-sm sm:text-base">Total:</span>
             <span className="font-bold text-base sm:text-lg text-[color:var(--color-primary)]">
               S/ {totalPrice.toFixed(2)}
             </span>

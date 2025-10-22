@@ -1,5 +1,5 @@
-import React from "react";
 import { Check } from "lucide-react";
+import React from "react";
 import "@/styles/components/step-indicator.css";
 
 interface Props {
@@ -32,13 +32,11 @@ export default function StepIndicator({ currentStep, totalSteps }: Props) {
                   isActive
                     ? "step-circle--active"
                     : isCompleted
-                    ? "step-circle--completed"
-                    : "step-circle--inactive"
+                      ? "step-circle--completed"
+                      : "step-circle--inactive"
                 }`}
               >
-                {isCompleted ? (
-                  <Check className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                ) : null}
+                {isCompleted ? <Check className="w-4 h-4 sm:w-5 sm:h-5 text-white" /> : null}
               </div>
             </div>
           );
@@ -55,9 +53,7 @@ export default function StepIndicator({ currentStep, totalSteps }: Props) {
           <div
             className="step-progress-active"
             style={{
-              width: `${
-                (Math.max(currentStep - 1, 0) / (totalSteps - 1)) * 100
-              }%`,
+              width: `${(Math.max(currentStep - 1, 0) / (totalSteps - 1)) * 100}%`,
             }}
           />
 
@@ -73,13 +69,11 @@ export default function StepIndicator({ currentStep, totalSteps }: Props) {
                       isActive
                         ? "step-point-circle--active"
                         : isCompleted
-                        ? "step-point-circle--completed"
-                        : "step-point-circle--inactive"
+                          ? "step-point-circle--completed"
+                          : "step-point-circle--inactive"
                     }`}
                   >
-                    {isCompleted ? (
-                      <Check className="w-4 h-4 text-white" />
-                    ) : null}
+                    {isCompleted ? <Check className="w-4 h-4 text-white" /> : null}
                   </div>
 
                   <span
@@ -87,8 +81,8 @@ export default function StepIndicator({ currentStep, totalSteps }: Props) {
                       isActive
                         ? "step-label--active"
                         : isCompleted
-                        ? "step-label--completed"
-                        : "step-label--inactive"
+                          ? "step-label--completed"
+                          : "step-label--inactive"
                     }`}
                   >
                     {stepNames[s - 1]}

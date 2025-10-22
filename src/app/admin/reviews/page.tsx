@@ -1,19 +1,19 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { getReviewStatusColor, getReviewStatusText } from "@/utils/reviewHelpers";
 import {
-  Star,
-  MessageSquare,
   CheckCircle,
-  XCircle,
+  ChevronDown,
   Eye,
   EyeOff,
-  Trash2,
-  ChevronDown,
   Filter,
+  MessageSquare,
   Search,
+  Star,
+  Trash2,
+  XCircle,
 } from "lucide-react";
-import { getReviewStatusColor, getReviewStatusText } from "@/utils/reviewHelpers";
+import React, { useState, useEffect } from "react";
 
 interface Review {
   id: string;
@@ -54,9 +54,7 @@ export default function AdminReviewsPage() {
     totalPages: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<
-    "ALL" | "PENDING" | "APPROVED" | "REJECTED"
-  >("ALL");
+  const [filter, setFilter] = useState<"ALL" | "PENDING" | "APPROVED" | "REJECTED">("ALL");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -157,8 +155,6 @@ export default function AdminReviewsPage() {
     setShowModal(true);
   };
 
-
-
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("es-ES", {
       year: "numeric",
@@ -173,8 +169,11 @@ export default function AdminReviewsPage() {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        className={`h-4 w-4 ${i < rating ? "text-[color:var(--color-accent)] fill-current" : "text-[color:var(--color-muted)]"
-          }`}
+        className={`h-4 w-4 ${
+          i < rating
+            ? "text-[color:var(--color-accent)] fill-current"
+            : "text-[color:var(--color-muted)]"
+        }`}
       />
     ));
   };
@@ -182,11 +181,8 @@ export default function AdminReviewsPage() {
   const filteredReviews = reviews.filter(
     (review) =>
       review.reviewerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      review.appointment.clientName
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      (review.reviewText &&
-        review.reviewText.toLowerCase().includes(searchTerm.toLowerCase())),
+      review.appointment.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (review.reviewText && review.reviewText.toLowerCase().includes(searchTerm.toLowerCase())),
   );
 
   return (
@@ -197,9 +193,7 @@ export default function AdminReviewsPage() {
           <h1 className="text-2xl font-bold text-[color:var(--color-heading)]">
             Gestión de Reseñas
           </h1>
-          <p className="text-[color:var(--color-muted)]">
-            Administra las reseñas de tus clientes
-          </p>
+          <p className="text-[color:var(--color-muted)]">Administra las reseñas de tus clientes</p>
         </div>
       </div>
 
@@ -214,13 +208,7 @@ export default function AdminReviewsPage() {
                 <select
                   value={filter}
                   onChange={(e) =>
-                    setFilter(
-                      e.target.value as
-                      | "ALL"
-                      | "PENDING"
-                      | "APPROVED"
-                      | "REJECTED",
-                    )
+                    setFilter(e.target.value as "ALL" | "PENDING" | "APPROVED" | "REJECTED")
                   }
                   className="appearance-none pr-8 border border-[color:var(--color-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-surface)] focus:border-[color:var(--color-primary)] bg-[color:var(--color-surface)] text-[color:var(--color-heading)]"
                 >
@@ -286,9 +274,7 @@ export default function AdminReviewsPage() {
                     </div>
                     <div className="flex items-center gap-2 mb-2">
                       {renderStars(review.rating)}
-                      <span className="text-sm text-gray-600">
-                        ({review.rating}/5)
-                      </span>
+                      <span className="text-sm text-gray-600">({review.rating}/5)</span>
                     </div>
                     <p className="text-sm text-[color:var(--color-muted)] mb-2">
                       Cliente: {review.appointment.clientName} •{" "}
@@ -326,18 +312,14 @@ export default function AdminReviewsPage() {
                     {review.status === "PENDING" && (
                       <>
                         <button
-                          onClick={() =>
-                            updateReviewStatus(review.id, "APPROVED", true)
-                          }
+                          onClick={() => updateReviewStatus(review.id, "APPROVED", true)}
                           className="p-2 text-[color:var(--status-confirmed-text)] hover:bg-[color:var(--status-confirmed-bg)] rounded-lg transition-colors"
                           title="Aprobar y hacer pública"
                         >
                           <CheckCircle className="h-4 w-4" />
                         </button>
                         <button
-                          onClick={() =>
-                            updateReviewStatus(review.id, "REJECTED")
-                          }
+                          onClick={() => updateReviewStatus(review.id, "REJECTED")}
                           className="p-2 text-[color:var(--status-cancelled-text)] hover:bg-[color:var(--status-cancelled-bg)] rounded-lg transition-colors"
                           title="Rechazar"
                         >
@@ -348,19 +330,9 @@ export default function AdminReviewsPage() {
 
                     {review.status === "APPROVED" && (
                       <button
-                        onClick={() =>
-                          updateReviewStatus(
-                            review.id,
-                            "APPROVED",
-                            !review.isPublic,
-                          )
-                        }
+                        onClick={() => updateReviewStatus(review.id, "APPROVED", !review.isPublic)}
                         className="p-2 text-[color:var(--color-primary)] hover:bg-[color:var(--color-primary)]/10 rounded-lg transition-colors"
-                        title={
-                          review.isPublic
-                            ? "Ocultar de público"
-                            : "Hacer pública"
-                        }
+                        title={review.isPublic ? "Ocultar de público" : "Hacer pública"}
                       >
                         {review.isPublic ? (
                           <EyeOff className="h-4 w-4" />
@@ -394,14 +366,12 @@ export default function AdminReviewsPage() {
             <div className="flex items-center justify-between">
               <div className="text-sm text-[color:var(--color-muted)]">
                 Mostrando {(pagination.page - 1) * pagination.limit + 1} a{" "}
-                {Math.min(pagination.page * pagination.limit, pagination.total)}{" "}
-                de {pagination.total} reseñas
+                {Math.min(pagination.page * pagination.limit, pagination.total)} de{" "}
+                {pagination.total} reseñas
               </div>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() =>
-                    setPagination((prev) => ({ ...prev, page: prev.page - 1 }))
-                  }
+                  onClick={() => setPagination((prev) => ({ ...prev, page: prev.page - 1 }))}
                   disabled={pagination.page === 1}
                   className="px-3 py-1 text-sm border border-[color:var(--color-border)]/30 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[color:var(--color-surface)] text-[color:var(--color-heading)]"
                 >
@@ -411,9 +381,7 @@ export default function AdminReviewsPage() {
                   Página {pagination.page} de {pagination.totalPages}
                 </span>
                 <button
-                  onClick={() =>
-                    setPagination((prev) => ({ ...prev, page: prev.page + 1 }))
-                  }
+                  onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}
                   disabled={pagination.page === pagination.totalPages}
                   className="px-3 py-1 text-sm border border-[color:var(--color-border)]/30 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[color:var(--color-surface)] text-[color:var(--color-heading)]"
                 >
@@ -455,8 +423,7 @@ export default function AdminReviewsPage() {
                     </span>
                   </div>
                   <p className="text-sm text-[color:var(--color-muted)] mb-3">
-                    {selectedReview.reviewerEmail} •{" "}
-                    {formatDate(selectedReview.createdAt)}
+                    {selectedReview.reviewerEmail} • {formatDate(selectedReview.createdAt)}
                   </p>
                 </div>
 
@@ -467,8 +434,7 @@ export default function AdminReviewsPage() {
                   <p className="text-sm text-[color:var(--color-muted)]">
                     Cliente: {selectedReview.appointment.clientName}
                     <br />
-                    Fecha: {" "}
-                    {formatDate(selectedReview.appointment.appointmentDate)}
+                    Fecha: {formatDate(selectedReview.appointment.appointmentDate)}
                     <br />
                     Servicio: {selectedReview.appointment.serviceType}
                   </p>
@@ -509,27 +475,21 @@ export default function AdminReviewsPage() {
                 {selectedReview.status === "PENDING" && (
                   <>
                     <button
-                      onClick={() =>
-                        updateReviewStatus(selectedReview.id, "APPROVED", true)
-                      }
+                      onClick={() => updateReviewStatus(selectedReview.id, "APPROVED", true)}
                       disabled={submitting}
                       className="flex-1 bg-[color:var(--status-confirmed-text)] text-white py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       {submitting ? "Procesando..." : "Aprobar y Publicar"}
                     </button>
                     <button
-                      onClick={() =>
-                        updateReviewStatus(selectedReview.id, "APPROVED", false)
-                      }
+                      onClick={() => updateReviewStatus(selectedReview.id, "APPROVED", false)}
                       disabled={submitting}
                       className="flex-1 bg-[color:var(--color-primary)] text-white py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       {submitting ? "Procesando..." : "Aprobar (Privada)"}
                     </button>
                     <button
-                      onClick={() =>
-                        updateReviewStatus(selectedReview.id, "REJECTED")
-                      }
+                      onClick={() => updateReviewStatus(selectedReview.id, "REJECTED")}
                       disabled={submitting}
                       className="flex-1 bg-[color:var(--status-cancelled-text)] text-white py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
@@ -541,11 +501,7 @@ export default function AdminReviewsPage() {
                 {selectedReview.status === "APPROVED" && (
                   <button
                     onClick={() =>
-                      updateReviewStatus(
-                        selectedReview.id,
-                        "APPROVED",
-                        !selectedReview.isPublic,
-                      )
+                      updateReviewStatus(selectedReview.id, "APPROVED", !selectedReview.isPublic)
                     }
                     disabled={submitting}
                     className="flex-1 bg-[color:var(--color-primary)] text-white py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"

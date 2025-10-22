@@ -1,19 +1,10 @@
 "use client";
 
+import { AnimatePresence, motion, useInView } from "framer-motion";
+import { ArrowLeft, ArrowRight, Calendar, Grid, Heart, Quote, Sliders, Star } from "lucide-react";
 import React, { useEffect, useState, useRef } from "react";
-import {
-  Star,
-  Quote,
-  Calendar,
-  Heart,
-  ArrowLeft,
-  ArrowRight,
-  Grid,
-  Sliders,
-} from "lucide-react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
-import Typography from "./ui/Typography";
 import Button from "./ui/Button";
+import Typography from "./ui/Typography";
 import "@/styles/components/testimonials.css";
 
 type ReviewShape = {
@@ -126,12 +117,8 @@ function getInitials(name: string) {
     .slice(0, 2);
 }
 
-function formatService(
-  services?: { name?: string; serviceName?: string }[],
-  serviceType?: string
-) {
-  if (!services || services.length === 0)
-    return serviceType || "Servicio de maquillaje";
+function formatService(services?: { name?: string; serviceName?: string }[], serviceType?: string) {
+  if (!services || services.length === 0) return serviceType || "Servicio de maquillaje";
   return services.map((s) => s.name || s.serviceName).join(", ");
 }
 
@@ -145,8 +132,7 @@ const serviceCategories = [
 
 export default function TestimonialsSection() {
   const [items, setItems] = useState<Testimonial[]>(fallbackTestimonials);
-  const [filteredItems, setFilteredItems] =
-    useState<Testimonial[]>(fallbackTestimonials);
+  const [filteredItems, setFilteredItems] = useState<Testimonial[]>(fallbackTestimonials);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<"carousel" | "grid">("carousel");
@@ -162,24 +148,15 @@ export default function TestimonialsSection() {
         const res = await fetch("/api/reviews");
         const data = await res.json();
         if (!mounted) return;
-        if (
-          data?.success &&
-          Array.isArray(data.reviews) &&
-          data.reviews.length > 0
-        ) {
+        if (data?.success && Array.isArray(data.reviews) && data.reviews.length > 0) {
           const list = data.reviews.map((r: ReviewShape) => ({
             id: r.id,
             name: r.reviewerName,
             text: r.reviewText || "Excelente servicio, muy recomendado!",
             rating: r.rating || 5,
-            service: formatService(
-              r.appointment?.services,
-              r.appointment?.serviceType
-            ),
+            service: formatService(r.appointment?.services, r.appointment?.serviceType),
             date: r.appointment?.appointmentDate
-              ? new Date(r.appointment!.appointmentDate!)
-                  .getFullYear()
-                  .toString()
+              ? new Date(r.appointment!.appointmentDate!).getFullYear().toString()
               : "2024",
             initials: getInitials(r.reviewerName),
           }));
@@ -202,7 +179,7 @@ export default function TestimonialsSection() {
       if (timerRef.current) window.clearInterval(timerRef.current);
       timerRef.current = window.setInterval(
         () => setIndex((i) => (i + 1) % filteredItems.length),
-        6000
+        6000,
       );
       return () => {
         if (timerRef.current) window.clearInterval(timerRef.current);
@@ -215,7 +192,7 @@ export default function TestimonialsSection() {
       setFilteredItems(items);
     } else {
       const filtered = items.filter((item) =>
-        item.service.toLowerCase().includes(selectedService.toLowerCase())
+        item.service.toLowerCase().includes(selectedService.toLowerCase()),
       );
       setFilteredItems(filtered);
     }
@@ -226,9 +203,7 @@ export default function TestimonialsSection() {
   // If user selected a specific service, prioritize featured items for the carousel.
   // If 'all' is selected, show all filtered items so "Todos" truly shows everything.
   const displayItems =
-    viewMode === "carousel" &&
-    selectedService !== "all" &&
-    featuredTestimonials.length > 0
+    viewMode === "carousel" && selectedService !== "all" && featuredTestimonials.length > 0
       ? featuredTestimonials
       : filteredItems;
 
@@ -236,7 +211,7 @@ export default function TestimonialsSection() {
     <section
       id="testimonials"
       className="py-12 sm:py-24 testimonials-section relative overflow-hidden"
-      style={{ scrollMarginTop: '120px' }}
+      style={{ scrollMarginTop: "120px" }}
       ref={sectionRef}
     >
       {/* Elementos decorativos de fondo */}
@@ -270,8 +245,7 @@ export default function TestimonialsSection() {
             variant="p"
             className="hidden sm:block text-lg text-[color:var(--color-body)] max-w-2xl mx-auto"
           >
-            Descubre por qué más de 370 clientas confían en mi arte para sus
-            momentos más especiales
+            Descubre por qué más de 370 clientas confían en mi arte para sus momentos más especiales
           </Typography>
         </motion.div>
 
@@ -286,33 +260,25 @@ export default function TestimonialsSection() {
             <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)] mb-1">
               5.0
             </div>
-            <div className="text-xs sm:text-sm text-[color:var(--color-body)]">
-              Calificación
-            </div>
+            <div className="text-xs sm:text-sm text-[color:var(--color-body)]">Calificación</div>
           </div>
           <div className="text-center p-4 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
             <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)] mb-1">
               370+
             </div>
-            <div className="text-xs sm:text-sm text-[color:var(--color-body)]">
-              Reseñas
-            </div>
+            <div className="text-xs sm:text-sm text-[color:var(--color-body)]">Reseñas</div>
           </div>
           <div className="text-center p-4 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
             <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)] mb-1">
               98%
             </div>
-            <div className="text-xs sm:text-sm text-[color:var(--color-body)]">
-              Satisfacción
-            </div>
+            <div className="text-xs sm:text-sm text-[color:var(--color-body)]">Satisfacción</div>
           </div>
           <div className="text-center p-4 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
             <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)] mb-1">
               8+
             </div>
-            <div className="text-xs sm:text-sm text-[color:var(--color-body)]">
-              Años Exp.
-            </div>
+            <div className="text-xs sm:text-sm text-[color:var(--color-body)]">Años Exp.</div>
           </div>
         </motion.div>
 
@@ -419,14 +385,12 @@ export default function TestimonialsSection() {
                         </div>
 
                         <div className="testimonial-stars mb-4">
-                          {[...Array(displayItems[index].rating)].map(
-                            (_, i) => (
-                              <Star
-                                key={i}
-                                className="w-5 h-5 mx-0.5 text-[color:var(--color-accent)] fill-current"
-                              />
-                            )
-                          )}
+                          {[...Array(displayItems[index].rating)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className="w-5 h-5 mx-0.5 text-[color:var(--color-accent)] fill-current"
+                            />
+                          ))}
                         </div>
 
                         <div className="testimonial-quote mb-6 px-4">
@@ -468,10 +432,7 @@ export default function TestimonialsSection() {
                     variant="ghost"
                     size="sm"
                     onClick={() =>
-                      setIndex(
-                        (i) =>
-                          (i - 1 + displayItems.length) % displayItems.length
-                      )
+                      setIndex((i) => (i - 1 + displayItems.length) % displayItems.length)
                     }
                     className="rounded-full p-2"
                   >
@@ -495,9 +456,7 @@ export default function TestimonialsSection() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() =>
-                      setIndex((i) => (i + 1) % displayItems.length)
-                    }
+                    onClick={() => setIndex((i) => (i + 1) % displayItems.length)}
                     className="rounded-full p-2"
                   >
                     <ArrowRight className="w-5 h-5" />
@@ -568,12 +527,7 @@ export default function TestimonialsSection() {
           <Button
             variant="primary"
             size="lg"
-            onClick={() =>
-              window.open(
-                "https://www.instagram.com/marcelacorderobeauty/",
-                "_blank"
-              )
-            }
+            onClick={() => window.open("https://www.instagram.com/marcelacorderobeauty/", "_blank")}
             className="px-8 py-3 rounded-full"
           >
             Ver más reseñas en Instagram

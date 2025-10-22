@@ -1,19 +1,19 @@
 "use client";
 
-import Link from "next/link";
-import Button from "@/components/ui/Button";
-import DashboardSection from "@/components/dashboard/DashboardSection";
-import DashboardHero from "@/components/dashboard/DashboardHero";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import StatsGrid from "@/components/dashboard/StatsGrid";
+import DashboardHero from "@/components/dashboard/DashboardHero";
+import DashboardSection from "@/components/dashboard/DashboardSection";
+import ErrorState from "@/components/dashboard/ErrorState";
+import LoadingSpinner from "@/components/dashboard/LoadingSpinner";
 import QuickActions from "@/components/dashboard/QuickActions";
 import RecentAppointments from "@/components/dashboard/RecentAppointments";
-import StatusSummary from "@/components/dashboard/StatusSummary";
 import ReviewsStats from "@/components/dashboard/ReviewsStats";
-import LoadingSpinner from "@/components/dashboard/LoadingSpinner";
-import ErrorState from "@/components/dashboard/ErrorState";
+import StatsGrid from "@/components/dashboard/StatsGrid";
+import StatusSummary from "@/components/dashboard/StatusSummary";
+import Button from "@/components/ui/Button";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { useRecentAppointments } from "@/hooks/useRecentAppointments";
+import Link from "next/link";
 
 export default function AdminDashboardModern() {
   const {
@@ -86,7 +86,9 @@ export default function AdminDashboardModern() {
           subtitle="Últimas actividades"
           action={
             <Link href="/admin/appointments">
-              <Button variant="secondary" size="sm" className="rounded-full">Ver todas</Button>
+              <Button variant="secondary" size="sm" className="rounded-full">
+                Ver todas
+              </Button>
             </Link>
           }
         >

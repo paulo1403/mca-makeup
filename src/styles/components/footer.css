@@ -4,11 +4,7 @@
   --footer-text: var(--color-body);
   --footer-heading: var(--color-heading);
   --footer-accent: var(--color-primary);
-  --footer-border: color-mix(
-    in srgb,
-    var(--color-border) 30%,
-    transparent
-  );
+  --footer-border: color-mix(in srgb, var(--color-border) 30%, transparent);
   --footer-link-hover: var(--color-accent);
 }
 
@@ -40,7 +36,7 @@
   .footer-container {
     padding: 4rem 3rem 2rem;
   }
-  
+
   .footer-grid {
     grid-template-columns: 2fr 1fr 1fr;
     gap: 4rem;

@@ -1,11 +1,11 @@
+import type { ServiceSelection } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { ServiceSelection } from "@/types";
 
 export function useAvailableRanges(
   date: Date | null,
   serviceSelection: ServiceSelection,
-  locationType: "STUDIO" | "HOME"
+  locationType: "STUDIO" | "HOME",
 ) {
   const formattedDate = date ? format(date, "yyyy-MM-dd") : "";
 
@@ -22,12 +22,7 @@ export function useAvailableRanges(
   const serviceTypesString = expandedServiceIds.join(",");
 
   return useQuery({
-    queryKey: [
-      "availableRanges",
-      formattedDate,
-      serviceTypesString,
-      locationType,
-    ],
+    queryKey: ["availableRanges", formattedDate, serviceTypesString, locationType],
     queryFn: async () => {
       if (!formattedDate || !expandedServiceIds.length || !locationType)
         return { availableRanges: [] };

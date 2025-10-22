@@ -1,22 +1,22 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Logo from "@/components/Logo";
 import {
-  LayoutDashboard,
-  Calendar,
-  Clock,
-  Settings,
-  Star,
   AlertTriangle,
-  Truck,
+  Calendar,
+  ChevronLeft,
+  Clock,
   Eye,
   Home,
+  LayoutDashboard,
+  Settings,
+  Star,
+  Truck,
   X,
-  ChevronLeft,
 } from "lucide-react";
-import Logo from "@/components/Logo";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React, { useState, useEffect } from "react";
 
 interface AdminSidebarProps {
   isOpen: boolean;
@@ -43,12 +43,12 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
   // Initialize collapsed synchronously from cookie or localStorage to avoid layout shifts
   const getInitialCollapsed = (): boolean => {
     try {
-      if (typeof window === 'undefined') return false;
+      if (typeof window === "undefined") return false;
       // Prefer cookie (so it can be read server-side if needed)
       const match = document.cookie.match(/(?:^|; )adminSidebarCollapsed=([^;]+)/);
-      if (match && match[1]) return match[1] === 'true';
-      const stored = localStorage.getItem('adminSidebarCollapsed');
-      if (stored !== null) return stored === 'true';
+      if (match && match[1]) return match[1] === "true";
+      const stored = localStorage.getItem("adminSidebarCollapsed");
+      if (stored !== null) return stored === "true";
     } catch {
       // ignore
     }
@@ -67,8 +67,8 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
   // Persist collapsed state to both localStorage and cookie when it changes
   useEffect(() => {
     try {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('adminSidebarCollapsed', String(collapsed));
+      if (typeof window !== "undefined") {
+        localStorage.setItem("adminSidebarCollapsed", String(collapsed));
         // Set cookie for 1 year so server or other pages can read it if needed
         const maxAge = 60 * 60 * 24 * 365; // 1 year in seconds
         document.cookie = `adminSidebarCollapsed=${collapsed}; path=/; max-age=${maxAge};`;
@@ -96,7 +96,9 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
             <div className="flex items-center gap-3 min-w-0">
               {collapsed ? (
                 <div className="w-9 h-9 bg-[color:var(--color-primary)]/15 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-[color:var(--color-primary)] font-semibold text-sm">MC</span>
+                  <span className="text-[color:var(--color-primary)] font-semibold text-sm">
+                    MC
+                  </span>
                 </div>
               ) : (
                 <Logo />
@@ -121,7 +123,9 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
                 aria-label={collapsed ? "Expandir barra" : "Colapsar barra"}
                 aria-pressed={collapsed}
               >
-             <ChevronLeft className={`h-5 w-5 transition-transform duration-300 ${collapsed ? "rotate-180" : "rotate-0"}`} />
+                <ChevronLeft
+                  className={`h-5 w-5 transition-transform duration-300 ${collapsed ? "rotate-180" : "rotate-0"}`}
+                />
               </button>
               {/* Close button (mobile) */}
               <button
@@ -141,8 +145,10 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
               const isActive = pathname === item.href;
 
               const baseClasses = `flex items-center ${collapsed ? "justify-center" : "space-x-3"} ${itemPaddingClass} rounded-lg text-sm font-medium font-montserrat transition-all duration-200 group nav-item focus-ring relative border`;
-              const activeClasses = "bg-[color:var(--color-primary)] text-white shadow-sm border-[color:var(--color-primary-light)]/40";
-              const inactiveClasses = "text-[color:var(--color-body)] hover:text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface-elevated)] border-transparent hover:border-[color:var(--color-border)]/50";
+              const activeClasses =
+                "bg-[color:var(--color-primary)] text-white shadow-sm border-[color:var(--color-primary-light)]/40";
+              const inactiveClasses =
+                "text-[color:var(--color-body)] hover:text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface-elevated)] border-transparent hover:border-[color:var(--color-border)]/50";
 
               return (
                 <Link

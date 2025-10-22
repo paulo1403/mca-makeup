@@ -1,12 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient, Prisma } from "@prisma/client";
-import { z } from "zod";
-import { sendEmailToAdmins, emailTemplates, sendEmail } from "@/lib/serverEmail";
-import {
-  parseDateFromString,
-  debugDate,
-} from "@/utils/dateUtils";
+import { emailTemplates, sendEmail, sendEmailToAdmins } from "@/lib/serverEmail";
+import { debugDate, parseDateFromString } from "@/utils/dateUtils";
 import { calculateNightShiftCost } from "@/utils/nightShift";
+import { type Prisma, PrismaClient } from "@prisma/client";
+import { type NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
 const prisma = new PrismaClient();
 
@@ -21,23 +18,16 @@ const appointmentSchema = z
       .max(20, "Teléfono muy largo")
       .refine((phone) => {
         const cleanPhone = phone.replace(/[\s\-\+\(\)]/g, "");
-        return (
-          cleanPhone.length >= 9 &&
-          cleanPhone.length <= 12 &&
-          /^\d+$/.test(cleanPhone)
-        );
+        return cleanPhone.length >= 9 && cleanPhone.length <= 12 && /^\d+$/.test(cleanPhone);
       }, "Formato de teléfono inválido. Ej: +51 999 209 880 o 999209880"),
     services: z
       .record(z.string(), z.number().min(1))
       .refine((obj) => Object.keys(obj).length > 0, {
         message: "Debe seleccionar al menos un servicio",
       })
-      .refine(
-        (obj) => Object.values(obj).some(quantity => quantity > 0),
-        {
-          message: "Debe seleccionar al menos una cantidad de servicio",
-        }
-      ),
+      .refine((obj) => Object.values(obj).some((quantity) => quantity > 0), {
+        message: "Debe seleccionar al menos una cantidad de servicio",
+      }),
     servicePrice: z.number().min(0, "Precio del servicio requerido"),
     appointmentDate: z.string().min(1, "Fecha requerida"),
     appointmentTimeRange: z.string().min(1, "Horario requerido"),
@@ -52,18 +42,12 @@ const appointmentSchema = z
   .refine(
     (data) => {
       if (data.locationType === "HOME") {
-        return (
-          data.district &&
-          data.district.length > 0 &&
-          data.address &&
-          data.address.length > 0
-        );
+        return data.district && data.district.length > 0 && data.address && data.address.length > 0;
       }
       return true;
     },
     {
-      message:
-        "Para servicios a domicilio, distrito y dirección son requeridos",
+      message: "Para servicios a domicilio, distrito y dirección son requeridos",
       path: ["address"],
     },
   )
@@ -102,7 +86,7 @@ export async function POST(request: NextRequest) {
     for (const [serviceId, quantity] of Object.entries(validatedData.services)) {
       if (quantity <= 0) continue;
 
-      const matchedService = allServices.find(s => s.id === serviceId);
+      const matchedService = allServices.find((s) => s.id === serviceId);
 
       if (!matchedService) {
         return NextResponse.json(
@@ -114,7 +98,7 @@ export async function POST(request: NextRequest) {
       for (let i = 0; i < quantity; i++) {
         parsedServices.push(matchedService);
       }
-      
+
       totalDuration += matchedService.duration * quantity;
       calculatedServicePrice += matchedService.price * quantity;
     }
@@ -125,8 +109,7 @@ export async function POST(request: NextRequest) {
     if (uniqueCategories.length === 1 && uniqueCategories[0] === "HAIRSTYLE") {
       return NextResponse.json(
         {
-          error:
-            "No se puede reservar solo peinado. Debe incluir un servicio de maquillaje.",
+          error: "No se puede reservar solo peinado. Debe incluir un servicio de maquillaje.",
         },
         { status: 400 },
       );
@@ -134,8 +117,7 @@ export async function POST(request: NextRequest) {
 
     // No permitir combinar novia con social/piel madura
     const hasNovia = categories.includes("BRIDAL");
-    const hasSocial =
-      categories.includes("SOCIAL") || categories.includes("MATURE_SKIN");
+    const hasSocial = categories.includes("SOCIAL") || categories.includes("MATURE_SKIN");
 
     if (hasNovia && hasSocial) {
       return NextResponse.json(
@@ -177,10 +159,7 @@ export async function POST(request: NextRequest) {
       appointmentDateTime = parseDateFromString(validatedData.appointmentDate);
       debugDate(appointmentDateTime, "Parsed appointment date");
     } catch {
-      return NextResponse.json(
-        { error: "Formato de fecha inválido" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Formato de fecha inválido" }, { status: 400 });
     }
 
     // Check if the appointment slot (rango) is available
@@ -204,7 +183,7 @@ export async function POST(request: NextRequest) {
     // Calcular costo de transporte si es a domicilio
     let transportCost = 0;
     let totalPrice = calculatedServicePrice;
-    
+
     // Calculate night shift cost
     const nightShiftCost = calculateNightShiftCost(validatedData.appointmentTimeRange);
 
@@ -230,14 +209,14 @@ export async function POST(request: NextRequest) {
     // Crear string de servicios para serviceType (mantener compatibilidad)
     const serviceTypeParts = [];
     const servicesJson = [];
-    
+
     // Group services by their details and create summary
     const serviceGroups = new Map();
-    
+
     for (const [serviceId, quantity] of Object.entries(validatedData.services)) {
       if (quantity <= 0) continue;
-      
-      const service = allServices.find(s => s.id === serviceId);
+
+      const service = allServices.find((s) => s.id === serviceId);
       if (service) {
         const key = service.id;
         serviceGroups.set(key, {
@@ -248,7 +227,7 @@ export async function POST(request: NextRequest) {
           category: service.category,
           quantity: quantity,
         });
-        
+
         // Add to service type string
         if (quantity > 1) {
           serviceTypeParts.push(`${quantity}x ${service.name}`);
@@ -257,9 +236,9 @@ export async function POST(request: NextRequest) {
         }
       }
     }
-    
+
     const serviceTypeString = serviceTypeParts.join(" + ");
-    
+
     // Convert groups to final JSON format
     for (const serviceGroup of serviceGroups.values()) {
       servicesJson.push(serviceGroup);
@@ -282,14 +261,10 @@ export async function POST(request: NextRequest) {
         appointmentDate: appointmentDateTime,
         appointmentTime: validatedData.appointmentTimeRange,
         locationType: validatedData.locationType,
-        district:
-          validatedData.locationType === "HOME" ? validatedData.district : null,
-        address:
-          validatedData.locationType === "HOME" ? validatedData.address : null,
+        district: validatedData.locationType === "HOME" ? validatedData.district : null,
+        address: validatedData.locationType === "HOME" ? validatedData.address : null,
         addressReference:
-          validatedData.locationType === "HOME"
-            ? validatedData.addressReference
-            : null,
+          validatedData.locationType === "HOME" ? validatedData.addressReference : null,
         additionalNotes: `Servicios: ${serviceTypeString}\nUbicación: ${validatedData.locationType === "STUDIO" ? "Local en Av. Bolívar 1073, Pueblo Libre" : `Domicilio - ${validatedData.district || ""}, ${validatedData.address || ""}`}${validatedData.addressReference ? ` (Ref: ${validatedData.addressReference})` : ""}${validatedData.additionalNotes ? `\n\nNotas adicionales: ${validatedData.additionalNotes}` : ""}`,
         status: "PENDING",
       },
@@ -300,7 +275,7 @@ export async function POST(request: NextRequest) {
       data: {
         type: "APPOINTMENT",
         title: "Nueva cita pendiente",
-        message: `${appointment.clientName} ha solicitado ${serviceTypeString} para el ${appointment.appointmentDate.toLocaleDateString('es-PE')} a las ${appointment.appointmentTime}`,
+        message: `${appointment.clientName} ha solicitado ${serviceTypeString} para el ${appointment.appointmentDate.toLocaleDateString("es-PE")} a las ${appointment.appointmentTime}`,
         link: "/admin/appointments",
         appointmentId: appointment.id,
         read: false,
@@ -311,7 +286,7 @@ export async function POST(request: NextRequest) {
     const adminEmailTemplate = emailTemplates.newAppointmentAlert(
       appointment.clientName,
       serviceTypeString,
-      appointment.appointmentDate.toLocaleDateString('es-ES'),
+      appointment.appointmentDate.toLocaleDateString("es-ES"),
       appointment.appointmentTime,
       appointment.clientEmail,
       appointment.clientPhone,
@@ -319,7 +294,7 @@ export async function POST(request: NextRequest) {
       appointment.district || undefined,
       appointment.address || undefined,
       appointment.addressReference || undefined,
-      `Ubicación: ${appointment.locationType === 'HOME' ? 'Domicilio' : 'Studio'}${appointment.district ? ` - Distrito: ${appointment.district}` : ''}${appointment.address ? ` - Dirección: ${appointment.address}` : ''}`
+      `Ubicación: ${appointment.locationType === "HOME" ? "Domicilio" : "Studio"}${appointment.district ? ` - Distrito: ${appointment.district}` : ""}${appointment.address ? ` - Dirección: ${appointment.address}` : ""}`,
     );
 
     const emailSent = await sendEmailToAdmins({
@@ -334,13 +309,13 @@ export async function POST(request: NextRequest) {
     const clientEmailTemplate = emailTemplates.appointmentPending(
       appointment.clientName,
       serviceTypeString,
-      appointment.appointmentDate.toLocaleDateString('es-ES'),
+      appointment.appointmentDate.toLocaleDateString("es-ES"),
       appointment.appointmentTime,
       appointment.locationType,
       appointment.district || undefined,
       appointment.address || undefined,
       appointment.addressReference || undefined,
-      appointment.additionalNotes || undefined
+      appointment.additionalNotes || undefined,
     );
 
     const clientEmailSent = await sendEmail({
@@ -354,8 +329,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        message:
-          "Cita enviada exitosamente. Te contactaremos pronto para confirmar.",
+        message: "Cita enviada exitosamente. Te contactaremos pronto para confirmar.",
         appointmentId: appointment.id,
         pricing: {
           servicePrice: calculatedServicePrice,
@@ -373,9 +347,7 @@ export async function POST(request: NextRequest) {
 
     if (error instanceof z.ZodError) {
       // Encontrar el primer error de teléfono para dar un mensaje más específico
-      const phoneError = error.errors.find((err) =>
-        err.path.includes("clientPhone"),
-      );
+      const phoneError = error.errors.find((err) => err.path.includes("clientPhone"));
 
       if (phoneError) {
         return NextResponse.json(
@@ -392,17 +364,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: "Datos inválidos",
-          message:
-            "Por favor verifica que todos los campos estén completos y sean válidos.",
+          message: "Por favor verifica que todos los campos estén completos y sean válidos.",
           details: error.errors,
         },
         { status: 400 },
       );
     }
 
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }

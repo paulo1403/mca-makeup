@@ -1,30 +1,22 @@
 "use client";
 
-import { TimeSlot } from "@/hooks/useAvailability";
+import type { TimeSlot } from "@/hooks/useAvailability";
 import {
+  Building,
+  CheckCircle,
   Clock,
   Edit2,
-  Trash2,
-  Play,
-  Pause,
-  Plus,
-  CheckCircle,
-  XCircle,
-  Building,
   Home,
+  Pause,
+  Play,
+  Plus,
+  Trash2,
+  XCircle,
 } from "lucide-react";
 import { useState } from "react";
 import React from "react";
 
-const DAYS_OF_WEEK = [
-  "Domingo",
-  "Lunes",
-  "Martes",
-  "Miércoles",
-  "Jueves",
-  "Viernes",
-  "Sábado",
-];
+const DAYS_OF_WEEK = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
 interface TimeSlotListProps {
   timeSlots: TimeSlot[];
@@ -50,9 +42,7 @@ export default function TimeSlotList({
   };
 
   // Agrupar por tipo de ubicación
-  const studioSlots = timeSlots.filter(
-    (slot) => slot.locationType === "STUDIO",
-  );
+  const studioSlots = timeSlots.filter((slot) => slot.locationType === "STUDIO");
   const homeSlots = timeSlots.filter((slot) => slot.locationType === "HOME");
 
   const currentSlots = activeTab === "STUDIO" ? studioSlots : homeSlots;
@@ -84,9 +74,7 @@ export default function TimeSlotList({
         <div
           className="w-3 h-3 rounded-full"
           style={{
-            backgroundColor: slot.isActive
-              ? "var(--status-confirmed-text)"
-              : "var(--color-muted)",
+            backgroundColor: slot.isActive ? "var(--status-confirmed-text)" : "var(--color-muted)",
           }}
         />
       </div>
@@ -102,14 +90,8 @@ export default function TimeSlotList({
               : "bg-[color:var(--color-primary)]/10 text-[color:var(--color-primary)] hover:bg-[color:var(--color-primary)]/15 border-[color:var(--color-primary)]/30"
           }`}
         >
-          {slot.isActive ? (
-            <Pause className="h-3 w-3" />
-          ) : (
-            <Play className="h-3 w-3" />
-          )}
-          <span className="hidden xs:inline">
-            {slot.isActive ? "Pausar" : "Activar"}
-          </span>
+          {slot.isActive ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
+          <span className="hidden xs:inline">{slot.isActive ? "Pausar" : "Activar"}</span>
         </button>
 
         {onEditAction && (
@@ -210,9 +192,7 @@ export default function TimeSlotList({
               <Home className="h-5 w-5 text-[color:var(--color-accent)]" />
             )}
             <h3 className="font-semibold text-[color:var(--color-heading)]">
-              {activeTab === "STUDIO"
-                ? "Servicios en Estudio"
-                : "Servicios a Domicilio"}
+              {activeTab === "STUDIO" ? "Servicios en Estudio" : "Servicios a Domicilio"}
             </h3>
           </div>
           <p className="text-sm text-[color:var(--color-body)]">
@@ -231,22 +211,17 @@ export default function TimeSlotList({
               <Home className="mx-auto h-12 w-12 text-[color:var(--color-muted)] mb-4" />
             )}
             <h3 className="text-lg font-medium text-[color:var(--color-heading)] mb-2">
-              No hay horarios configurados para {" "}
-              {activeTab === "STUDIO" ? "estudio" : "domicilio"}
+              No hay horarios configurados para {activeTab === "STUDIO" ? "estudio" : "domicilio"}
             </h3>
             <p className="text-[color:var(--color-body)] mb-4">
-              Agrega horarios para que los clientes puedan reservar {" "}
-              {activeTab === "STUDIO"
-                ? "citas en el estudio"
-                : "servicios a domicilio"}
+              Agrega horarios para que los clientes puedan reservar{" "}
+              {activeTab === "STUDIO" ? "citas en el estudio" : "servicios a domicilio"}
             </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {DAYS_OF_WEEK.map((dayName, dayIndex) => {
-              const daySlots = currentSlots.filter(
-                (slot) => slot.dayOfWeek === dayIndex,
-              );
+              const daySlots = currentSlots.filter((slot) => slot.dayOfWeek === dayIndex);
               const hasActiveSlots = daySlots.some((slot) => slot.isActive);
 
               return (
@@ -297,10 +272,7 @@ export default function TimeSlotList({
                           style={{ color: "var(--status-pending-text)" }}
                         />
                       ) : (
-                        <XCircle
-                          className="h-5 w-5"
-                          style={{ color: "var(--color-muted)" }}
-                        />
+                        <XCircle className="h-5 w-5" style={{ color: "var(--color-muted)" }} />
                       )}
                     </div>
 
@@ -315,24 +287,23 @@ export default function TimeSlotList({
                                 borderColor: "var(--status-confirmed-border)",
                               }
                             : daySlots.length > 0
-                            ? {
-                                backgroundColor: "var(--status-pending-bg)",
-                                color: "var(--status-pending-text)",
-                                borderColor: "var(--status-pending-border)",
-                              }
-                            : {
-                                backgroundColor:
-                                  "var(--color-surface-elevated)",
-                                color: "var(--color-muted)",
-                                borderColor: "var(--color-border)",
-                              }
+                              ? {
+                                  backgroundColor: "var(--status-pending-bg)",
+                                  color: "var(--status-pending-text)",
+                                  borderColor: "var(--status-pending-border)",
+                                }
+                              : {
+                                  backgroundColor: "var(--color-surface-elevated)",
+                                  color: "var(--color-muted)",
+                                  borderColor: "var(--color-border)",
+                                }
                         }
                       >
                         {hasActiveSlots
                           ? "Disponible"
                           : daySlots.length > 0
-                          ? "Pausado"
-                          : "Sin horario"}
+                            ? "Pausado"
+                            : "Sin horario"}
                       </span>
                     </div>
                   </div>
@@ -351,9 +322,7 @@ export default function TimeSlotList({
                           className="mx-auto h-6 w-6 mb-2"
                           style={{ color: "var(--color-muted)" }}
                         />
-                        <p className="text-xs text-[color:var(--color-body)] mb-2">
-                          Sin horarios
-                        </p>
+                        <p className="text-xs text-[color:var(--color-body)] mb-2">Sin horarios</p>
                         <button
                           onClick={() => onAddAction?.(dayIndex, activeTab)}
                           className="inline-flex items-center space-x-1 text-xs text-[color:var(--color-primary)] hover:text-[color:var(--color-primary-hover)] font-medium"

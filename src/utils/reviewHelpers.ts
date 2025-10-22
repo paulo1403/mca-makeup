@@ -1,32 +1,35 @@
 export const copyReviewLink = (reviewToken: string, buttonElement?: HTMLButtonElement) => {
   const reviewUrl = `${typeof window !== "undefined" ? window.location.origin : "https://marcelacorderomakeup.com"}/review/${reviewToken}`;
 
-  navigator.clipboard.writeText(reviewUrl).then(() => {
-    if (buttonElement) {
-      const originalText = buttonElement.textContent;
-      buttonElement.textContent = "✅ Copiado!";
-      setTimeout(() => {
-        buttonElement.textContent = originalText;
-      }, 2000);
-    }
-  }).catch((err) => {
-    console.error('Error copying review link:', err);
-    // Fallback for older browsers
-    const textArea = document.createElement("textarea");
-    textArea.value = reviewUrl;
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textArea);
+  navigator.clipboard
+    .writeText(reviewUrl)
+    .then(() => {
+      if (buttonElement) {
+        const originalText = buttonElement.textContent;
+        buttonElement.textContent = "✅ Copiado!";
+        setTimeout(() => {
+          buttonElement.textContent = originalText;
+        }, 2000);
+      }
+    })
+    .catch((err) => {
+      console.error("Error copying review link:", err);
+      // Fallback for older browsers
+      const textArea = document.createElement("textarea");
+      textArea.value = reviewUrl;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
 
-    if (buttonElement) {
-      const originalText = buttonElement.textContent;
-      buttonElement.textContent = "✅ Copiado!";
-      setTimeout(() => {
-        buttonElement.textContent = originalText;
-      }, 2000);
-    }
-  });
+      if (buttonElement) {
+        const originalText = buttonElement.textContent;
+        buttonElement.textContent = "✅ Copiado!";
+        setTimeout(() => {
+          buttonElement.textContent = originalText;
+        }, 2000);
+      }
+    });
 };
 
 export const getReviewUrl = (reviewToken: string): string => {

@@ -1,18 +1,19 @@
 "use client";
 
-import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import {
-  ImageIcon,
-  ExternalLink,
-  Sparkles,
-  Heart,
-  Users,
   Camera,
+  ExternalLink,
+  Heart,
+  ImageIcon,
   MessageSquare,
+  Sparkles,
+  Users,
 } from "lucide-react";
-import Typography from "./ui/Typography";
+import type React from "react";
+import { useRef } from "react";
 import Button from "./ui/Button";
+import Typography from "./ui/Typography";
 
 type PortfolioCategory = {
   title: string;
@@ -64,7 +65,7 @@ export default function PortfolioSection() {
     <section
       id="portafolio"
       className="hidden sm:block py-12 sm:py-28 bg-[color:var(--color-background)]"
-      style={{ scrollMarginTop: '120px' }}
+      style={{ scrollMarginTop: "120px" }}
       ref={ref}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
@@ -90,8 +91,7 @@ export default function PortfolioSection() {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)]">
               Arte
             </span>
-          </Typography
-          >
+          </Typography>
 
           <Typography
             as="p"
@@ -129,12 +129,7 @@ export default function PortfolioSection() {
           variants={{ visible: { transition: { staggerChildren: 0.12 } } }}
         >
           {portfolioCategories.map((cat, i) => (
-            <motion.div
-              key={cat.title}
-              className="group"
-              custom={i}
-              variants={cardVariants}
-            >
+            <motion.div key={cat.title} className="group" custom={i} variants={cardVariants}>
               <div className="p-6 rounded-2xl h-full flex flex-col bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/20 group-hover:border-[color:var(--color-primary)]/50 transition-all duration-300">
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 rounded-xl bg-[color:var(--color-accent)]/10 text-[color:var(--color-primary)]">
@@ -153,9 +148,7 @@ export default function PortfolioSection() {
                   {cat.title}
                 </Typography>
 
-                <p className="text-[color:var(--color-body)] mb-6 flex-grow">
-                  {cat.description}
-                </p>
+                <p className="text-[color:var(--color-body)] mb-6 flex-grow">{cat.description}</p>
 
                 <div className="mt-auto">
                   <Button
@@ -190,8 +183,8 @@ export default function PortfolioSection() {
             variant="p"
             className="text-xl sm:text-2xl font-light text-[color:var(--color-heading)] mb-4 italic"
           >
-            &ldquo;Cada rostro es un lienzo único, cada cliente merece sentirse
-            la más bella en su día especial&rdquo;
+            &ldquo;Cada rostro es un lienzo único, cada cliente merece sentirse la más bella en su
+            día especial&rdquo;
           </Typography>
 
           <div className="flex items-center justify-center gap-4">
@@ -199,19 +192,13 @@ export default function PortfolioSection() {
               MC
             </div>
             <div className="text-left">
-              <p className="font-semibold text-[color:var(--color-heading)]">
-                Marcela Cordero
-              </p>
-              <p className="text-sm text-[color:var(--color-body)]">
-                Maquilladora Profesional
-              </p>
+              <p className="font-semibold text-[color:var(--color-heading)]">Marcela Cordero</p>
+              <p className="text-sm text-[color:var(--color-body)]">Maquilladora Profesional</p>
             </div>
           </div>
 
           <div className="mt-8 pt-6 border-t border-[color:var(--color-accent)]/10">
-            <p className="text-sm text-[color:var(--color-body)] mb-4">
-              Conéctate con mi trabajo
-            </p>
+            <p className="text-sm text-[color:var(--color-body)] mb-4">Conéctate con mi trabajo</p>
             <div className="flex gap-3 justify-center">
               <Button
                 as="a"

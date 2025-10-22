@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
 export interface RecentAppointment {
   id: string;
@@ -16,22 +16,22 @@ export interface RecentAppointment {
   }>;
   appointmentDate: string;
   appointmentTime: string;
-  status: 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED';
+  status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
   additionalNotes?: string;
   createdAt: string;
 }
 
-export const useRecentAppointments = (limit: number = 5) => {
+export const useRecentAppointments = (limit = 5) => {
   return useQuery<RecentAppointment[]>({
-    queryKey: ['recent-appointments', limit],
+    queryKey: ["recent-appointments", limit],
     queryFn: async () => {
       const response = await fetch(`/api/admin/appointments?limit=${limit}`);
       const data = await response.json();
-      
+
       if (!data.success) {
-        throw new Error('Failed to fetch recent appointments');
+        throw new Error("Failed to fetch recent appointments");
       }
-      
+
       return data.data.appointments;
     },
     staleTime: 30 * 60 * 1000, // 30 minutes

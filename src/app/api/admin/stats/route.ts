@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 // GET /api/admin/stats - Get dashboard statistics
 export async function GET() {
@@ -166,9 +166,7 @@ export async function GET() {
         serviceStats: serviceStats.map((stat) => ({
           service: stat.serviceType,
           count: stat._count.serviceType,
-          percentage: Math.round(
-            (stat._count.serviceType / totalAppointments) * 100,
-          ),
+          percentage: Math.round((stat._count.serviceType / totalAppointments) * 100),
         })),
         recentAppointments,
         weeklySchedule,

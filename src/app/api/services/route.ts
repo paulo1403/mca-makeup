@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
@@ -10,10 +10,7 @@ export async function GET() {
       where: {
         isActive: true,
       },
-      orderBy: [
-        { category: "asc" },
-        { price: "asc" }
-      ],
+      orderBy: [{ category: "asc" }, { price: "asc" }],
       select: {
         id: true,
         name: true,
@@ -25,24 +22,24 @@ export async function GET() {
     });
 
     // Agrupar servicios por categoría para mejor organización
-    const servicesByCategory = services.reduce((acc, service) => {
-      const category = service.category;
-      if (!acc[category]) {
-        acc[category] = [];
-      }
-      acc[category].push(service);
-      return acc;
-    }, {} as Record<string, typeof services>);
+    const servicesByCategory = services.reduce(
+      (acc, service) => {
+        const category = service.category;
+        if (!acc[category]) {
+          acc[category] = [];
+        }
+        acc[category].push(service);
+        return acc;
+      },
+      {} as Record<string, typeof services>,
+    );
 
     return NextResponse.json({
       services,
-      servicesByCategory
+      servicesByCategory,
     });
   } catch (error) {
     console.error("Error fetching services:", error);
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }

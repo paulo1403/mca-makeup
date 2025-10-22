@@ -1,10 +1,10 @@
 "use client";
 
-import { Eye, Info, Pencil, DollarSign, Clock, Tag, Sparkles } from "lucide-react";
-import Modal, { ModalHeader, ModalBody, ModalFooter } from "@/components/ui/Modal";
-import type { Service } from "../types";
 import Button from "@/components/ui/Button";
+import Modal, { ModalHeader, ModalBody, ModalFooter } from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
+import { Clock, DollarSign, Eye, Info, Pencil, Sparkles, Tag } from "lucide-react";
+import type { Service } from "../types";
 
 interface ViewServiceModalProps {
   show: boolean;
@@ -40,9 +40,17 @@ export default function ViewServiceModal({
         <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] p-5 mb-6">
           <div className="flex items-start justify-between">
             <div>
-              <Typography as="h3" variant="h4" className="text-[var(--color-heading)] font-semibold mb-2 tracking-tight">{viewingService.name}</Typography>
+              <Typography
+                as="h3"
+                variant="h4"
+                className="text-[var(--color-heading)] font-semibold mb-2 tracking-tight"
+              >
+                {viewingService.name}
+              </Typography>
               <div className="flex items-center gap-3">
-                <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${isActiveChip}`}>
+                <span
+                  className={`px-3 py-1 text-xs font-semibold rounded-full border ${isActiveChip}`}
+                >
                   {viewingService.isActive ? "✓ Activo" : "✗ Inactivo"}
                 </span>
                 <span className="px-3 py-1 text-xs font-medium rounded-full border bg-[var(--color-selected)] text-[var(--color-primary)] border-[var(--color-border)]">
@@ -59,11 +67,15 @@ export default function ViewServiceModal({
             </div>
             <div className="flex items-center gap-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg px-3 py-2">
               <Clock className="w-4 h-4 text-[var(--color-primary)]" />
-              <span className="text-sm text-[var(--color-heading)]">{viewingService.duration} min</span>
+              <span className="text-sm text-[var(--color-heading)]">
+                {viewingService.duration} min
+              </span>
             </div>
             <div className="hidden sm:flex items-center gap-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg px-3 py-2">
               <Tag className="w-4 h-4 text-[var(--color-primary)]" />
-              <span className="text-sm text-[var(--color-heading)]">{serviceCategories[viewingService.category]}</span>
+              <span className="text-sm text-[var(--color-heading)]">
+                {serviceCategories[viewingService.category]}
+              </span>
             </div>
           </div>
         </div>
@@ -92,7 +104,8 @@ export default function ViewServiceModal({
               Información Especial: Peinados
             </h4>
             <p className="text-sm text-[var(--color-body)]">
-              Este servicio de peinado solo puede ser reservado junto con un servicio de maquillaje. Los clientes verán el peinado como un valor agregado a su servicio principal.
+              Este servicio de peinado solo puede ser reservado junto con un servicio de maquillaje.
+              Los clientes verán el peinado como un valor agregado a su servicio principal.
             </p>
           </div>
         )}

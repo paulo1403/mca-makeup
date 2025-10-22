@@ -1,24 +1,16 @@
 "use client";
+import Button from "@/components/ui/Button";
+import Typography from "@/components/ui/Typography";
+import { useGroupedServicesQuery } from "@/hooks/useServicesQuery";
+import type { BookingData } from "@/lib/bookingSchema";
+import { CATEGORY_LABELS, validateSelection } from "@/lib/serviceRules";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, Clock, Filter, Search, Sparkles, Users, X } from "lucide-react";
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
-import { useGroupedServicesQuery } from "@/hooks/useServicesQuery";
+import toast from "react-hot-toast";
 import ServiceCategoryGroup from "../../booking/ServiceCategoryGroup";
 import ValidationToast from "../ValidationToast";
-import type { BookingData } from "@/lib/bookingSchema";
-import { validateSelection, CATEGORY_LABELS } from "@/lib/serviceRules";
-import toast from "react-hot-toast";
-import {
-  Search,
-  Sparkles,
-  Clock,
-  Users,
-  Filter,
-  X,
-  ChevronDown,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import Typography from "@/components/ui/Typography";
-import Button from "@/components/ui/Button";
 
 // Diccionario de traducciones
 const translations = {
@@ -45,8 +37,7 @@ const translations = {
 
   // Sin resultados
   noResults: "No se encontraron servicios",
-  noResultsMessage:
-    "Intenta con otros términos de búsqueda o cambia los filtros",
+  noResultsMessage: "Intenta con otros términos de búsqueda o cambia los filtros",
 
   // Ayuda
   needHelp: "¿Necesitas ayuda?",
@@ -69,8 +60,7 @@ const translations = {
     maxServices: "Has alcanzado el número máximo de servicios permitidos",
     minDuration: "La duración mínima es de 30 minutos",
     maxDuration: "La duración máxima es de 8 horas",
-    invalidCombination:
-      "La combinación de servicios seleccionados no es válida",
+    invalidCombination: "La combinación de servicios seleccionados no es válida",
   },
 };
 
@@ -122,13 +112,10 @@ export default function Step2_ServiceSelection() {
     id: string;
     quantity: number;
   }>;
-  const selectedServicesMap = selectedArr.reduce<Record<string, number>>(
-    (acc, item) => {
-      acc[item.id] = item.quantity;
-      return acc;
-    },
-    {}
-  );
+  const selectedServicesMap = selectedArr.reduce<Record<string, number>>((acc, item) => {
+    acc[item.id] = item.quantity;
+    return acc;
+  }, {});
 
   // grouped is a map category -> Service[]; collect all services into an array for validation
   const allServices = Object.values(grouped).flat();
@@ -161,10 +148,7 @@ export default function Step2_ServiceSelection() {
 
   // Mostrar toast cuando hay error de validación
   useEffect(() => {
-    const validationResult = validateSelection(
-      selectedServicesMap || {},
-      allServices
-    );
+    const validationResult = validateSelection(selectedServicesMap || {}, allServices);
 
     if (validationResult) {
       // Dismiss previous toast if exists
@@ -182,10 +166,10 @@ export default function Step2_ServiceSelection() {
           />
         ),
         {
-          duration: Infinity, // No auto-hide
+          duration: Number.POSITIVE_INFINITY, // No auto-hide
           id: "validation-error", // Unique ID to prevent duplicates
           position: "top-right",
-        }
+        },
       );
     } else {
       // Hide toast when validation passes
@@ -208,9 +192,7 @@ export default function Step2_ServiceSelection() {
     return (
       <div className="flex justify-center items-center py-12">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[color:var(--color-primary)]"></div>
-        <span className="ml-3 text-[color:var(--color-body)]">
-          {t("loading")}
-        </span>
+        <span className="ml-3 text-[color:var(--color-body)]">{t("loading")}</span>
       </div>
     );
 
@@ -298,10 +280,7 @@ export default function Step2_ServiceSelection() {
             <span className="text-sm font-medium text-[color:var(--color-heading)]">
               {t("categories")}
             </span>
-            <motion.div
-              animate={{ rotate: showFilters ? 180 : 0 }}
-              transition={{ duration: 0.2 }}
-            >
+            <motion.div animate={{ rotate: showFilters ? 180 : 0 }} transition={{ duration: 0.2 }}>
               <ChevronDown className="w-4 h-4 text-[color:var(--color-heading)]" />
             </motion.div>
           </button>
@@ -375,7 +354,8 @@ export default function Step2_ServiceSelection() {
                 )}
                 {selectedCategory && (
                   <span className="px-2 py-0.5 bg-[color:var(--color-surface-secondary)] rounded text-xs">
-                    {CATEGORY_LABELS[selectedCategory as keyof typeof CATEGORY_LABELS] ?? selectedCategory}
+                    {CATEGORY_LABELS[selectedCategory as keyof typeof CATEGORY_LABELS] ??
+                      selectedCategory}
                   </span>
                 )}
               </div>
@@ -421,12 +401,7 @@ export default function Step2_ServiceSelection() {
             >
               {t("noResultsMessage")}
             </Typography>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={clearFilters}
-              className="px-4 py-2"
-            >
+            <Button variant="ghost" size="sm" onClick={clearFilters} className="px-4 py-2">
               {t("clearFilters")}
             </Button>
           </motion.div>
@@ -476,11 +451,7 @@ export default function Step2_ServiceSelection() {
             >
               {t("needHelp")}
             </Typography>
-            <Typography
-              as="p"
-              variant="p"
-              className="text-[color:var(--color-body)] text-xs"
-            >
+            <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-xs">
               {t("helpMessage")}
             </Typography>
           </div>

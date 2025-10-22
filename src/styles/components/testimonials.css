@@ -1,11 +1,7 @@
 /* Token-aware styles for the Testimonials section */
 :root {
   --testimonials-bg: var(--color-surface);
-  --testimonials-border: color-mix(
-    in srgb,
-    var(--color-accent) 20%,
-    transparent
-  );
+  --testimonials-border: color-mix(in srgb, var(--color-accent) 20%, transparent);
   --testimonial-quote-color: var(--color-heading);
   --testimonial-body: var(--color-body);
 }
@@ -93,6 +89,3 @@
     margin: 0 auto;
   }
 }
-
-
-

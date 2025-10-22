@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Typography from "@/components/ui/Typography";
+import { motion } from "framer-motion";
 
 interface DashboardSectionProps {
   title?: string;
@@ -11,14 +11,24 @@ interface DashboardSectionProps {
   id?: string;
 }
 
-export default function DashboardSection({ title, subtitle, action, children, id }: DashboardSectionProps) {
+export default function DashboardSection({
+  title,
+  subtitle,
+  action,
+  children,
+  id,
+}: DashboardSectionProps) {
   return (
     <section id={id} className="relative mb-6 sm:mb-8">
       {(title || subtitle) && (
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-3">
           <div>
             {title && (
-              <Typography as="h3" variant="h3" className="text-lg sm:text-xl font-bold text-[color:var(--color-heading)]">
+              <Typography
+                as="h3"
+                variant="h3"
+                className="text-lg sm:text-xl font-bold text-[color:var(--color-heading)]"
+              >
                 {title}
               </Typography>
             )}
@@ -38,9 +48,7 @@ export default function DashboardSection({ title, subtitle, action, children, id
         transition={{ duration: 0.35 }}
         className="rounded-xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/30 shadow-sm"
       >
-        <div className="p-4 sm:p-6">
-          {children}
-        </div>
+        <div className="p-4 sm:p-6">{children}</div>
       </motion.div>
     </section>
   );

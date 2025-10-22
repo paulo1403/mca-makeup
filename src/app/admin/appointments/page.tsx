@@ -1,12 +1,12 @@
 "use client";
 
-import { Suspense } from "react";
-import { useAppointmentsPage } from "@/hooks/useAppointmentsPage";
 import AppointmentFilters from "@/components/appointments/AppointmentFilters";
-import AppointmentTable from "@/components/appointments/AppointmentTable";
-import Pagination from "@/components/appointments/Pagination";
 import AppointmentModal from "@/components/appointments/AppointmentModal";
+import AppointmentTable from "@/components/appointments/AppointmentTable";
 import LoadingSpinner from "@/components/appointments/LoadingSpinner";
+import Pagination from "@/components/appointments/Pagination";
+import { useAppointmentsPage } from "@/hooks/useAppointmentsPage";
+import { Suspense } from "react";
 
 function AppointmentsContent() {
   const {
@@ -38,6 +38,8 @@ function AppointmentsContent() {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
+                focusable="false"
               >
                 <path
                   strokeLinecap="round"
@@ -47,15 +49,12 @@ function AppointmentsContent() {
                 />
               </svg>
             </div>
-            <h2 className="text-xl font-semibold text-heading mb-2">
-              Error al cargar las citas
-            </h2>
+            <h2 className="text-xl font-semibold text-heading mb-2">Error al cargar las citas</h2>
             <p className="text-muted mb-6">
-              {error instanceof Error
-                ? error.message
-                : "Ha ocurrido un error inesperado"}
+              {error instanceof Error ? error.message : "Ha ocurrido un error inesperado"}
             </p>
             <button
+              type="button"
               onClick={() => window.location.reload()}
               className="w-full bg-[color:var(--color-primary)] text-white px-4 py-2 rounded-lg hover:bg-[color:var(--color-primary-hover)] transition-colors font-medium"
             >
@@ -96,19 +95,14 @@ function AppointmentsContent() {
                       style: "currency",
                       currency: "PEN",
                     }).format(
-                      appointments.reduce(
-                        (total, apt) => total + (apt.totalPrice || 0),
-                        0,
-                      ),
+                      appointments.reduce((total, apt) => total + (apt.totalPrice || 0), 0),
                     )}
                   </span>
                 </div>
                 {appointments.length > 0 && (
                   <div className="hidden sm:flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-[color:var(--color-success)] rounded-full"></div>
-                    <span className="text-xs text-muted">
-                      En tiempo real
-                    </span>
+                    <div className="w-2 h-2 bg-[color:var(--color-success)] rounded-full" />
+                    <span className="text-xs text-muted">En tiempo real</span>
                   </div>
                 )}
               </div>
@@ -129,10 +123,7 @@ function AppointmentsContent() {
                 >
                   {appointments.filter((a) => a.status === "CONFIRMED").length}
                 </div>
-                <div
-                  className="text-xs"
-                  style={{ color: "var(--status-confirmed-text)" }}
-                >
+                <div className="text-xs" style={{ color: "var(--status-confirmed-text)" }}>
                   Confirmadas
                 </div>
               </div>
@@ -149,10 +140,7 @@ function AppointmentsContent() {
                 >
                   {appointments.filter((a) => a.status === "PENDING").length}
                 </div>
-                <div
-                  className="text-xs"
-                  style={{ color: "var(--status-pending-text)" }}
-                >
+                <div className="text-xs" style={{ color: "var(--status-pending-text)" }}>
                   Pendientes
                 </div>
               </div>
@@ -169,10 +157,7 @@ function AppointmentsContent() {
                 >
                   {appointments.filter((a) => a.status === "COMPLETED").length}
                 </div>
-                <div
-                  className="text-xs"
-                  style={{ color: "var(--status-completed-text)" }}
-                >
+                <div className="text-xs" style={{ color: "var(--status-completed-text)" }}>
                   Completadas
                 </div>
               </div>
@@ -184,7 +169,10 @@ function AppointmentsContent() {
       {/* Main Content */}
       <div className="px-4 py-4 space-y-4">
         {/* Filters Section - Mobile First */}
-        <div className="bg-[color:var(--color-surface)] rounded-xl shadow-sm border border-[color:var(--color-border)] p-4" data-filters>
+        <div
+          className="bg-[color:var(--color-surface)] rounded-xl shadow-sm border border-[color:var(--color-border)] p-4"
+          data-filters
+        >
           <AppointmentFilters
             searchTerm={searchTerm}
             filter={filter}
@@ -203,6 +191,8 @@ function AppointmentsContent() {
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  focusable="false"
                 >
                   <path
                     strokeLinecap="round"
@@ -212,16 +202,17 @@ function AppointmentsContent() {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-heading mb-2">
-                No hay citas
-              </h3>
+              <h3 className="text-lg font-semibold text-heading mb-2">No hay citas</h3>
               <p className="text-muted mb-6">
                 {filter !== "all"
                   ? "No se encontraron citas con el filtro seleccionado"
                   : "Aún no tienes citas programadas"}
               </p>
               <button
-                onClick={() => (window.location.href = "/")}
+                type="button"
+                onClick={() => {
+                  window.location.href = "/";
+                }}
                 className="bg-[color:var(--color-primary)] text-white px-6 py-2 rounded-lg hover:bg-[color:var(--color-primary-hover)] transition-colors font-medium"
               >
                 Ver sitio web
@@ -251,6 +242,7 @@ function AppointmentsContent() {
       {/* Floating Action Button for Mobile */}
       <div className="fixed bottom-6 right-6 sm:hidden">
         <button
+          type="button"
           onClick={() => {
             const filters = document.querySelector("[data-filters]");
             filters?.scrollIntoView({ behavior: "smooth" });
@@ -262,6 +254,8 @@ function AppointmentsContent() {
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
           >
             <path
               strokeLinecap="round"

@@ -1,31 +1,24 @@
 "use client";
-import React, { useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
-import type { FieldPath } from "react-hook-form";
+import { useServicesList } from "@/hooks/useServices";
+import BookingSchema, { type BookingData } from "@/lib/bookingSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { motion, AnimatePresence } from "framer-motion";
-import BookingSchema, { BookingData } from "@/lib/bookingSchema";
+import { useMutation } from "@tanstack/react-query";
+import { AnimatePresence, motion } from "framer-motion";
+import { Calendar, CreditCard, MapPin, Send, Sparkles, User } from "lucide-react";
+import React, { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import type { FieldPath } from "react-hook-form";
+import toast from "react-hot-toast";
+import BookingSummary from "./booking/BookingSummary";
 import StepIndicator from "./booking/StepIndicator";
+import SuccessModal from "./booking/SuccessModal";
 import Step1 from "./booking/steps/Step1_PersonalInfo";
 import Step2 from "./booking/steps/Step2_ServiceSelection";
 import Step3 from "./booking/steps/Step3_Location";
 import Step4 from "./booking/steps/Step4_DateTime";
 import Step5 from "./booking/steps/Step5_Confirmation";
-import BookingSummary from "./booking/BookingSummary";
-import { useMutation } from "@tanstack/react-query";
-import toast from "react-hot-toast";
-import SuccessModal from "./booking/SuccessModal";
-import { useServicesList } from "@/hooks/useServices";
-import {
-  Send,
-  Calendar,
-  MapPin,
-  CreditCard,
-  User,
-  Sparkles,
-} from "lucide-react";
-import Typography from "./ui/Typography";
 import Button from "./ui/Button";
+import Typography from "./ui/Typography";
 
 const translations = {
   title: "Reserva tu Cita",
@@ -81,14 +74,10 @@ export default function BookingFlow() {
   const total = 5;
   const canSubmit = methods.watch("agreedToTerms") === true;
   const [showSuccess, setShowSuccess] = useState(false);
-  const [successPricing, setSuccessPricing] = useState<Pricing | undefined>(
-    undefined
-  );
-  const [successClientName, setSuccessClientName] = useState<
-    string | undefined
-  >(undefined);
+  const [successPricing, setSuccessPricing] = useState<Pricing | undefined>(undefined);
+  const [successClientName, setSuccessClientName] = useState<string | undefined>(undefined);
   const [successServiceNames, setSuccessServiceNames] = useState<string[]>([]);
-   const { t } = useTranslations();
+  const { t } = useTranslations();
   const { data: allServices = [] } = useServicesList();
 
   // Iconos para cada paso
@@ -107,9 +96,7 @@ export default function BookingFlow() {
         clientPhone: payload.phone,
         services: servicesRecord,
         servicePrice: 0,
-        appointmentDate: payload.date
-          ? new Date(payload.date).toISOString()
-          : "",
+        appointmentDate: payload.date ? new Date(payload.date).toISOString() : "",
         appointmentTimeRange: payload.timeSlot,
         locationType: payload.locationType,
         district: payload.district || undefined,
@@ -157,8 +144,8 @@ export default function BookingFlow() {
       setCurrentStep(1);
       setSuccessPricing(data?.pricing);
       setSuccessClientName(methods.getValues("name"));
-       setShowSuccess(true);
-       toast.success(t("successMessage"));
+      setShowSuccess(true);
+      toast.success(t("successMessage"));
     },
     onError: (err: unknown) => {
       const message = err instanceof Error ? err.message : t("errorSending");
@@ -240,11 +227,7 @@ export default function BookingFlow() {
                   >
                     {t(`step${currentStep}Title`)}
                   </Typography>
-                  <Typography
-                    as="p"
-                    variant="p"
-                    className="text-[color:var(--color-body)] text-sm"
-                  >
+                  <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-sm">
                     Paso {currentStep} de {total}
                   </Typography>
                 </div>
@@ -289,9 +272,7 @@ export default function BookingFlow() {
               {/* Botones de navegación */}
               <motion.div
                 className={`mt-6 flex flex-col gap-3 ${
-                  currentStep === total
-                    ? "sm:flex sm:justify-end"
-                    : "sm:flex sm:justify-between"
+                  currentStep === total ? "sm:flex sm:justify-end" : "sm:flex sm:justify-between"
                 }`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -327,17 +308,13 @@ export default function BookingFlow() {
                       variant="primary"
                       size="lg"
                       disabled={!canSubmit || sendBooking.isPending}
-                      onClick={methods.handleSubmit((data) =>
-                        sendBooking.mutate(data)
-                      )}
+                      onClick={methods.handleSubmit((data) => sendBooking.mutate(data))}
                       aria-busy={sendBooking.isPending}
                       className="w-full sm:w-auto min-h-[52px]"
                     >
                       <span className="inline-flex items-center gap-2">
                         <Send className="w-5 h-5" />
-                        {sendBooking.isPending
-                          ? t("submitting")
-                          : t("submitButton")}
+                        {sendBooking.isPending ? t("submitting") : t("submitButton")}
                       </span>
                     </Button>
                   )}
@@ -351,8 +328,8 @@ export default function BookingFlow() {
         open={showSuccess}
         onClose={() => setShowSuccess(false)}
         clientName={successClientName}
-  pricing={successPricing ?? undefined}
-  serviceNames={successServiceNames}
+        pricing={successPricing ?? undefined}
+        serviceNames={successServiceNames}
       />
     </FormProvider>
   );

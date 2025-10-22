@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
 import { motion } from "framer-motion";
+import { Clock, Instagram, MapPin, Sparkles, Star, Truck } from "lucide-react";
 import Image from "next/image";
+import React from "react";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
-import { MapPin, Truck, Instagram, Clock, Sparkles, Star } from "lucide-react";
 
 export default function HeroSection() {
   return (
@@ -25,7 +25,7 @@ export default function HeroSection() {
           }}
           transition={{
             duration: 8,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             ease: "easeInOut",
           }}
         />
@@ -37,7 +37,7 @@ export default function HeroSection() {
           }}
           transition={{
             duration: 10,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             ease: "easeInOut",
             delay: 1,
           }}
@@ -107,7 +107,8 @@ export default function HeroSection() {
                 variant="p"
                 className="text-[color:var(--color-body)] text-lg max-w-xl leading-relaxed"
               >
-                Maquilladora profesional, diseñadora de maquillajes exclusivos para Novias y eventos sociales
+                Maquilladora profesional, diseñadora de maquillajes exclusivos para Novias y eventos
+                sociales
               </Typography>
               <Typography
                 as="p"
@@ -115,10 +116,7 @@ export default function HeroSection() {
                 className="text-[color:var(--color-body)]/80 max-w-xl hidden sm:block"
               >
                 Especialista en{" "}
-                <span className="text-[color:var(--color-primary)] font-semibold">
-                  Soft Glam
-                </span>{" "}
-                y{" "}
+                <span className="text-[color:var(--color-primary)] font-semibold">Soft Glam</span> y{" "}
                 <span className="text-[color:var(--color-primary)] font-semibold">
                   Maquillaje Nupcial
                 </span>
@@ -145,11 +143,7 @@ export default function HeroSection() {
                     />
                   ))}
                 </div>
-                <Typography
-                  as="p"
-                  variant="small"
-                  className="text-[color:var(--color-body)] mt-1"
-                >
+                <Typography as="p" variant="small" className="text-[color:var(--color-body)] mt-1">
                   Calificación
                 </Typography>
               </div>
@@ -157,11 +151,7 @@ export default function HeroSection() {
                 <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
                   370+
                 </div>
-                <Typography
-                  as="p"
-                  variant="small"
-                  className="text-[color:var(--color-body)] mt-1"
-                >
+                <Typography as="p" variant="small" className="text-[color:var(--color-body)] mt-1">
                   Clientes
                 </Typography>
               </div>
@@ -169,11 +159,7 @@ export default function HeroSection() {
                 <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
                   8+
                 </div>
-                <Typography
-                  as="p"
-                  variant="small"
-                  className="text-[color:var(--color-body)] mt-1"
-                >
+                <Typography as="p" variant="small" className="text-[color:var(--color-body)] mt-1">
                   Años Exp.
                 </Typography>
               </div>
@@ -192,17 +178,17 @@ export default function HeroSection() {
                 onClick={() => {
                   const element = document.querySelector("#contacto");
                   if (element) {
-                    const header = document.querySelector('header');
+                    const header = document.querySelector("header");
                     const headerHeight = header ? header.offsetHeight : 80;
                     const isMobile = window.innerWidth < 768;
                     const extraMargin = isMobile ? 60 : 30;
-                    
+
                     const elementPosition = element.getBoundingClientRect().top + window.scrollY;
                     const offsetPosition = elementPosition - headerHeight - extraMargin;
-                    
+
                     window.scrollTo({
                       top: offsetPosition,
-                      behavior: "smooth"
+                      behavior: "smooth",
                     });
                   }
                 }}
@@ -365,9 +351,7 @@ export default function HeroSection() {
                   </a>
 
                   <div className="px-3 py-2 rounded-xl bg-[color:var(--color-surface)]/90 backdrop-blur-sm border border-[color:var(--color-border)]/50">
-                    <p className="text-xs font-medium text-[color:var(--color-muted)]">
-                      Sígueme
-                    </p>
+                    <p className="text-xs font-medium text-[color:var(--color-muted)]">Sígueme</p>
                     <p className="text-sm font-semibold text-[color:var(--color-heading)]">
                       @marcelacorderobeauty
                     </p>
@@ -384,7 +368,7 @@ export default function HeroSection() {
                 }}
                 transition={{
                   duration: 3,
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                   ease: "easeInOut",
                 }}
               >
@@ -404,7 +388,7 @@ export default function HeroSection() {
                 }}
                 transition={{
                   duration: 4,
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                   ease: "easeInOut",
                   delay: 1,
                 }}
@@ -426,7 +410,7 @@ export default function HeroSection() {
                 }}
                 transition={{
                   duration: 5,
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                   ease: "easeInOut",
                   delay: 2,
                 }}
@@ -447,7 +431,7 @@ export default function HeroSection() {
                 }}
                 transition={{
                   duration: 6,
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                   ease: "easeInOut",
                   delay: 3,
                 }}

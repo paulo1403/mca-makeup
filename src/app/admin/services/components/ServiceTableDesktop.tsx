@@ -1,8 +1,8 @@
 "use client";
 
-import { Plus, Eye, Pencil, Trash2 } from "lucide-react";
-import type { Service } from "../types";
 import Button from "@/components/ui/Button";
+import { Eye, Pencil, Plus, Trash2 } from "lucide-react";
+import type { Service } from "../types";
 
 interface ServiceTableDesktopProps {
   services: Service[];
@@ -31,8 +31,12 @@ export default function ServiceTableDesktop({
             {/* Sparkles icon omitted to reduce imports */}
             <span className="text-3xl">✨</span>
           </div>
-          <h3 className="text-lg font-semibold text-[color:var(--color-heading)] mb-2">No tienes servicios aún</h3>
-          <p className="text-[color:var(--color-body)] mb-6">Crea tu primer servicio para empezar a recibir reservas de tus clientes.</p>
+          <h3 className="text-lg font-semibold text-[color:var(--color-heading)] mb-2">
+            No tienes servicios aún
+          </h3>
+          <p className="text-[color:var(--color-body)] mb-6">
+            Crea tu primer servicio para empezar a recibir reservas de tus clientes.
+          </p>
           <Button
             onClick={openNewModal}
             variant="primary"
@@ -48,12 +52,24 @@ export default function ServiceTableDesktop({
           <table className="min-w-full divide-y divide-[color:var(--color-border)]">
             <thead className="bg-[color:var(--color-surface-elevated)]">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider w-1/3 min-w-[200px]">Servicio</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider hidden sm:table-cell w-24">Categoría</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider w-20">Precio</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider hidden md:table-cell w-20">Duración</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider w-20">Estado</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider w-32">Acciones</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider w-1/3 min-w-[200px]">
+                  Servicio
+                </th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider hidden sm:table-cell w-24">
+                  Categoría
+                </th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider w-20">
+                  Precio
+                </th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider hidden md:table-cell w-20">
+                  Duración
+                </th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider w-20">
+                  Estado
+                </th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider w-32">
+                  Acciones
+                </th>
               </tr>
             </thead>
             <tbody className="bg-[color:var(--color-surface)] divide-y divide-[color:var(--color-border)]">
@@ -61,13 +77,19 @@ export default function ServiceTableDesktop({
                 <tr key={service.id} className="hover:bg-[color:var(--color-surface-elevated)]">
                   <td className="px-4 py-4">
                     <div className="max-w-xs">
-                      <div className="text-sm font-medium text-[color:var(--color-heading)] truncate">{service.name}</div>
+                      <div className="text-sm font-medium text-[color:var(--color-heading)] truncate">
+                        {service.name}
+                      </div>
                       <div className="text-xs text-[color:var(--color-body)] sm:hidden">
                         {serviceCategories[service.category as keyof typeof serviceCategories]}
                       </div>
-                      <div className="text-xs text-[color:var(--color-body)] md:hidden">{service.duration} min</div>
+                      <div className="text-xs text-[color:var(--color-body)] md:hidden">
+                        {service.duration} min
+                      </div>
                       {service.description && (
-                        <div className="text-xs text-[color:var(--color-muted)] truncate mt-1">{service.description}</div>
+                        <div className="text-xs text-[color:var(--color-muted)] truncate mt-1">
+                          {service.description}
+                        </div>
                       )}
                     </div>
                   </td>
@@ -79,7 +101,9 @@ export default function ServiceTableDesktop({
                   <td className="px-3 py-4 text-sm text-[color:var(--color-heading)]">
                     <span className="font-medium">S/ {service.price}</span>
                   </td>
-                  <td className="px-3 py-4 text-sm text-[color:var(--color-heading)] hidden md:table-cell">{service.duration} min</td>
+                  <td className="px-3 py-4 text-sm text-[color:var(--color-heading)] hidden md:table-cell">
+                    {service.duration} min
+                  </td>
                   <td className="px-3 py-4">
                     <button
                       onClick={() => toggleActive(service)}

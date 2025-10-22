@@ -1,22 +1,15 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { useFormContext, Controller } from "react-hook-form";
-import {
-  ShieldCheck,
-  CreditCard,
-  Copy,
-  Check,
-  FileText,
-  Sparkles,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import type { BookingData } from "@/lib/bookingSchema";
-import useServicesQuery from "@/hooks/useServicesQuery";
-import { useBookingSummary } from "@/hooks/useBookingSummary";
-import { useTransportCost } from "@/hooks/useTransportCost";
-import Typography from "@/components/ui/Typography";
 import Button from "@/components/ui/Button";
+import Typography from "@/components/ui/Typography";
+import { useBookingSummary } from "@/hooks/useBookingSummary";
+import useServicesQuery from "@/hooks/useServicesQuery";
+import { useTransportCost } from "@/hooks/useTransportCost";
+import type { BookingData } from "@/lib/bookingSchema";
 import { calculateNightShiftCost } from "@/utils/nightShift";
+import { AnimatePresence, motion } from "framer-motion";
+import { Check, Copy, CreditCard, FileText, ShieldCheck, Sparkles } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 
 const translations = {
   title: "Confirmación y Pago",
@@ -79,7 +72,7 @@ export default function Step5_Confirmation() {
     services,
     transportEnabled,
     transportCost?.cost,
-    nightShiftCost
+    nightShiftCost,
   );
   const remaining = Math.max(0, (total || 0) - 150);
 
@@ -232,10 +225,18 @@ export default function Step5_Confirmation() {
               </div>
             </div>
             <div className="flex justify-between items-center mt-2">
-              <Typography as="span" variant="small" className="text-[color:var(--color-body)] text-xs">
+              <Typography
+                as="span"
+                variant="small"
+                className="text-[color:var(--color-body)] text-xs"
+              >
                 Restante a pagar
               </Typography>
-              <Typography as="span" variant="small" className="text-[color:var(--color-heading)] font-medium text-xs">
+              <Typography
+                as="span"
+                variant="small"
+                className="text-[color:var(--color-heading)] font-medium text-xs"
+              >
                 S/ {remaining}
               </Typography>
             </div>
@@ -386,11 +387,7 @@ export default function Step5_Confirmation() {
                       exit={{ opacity: 0, y: -5 }}
                       className="mt-1"
                     >
-                      <Typography
-                        as="span"
-                        variant="caption"
-                        className="!text-red-500 text-xs"
-                      >
+                      <Typography as="span" variant="caption" className="!text-red-500 text-xs">
                         {t("requiredToSend")}
                       </Typography>
                     </motion.div>

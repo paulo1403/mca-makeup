@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { type NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
@@ -10,10 +10,7 @@ export async function GET(request: NextRequest) {
     const district = searchParams.get("district");
 
     if (!district) {
-      return NextResponse.json(
-        { error: "El parámetro 'district' es requerido" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "El parámetro 'district' es requerido" }, { status: 400 });
     }
 
     // Buscar el costo de transporte para el distrito específico
@@ -52,10 +49,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error fetching transport cost:", error);
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
 
@@ -85,9 +79,6 @@ export async function POST() {
     });
   } catch (error) {
     console.error("Error fetching districts:", error);
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }

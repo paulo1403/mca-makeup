@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { formatDateForCalendar, formatTimeRange } from "@/utils/dateUtils";
+import { type NextRequest, NextResponse } from "next/server";
 
 // GET /api/admin/appointments/calendar - Get appointments for calendar view with optional date filtering
 export async function GET(request: NextRequest) {
@@ -73,28 +73,20 @@ export async function GET(request: NextRequest) {
         const servicePrice = appointment.servicePrice || 0;
         const transportCost = appointment.transportCost || 0;
         const totalPrice =
-          appointment.totalPrice !== null &&
-          appointment.totalPrice !== undefined
+          appointment.totalPrice !== null && appointment.totalPrice !== undefined
             ? appointment.totalPrice
             : servicePrice + transportCost;
 
         // Validar y formatear tiempo de manera segura
         let formattedTime = appointment.appointmentTime;
         try {
-          if (
-            appointment.appointmentTime &&
-            typeof appointment.appointmentTime === "string"
-          ) {
+          if (appointment.appointmentTime && typeof appointment.appointmentTime === "string") {
             formattedTime = formatTimeRange(appointment.appointmentTime);
           }
         } catch (timeError) {
-          console.error(
-            `Error formatting time for appointment ${appointment.id}:`,
-            timeError,
-          );
+          console.error(`Error formatting time for appointment ${appointment.id}:`, timeError);
           // Mantener el tiempo original si hay error
-          formattedTime =
-            appointment.appointmentTime || "Horario no disponible";
+          formattedTime = appointment.appointmentTime || "Horario no disponible";
         }
 
         return {

@@ -4,46 +4,46 @@
 :root,
 :root[data-theme="light"] {
   /* Backgrounds */
-  --color-background: #F6EFE8;        /* Beige cálido suave */
-  --color-surface: #FFFFFF;           /* Blanco puro */
-  --color-surface-elevated: #F4ECE6;  /* Beige casi blanco */
+  --color-background: #f6efe8; /* Beige cálido suave */
+  --color-surface: #ffffff; /* Blanco puro */
+  --color-surface-elevated: #f4ece6; /* Beige casi blanco */
 
   /* Brown Palette */
-  --color-primary: #B08463;           /* Marrón principal */
-  --color-primary-hover: #A37352;     /* Marrón hover */
-  --color-primary-light: #D0B9A7;     /* Marrón suave */
-  --color-accent: #B9937B;            /* Acento camel */
-  --color-accent-soft: #E6D7C9;       /* Acento muy suave */
+  --color-primary: #b08463; /* Marrón principal */
+  --color-primary-hover: #a37352; /* Marrón hover */
+  --color-primary-light: #d0b9a7; /* Marrón suave */
+  --color-accent: #b9937b; /* Acento camel */
+  --color-accent-soft: #e6d7c9; /* Acento muy suave */
 
   /* Text */
-  --color-heading: #2D221B;           /* Casi negro cálido */
-  --color-body: #5A4A3E;              /* Gris/marrón cuerpo */
-  --color-muted: #8B7A6D;             /* Texto secundario */
+  --color-heading: #2d221b; /* Casi negro cálido */
+  --color-body: #5a4a3e; /* Gris/marrón cuerpo */
+  --color-muted: #8b7a6d; /* Texto secundario */
 
   /* Borders */
-  --color-border: #E5D6C8;            /* Borde suave cálido */
+  --color-border: #e5d6c8; /* Borde suave cálido */
 
   /* Semantic */
   --color-cta-bg: var(--color-primary);
   --color-cta-hover: var(--color-primary-hover);
-  --color-cta-text: #FFFFFF;
+  --color-cta-text: #ffffff;
 
   /* Status pills (light) */
-  --status-pending-bg: #FEF3C7;      /* amber-50 */
-  --status-pending-text: #92400E;    /* amber-800 */
-  --status-pending-border: #FDE68A;  /* amber-200 */
+  --status-pending-bg: #fef3c7; /* amber-50 */
+  --status-pending-text: #92400e; /* amber-800 */
+  --status-pending-border: #fde68a; /* amber-200 */
 
-  --status-confirmed-bg: #ECFDF5;    /* emerald-50 */
-  --status-confirmed-text: #065F46;  /* emerald-800 */
-  --status-confirmed-border: #A7F3D0;/* emerald-200 */
+  --status-confirmed-bg: #ecfdf5; /* emerald-50 */
+  --status-confirmed-text: #065f46; /* emerald-800 */
+  --status-confirmed-border: #a7f3d0; /* emerald-200 */
 
-  --status-completed-bg: #EFF6FF;    /* blue-50 */
-  --status-completed-text: #1D4ED8;  /* blue-700 */
-  --status-completed-border: #BFDBFE;/* blue-200 */
+  --status-completed-bg: #eff6ff; /* blue-50 */
+  --status-completed-text: #1d4ed8; /* blue-700 */
+  --status-completed-border: #bfdbfe; /* blue-200 */
 
-  --status-cancelled-bg: #FEF2F2;    /* red-50 */
-  --status-cancelled-text: #B91C1C;  /* red-700 */
-  --status-cancelled-border: #FECACA;/* red-200 */
+  --status-cancelled-bg: #fef2f2; /* red-50 */
+  --status-cancelled-text: #b91c1c; /* red-700 */
+  --status-cancelled-border: #fecaca; /* red-200 */
 
   /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.8);
@@ -129,52 +129,52 @@
   --color-accent-tertiary: var(--color-accent-soft);
   --color-selected: color-mix(in srgb, var(--color-primary) 15%, transparent);
   --color-neutral: var(--color-muted);
-  --color-whatsapp: #25D366;
+  --color-whatsapp: #25d366;
 }
 
 /* Dark theme variables */
 :root[data-theme="dark"] {
   /* Backgrounds */
-  --color-background: #0F0B08;        /* Café casi negro */
-  --color-surface: #16110D;           /* Surface cards */
-  --color-surface-elevated: #1E1712;  /* Elevated elements */
+  --color-background: #0f0b08; /* Café casi negro */
+  --color-surface: #16110d; /* Surface cards */
+  --color-surface-elevated: #1e1712; /* Elevated elements */
 
   /* Brown Palette */
-  --color-primary: #D0B9A7;           /* Marrón claro en oscuro */
-  --color-primary-hover: #B9937B;     /* Hover cálido */
-  --color-primary-light: #E6D7C9;     /* Suave para fondos */
-  --color-accent: #B08463;            /* Marrón medio/acento */
-  --color-accent-soft: #D9C5B4;       /* Acento muy suave */
+  --color-primary: #d0b9a7; /* Marrón claro en oscuro */
+  --color-primary-hover: #b9937b; /* Hover cálido */
+  --color-primary-light: #e6d7c9; /* Suave para fondos */
+  --color-accent: #b08463; /* Marrón medio/acento */
+  --color-accent-soft: #d9c5b4; /* Acento muy suave */
 
   /* Text */
-  --color-heading: #F4ECE6;           /* Títulos cálidos */
-  --color-body: #E9DED3;              /* Texto body */
-  --color-muted: #B8A89A;             /* Texto secundario */
+  --color-heading: #f4ece6; /* Títulos cálidos */
+  --color-body: #e9ded3; /* Texto body */
+  --color-muted: #b8a89a; /* Texto secundario */
 
   /* Borders */
-  --color-border: #2A211B;            /* Borde oscuro cálido */
+  --color-border: #2a211b; /* Borde oscuro cálido */
 
   /* Semantic */
   --color-cta-bg: var(--color-primary);
   --color-cta-hover: var(--color-primary-hover);
-  --color-cta-text: #FFFFFF;
+  --color-cta-text: #ffffff;
 
   /* Status pills (dark) */
-  --status-pending-bg: color-mix(in srgb, #F59E0B 16%, var(--color-surface));
-  --status-pending-text: #FBBF24;
-  --status-pending-border: color-mix(in srgb, #F59E0B 30%, transparent);
+  --status-pending-bg: color-mix(in srgb, #f59e0b 16%, var(--color-surface));
+  --status-pending-text: #fbbf24;
+  --status-pending-border: color-mix(in srgb, #f59e0b 30%, transparent);
 
-  --status-confirmed-bg: color-mix(in srgb, #10B981 16%, var(--color-surface));
-  --status-confirmed-text: #34D399;
-  --status-confirmed-border: color-mix(in srgb, #10B981 30%, transparent);
+  --status-confirmed-bg: color-mix(in srgb, #10b981 16%, var(--color-surface));
+  --status-confirmed-text: #34d399;
+  --status-confirmed-border: color-mix(in srgb, #10b981 30%, transparent);
 
-  --status-completed-bg: color-mix(in srgb, #3B82F6 16%, var(--color-surface));
-  --status-completed-text: #60A5FA;
-  --status-completed-border: color-mix(in srgb, #3B82F6 30%, transparent);
+  --status-completed-bg: color-mix(in srgb, #3b82f6 16%, var(--color-surface));
+  --status-completed-text: #60a5fa;
+  --status-completed-border: color-mix(in srgb, #3b82f6 30%, transparent);
 
-  --status-cancelled-bg: color-mix(in srgb, #EF4444 16%, var(--color-surface));
-  --status-cancelled-text: #F87171;
-  --status-cancelled-border: color-mix(in srgb, #EF4444 30%, transparent);
+  --status-cancelled-bg: color-mix(in srgb, #ef4444 16%, var(--color-surface));
+  --status-cancelled-text: #f87171;
+  --status-cancelled-border: color-mix(in srgb, #ef4444 30%, transparent);
 
   /* Glassmorphism */
   --glass-bg: rgba(19, 17, 31, 0.75);
@@ -193,7 +193,7 @@
   --color-accent-tertiary: var(--color-accent-soft);
   --color-selected: color-mix(in srgb, var(--color-primary) 25%, transparent);
   --color-neutral: var(--color-muted);
-  --color-whatsapp: #25D366;
+  --color-whatsapp: #25d366;
 }
 
 /* Minimal global resets relevant to layout */

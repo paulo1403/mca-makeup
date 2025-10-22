@@ -1,15 +1,20 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAppointments, useAppointmentUrlParams, Appointment } from '@/hooks/useAppointments';
-import { scrollToAppointment } from '@/utils/appointmentHelpers';
+import {
+  type Appointment,
+  useAppointmentUrlParams,
+  useAppointments,
+} from "@/hooks/useAppointments";
+import { scrollToAppointment } from "@/utils/appointmentHelpers";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 export const useAppointmentsPage = () => {
   const router = useRouter();
   const { filter: urlFilter } = useAppointmentUrlParams();
-  const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : undefined;
-  const highlightId = searchParams?.get('highlightId') || null;
-  const showDetail = searchParams?.get('showDetail') || null;
-  
+  const searchParams =
+    typeof window !== "undefined" ? new URLSearchParams(window.location.search) : undefined;
+  const highlightId = searchParams?.get("highlightId") || null;
+  const showDetail = searchParams?.get("showDetail") || null;
+
   // Estado local
   const [filter, setFilter] = useState(urlFilter);
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,9 +24,9 @@ export const useAppointmentsPage = () => {
   const [highlightedId, setHighlightedId] = useState<string | null>(highlightId);
 
   // Query de citas
-  const { data, isLoading, error } = useAppointments({ 
-    page: currentPage, 
-    filter, 
+  const { data, isLoading, error } = useAppointments({
+    page: currentPage,
+    filter,
     searchTerm,
     id: highlightId || undefined,
   });
@@ -46,7 +51,7 @@ export const useAppointmentsPage = () => {
   // Efecto para abrir modal cuando se especifica en URL
   useEffect(() => {
     if (showDetail && highlightId && appointments.length > 0) {
-      const appointment = appointments.find(apt => apt.id === highlightId);
+      const appointment = appointments.find((apt) => apt.id === highlightId);
       if (appointment) {
         setSelectedAppointment(appointment);
         setShowModal(true);
@@ -56,7 +61,7 @@ export const useAppointmentsPage = () => {
 
   // Scroll al appointment destacado
   useEffect(() => {
-    if (highlightedId && appointments.some(apt => apt.id === highlightedId)) {
+    if (highlightedId && appointments.some((apt) => apt.id === highlightedId)) {
       scrollToAppointment(highlightedId);
     }
   }, [highlightedId, appointments]);
@@ -88,13 +93,13 @@ export const useAppointmentsPage = () => {
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedAppointment(null);
-    
+
     // Limpiar parámetros de URL si están presentes
     const params = new URLSearchParams(window.location.search);
-    if (params.has('showDetail') || params.has('highlightId')) {
-      params.delete('showDetail');
-      params.delete('highlightId');
-      const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
+    if (params.has("showDetail") || params.has("highlightId")) {
+      params.delete("showDetail");
+      params.delete("highlightId");
+      const newUrl = `${window.location.pathname}${params.toString() ? "?" + params.toString() : ""}`;
       router.replace(newUrl);
     }
   };
@@ -103,7 +108,7 @@ export const useAppointmentsPage = () => {
     // Data
     appointments,
     pagination,
-    
+
     // Estado
     filter,
     searchTerm,
@@ -111,11 +116,11 @@ export const useAppointmentsPage = () => {
     selectedAppointment,
     showModal,
     highlightedId,
-    
+
     // Estado de loading/error
     isLoading,
     error,
-    
+
     // Handlers
     handleSearchChange,
     handleFilterChange,

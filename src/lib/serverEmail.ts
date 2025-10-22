@@ -1,16 +1,16 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 const EMAIL_CONFIG = {
-  host: 'smtp.gmail.com',
+  host: "smtp.gmail.com",
   port: 587,
   secure: false,
   auth: {
-    user: process.env.GMAIL_USER || 'marcelacordero.bookings@gmail.com',
-    pass: process.env.GMAIL_APP_PASSWORD || '',
+    user: process.env.GMAIL_USER || "marcelacordero.bookings@gmail.com",
+    pass: process.env.GMAIL_APP_PASSWORD || "",
   },
-  adminEmails: process.env.NEXT_PUBLIC_ADMIN_EMAILS ?
-    process.env.NEXT_PUBLIC_ADMIN_EMAILS.split(',').map(email => email.trim()) :
-    ['marcelacordero.bookings@gmail.com'],
+  adminEmails: process.env.NEXT_PUBLIC_ADMIN_EMAILS
+    ? process.env.NEXT_PUBLIC_ADMIN_EMAILS.split(",").map((email) => email.trim())
+    : ["marcelacordero.bookings@gmail.com"],
 };
 
 export interface EmailData {
@@ -38,7 +38,7 @@ const getTransporter = () => {
 export const sendEmail = async (emailData: EmailData): Promise<boolean> => {
   try {
     if (!EMAIL_CONFIG.auth.user || !EMAIL_CONFIG.auth.pass) {
-      if (process.env.NODE_ENV !== 'production') {
+      if (process.env.NODE_ENV !== "production") {
         console.log("Gmail credentials not configured, skipping email send");
       }
       return false;
@@ -46,7 +46,7 @@ export const sendEmail = async (emailData: EmailData): Promise<boolean> => {
 
     const transporter = getTransporter();
     if (!transporter) {
-      if (process.env.NODE_ENV !== 'production') {
+      if (process.env.NODE_ENV !== "production") {
         console.log("Email transporter not available, skipping email send");
       }
       return false;
@@ -62,12 +62,7 @@ export const sendEmail = async (emailData: EmailData): Promise<boolean> => {
 
     const result = await transporter.sendMail(mailOptions);
 
-    console.log(
-      "Email sent successfully to:",
-      emailData.to,
-      "Message ID:",
-      result.messageId,
-    );
+    console.log("Email sent successfully to:", emailData.to, "Message ID:", result.messageId);
     return true;
   } catch (error) {
     console.error("Error sending email:", error);
@@ -76,10 +71,10 @@ export const sendEmail = async (emailData: EmailData): Promise<boolean> => {
 };
 
 // Nueva función para enviar emails a múltiples destinatarios (admins)
-export const sendEmailToAdmins = async (emailData: Omit<EmailData, 'to'>): Promise<boolean> => {
+export const sendEmailToAdmins = async (emailData: Omit<EmailData, "to">): Promise<boolean> => {
   try {
     if (!EMAIL_CONFIG.auth.user || !EMAIL_CONFIG.auth.pass) {
-      if (process.env.NODE_ENV !== 'production') {
+      if (process.env.NODE_ENV !== "production") {
         console.log("Gmail credentials not configured, skipping email send");
       }
       return false;
@@ -87,7 +82,7 @@ export const sendEmailToAdmins = async (emailData: Omit<EmailData, 'to'>): Promi
 
     const transporter = getTransporter();
     if (!transporter) {
-      if (process.env.NODE_ENV !== 'production') {
+      if (process.env.NODE_ENV !== "production") {
         console.log("Email transporter not available, skipping email send");
       }
       return false;
@@ -105,7 +100,7 @@ export const sendEmailToAdmins = async (emailData: Omit<EmailData, 'to'>): Promi
 
     console.log(
       "Email sent successfully to admins:",
-      EMAIL_CONFIG.adminEmails.join(', '),
+      EMAIL_CONFIG.adminEmails.join(", "),
       "Message ID:",
       result.messageId,
     );
@@ -180,14 +175,19 @@ const generateInlineEmailStructure = (content: string) => `
 `;
 
 // Función helper para crear botones compatibles con email
-const createEmailButton = (text: string, href?: string, style: 'primary' | 'secondary' = 'primary') => {
-  const baseStyle = "display: inline-block; padding: 12px 22px; text-decoration: none; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center; text-transform: none; letter-spacing: 0.2px; margin: 8px 6px;";
-  
+const createEmailButton = (
+  text: string,
+  href?: string,
+  style: "primary" | "secondary" = "primary",
+) => {
+  const baseStyle =
+    "display: inline-block; padding: 12px 22px; text-decoration: none; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center; text-transform: none; letter-spacing: 0.2px; margin: 8px 6px;";
+
   const primaryStyle = `${baseStyle} background-color: #B08463; color: #ffffff; border: none; box-shadow: 0 8px 24px rgba(176,132,99,0.12);`;
   const secondaryStyle = `${baseStyle} background-color: #ffffff; color: #374151; border: 1px solid #e9e7ff;`;
-  
-  const buttonStyle = style === 'primary' ? primaryStyle : secondaryStyle;
-  
+
+  const buttonStyle = style === "primary" ? primaryStyle : secondaryStyle;
+
   if (href) {
     return `<a href="${href}" style="${buttonStyle}" target="_blank" rel="noopener noreferrer">${text}</a>`;
   }
@@ -195,15 +195,15 @@ const createEmailButton = (text: string, href?: string, style: 'primary' | 'seco
 };
 
 // Función helper para crear cajas de información
-const createInfoBox = (content: string, type: 'info' | 'success' | 'warning' = 'info') => {
+const createInfoBox = (content: string, type: "info" | "success" | "warning" = "info") => {
   const baseStyle = "padding: 18px; border-radius: 12px; margin: 18px 0; border-left: 4px solid;";
-  
+
   const styles = {
-  info: `${baseStyle} background-color: #fbf8ff; border-left-color: #B08463;`,
+    info: `${baseStyle} background-color: #fbf8ff; border-left-color: #B08463;`,
     success: `${baseStyle} background-color: #f0fdf4; border-left-color: #10b981;`,
-    warning: `${baseStyle} background-color: #fffbeb; border-left-color: #f59e0b;`
+    warning: `${baseStyle} background-color: #fffbeb; border-left-color: #f59e0b;`,
   };
-  
+
   return `<div style="${styles[type]}">${content}</div>`;
 };
 
@@ -228,7 +228,8 @@ export const emailTemplates = {
   Me complace confirmar tu cita para <strong style="color: #B08463;">${serviceType}</strong>.
       </p>
 
-      ${createInfoBox(`
+      ${createInfoBox(
+        `
   <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 600; color: #B08463;">💄 Detalles de tu cita:</h3>
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
           <tr>
@@ -251,34 +252,55 @@ export const emailTemplates = {
               <strong style="color: #1C1C1C;">Ubicación:</strong> ${locationType === "STUDIO" ? "Av. Bolívar 1075 , Pueblo Libre" : "A domicilio"}
             </td>
           </tr>
-          ${locationType === "HOME" && district ? `
+          ${
+            locationType === "HOME" && district
+              ? `
           <tr>
             <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
               <strong style="color: #1C1C1C;">Distrito:</strong> ${district}
             </td>
           </tr>
-          ` : ""}
-          ${locationType === "HOME" && address ? `
+          `
+              : ""
+          }
+          ${
+            locationType === "HOME" && address
+              ? `
           <tr>
             <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
               <strong style="color: #1C1C1C;">Dirección:</strong> ${address}
             </td>
           </tr>
-          ` : ""}
-          ${locationType === "HOME" && addressReference ? `
+          `
+              : ""
+          }
+          ${
+            locationType === "HOME" && addressReference
+              ? `
           <tr>
             <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
               <strong style="color: #1C1C1C;">Referencia:</strong> ${addressReference}
             </td>
           </tr>
-          ` : ""}
+          `
+              : ""
+          }
         </table>
-      `, 'success')}
+      `,
+        "success",
+      )}
 
-      ${additionalNotes ? createInfoBox(`
+      ${
+        additionalNotes
+          ? createInfoBox(
+              `
         <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #1C1C1C;">💬 Mensaje adicional:</h3>
         <p style="margin: 0; font-style: italic; color: #5a5a5a;">"${additionalNotes}"</p>
-      `, 'info') : ""}
+      `,
+              "info",
+            )
+          : ""
+      }
 
       <p style="font-size: 16px; line-height: 1.7; margin-bottom: 20px; color: #5a5a5a;">
         Estoy muy emocionada de trabajar contigo. Me pondré en contacto contigo 24 horas antes de la cita para confirmar los detalles finales.
@@ -318,12 +340,7 @@ export const emailTemplates = {
     `,
   }),
 
-  appointmentCancelled: (
-    clientName: string,
-    serviceType: string,
-    date: string,
-    time: string,
-  ) => ({
+  appointmentCancelled: (clientName: string, serviceType: string, date: string, time: string) => ({
     subject: "Cita cancelada - Marcela Cordero Makeup",
     html: generateInlineEmailStructure(`
   <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B08463;">Hola ${clientName},</h2>
@@ -332,7 +349,8 @@ export const emailTemplates = {
         Lamento informarte que he tenido que cancelar tu cita programada.
       </p>
 
-      ${createInfoBox(`
+      ${createInfoBox(
+        `
         <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 600; color: #ef4444;">⚠️ Cita cancelada:</h3>
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
           <tr>
@@ -351,7 +369,9 @@ export const emailTemplates = {
             </td>
           </tr>
         </table>
-      `, 'warning')}
+      `,
+        "warning",
+      )}
 
       <p style="font-size: 16px; line-height: 1.7; margin-bottom: 20px; color: #5a5a5a;">
         Si estás interesada en reprogramar, por favor contáctame y estaré encantada de encontrar una nueva fecha que funcione para ambas.
@@ -400,7 +420,8 @@ export const emailTemplates = {
     html: generateInlineEmailStructure(`
   <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B08463;">🔔 Nueva solicitud de cita pendiente</h2>
 
-      ${createInfoBox(`
+      ${createInfoBox(
+        `
   <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 600; color: #B08463;">👤 Detalles del cliente:</h3>
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
           <tr>
@@ -434,9 +455,12 @@ export const emailTemplates = {
             </td>
           </tr>
         </table>
-      `, 'info')}
+      `,
+        "info",
+      )}
 
-      ${createInfoBox(`
+      ${createInfoBox(
+        `
   <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 600; color: #B08463;">📍 Detalles del servicio:</h3>
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
           <tr>
@@ -444,39 +468,63 @@ export const emailTemplates = {
               <strong style="color: #1C1C1C;">Ubicación:</strong> ${locationType === "STUDIO" ? "Av. Bolívar 1075 , Pueblo Libre" : "Servicio a domicilio"}
             </td>
           </tr>
-          ${locationType === "HOME" && district ? `
+          ${
+            locationType === "HOME" && district
+              ? `
           <tr>
             <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
               <strong style="color: #1C1C1C;">Distrito:</strong> ${district}
             </td>
           </tr>
-          ` : ""}
-          ${locationType === "HOME" && address ? `
+          `
+              : ""
+          }
+          ${
+            locationType === "HOME" && address
+              ? `
           <tr>
             <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
               <strong style="color: #1C1C1C;">Dirección:</strong> ${address}
             </td>
           </tr>
-          ` : ""}
-          ${locationType === "HOME" && addressReference ? `
+          `
+              : ""
+          }
+          ${
+            locationType === "HOME" && addressReference
+              ? `
           <tr>
             <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
               <strong style="color: #1C1C1C;">Referencia:</strong> ${addressReference}
             </td>
           </tr>
-          ` : ""}
+          `
+              : ""
+          }
         </table>
-      `, 'success')}
+      `,
+        "success",
+      )}
 
-      ${additionalNotes ? createInfoBox(`
+      ${
+        additionalNotes
+          ? createInfoBox(
+              `
         <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #1C1C1C;">💬 Mensaje adicional:</h3>
         <p style="margin: 0; font-style: italic; color: #5a5a5a;">"${additionalNotes}"</p>
-      `, 'info') : ""}
+      `,
+              "info",
+            )
+          : ""
+      }
 
-      ${createInfoBox(`
+      ${createInfoBox(
+        `
         <p style="margin: 0; font-size: 14px; color: #f59e0b;"><strong>Estado:</strong> Esta cita está PENDIENTE de confirmación.</p>
         <p style="margin: 10px 0 0; font-size: 14px; color: #5a5a5a;">El cliente recibió una notificación de solicitud. Puedes confirmar o modificar la cita desde el panel de administración.</p>
-      `, 'warning')}
+      `,
+        "warning",
+      )}
     `),
     text: `
       Nueva solicitud de cita pendiente
@@ -521,7 +569,8 @@ export const emailTemplates = {
   He recibido tu solicitud de cita para <strong style="color: #B08463;">${serviceType}</strong>. Te contactaré pronto para confirmar la disponibilidad y finalizar los detalles.
       </p>
 
-      ${createInfoBox(`
+      ${createInfoBox(
+        `
         <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 600; color: #f59e0b;">⏳ Detalles de tu solicitud:</h3>
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
           <tr>
@@ -544,39 +593,63 @@ export const emailTemplates = {
               <strong style="color: #1C1C1C;">Ubicación:</strong> ${locationType === "STUDIO" ? "Av. Bolívar 1075 , Pueblo Libre" : "A domicilio"}
             </td>
           </tr>
-          ${locationType === "HOME" && district ? `
+          ${
+            locationType === "HOME" && district
+              ? `
           <tr>
             <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
               <strong style="color: #1C1C1C;">Distrito:</strong> ${district}
             </td>
           </tr>
-          ` : ""}
-          ${locationType === "HOME" && address ? `
+          `
+              : ""
+          }
+          ${
+            locationType === "HOME" && address
+              ? `
           <tr>
             <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
               <strong style="color: #1C1C1C;">Dirección:</strong> ${address}
             </td>
           </tr>
-          ` : ""}
-          ${locationType === "HOME" && addressReference ? `
+          `
+              : ""
+          }
+          ${
+            locationType === "HOME" && addressReference
+              ? `
           <tr>
             <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
               <strong style="color: #1C1C1C;">Referencia:</strong> ${addressReference}
             </td>
           </tr>
-          ` : ""}
+          `
+              : ""
+          }
         </table>
-      `, 'warning')}
+      `,
+        "warning",
+      )}
 
-      ${additionalNotes ? createInfoBox(`
+      ${
+        additionalNotes
+          ? createInfoBox(
+              `
         <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #1C1C1C;">💬 Tu mensaje:</h3>
         <p style="margin: 0; font-style: italic; color: #5a5a5a;">"${additionalNotes}"</p>
-      `, 'info') : ""}
+      `,
+              "info",
+            )
+          : ""
+      }
 
-      ${createInfoBox(`
+      ${createInfoBox(
+        `
         <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #10b981;">📞 ¿Qué sigue?</h3>
         <p style="margin: 0; font-size: 14px; color: #5a5a5a;">Me pondré en contacto contigo dentro de las próximas <strong style="color: #1C1C1C;">24 horas</strong> para confirmar la disponibilidad y coordinar los detalles finales de tu cita.</p>
-      `, 'success')}
+      `,
+        "success",
+      )}
 
       <p style="font-size: 16px; line-height: 1.7; margin-bottom: 30px; color: #5a5a5a;">
         Si tienes alguna pregunta urgente o necesitas hacer algún cambio, no dudes en contactarme directamente.
@@ -613,12 +686,7 @@ export const emailTemplates = {
     `,
   }),
 
-  reviewRequest: (
-    clientName: string,
-    serviceType: string,
-    date: string,
-    reviewToken: string,
-  ) => ({
+  reviewRequest: (clientName: string, serviceType: string, date: string, reviewToken: string) => ({
     subject: "¡Comparte tu experiencia! - Marcela Cordero Makeup",
     html: generateInlineEmailStructure(`
   <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B08463;">¡Hola ${clientName}!</h2>
@@ -632,10 +700,11 @@ export const emailTemplates = {
       </p>
 
       <div style="text-align: center; margin: 30px 0;">
-        ${createEmailButton('⭐ Escribir mi reseña', `${process.env.NEXTAUTH_URL || "https://marcelacorderomakeup.com"}/review/${reviewToken}`, 'primary')}
+        ${createEmailButton("⭐ Escribir mi reseña", `${process.env.NEXTAUTH_URL || "https://marcelacorderomakeup.com"}/review/${reviewToken}`, "primary")}
       </div>
 
-      ${createInfoBox(`
+      ${createInfoBox(
+        `
         <h3 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #1C1C1C;">¿Por qué tu reseña es importante?</h3>
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
           <tr>
@@ -654,7 +723,9 @@ export const emailTemplates = {
             </td>
           </tr>
         </table>
-      `, 'info')}
+      `,
+        "info",
+      )}
 
       <p style="font-size: 14px; line-height: 1.6; font-style: italic; color: #8a8a8a; margin-bottom: 30px;">
         <strong>Nota:</strong> Tu reseña será revisada antes de ser publicada. Si prefieres mantenerla privada, también puedes indicarlo en el formulario.

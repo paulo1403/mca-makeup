@@ -7,12 +7,7 @@ if (fs.existsSync(".env.development")) {
   dotenv.config();
 }
 
-import {
-  PrismaClient,
-  ServiceCategory,
-  LocationType,
-  NotificationType,
-} from "@prisma/client";
+import { LocationType, NotificationType, PrismaClient, ServiceCategory } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -32,16 +27,14 @@ async function main() {
     },
     {
       name: "Maquillaje Social",
-      description:
-        "Perfecto para eventos sociales, fiestas y ocasiones especiales.",
+      description: "Perfecto para eventos sociales, fiestas y ocasiones especiales.",
       price: 180.0,
       duration: 120,
       category: ServiceCategory.SOCIAL,
     },
     {
       name: "Maquillaje para Piel Madura",
-      description:
-        "Técnicas especializadas para resaltar la belleza natural en pieles maduras.",
+      description: "Técnicas especializadas para resaltar la belleza natural en pieles maduras.",
       price: 200.0,
       duration: 135,
       category: ServiceCategory.MATURE_SKIN,
@@ -55,32 +48,28 @@ async function main() {
     },
     {
       name: "Peinado de Novia",
-      description:
-        "Peinado sofisticado para novias, incluye accesorios y prueba previa.",
+      description: "Peinado sofisticado para novias, incluye accesorios y prueba previa.",
       price: 180.0,
       duration: 120,
       category: ServiceCategory.BRIDAL,
     },
     {
       name: "Maquillaje + Peinado Novia",
-      description:
-        "Paquete completo para novias: maquillaje profesional + peinado elegante.",
+      description: "Paquete completo para novias: maquillaje profesional + peinado elegante.",
       price: 480.0,
       duration: 240,
       category: ServiceCategory.BRIDAL,
     },
     {
       name: "Maquillaje + Peinado Social",
-      description:
-        "Combo perfecto para eventos: maquillaje y peinado coordinados.",
+      description: "Combo perfecto para eventos: maquillaje y peinado coordinados.",
       price: 250.0,
       duration: 180,
       category: ServiceCategory.SOCIAL,
     },
     {
       name: "Maquillaje Express",
-      description:
-        "Maquillaje rápido y natural para el día a día o eventos casuales.",
+      description: "Maquillaje rápido y natural para el día a día o eventos casuales.",
       price: 120.0,
       duration: 75,
       category: ServiceCategory.OTHER,
@@ -540,24 +529,21 @@ async function main() {
     {
       type: NotificationType.SYSTEM,
       title: "Sistema Inicializado",
-      message:
-        "El sistema de reservas ha sido configurado correctamente con datos iniciales.",
+      message: "El sistema de reservas ha sido configurado correctamente con datos iniciales.",
       link: "/admin/dashboard",
       read: false,
     },
     {
       type: NotificationType.SYSTEM,
       title: "Servicios Configurados",
-      message:
-        "Se han agregado los servicios principales de maquillaje y peinado.",
+      message: "Se han agregado los servicios principales de maquillaje y peinado.",
       link: "/admin/services",
       read: false,
     },
     {
       type: NotificationType.SYSTEM,
       title: "Costos de Transporte",
-      message:
-        "Se han configurado los costos de transporte para todos los distritos de Lima.",
+      message: "Se han configurado los costos de transporte para todos los distritos de Lima.",
       link: "/admin/transport",
       read: false,
     },

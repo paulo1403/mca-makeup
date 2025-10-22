@@ -1,15 +1,12 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 // Esquemas de validación
 export const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, 'El email es requerido')
-    .email('Ingresa un email válido'),
+  email: z.string().min(1, "El email es requerido").email("Ingresa un email válido"),
   password: z
     .string()
-    .min(1, 'La contraseña es requerida')
-    .min(6, 'La contraseña debe tener al menos 6 caracteres'),
+    .min(1, "La contraseña es requerida")
+    .min(6, "La contraseña debe tener al menos 6 caracteres"),
 });
 
 export type LoginFormData = z.infer<typeof loginSchema>;
@@ -43,20 +40,17 @@ export interface RateLimitStatus {
 export const formatTime = (seconds: number): string => {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
-  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
 };
 
 // Utilidades de rate limiting
 export const getMostRestrictiveRateLimit = (rateLimitStatus: RateLimitStatus): RateLimitInfo => {
   const { ip, email } = rateLimitStatus;
-  
+
   const isBlocked = ip.isBlocked || (email?.isBlocked ?? false);
-  const attemptsLeft = Math.min(
-    ip.attemptsLeft,
-    email?.attemptsLeft ?? 999
-  );
+  const attemptsLeft = Math.min(ip.attemptsLeft, email?.attemptsLeft ?? 999);
   const blockedUntil = ip.blockedUntil || email?.blockedUntil;
-  
+
   return {
     isBlocked,
     attemptsLeft,

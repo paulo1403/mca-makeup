@@ -1,18 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
-import type { Service, ServiceFormData } from "./types";
-import ServicesHeader from "./components/ServicesHeader";
-import ServiceListMobile from "./components/ServiceListMobile";
-import ServiceTableDesktop from "./components/ServiceTableDesktop";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 import ServiceFormModal from "./components/ServiceFormModal";
 import ServiceInfoModal from "./components/ServiceInfoModal";
+import ServiceListMobile from "./components/ServiceListMobile";
+import ServiceTableDesktop from "./components/ServiceTableDesktop";
+import ServicesHeader from "./components/ServicesHeader";
 import ViewServiceModal from "./components/ViewServiceModal";
-import ConfirmModal from "@/components/ui/ConfirmModal";
+import type { Service, ServiceFormData } from "./types";
 
 const SERVICE_CATEGORIES = {
   BRIDAL: "Novia",
@@ -64,7 +64,6 @@ export default function ServicesPage() {
     }
   }, [session, status, router]);
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -82,8 +81,8 @@ export default function ServicesPage() {
         },
         body: JSON.stringify({
           ...formData,
-          price: parseFloat(formData.price),
-          duration: parseInt(formData.duration),
+          price: Number.parseFloat(formData.price),
+          duration: Number.parseInt(formData.duration),
         }),
       });
 
@@ -232,7 +231,10 @@ export default function ServicesPage() {
         viewingService={viewingService}
         onClose={() => setShowViewModal(false)}
         serviceCategories={SERVICE_CATEGORIES}
-        onEdit={(service) => { setShowViewModal(false); handleEdit(service); }}
+        onEdit={(service) => {
+          setShowViewModal(false);
+          handleEdit(service);
+        }}
       />
 
       <ConfirmModal
@@ -259,7 +261,10 @@ export default function ServicesPage() {
             setError(error instanceof Error ? error.message : "Error al eliminar");
           }
         }}
-        onCancel={() => { setShowDeleteModal(false); setDeleteId(null); }}
+        onCancel={() => {
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
       />
     </div>
   );

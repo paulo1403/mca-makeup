@@ -1,21 +1,14 @@
 "use client";
-import React from "react";
-import { Controller, useFormContext } from "react-hook-form";
-import DatePicker from "react-datepicker";
+import Typography from "@/components/ui/Typography";
 import { useAvailableRanges } from "@/hooks/useAvailableRanges";
 import type { BookingData } from "@/lib/bookingSchema";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Clock,
-  Calendar,
-  Sparkles,
-  Check,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import Typography from "@/components/ui/Typography";
+import { AnimatePresence, motion } from "framer-motion";
+import { Calendar, Check, ChevronLeft, ChevronRight, Clock, Sparkles } from "lucide-react";
+import React from "react";
+import DatePicker from "react-datepicker";
+import { Controller, useFormContext } from "react-hook-form";
 
 // Diccionario de traducciones
 const translations = {
@@ -51,18 +44,15 @@ export default function Step4_DateTime() {
   const locationType = watch("locationType");
   const { t } = useTranslations();
 
-  const serviceSelection = selectedServices.reduce<Record<string, number>>(
-    (acc, cur) => {
-      acc[cur.id] = cur.quantity;
-      return acc;
-    },
-    {}
-  );
+  const serviceSelection = selectedServices.reduce<Record<string, number>>((acc, cur) => {
+    acc[cur.id] = cur.quantity;
+    return acc;
+  }, {});
 
   const { data: rangesData, isLoading } = useAvailableRanges(
     date || null,
     serviceSelection,
-    (locationType as "STUDIO" | "HOME") || "STUDIO"
+    (locationType as "STUDIO" | "HOME") || "STUDIO",
   );
 
   return (
@@ -88,11 +78,7 @@ export default function Step4_DateTime() {
           >
             {t("title")}
           </Typography>
-          <Typography
-            as="p"
-            variant="p"
-            className="text-[color:var(--color-body)] text-sm"
-          >
+          <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-sm">
             {t("subtitle")}
           </Typography>
         </div>
@@ -117,11 +103,7 @@ export default function Step4_DateTime() {
                 inline
                 locale={es}
                 calendarClassName="w-full"
-                renderCustomHeader={({
-                  date,
-                  decreaseMonth,
-                  increaseMonth,
-                }) => (
+                renderCustomHeader={({ date, decreaseMonth, increaseMonth }) => (
                   <div className="flex items-center justify-between mb-4">
                     <button
                       type="button"
@@ -161,18 +143,11 @@ export default function Step4_DateTime() {
           className="p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
         >
           <div className="flex items-center justify-between mb-4">
-            <Typography
-              as="h3"
-              variant="h3"
-            >
+            <Typography as="h3" variant="h3">
               {t("selectTimeSlot")}
             </Typography>
             {date && (
-              <Typography
-                as="span"
-                variant="small"
-                className="text-[color:var(--color-body)]"
-              >
+              <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
                 {format(date, "dd/MM/yyyy")}
               </Typography>
             )}
@@ -249,18 +224,14 @@ export default function Step4_DateTime() {
                   >
                     <Clock
                       className={`w-4 h-4 ${
-                        isSelected
-                          ? "text-white"
-                          : "text-[color:var(--color-accent)]"
+                        isSelected ? "text-white" : "text-[color:var(--color-accent)]"
                       }`}
                     />
                     <Typography
                       as="span"
                       variant="small"
                       className={`font-medium ${
-                        isSelected
-                          ? "text-white"
-                          : "text-[color:var(--color-heading)]"
+                        isSelected ? "text-white" : "text-[color:var(--color-heading)]"
                       }`}
                     >
                       {r}
@@ -271,11 +242,7 @@ export default function Step4_DateTime() {
             </div>
           ) : date ? (
             <div className="text-center py-4">
-              <Typography
-                as="p"
-                variant="p"
-                className="text-[color:var(--color-body)] text-sm"
-              >
+              <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-sm">
                 {t("noTimeSlots")}
               </Typography>
               <Typography
@@ -288,11 +255,7 @@ export default function Step4_DateTime() {
             </div>
           ) : (
             <div className="text-center py-4">
-              <Typography
-                as="p"
-                variant="p"
-                className="text-[color:var(--color-body)] text-sm"
-              >
+              <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-sm">
                 Selecciona una fecha para ver los horarios disponibles
               </Typography>
             </div>

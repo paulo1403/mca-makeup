@@ -1,13 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { randomUUID } from "crypto";
-import { sendEmail, emailTemplates } from "@/lib/serverEmail";
+import { prisma } from "@/lib/prisma";
+import { emailTemplates, sendEmail } from "@/lib/serverEmail";
+import { type NextRequest, NextResponse } from "next/server";
 
 // PATCH /api/admin/appointments/[id] - Update appointment status
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const body = await request.json();
     const { status } = body;
@@ -16,10 +13,7 @@ export async function PATCH(
     // Validate status
     const validStatuses = ["PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"];
     if (!validStatuses.includes(status)) {
-      return NextResponse.json(
-        { success: false, message: "Invalid status" },
-        { status: 400 },
-      );
+      return NextResponse.json({ success: false, message: "Invalid status" }, { status: 400 });
     }
 
     // Get appointment data before update for email
@@ -69,9 +63,7 @@ export async function PATCH(
         });
 
         // Review request emails disabled - reviews are handled through the website
-        console.log(
-          `Review token created for ${appointmentData.clientName}: ${reviewToken}`,
-        );
+        console.log(`Review token created for ${appointmentData.clientName}: ${reviewToken}`);
       } else {
         reviewToken = existingReview.reviewToken;
       }
@@ -106,40 +98,40 @@ export async function PATCH(
     if (appointmentData.status !== status) {
       try {
         let emailTemplate = null;
-        const serviceType = appointmentData.serviceType || 'Servicio de maquillaje';
-        
+        const serviceType = appointmentData.serviceType || "Servicio de maquillaje";
+
         switch (status) {
-          case 'CONFIRMED':
+          case "CONFIRMED":
             emailTemplate = emailTemplates.appointmentConfirmed(
               appointmentData.clientName,
               serviceType,
-              appointmentData.appointmentDate.toLocaleDateString('es-ES'),
+              appointmentData.appointmentDate.toLocaleDateString("es-ES"),
               appointmentData.appointmentTime,
               appointmentData.locationType,
               appointmentData.district || undefined,
               appointmentData.address || undefined,
               appointmentData.addressReference || undefined,
-              appointmentData.additionalNotes || undefined
+              appointmentData.additionalNotes || undefined,
             );
             break;
-            
-          case 'CANCELLED':
+
+          case "CANCELLED":
             emailTemplate = emailTemplates.appointmentCancelled(
               appointmentData.clientName,
               serviceType,
-              appointmentData.appointmentDate.toLocaleDateString('es-ES'),
-              appointmentData.appointmentTime
+              appointmentData.appointmentDate.toLocaleDateString("es-ES"),
+              appointmentData.appointmentTime,
             );
             break;
-            
-          case 'COMPLETED':
+
+          case "COMPLETED":
             // Only send review email if we just created a new review token
             if (reviewToken) {
               emailTemplate = emailTemplates.reviewRequest(
                 appointmentData.clientName,
                 serviceType,
-                appointmentData.appointmentDate.toLocaleDateString('es-ES'),
-                reviewToken
+                appointmentData.appointmentDate.toLocaleDateString("es-ES"),
+                reviewToken,
               );
             }
             break;
@@ -152,9 +144,11 @@ export async function PATCH(
             html: emailTemplate.html,
             text: emailTemplate.text,
           });
-          
-          console.log(`📧 Email ${status.toLowerCase()} enviado a ${appointmentData.clientName}:`, 
-                     emailSent ? "✅ Exitoso" : "❌ Fallido");
+
+          console.log(
+            `📧 Email ${status.toLowerCase()} enviado a ${appointmentData.clientName}:`,
+            emailSent ? "✅ Exitoso" : "❌ Fallido",
+          );
         }
       } catch (emailError) {
         console.error("Error enviando email al cliente:", emailError);

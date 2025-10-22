@@ -1,20 +1,12 @@
 "use client";
+import Button from "@/components/ui/Button";
+import Typography from "@/components/ui/Typography";
+import { CATEGORY_LABELS } from "@/lib/serviceRules";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, Clock, Minus, Package, Plus, Star, X } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Package,
-  Clock,
-  Star,
-  Plus,
-  Minus,
-  X,
-  ChevronDown,
-} from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import type { Service } from "../../hooks/useServicesQuery";
-import { CATEGORY_LABELS } from "@/lib/serviceRules";
-import Typography from "@/components/ui/Typography";
-import Button from "@/components/ui/Button";
 
 type Props = {
   category: string;
@@ -44,15 +36,15 @@ const ServiceCard = ({
     const checkClamped = () => {
       const el = descRef.current;
       if (!el) return;
-      const clamped = !showFull && (el.scrollHeight > el.clientHeight + 1);
+      const clamped = !showFull && el.scrollHeight > el.clientHeight + 1;
       setIsClamped(clamped);
     };
     checkClamped();
-    window.addEventListener('resize', checkClamped);
-    return () => window.removeEventListener('resize', checkClamped);
+    window.addEventListener("resize", checkClamped);
+    return () => window.removeEventListener("resize", checkClamped);
   }, [service.description, showFull]);
 
-  const needsToggle = isClamped || showFull || ((service.description?.length ?? 0) > 60);
+  const needsToggle = isClamped || showFull || (service.description?.length ?? 0) > 60;
 
   return (
     <div
@@ -110,9 +102,7 @@ const ServiceCard = ({
           <Star className="w-3 h-3" />
           {service.rating || "5.0"}
         </span>
-        <span className="font-semibold text-[color:var(--color-primary)]">
-          S/{service.price}
-        </span>
+        <span className="font-semibold text-[color:var(--color-primary)]">S/{service.price}</span>
       </div>
 
       {/* Controles optimizados para mobile */}
@@ -120,9 +110,7 @@ const ServiceCard = ({
         {isSelected ? (
           <div className="flex items-center gap-2 w-full">
             <button
-              onClick={() =>
-                onQuantityChange(service.id, Math.max(1, quantity - 1))
-              }
+              onClick={() => onQuantityChange(service.id, Math.max(1, quantity - 1))}
               className="w-8 h-8 rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface)] flex items-center justify-center active:scale-95 transition-transform"
               disabled={quantity <= 1}
             >
@@ -130,9 +118,7 @@ const ServiceCard = ({
             </button>
 
             <div className="flex-1 text-center">
-              <span className="font-semibold text-[color:var(--color-heading)]">
-                {quantity}
-              </span>
+              <span className="font-semibold text-[color:var(--color-heading)]">{quantity}</span>
               <span className="text-xs text-[color:var(--color-body)] block">
                 {quantity === 1 ? "servicio" : "servicios"}
               </span>
@@ -168,11 +154,7 @@ const ServiceCard = ({
   );
 };
 
-export default function ServiceCategoryGroup({
-  category,
-  services,
-  fieldName,
-}: Props) {
+export default function ServiceCategoryGroup({ category, services, fieldName }: Props) {
   const { watch, setValue } = useFormContext();
   const label = CATEGORY_LABELS[category] ?? category;
   const [isExpanded, setIsExpanded] = useState(false);
@@ -183,7 +165,7 @@ export default function ServiceCategoryGroup({
       acc[item.id] = item.quantity;
       return acc;
     },
-    {} as Record<string, number>
+    {} as Record<string, number>,
   );
 
   // Función corregida para agregar/eliminar servicios
@@ -247,10 +229,7 @@ export default function ServiceCategoryGroup({
             onClick={() => setIsExpanded(!isExpanded)}
             className="w-10 h-10 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)] flex items-center justify-center hover:bg-[color:var(--color-surface-secondary)] active:scale-95 transition-all flex-shrink-0"
           >
-            <motion.div
-              animate={{ rotate: isExpanded ? 180 : 0 }}
-              transition={{ duration: 0.2 }}
-            >
+            <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
               <ChevronDown className="w-5 h-5 text-[color:var(--color-heading)]" />
             </motion.div>
           </button>

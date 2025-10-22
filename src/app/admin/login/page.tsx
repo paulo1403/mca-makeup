@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useRef } from 'react';
-import { useSession, signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { Lock } from 'lucide-react';
-import { useLogin, useRateLimitCheck } from '@/hooks/useAuth';
-import { useCountdown } from '@/hooks/useCountdown';
-import { LoginForm } from '@/components/auth/LoginForm';
-import { RateLimitAlerts } from '@/components/auth/RateLimitAlerts';
-import { ErrorAlert } from '@/components/auth/ErrorAlert';
-import { LoginFormData, getMostRestrictiveRateLimit } from '@/lib/auth-utils';
+import { ErrorAlert } from "@/components/auth/ErrorAlert";
+import { LoginForm } from "@/components/auth/LoginForm";
+import { RateLimitAlerts } from "@/components/auth/RateLimitAlerts";
+import { useLogin, useRateLimitCheck } from "@/hooks/useAuth";
+import { useCountdown } from "@/hooks/useCountdown";
+import { type LoginFormData, getMostRestrictiveRateLimit } from "@/lib/auth-utils";
+import { Lock } from "lucide-react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 export default function AdminLogin() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { status } = useSession();
   const router = useRouter();
@@ -24,19 +24,17 @@ export default function AdminLogin() {
   const { data: rateLimitStatus, refetch: refetchRateLimit } = useRateLimitCheck(email);
 
   // Calcular info de rate limiting
-  const rateLimitInfo = rateLimitStatus 
-    ? getMostRestrictiveRateLimit(rateLimitStatus)
-    : null;
+  const rateLimitInfo = rateLimitStatus ? getMostRestrictiveRateLimit(rateLimitStatus) : null;
 
   // Countdown para bloqueo
   const { timeLeft } = useCountdown(rateLimitInfo?.blockedUntil);
 
   // Redirect si ya está autenticado
   useEffect(() => {
-    if (status === 'authenticated') {
+    if (status === "authenticated") {
       const search = new URLSearchParams(window.location.search);
-      const callbackUrl = search.get('callbackUrl');
-      const target = (!callbackUrl || callbackUrl.includes('/admin/login')) ? '/admin' : callbackUrl;
+      const callbackUrl = search.get("callbackUrl");
+      const target = !callbackUrl || callbackUrl.includes("/admin/login") ? "/admin" : callbackUrl;
       if (target !== window.location.pathname) {
         router.replace(target);
       }
@@ -44,16 +42,16 @@ export default function AdminLogin() {
       // the session may be stale and offer actions. If the user doesn't interact, we'll
       // force sign out after an additional timeout.
       const showBannerTimer = setTimeout(() => {
-        if (window.location.pathname === '/admin/login') {
+        if (window.location.pathname === "/admin/login") {
           setShowStuckBanner(true);
           showStuckBannerRef.current = true;
         }
       }, 900);
 
       const autoSignoutTimer = setTimeout(async () => {
-          if (window.location.pathname === '/admin/login' && showStuckBannerRef.current) {
-          const { signOut } = await import('next-auth/react');
-          signOut({ callbackUrl: '/admin/login' });
+        if (window.location.pathname === "/admin/login" && showStuckBannerRef.current) {
+          const { signOut } = await import("next-auth/react");
+          signOut({ callbackUrl: "/admin/login" });
         }
       }, 3000);
 
@@ -69,29 +67,30 @@ export default function AdminLogin() {
   // Handler para submit del formulario - usando solo NextAuth
   const handleSubmit = async (formData: LoginFormData) => {
     setIsLoading(true);
-    
+
     try {
-      const result = await signIn('credentials', {
+      const result = await signIn("credentials", {
         email: formData.email,
         password: formData.password,
         redirect: false,
       });
-      
+
       if (result?.error) {
-        throw new Error('Credenciales incorrectas');
+        throw new Error("Credenciales incorrectas");
       }
-      
-      if (result?.ok) {        
+
+      if (result?.ok) {
         // Obtener callbackUrl o usar /admin por defecto
         const search = new URLSearchParams(window.location.search);
-        const callbackUrl = search.get('callbackUrl');
-        const target = (!callbackUrl || callbackUrl.includes('/admin/login')) ? '/admin' : callbackUrl;
+        const callbackUrl = search.get("callbackUrl");
+        const target =
+          !callbackUrl || callbackUrl.includes("/admin/login") ? "/admin" : callbackUrl;
         router.replace(target);
       } else {
-        throw new Error('Error inesperado al iniciar sesión');
+        throw new Error("Error inesperado al iniciar sesión");
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       // Mostrar el error al usuario usando React Query para mantener compatibilidad
       loginMutation.mutate(formData);
     } finally {
@@ -105,43 +104,49 @@ export default function AdminLogin() {
   };
 
   // Loading states
-  if (status === 'loading') {
+  if (status === "loading") {
     return (
-      <div className='min-h-screen bg-[var(--color-background)] flex items-center justify-center'>
-        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-primary)]'></div>
+      <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-primary)]"></div>
       </div>
     );
   }
 
-  if (status === 'authenticated') {
+  if (status === "authenticated") {
     return (
-      <div className='min-h-screen bg-[var(--color-background)] flex items-center justify-center px-4'>
-        <div className='max-w-xl w-full'>
+      <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center px-4">
+        <div className="max-w-xl w-full">
           {!showStuckBanner ? (
-            <div className='text-center text-[var(--color-heading)]'>Redirigiendo...</div>
+            <div className="text-center text-[var(--color-heading)]">Redirigiendo...</div>
           ) : (
-            <div className='bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg p-6 shadow'>
-              <h3 className='text-lg font-semibold text-[var(--color-heading)] mb-2'>Problema con la sesión</h3>
-              <p className='text-sm text-[var(--color-muted)] mb-4'>Parece que tu sesión está caducada o hay un problema con la cookie. Puedes intentar reintentar la redirección o cerrar sesión para volver a iniciar sesión manualmente.</p>
-              <div className='flex gap-3'>
+            <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg p-6 shadow">
+              <h3 className="text-lg font-semibold text-[var(--color-heading)] mb-2">
+                Problema con la sesión
+              </h3>
+              <p className="text-sm text-[var(--color-muted)] mb-4">
+                Parece que tu sesión está caducada o hay un problema con la cookie. Puedes intentar
+                reintentar la redirección o cerrar sesión para volver a iniciar sesión manualmente.
+              </p>
+              <div className="flex gap-3">
                 <button
                   onClick={() => {
                     const search = new URLSearchParams(window.location.search);
-                    const callbackUrl = search.get('callbackUrl');
-                    const target = (!callbackUrl || callbackUrl.includes('/admin/login')) ? '/admin' : callbackUrl;
+                    const callbackUrl = search.get("callbackUrl");
+                    const target =
+                      !callbackUrl || callbackUrl.includes("/admin/login") ? "/admin" : callbackUrl;
                     router.replace(target as string);
                     setShowStuckBanner(false);
                   }}
-                  className='px-4 py-2 bg-[var(--color-primary)] text-[var(--on-accent-contrast)] rounded'
+                  className="px-4 py-2 bg-[var(--color-primary)] text-[var(--on-accent-contrast)] rounded"
                 >
                   Reintentar redirección
                 </button>
                 <button
                   onClick={async () => {
-                    const { signOut } = await import('next-auth/react');
-                    signOut({ callbackUrl: '/admin/login' });
+                    const { signOut } = await import("next-auth/react");
+                    signOut({ callbackUrl: "/admin/login" });
                   }}
-                  className='px-4 py-2 bg-red-600 text-white rounded'
+                  className="px-4 py-2 bg-red-600 text-white rounded"
                 >
                   Cerrar sesión y reingresar
                 </button>
@@ -154,33 +159,29 @@ export default function AdminLogin() {
   }
 
   // Extraer error message
-  const errorMessage = loginMutation.error instanceof Error
-    ? loginMutation.error.message
-    : typeof loginMutation.error === 'object' && loginMutation.error && 'message' in loginMutation.error
-    ? (loginMutation.error as { message: string }).message
-    : null;
+  const errorMessage =
+    loginMutation.error instanceof Error
+      ? loginMutation.error.message
+      : typeof loginMutation.error === "object" &&
+          loginMutation.error &&
+          "message" in loginMutation.error
+        ? (loginMutation.error as { message: string }).message
+        : null;
 
   return (
-    <div className='min-h-screen bg-[var(--color-background)] flex items-center justify-center px-4'>
-      <div className='max-w-md w-full bg-[var(--color-surface)] border border-[var(--color-border)] shadow-lg rounded-2xl p-6 space-y-6'>
+    <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center px-4">
+      <div className="max-w-md w-full bg-[var(--color-surface)] border border-[var(--color-border)] shadow-lg rounded-2xl p-6 space-y-6">
         {/* Header */}
-        <div className='text-center'>
-          <div className='mx-auto h-12 w-12 bg-[var(--color-primary)] rounded-full flex items-center justify-center'>
-            <Lock className='h-6 w-6 text-[var(--color-cta-text)]' />
+        <div className="text-center">
+          <div className="mx-auto h-12 w-12 bg-[var(--color-primary)] rounded-full flex items-center justify-center">
+            <Lock className="h-6 w-6 text-[var(--color-cta-text)]" />
           </div>
-          <h2 className='mt-4 text-h2 text-[var(--color-heading)]'>
-            Panel de Administración
-          </h2>
-          <p className='mt-2 text-sm text-[var(--color-muted)]'>
-            Marcela Cordero Makeup Artist
-          </p>
+          <h2 className="mt-4 text-h2 text-[var(--color-heading)]">Panel de Administración</h2>
+          <p className="mt-2 text-sm text-[var(--color-muted)]">Marcela Cordero Makeup Artist</p>
         </div>
 
         {/* Rate Limit Alerts */}
-        <RateLimitAlerts 
-          rateLimitInfo={rateLimitInfo}
-          onExpired={handleBlockExpired}
-        />
+        <RateLimitAlerts rateLimitInfo={rateLimitInfo} onExpired={handleBlockExpired} />
 
         {/* Error Alert */}
         <ErrorAlert error={errorMessage} />
@@ -195,9 +196,10 @@ export default function AdminLogin() {
         />
 
         {/* Security Notice */}
-        <div className='mt-2 text-center'>
-          <p className='text-xs text-[var(--color-muted)]'>
-            🔐 Este panel está protegido contra ataques de fuerza bruta.<br/>
+        <div className="mt-2 text-center">
+          <p className="text-xs text-[var(--color-muted)]">
+            🔐 Este panel está protegido contra ataques de fuerza bruta.
+            <br />
             Máximo 5 intentos cada 15 minutos.
           </p>
         </div>

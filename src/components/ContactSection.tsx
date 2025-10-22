@@ -1,20 +1,11 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
+import { Calendar, Clock, Instagram, Mail, MapPin, MessageSquare, Phone, Star } from "lucide-react";
 import { useRef } from "react";
-import {
-  Phone,
-  Mail,
-  MapPin,
-  Clock,
-  Instagram,
-  MessageSquare,
-  Calendar,
-  Star,
-} from "lucide-react";
 import BookingFlow from "./BookingFlow";
-import Typography from "./ui/Typography";
 import Button from "./ui/Button";
+import Typography from "./ui/Typography";
 import "@/styles/components/contact.css";
 
 export default function ContactSection() {
@@ -58,7 +49,12 @@ export default function ContactSection() {
   ];
 
   return (
-    <section id="contacto" className="contact-section py-10 sm:py-20 relative overflow-hidden" style={{ scrollMarginTop: '120px' }} ref={sectionRef}>
+    <section
+      id="contacto"
+      className="contact-section py-10 sm:py-20 relative overflow-hidden"
+      style={{ scrollMarginTop: "120px" }}
+      ref={sectionRef}
+    >
       {/* Elementos decorativos */}
       <div className="contact-decoration contact-decoration--1 hidden sm:block" />
       <div className="contact-decoration contact-decoration--2 hidden sm:block" />
@@ -89,9 +85,9 @@ export default function ContactSection() {
             variant="p"
             className="contact-description hidden sm:block text-base sm:text-lg"
           >
-            Completa el proceso en cinco pasos: selecciona tus servicios,
-            ingresa tus datos, indica la ubicación, elige fecha y horario, y
-            confirma. Te contactaré para coordinar cualquier detalle adicional.
+            Completa el proceso en cinco pasos: selecciona tus servicios, ingresa tus datos, indica
+            la ubicación, elige fecha y horario, y confirma. Te contactaré para coordinar cualquier
+            detalle adicional.
           </Typography>
 
           <Typography
@@ -99,8 +95,8 @@ export default function ContactSection() {
             variant="p"
             className="contact-subtitle hidden sm:block text-sm sm:text-base"
           >
-            Puedes avanzar y retroceder entre pasos sin perder tu selección. Si
-            prefieres asistencia, escríbeme y te guío en el proceso.
+            Puedes avanzar y retroceder entre pasos sin perder tu selección. Si prefieres
+            asistencia, escríbeme y te guío en el proceso.
           </Typography>
         </motion.div>
 
@@ -115,11 +111,7 @@ export default function ContactSection() {
           >
             {/* Información de contacto */}
             <div className="contact-info-card hidden lg:block">
-              <Typography
-                as="h3"
-                variant="h3"
-                className="contact-info-title text-xl"
-              >
+              <Typography as="h3" variant="h3" className="contact-info-title text-xl">
                 <Star className="contact-info-icon" />
                 Información de Contacto
               </Typography>
@@ -138,16 +130,8 @@ export default function ContactSection() {
                           <a
                             href={info.href}
                             className="contact-info-link"
-                            target={
-                              info.href.startsWith("http")
-                                ? "_blank"
-                                : undefined
-                            }
-                            rel={
-                              info.href.startsWith("http")
-                                ? "noopener noreferrer"
-                                : undefined
-                            }
+                            target={info.href.startsWith("http") ? "_blank" : undefined}
+                            rel={info.href.startsWith("http") ? "noopener noreferrer" : undefined}
                           >
                             {info.value}
                           </a>
@@ -185,11 +169,7 @@ export default function ContactSection() {
 
             {/* Acciones rápidas */}
             <div className="contact-info-card">
-              <Typography
-                as="h3"
-                variant="h3"
-                className="contact-info-title text-xl"
-              >
+              <Typography as="h3" variant="h3" className="contact-info-title text-xl">
                 <MessageSquare className="contact-info-icon" />
                 Contacto Directo
               </Typography>
@@ -205,14 +185,8 @@ export default function ContactSection() {
                       as="a"
                       href={action.href}
                       className="flex-1 justify-center gap-2"
-                      target={
-                        action.href.startsWith("http") ? "_blank" : undefined
-                      }
-                      rel={
-                        action.href.startsWith("http")
-                          ? "noopener noreferrer"
-                          : undefined
-                      }
+                      target={action.href.startsWith("http") ? "_blank" : undefined}
+                      rel={action.href.startsWith("http") ? "noopener noreferrer" : undefined}
                     >
                       <IconComponent className="w-4 h-4" />
                       {action.label}

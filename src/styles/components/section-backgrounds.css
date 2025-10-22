@@ -2,9 +2,8 @@
 
 /* Fondos base con degradados difuminados ultra suaves */
 .section-bg-hero {
-  background: 
-    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)),
-    url('https://marcelacorderomakeup.my.canva.site/_assets/media/d896d7f1ed2c9864b0567d571abf3c48.jpg');
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)),
+    url("https://marcelacorderomakeup.my.canva.site/_assets/media/d896d7f1ed2c9864b0567d571abf3c48.jpg");
   background-size: cover;
   background-position: center 20%;
   background-repeat: no-repeat;
@@ -26,13 +25,13 @@
 }
 
 .section-bg-portfolio {
-  background: 
-    radial-gradient(ellipse at center, rgba(99, 102, 241, 0.02) 0%, transparent 65%),
-    linear-gradient(180deg, 
-      rgba(8, 8, 8, 0.8) 0%, 
+  background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.02) 0%, transparent 65%),
+    linear-gradient(
+      180deg,
+      rgba(8, 8, 8, 0.8) 0%,
       rgba(12, 12, 12, 0.85) 15%,
       rgba(18, 18, 18, 0.9) 35%,
-      #0F0F0F 50%, 
+      #0f0f0f 50%,
       rgba(14, 14, 14, 0.9) 65%,
       rgba(10, 10, 10, 0.85) 85%,
       rgba(6, 6, 6, 0.8) 100%
@@ -40,13 +39,13 @@
 }
 
 .section-bg-testimonials {
-  background: 
-    radial-gradient(ellipse at center, rgba(16, 185, 129, 0.02) 0%, transparent 60%),
-    linear-gradient(180deg, 
-      rgba(6, 6, 6, 0.8) 0%, 
+  background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.02) 0%, transparent 60%),
+    linear-gradient(
+      180deg,
+      rgba(6, 6, 6, 0.8) 0%,
       rgba(10, 10, 10, 0.85) 15%,
       rgba(16, 16, 16, 0.9) 35%,
-      #1A1A1A 50%, 
+      #1a1a1a 50%,
       rgba(18, 18, 18, 0.9) 65%,
       rgba(14, 14, 14, 0.85) 85%,
       rgba(10, 10, 10, 0.8) 100%
@@ -54,13 +53,13 @@
 }
 
 .section-bg-about {
-  background: 
-    radial-gradient(ellipse at center, rgba(99, 102, 241, 0.025) 0%, transparent 65%),
-    linear-gradient(180deg, 
-      rgba(10, 10, 10, 0.8) 0%, 
+  background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.025) 0%, transparent 65%),
+    linear-gradient(
+      180deg,
+      rgba(10, 10, 10, 0.8) 0%,
       rgba(14, 14, 14, 0.85) 15%,
       rgba(20, 20, 20, 0.9) 35%,
-      #141414 50%, 
+      #141414 50%,
       rgba(16, 16, 16, 0.9) 65%,
       rgba(12, 12, 12, 0.85) 85%,
       rgba(8, 8, 8, 0.8) 100%
@@ -68,13 +67,13 @@
 }
 
 .section-bg-contact {
-  background: 
-    radial-gradient(ellipse at center, rgba(16, 185, 129, 0.02) 0%, transparent 60%),
-    linear-gradient(180deg, 
-      rgba(8, 8, 8, 0.8) 0%, 
+  background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.02) 0%, transparent 60%),
+    linear-gradient(
+      180deg,
+      rgba(8, 8, 8, 0.8) 0%,
       rgba(12, 12, 12, 0.85) 15%,
       rgba(18, 18, 18, 0.9) 35%,
-      #0F0F0F 50%, 
+      #0f0f0f 50%,
       rgba(10, 10, 10, 0.9) 65%,
       rgba(5, 5, 5, 0.95) 85%,
       rgba(2, 2, 2, 0.98) 100%
@@ -82,13 +81,13 @@
 }
 
 .section-bg-footer {
-  background: 
-    radial-gradient(ellipse at top, rgba(99, 102, 241, 0.015) 0%, transparent 50%),
-    linear-gradient(180deg, 
-      rgba(2, 2, 2, 0.98) 0%, 
+  background: radial-gradient(ellipse at top, rgba(99, 102, 241, 0.015) 0%, transparent 50%),
+    linear-gradient(
+      180deg,
+      rgba(2, 2, 2, 0.98) 0%,
       rgba(5, 5, 5, 0.99) 20%,
       rgba(8, 8, 8, 0.995) 40%,
-      #000000 70%, 
+      #000000 70%,
       #000000 100%
     );
 }
@@ -100,7 +99,8 @@
   left: 0;
   right: 0;
   height: 60px; /* Reducido de 120px */
-  background: linear-gradient(180deg, 
+  background: linear-gradient(
+    180deg,
     rgba(0, 0, 0, 0.6) 0%,
     rgba(0, 0, 0, 0.3) 40%,
     rgba(0, 0, 0, 0.1) 70%,
@@ -116,7 +116,8 @@
   left: 0;
   right: 0;
   height: 60px; /* Reducido de 120px */
-  background: linear-gradient(0deg, 
+  background: linear-gradient(
+    0deg,
     rgba(0, 0, 0, 0.6) 0%,
     rgba(0, 0, 0, 0.3) 40%,
     rgba(0, 0, 0, 0.1) 70%,
@@ -133,7 +134,8 @@
   left: 0;
   right: 0;
   height: 30px; /* Reducido de 60px */
-  background: linear-gradient(180deg, 
+  background: linear-gradient(
+    180deg,
     rgba(0, 0, 0, 0.4) 0%,
     rgba(0, 0, 0, 0.2) 50%,
     transparent 100%
@@ -149,11 +151,7 @@
   left: 0;
   right: 0;
   height: 30px; /* Reducido de 60px */
-  background: linear-gradient(0deg, 
-    rgba(0, 0, 0, 0.4) 0%,
-    rgba(0, 0, 0, 0.2) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%);
   backdrop-filter: blur(1px); /* Reducido de 2px */
   pointer-events: none;
   z-index: 2;
@@ -161,21 +159,23 @@
 
 /* Variantes con colores accent sutiles */
 .section-bg-with-accent-1 {
-  background: linear-gradient(180deg, 
-    rgba(10, 10, 10, 0.9) 0%, 
-    rgba(26, 26, 26, 0.95) 30%, 
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 10, 0.9) 0%,
+    rgba(26, 26, 26, 0.95) 30%,
     rgba(99, 102, 241, 0.02) 50%,
-    rgba(26, 26, 26, 0.95) 70%, 
+    rgba(26, 26, 26, 0.95) 70%,
     rgba(10, 10, 10, 0.8) 100%
   );
 }
 
 .section-bg-with-accent-2 {
-  background: linear-gradient(180deg, 
-    rgba(10, 10, 10, 0.8) 0%, 
-    rgba(20, 20, 20, 0.9) 30%, 
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 10, 0.8) 0%,
+    rgba(20, 20, 20, 0.9) 30%,
     rgba(16, 185, 129, 0.02) 50%,
-    rgba(20, 20, 20, 0.9) 70%, 
+    rgba(20, 20, 20, 0.9) 70%,
     rgba(10, 10, 10, 0.8) 100%
   );
 }
@@ -186,7 +186,7 @@
   .section-overlay-bottom {
     height: 40px; /* Reducido de 80px */
   }
-  
+
   .blur-fade-top,
   .blur-fade-bottom {
     height: 20px; /* Reducido de 40px */
@@ -200,9 +200,19 @@
 }
 
 @keyframes gradient-shift {
-  0% { background-position: 0% 0%; }
-  25% { background-position: 100% 0%; }
-  50% { background-position: 100% 100%; }
-  75% { background-position: 0% 100%; }
-  100% { background-position: 0% 0%; }
+  0% {
+    background-position: 0% 0%;
+  }
+  25% {
+    background-position: 100% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
 }

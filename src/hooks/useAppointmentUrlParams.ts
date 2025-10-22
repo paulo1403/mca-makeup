@@ -1,9 +1,9 @@
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from "next/navigation";
 
 export function useAppointmentUrlParams() {
   const searchParams = useSearchParams();
   return {
-    highlightId: searchParams.get('highlightId'),
-    showDetail: searchParams.get('showDetail'),
+    highlightId: searchParams.get("highlightId"),
+    showDetail: searchParams.get("showDetail"),
   };
 }

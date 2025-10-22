@@ -1,10 +1,10 @@
 "use client";
 
-import { Dispatch, SetStateAction } from "react";
-import { Info, Plus, Pencil, Sparkles, Tag, DollarSign, Clock } from "lucide-react";
-import type { Service, ServiceFormData } from "../types";
-import Modal, { ModalHeader, ModalBody, ModalFooter } from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
+import Modal, { ModalHeader, ModalBody, ModalFooter } from "@/components/ui/Modal";
+import { Clock, DollarSign, Info, Pencil, Plus, Sparkles, Tag } from "lucide-react";
+import type { Dispatch, SetStateAction } from "react";
+import type { Service, ServiceFormData } from "../types";
 
 interface ServiceFormModalProps {
   show: boolean;
@@ -30,12 +30,18 @@ export default function ServiceFormModal({
   return (
     <Modal open={show} onClose={onClose} size="lg" ariaLabelledBy="service-form-title">
       <ModalHeader
-        title={<span id="service-form-title">{editingService ? "Editar Servicio" : "Nuevo Servicio"}</span>}
-        icon={editingService ? (
-          <Pencil className="w-6 h-6 text-[var(--color-primary)]" />
-        ) : (
-          <Plus className="w-6 h-6 text-[var(--color-primary)]" />
-        )}
+        title={
+          <span id="service-form-title">
+            {editingService ? "Editar Servicio" : "Nuevo Servicio"}
+          </span>
+        }
+        icon={
+          editingService ? (
+            <Pencil className="w-6 h-6 text-[var(--color-primary)]" />
+          ) : (
+            <Plus className="w-6 h-6 text-[var(--color-primary)]" />
+          )
+        }
         onClose={onClose}
       />
 
@@ -45,8 +51,13 @@ export default function ServiceFormModal({
           <div className="flex items-center gap-3">
             <Sparkles className="w-5 h-5 text-[var(--color-primary)]" />
             <div>
-              <p className="text-sm text-[var(--color-body)]">Completa los detalles del servicio para mantener tu catálogo ordenado y coherente con el tema.</p>
-              <p className="text-xs text-[var(--color-muted)]">Usa títulos claros, precios consistentes y selecciona la categoría adecuada.</p>
+              <p className="text-sm text-[var(--color-body)]">
+                Completa los detalles del servicio para mantener tu catálogo ordenado y coherente
+                con el tema.
+              </p>
+              <p className="text-xs text-[var(--color-muted)]">
+                Usa títulos claros, precios consistentes y selecciona la categoría adecuada.
+              </p>
             </div>
           </div>
         </div>
@@ -56,11 +67,19 @@ export default function ServiceFormModal({
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 space-y-4">
             <div className="flex items-center gap-2 mb-2">
               <Tag className="w-4 h-4 text-[var(--color-primary)]" />
-              <h3 className="text-sm font-semibold text-[var(--color-heading)]">Información básica</h3>
+              <h3 className="text-sm font-semibold text-[var(--color-heading)]">
+                Información básica
+              </h3>
             </div>
             <div>
-              <label className="block text-xs font-medium text-[var(--color-body)] mb-2">Nombre del Servicio *</label>
+              <label
+                htmlFor="serviceName"
+                className="block text-xs font-medium text-[var(--color-body)] mb-2"
+              >
+                Nombre del Servicio *
+              </label>
               <input
+                id="serviceName"
                 type="text"
                 required
                 value={formData.name}
@@ -71,8 +90,14 @@ export default function ServiceFormModal({
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[var(--color-body)] mb-2">Descripción</label>
+              <label
+                htmlFor="serviceDescription"
+                className="block text-xs font-medium text-[var(--color-body)] mb-2"
+              >
+                Descripción
+              </label>
               <textarea
+                id="serviceDescription"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 rows={3}
@@ -86,12 +111,20 @@ export default function ServiceFormModal({
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
             <div className="flex items-center gap-2 mb-4">
               <DollarSign className="w-4 h-4 text-[var(--color-primary)]" />
-              <h3 className="text-sm font-semibold text-[var(--color-heading)]">Precio, duración y categoría</h3>
+              <h3 className="text-sm font-semibold text-[var(--color-heading)]">
+                Precio, duración y categoría
+              </h3>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
               <div>
-                <label className="block text-xs font-medium text-[var(--color-body)] mb-2">Precio (S/) *</label>
+                <label
+                  htmlFor="servicePrice"
+                  className="block text-xs font-medium text-[var(--color-body)] mb-2"
+                >
+                  Precio (S/) *
+                </label>
                 <input
+                  id="servicePrice"
                   type="number"
                   required
                   min="0"
@@ -104,8 +137,14 @@ export default function ServiceFormModal({
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-[var(--color-body)] mb-2">Duración (min) *</label>
+                <label
+                  htmlFor="serviceDuration"
+                  className="block text-xs font-medium text-[var(--color-body)] mb-2"
+                >
+                  Duración (min) *
+                </label>
                 <input
+                  id="serviceDuration"
                   type="number"
                   required
                   min="0"
@@ -116,15 +155,21 @@ export default function ServiceFormModal({
                 />
                 {formData.duration === "0" && (
                   <p className="text-xs text-[var(--color-muted)] mt-1 flex items-center">
-                    <Info className="w-3 h-3 mr-1 text-[var(--color-primary)]" />
-                    ⚡ Duración 0: Se realizará simultáneamente con el maquillaje (no suma tiempo total)
+                    <Info className="w-3 h-3 mr-1 text-[var(--color-primary)]" />⚡ Duración 0: Se
+                    realizará simultáneamente con el maquillaje (no suma tiempo total)
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-[var(--color-body)] mb-2">Categoría *</label>
+                <label
+                  htmlFor="serviceCategory"
+                  className="block text-xs font-medium text-[var(--color-body)] mb-2"
+                >
+                  Categoría *
+                </label>
                 <select
+                  id="serviceCategory"
                   required
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}

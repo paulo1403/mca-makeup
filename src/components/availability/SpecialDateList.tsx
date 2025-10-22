@@ -1,14 +1,7 @@
 "use client";
 
-import { SpecialDate } from "@/hooks/useAvailability";
-import {
-  Trash2,
-  Calendar,
-  Clock,
-  CheckCircle,
-  XCircle,
-  Edit2,
-} from "lucide-react";
+import type { SpecialDate } from "@/hooks/useAvailability";
+import { Calendar, CheckCircle, Clock, Edit2, Trash2, XCircle } from "lucide-react";
 
 interface SpecialDateListProps {
   specialDates: SpecialDate[];
@@ -32,8 +25,8 @@ export default function SpecialDateList({
       <div className="text-center py-8">
         <Calendar className="mx-auto h-12 w-12 text-[color:var(--color-muted)] mb-4" />
         <p className="text-[color:var(--color-body)] mb-4">
-          No tienes fechas especiales configuradas. Puedes agregar días libres o
-          horarios especiales.
+          No tienes fechas especiales configuradas. Puedes agregar días libres o horarios
+          especiales.
         </p>
       </div>
     );
@@ -44,14 +37,14 @@ export default function SpecialDateList({
     const [yearA, monthA, dayA] = a.date.split("-");
     const [yearB, monthB, dayB] = b.date.split("-");
     const dateA = new Date(
-      parseInt(yearA),
-      parseInt(monthA) - 1,
-      parseInt(dayA),
+      Number.parseInt(yearA),
+      Number.parseInt(monthA) - 1,
+      Number.parseInt(dayA),
     );
     const dateB = new Date(
-      parseInt(yearB),
-      parseInt(monthB) - 1,
-      parseInt(dayB),
+      Number.parseInt(yearB),
+      Number.parseInt(monthB) - 1,
+      Number.parseInt(dayB),
     );
     return dateA.getTime() - dateB.getTime();
   });
@@ -84,10 +77,7 @@ export default function SpecialDateList({
                     style={{ color: "var(--status-confirmed-text)" }}
                   />
                 ) : (
-                  <XCircle
-                    className="h-5 w-5"
-                    style={{ color: "var(--status-cancelled-text)" }}
-                  />
+                  <XCircle className="h-5 w-5" style={{ color: "var(--status-cancelled-text)" }} />
                 )}
                 <div>
                   <div className="font-medium text-[color:var(--color-heading)]">
@@ -95,9 +85,9 @@ export default function SpecialDateList({
                       // Crear la fecha manualmente para evitar problemas de zona horaria
                       const [year, month, day] = specialDate.date.split("-");
                       const localDate = new Date(
-                        parseInt(year),
-                        parseInt(month) - 1,
-                        parseInt(day),
+                        Number.parseInt(year),
+                        Number.parseInt(month) - 1,
+                        Number.parseInt(day),
                       );
                       return localDate.toLocaleDateString("es-PE", {
                         weekday: "long",

@@ -1,11 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { type NextRequest, NextResponse } from "next/server";
 
 // PATCH /api/admin/availability/[id] - Update time slot (toggle active/inactive)
-export async function PATCH(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> },
-) {
+export async function PATCH(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params;
     const body = await request.json();
@@ -34,12 +31,7 @@ export async function PATCH(
   } catch (error) {
     console.error("Error updating time slot:", error);
 
-    if (
-      error &&
-      typeof error === "object" &&
-      "code" in error &&
-      error.code === "P2025"
-    ) {
+    if (error && typeof error === "object" && "code" in error && error.code === "P2025") {
       return NextResponse.json(
         {
           success: false,
@@ -57,10 +49,7 @@ export async function PATCH(
 }
 
 // DELETE /api/admin/availability/[id] - Delete time slot
-export async function DELETE(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> },
-) {
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params;
 
@@ -76,12 +65,7 @@ export async function DELETE(
   } catch (error) {
     console.error("Error deleting time slot:", error);
 
-    if (
-      error &&
-      typeof error === "object" &&
-      "code" in error &&
-      error.code === "P2025"
-    ) {
+    if (error && typeof error === "object" && "code" in error && error.code === "P2025") {
       return NextResponse.json(
         {
           success: false,
@@ -99,10 +83,7 @@ export async function DELETE(
 }
 
 // PUT /api/admin/availability/[id] - Update complete time slot data
-export async function PUT(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> },
-) {
+export async function PUT(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params;
     const body = await request.json();
@@ -186,12 +167,7 @@ export async function PUT(
   } catch (error) {
     console.error("Error updating time slot:", error);
 
-    if (
-      error &&
-      typeof error === "object" &&
-      "code" in error &&
-      error.code === "P2025"
-    ) {
+    if (error && typeof error === "object" && "code" in error && error.code === "P2025") {
       return NextResponse.json(
         {
           success: false,

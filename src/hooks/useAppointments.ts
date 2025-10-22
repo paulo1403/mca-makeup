@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
 export interface Appointment {
@@ -58,21 +58,14 @@ interface UseAppointmentsParams {
 }
 
 // Hook para obtener citas
-export const useAppointments = ({
-  page,
-  filter,
-  searchTerm,
-  id,
-}: UseAppointmentsParams) => {
+export const useAppointments = ({ page, filter, searchTerm, id }: UseAppointmentsParams) => {
   return useQuery({
     queryKey: ["appointments", page, filter, searchTerm, id ?? null],
     queryFn: async (): Promise<AppointmentsResponse> => {
       const params = new URLSearchParams({
         page: page.toString(),
         limit: "10",
-        ...(filter === "all" || !filter
-          ? { status: "PENDING,CONFIRMED" }
-          : { status: filter }),
+        ...(filter === "all" || !filter ? { status: "PENDING,CONFIRMED" } : { status: filter }),
         ...(searchTerm && { search: searchTerm }),
       });
 
@@ -118,7 +111,7 @@ export const useAppointments = ({
     },
     staleTime: 1000 * 60 * 5, // 5 minutos
   });
-}
+};
 
 // Hook para actualizar estado de cita
 export const useUpdateAppointmentStatus = () => {
@@ -190,8 +183,7 @@ export const useAppointmentUrlParams = () => {
 
   return {
     filter:
-      filterParam &&
-      ["PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"].includes(filterParam)
+      filterParam && ["PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"].includes(filterParam)
         ? filterParam
         : "all",
     highlightId: highlightParam,

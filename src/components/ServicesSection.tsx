@@ -1,19 +1,12 @@
 "use client";
 
-import React, { useRef } from "react";
+import useServiceGroups, { type ServiceGroup } from "@/hooks/useServiceGroups";
 import { motion, useInView } from "framer-motion";
-import {
-  MapPin,
-  Clock,
-  Brush,
-  Sparkles,
-  Check,
-  ArrowRight,
-  Star
-} from "lucide-react";
+import { ArrowRight, Brush, Check, Clock, MapPin, Sparkles, Star } from "lucide-react";
+import type React from "react";
+import { useRef } from "react";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
-import useServiceGroups, { ServiceGroup } from "@/hooks/useServiceGroups";
 
 // UI type extends API type with optional UI-only props
 type UIServiceGroup = ServiceGroup & { icon?: React.ReactNode; badge?: string };
@@ -23,8 +16,7 @@ function ServiceCard({ service, index }: { service: UIServiceGroup; index: numbe
 
   return (
     <motion.article
-      className={`relative group ${isPopular ? "service-card-featured" : "service-card"
-        }`}
+      className={`relative group ${isPopular ? "service-card-featured" : "service-card"}`}
       whileHover={{ y: -8, transition: { duration: 0.3 } }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -50,9 +42,7 @@ function ServiceCard({ service, index }: { service: UIServiceGroup; index: numbe
               whileHover={{ rotate: 360, scale: 1.05 }}
               transition={{ duration: 0.5 }}
             >
-              {service.icon || (
-                <Brush className="w-5 h-5 text-[color:var(--color-primary)]" />
-              )}
+              {service.icon || <Brush className="w-5 h-5 text-[color:var(--color-primary)]" />}
             </motion.div>
             <div className="flex-1 min-w-0">
               <Typography
@@ -143,7 +133,7 @@ function ServiceCard({ service, index }: { service: UIServiceGroup; index: numbe
         }}
         transition={{
           duration: 3.5,
-          repeat: Infinity,
+          repeat: Number.POSITIVE_INFINITY,
           ease: "easeInOut",
         }}
       >
@@ -164,7 +154,7 @@ export default function ServicesSection() {
     <section
       id="servicios"
       className="relative py-12 sm:py-20 overflow-hidden"
-      style={{ scrollMarginTop: '120px' }}
+      style={{ scrollMarginTop: "120px" }}
       ref={ref}
     >
       {/* Background */}
@@ -184,9 +174,7 @@ export default function ServicesSection() {
           <motion.div
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[color:var(--color-accent)]/10 border border-[color:var(--color-accent)]/20 mb-4"
             initial={{ scale: 0.95, opacity: 0 }}
-            animate={
-              isInView ? { scale: 1, opacity: 1 } : { scale: 0.95, opacity: 0 }
-            }
+            animate={isInView ? { scale: 1, opacity: 1 } : { scale: 0.95, opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
             <Sparkles className="w-3.5 h-3.5 text-[color:var(--color-primary)]" />
@@ -211,8 +199,8 @@ export default function ServicesSection() {
             variant="p"
             className="text-sm sm:text-base text-[color:var(--color-body)] max-w-xl mx-auto leading-relaxed"
           >
-            Maquillaje profesional diseñado para cada ocasión, con atención
-            personalizada y productos de alta calidad.
+            Maquillaje profesional diseñado para cada ocasión, con atención personalizada y
+            productos de alta calidad.
           </Typography>
         </motion.div>
 
@@ -229,17 +217,10 @@ export default function ServicesSection() {
             </div>
             <div className="flex items-center justify-center gap-1 mt-1">
               {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className="w-4 h-4 text-[color:var(--color-accent)] fill-current"
-                />
+                <Star key={i} className="w-4 h-4 text-[color:var(--color-accent)] fill-current" />
               ))}
             </div>
-            <Typography
-              as="p"
-              variant="small"
-              className="text-[color:var(--color-body)] mt-1"
-            >
+            <Typography as="p" variant="small" className="text-[color:var(--color-body)] mt-1">
               Calificación
             </Typography>
           </div>
@@ -247,11 +228,7 @@ export default function ServicesSection() {
             <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
               370+
             </div>
-            <Typography
-              as="p"
-              variant="small"
-              className="text-[color:var(--color-body)] mt-1"
-            >
+            <Typography as="p" variant="small" className="text-[color:var(--color-body)] mt-1">
               Clientes
             </Typography>
           </div>
@@ -259,11 +236,7 @@ export default function ServicesSection() {
             <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
               8+
             </div>
-            <Typography
-              as="p"
-              variant="small"
-              className="text-[color:var(--color-body)] mt-1"
-            >
+            <Typography as="p" variant="small" className="text-[color:var(--color-body)] mt-1">
               Años Exp.
             </Typography>
           </div>
@@ -271,11 +244,7 @@ export default function ServicesSection() {
             <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
               100%
             </div>
-            <Typography
-              as="p"
-              variant="small"
-              className="text-[color:var(--color-body)] mt-1"
-            >
+            <Typography as="p" variant="small" className="text-[color:var(--color-body)] mt-1">
               Satisfacción
             </Typography>
           </div>
@@ -285,14 +254,14 @@ export default function ServicesSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-10">
           {isLoading
             ? Array.from({ length: visibleServices.length || 2 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-80 rounded-xl bg-[color:var(--color-surface)] animate-pulse"
-              />
-            ))
+                <div
+                  key={i}
+                  className="h-80 rounded-xl bg-[color:var(--color-surface)] animate-pulse"
+                />
+              ))
             : visibleServices.map((service, index) => (
-              <ServiceCard key={service.title} service={service} index={index} />
-            ))}
+                <ServiceCard key={service.title} service={service} index={index} />
+              ))}
         </div>
 
         {/* Bottom CTA */}
@@ -326,8 +295,7 @@ export default function ServicesSection() {
                     variant="p"
                     className="text-sm text-[color:var(--color-body)] leading-relaxed mb-5"
                   >
-                    Vísitanos en nuestro Room Studio en Pueblo Libre o agenda una
-                    cita a domicilio.
+                    Vísitanos en nuestro Room Studio en Pueblo Libre o agenda una cita a domicilio.
                   </Typography>
 
                   <Button
@@ -336,17 +304,18 @@ export default function ServicesSection() {
                     onClick={() => {
                       const element = document.querySelector("#contacto");
                       if (element) {
-                        const header = document.querySelector('header');
+                        const header = document.querySelector("header");
                         const headerHeight = header ? header.offsetHeight : 80;
                         const isMobile = window.innerWidth < 768;
                         const extraMargin = isMobile ? 60 : 30;
 
-                        const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+                        const elementPosition =
+                          element.getBoundingClientRect().top + window.scrollY;
                         const offsetPosition = elementPosition - headerHeight - extraMargin;
 
                         window.scrollTo({
                           top: offsetPosition,
-                          behavior: "smooth"
+                          behavior: "smooth",
                         });
                       }
                     }}

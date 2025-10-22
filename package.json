@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "format:check": "biome format --check .",
     "postinstall": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
     "db:reset": "prisma db push --force-reset && npm run db:seed",
@@ -47,15 +49,13 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-big-calendar": "^1.16.2",
     "@types/react-dom": "^19",
     "@types/web-push": "^3.6.4",
-    "eslint": "^9",
-    "eslint-config-next": "15.3.4",
+    "@biomejs/biome": "^1.9.0",
     "tailwindcss": "^4",
     "tsx": "^4.20.3",
     "typescript": "^5"

@@ -1,41 +1,42 @@
-"use client"
-import React, { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useFormContext } from 'react-hook-form'
-import QuantityControl from './QuantityControl'
-import { Info, Clock, Banknote } from 'lucide-react'
-import type { Service } from '../../hooks/useServicesQuery'
+"use client";
+import { AnimatePresence, motion } from "framer-motion";
+import { Banknote, Clock, Info } from "lucide-react";
+import React, { useState } from "react";
+import { useFormContext } from "react-hook-form";
+import type { Service } from "../../hooks/useServicesQuery";
+import QuantityControl from "./QuantityControl";
 
 type Props = {
-  service: Service
-  index?: number
-  fieldName?: string
-}
+  service: Service;
+  index?: number;
+  fieldName?: string;
+};
 
 export default function ServiceCard({ service }: Props) {
-  const { watch, setValue } = useFormContext()
-  const selected = (watch('selectedServices') || []) as Array<{ id: string; quantity: number }>
-  const item = selected.find(s => s.id === service.id)
-  const qty = item ? item.quantity : 0
+  const { watch, setValue } = useFormContext();
+  const selected = (watch("selectedServices") || []) as Array<{ id: string; quantity: number }>;
+  const item = selected.find((s) => s.id === service.id);
+  const qty = item ? item.quantity : 0;
 
   const onChange = (v: number) => {
-    const others = selected.filter(s => s.id !== service.id)
-    const updated = v > 0 ? [...others, { id: service.id, quantity: v }] : others
-    setValue('selectedServices', updated)
-  }
+    const others = selected.filter((s) => s.id !== service.id);
+    const updated = v > 0 ? [...others, { id: service.id, quantity: v }] : others;
+    setValue("selectedServices", updated);
+  };
 
-  const [showDescription, setShowDescription] = useState(false)
-  const subtotal = service.price * qty
-  const isSelected = qty > 0
+  const [showDescription, setShowDescription] = useState(false);
+  const subtotal = service.price * qty;
+  const isSelected = qty > 0;
 
   return (
     <motion.div
       layout
       className={`
         bg-service-card rounded-2xl border transition-all duration-300 overflow-hidden min-h-[110px]
-        ${isSelected 
-          ? 'border-2 border-[var(--color-accent-primary)] shadow-service-card-selected' 
-          : 'border-service-card hover:border-service-card-selected shadow-service-card hover:shadow-service-card-hover'
+        ${
+          isSelected
+            ? "border-2 border-[var(--color-accent-primary)] shadow-service-card-selected"
+            : "border-service-card hover:border-service-card-selected shadow-service-card hover:shadow-service-card-hover"
         }
       `}
     >
@@ -47,14 +48,14 @@ export default function ServiceCard({ service }: Props) {
             <h4 className="text-service-title font-bold text-lg leading-tight mb-2 line-clamp-2">
               {service.name}
             </h4>
-            
+
             {/* Service Info */}
             <div className="flex items-center gap-4 text-sm">
               <div className="flex items-center gap-1.5 text-service-duration">
                 <Clock className="w-4 h-4" />
                 <span className="font-medium">{service.duration} min</span>
               </div>
-              
+
               <div className="flex items-center gap-1.5 text-service-price-highlight">
                 <Banknote className="w-4 h-4" />
                 <span className="font-bold">S/ {service.price}</span>
@@ -71,12 +72,13 @@ export default function ServiceCard({ service }: Props) {
               whileTap={{ scale: 0.95 }}
               className={`
                 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200
-                ${showDescription 
-                  ? 'bg-accent-primary text-white' 
-                  : 'bg-accent-primary/10 text-accent-primary hover:bg-accent-primary/20'
+                ${
+                  showDescription
+                    ? "bg-accent-primary text-white"
+                    : "bg-accent-primary/10 text-accent-primary hover:bg-accent-primary/20"
                 }
               `}
-              title={showDescription ? 'Ocultar información' : 'Ver más información'}
+              title={showDescription ? "Ocultar información" : "Ver más información"}
             >
               <motion.div
                 animate={{ rotate: showDescription ? 180 : 0 }}
@@ -101,7 +103,7 @@ export default function ServiceCard({ service }: Props) {
               </motion.div>
             )}
           </div>
-          
+
           <QuantityControl value={qty} onChange={onChange} />
         </div>
       </div>
@@ -136,5 +138,5 @@ export default function ServiceCard({ service }: Props) {
         />
       )}
     </motion.div>
-  )
+  );
 }

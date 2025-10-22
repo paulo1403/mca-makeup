@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Building, Home } from "lucide-react";
+import Button from "@/components/ui/Button";
 import Modal, { ModalHeader, ModalBody } from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
-import Button from "@/components/ui/Button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Building, Home } from "lucide-react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const timeSlotSchema = z
   .object({
@@ -23,15 +23,7 @@ const timeSlotSchema = z
 
 type TimeSlotFormData = z.infer<typeof timeSlotSchema>;
 
-const DAYS_OF_WEEK = [
-  "Domingo",
-  "Lunes",
-  "Martes",
-  "Miércoles",
-  "Jueves",
-  "Viernes",
-  "Sábado",
-];
+const DAYS_OF_WEEK = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
 interface AddTimeSlotModalProps {
   isOpen: boolean;
@@ -99,11 +91,22 @@ export default function AddTimeSlotModal({
 
   return (
     <Modal open={isOpen} onClose={handleClose} size="sm" ariaLabelledBy="add-timeslot-title">
-      <ModalHeader title={<Typography as='span' id='add-timeslot-title' variant='h3'>Agregar Horario de Trabajo</Typography>} onClose={handleClose} />
+      <ModalHeader
+        title={
+          <Typography as="span" id="add-timeslot-title" variant="h3">
+            Agregar Horario de Trabajo
+          </Typography>
+        }
+        onClose={handleClose}
+      />
       <ModalBody>
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
           <div>
-            <Typography as="label" variant="small" className="block text-sm font-medium text-[color:var(--color-heading)] mb-2">
+            <Typography
+              as="label"
+              variant="small"
+              className="block text-sm font-medium text-[color:var(--color-heading)] mb-2"
+            >
               Tipo de Servicio
             </Typography>
             <div className="grid grid-cols-2 gap-3">
@@ -123,7 +126,9 @@ export default function AddTimeSlotModal({
                 <Building
                   className={`h-4 w-4 ${selectedLocationType === "STUDIO" ? "text-[color:var(--color-primary)]" : "text-[color:var(--color-muted)]"}`}
                 />
-                <Typography as='span' variant='small' className='font-medium'>En Estudio</Typography>
+                <Typography as="span" variant="small" className="font-medium">
+                  En Estudio
+                </Typography>
               </label>
 
               <label
@@ -142,18 +147,24 @@ export default function AddTimeSlotModal({
                 <Home
                   className={`h-4 w-4 ${selectedLocationType === "HOME" ? "text-[color:var(--color-primary)]" : "text-[color:var(--color-muted)]"}`}
                 />
-                <Typography as='span' variant='small' className='font-medium'>A Domicilio</Typography>
+                <Typography as="span" variant="small" className="font-medium">
+                  A Domicilio
+                </Typography>
               </label>
             </div>
             {errors.locationType && (
-              <Typography variant='caption' className="text-red-500 mt-1">
+              <Typography variant="caption" className="text-red-500 mt-1">
                 {errors.locationType.message}
               </Typography>
             )}
           </div>
 
           <div>
-            <Typography as="label" variant="small" className="block text-sm font-medium text-[color:var(--color-heading)] mb-1">
+            <Typography
+              as="label"
+              variant="small"
+              className="block text-sm font-medium text-[color:var(--color-heading)] mb-1"
+            >
               Día de la semana
             </Typography>
             <select
@@ -167,7 +178,7 @@ export default function AddTimeSlotModal({
               ))}
             </select>
             {errors.dayOfWeek && (
-              <Typography variant='caption' className="text-red-500 mt-1">
+              <Typography variant="caption" className="text-red-500 mt-1">
                 {errors.dayOfWeek.message}
               </Typography>
             )}
@@ -175,7 +186,11 @@ export default function AddTimeSlotModal({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <Typography as="label" variant="small" className="block text-sm sm:text-base font-semibold text-[color:var(--color-heading)] mb-2 sm:mb-3">
+              <Typography
+                as="label"
+                variant="small"
+                className="block text-sm sm:text-base font-semibold text-[color:var(--color-heading)] mb-2 sm:mb-3"
+              >
                 Hora de inicio
               </Typography>
               <input
@@ -185,13 +200,17 @@ export default function AddTimeSlotModal({
                 style={{ colorScheme: "dark" }}
               />
               {errors.startTime && (
-                <Typography variant='caption' className="text-red-500 mt-1">
+                <Typography variant="caption" className="text-red-500 mt-1">
                   {errors.startTime.message}
                 </Typography>
               )}
             </div>
             <div>
-              <Typography as="label" variant="small" className="block text-sm sm:text-base font-semibold text-[color:var(--color-heading)] mb-2 sm:mb-3">
+              <Typography
+                as="label"
+                variant="small"
+                className="block text-sm sm:text-base font-semibold text-[color:var(--color-heading)] mb-2 sm:mb-3"
+              >
                 Hora de fin
               </Typography>
               <input
@@ -201,7 +220,7 @@ export default function AddTimeSlotModal({
                 style={{ colorScheme: "dark" }}
               />
               {errors.endTime && (
-                <Typography variant='caption' className="text-red-500 mt-1">
+                <Typography variant="caption" className="text-red-500 mt-1">
                   {errors.endTime.message}
                 </Typography>
               )}
@@ -209,29 +228,25 @@ export default function AddTimeSlotModal({
           </div>
 
           <div className="bg-[color:var(--color-accent)]/6 border border-[color:var(--color-accent)]/20 rounded-lg p-3">
-            <Typography variant='small' className="text-[color:var(--color-on-surface)]">
-              <span className='font-semibold'>Ejemplo:</span> Si trabajas los lunes de 9:00 AM a 5:00 PM, selecciona &quot;Lunes&quot;, hora de inicio &quot;09:00&quot; y hora de fin &quot;17:00&quot;.
+            <Typography variant="small" className="text-[color:var(--color-on-surface)]">
+              <span className="font-semibold">Ejemplo:</span> Si trabajas los lunes de 9:00 AM a
+              5:00 PM, selecciona &quot;Lunes&quot;, hora de inicio &quot;09:00&quot; y hora de fin
+              &quot;17:00&quot;.
             </Typography>
           </div>
 
           <div className="flex flex-col sm:flex-row justify-end gap-3 sm:space-x-3 mt-6">
             <Button
-              as='button'
+              as="button"
               type="button"
               onClick={handleClose}
               disabled={isLoading}
-              variant='ghost'
-              size='md'
+              variant="ghost"
+              size="md"
             >
               Cancelar
             </Button>
-            <Button
-              as='button'
-              type="submit"
-              disabled={isLoading}
-              variant='primary'
-              size='md'
-            >
+            <Button as="button" type="submit" disabled={isLoading} variant="primary" size="md">
               {isLoading ? "Guardando..." : "Agregar Horario"}
             </Button>
           </div>

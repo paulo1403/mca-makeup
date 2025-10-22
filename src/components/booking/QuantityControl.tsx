@@ -1,16 +1,16 @@
-"use client"
-import React from 'react'
-import { motion } from 'framer-motion'
-import { Minus, Plus } from 'lucide-react'
+"use client";
+import { motion } from "framer-motion";
+import { Minus, Plus } from "lucide-react";
+import React from "react";
 
 interface Props {
-  value: number
-  onChange: (v: number) => void
+  value: number;
+  onChange: (v: number) => void;
 }
 
 export default function QuantityControl({ value, onChange }: Props) {
-  const setValue = (v: number) => onChange(v)
-  const isSelected = value > 0
+  const setValue = (v: number) => onChange(v);
+  const isSelected = value > 0;
 
   return (
     <div className="flex items-center gap-2">
@@ -23,9 +23,10 @@ export default function QuantityControl({ value, onChange }: Props) {
         whileTap={{ scale: value > 0 ? 0.95 : 1 }}
         className={`
           w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200
-          ${value > 0
-            ? 'bg-accent-primary/10 text-accent-primary hover:bg-accent-primary/20 border border-accent-primary/20'
-            : 'bg-quantity-button-disabled text-quantity-button-disabled border border-quantity-button-disabled cursor-not-allowed'
+          ${
+            value > 0
+              ? "bg-accent-primary/10 text-accent-primary hover:bg-accent-primary/20 border border-accent-primary/20"
+              : "bg-quantity-button-disabled text-quantity-button-disabled border border-quantity-button-disabled cursor-not-allowed"
           }
         `}
         aria-label="Disminuir cantidad"
@@ -41,7 +42,7 @@ export default function QuantityControl({ value, onChange }: Props) {
           animate={{ scale: 1, opacity: 1 }}
           className={`
             font-bold text-lg
-            ${isSelected ? 'text-accent-primary' : 'text-quantity'}
+            ${isSelected ? "text-accent-primary" : "text-quantity"}
           `}
         >
           {value}
@@ -60,5 +61,5 @@ export default function QuantityControl({ value, onChange }: Props) {
         <Plus className="w-4 h-4 font-bold" />
       </motion.button>
     </div>
-  )
+  );
 }

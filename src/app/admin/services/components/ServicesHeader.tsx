@@ -1,9 +1,9 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+import Typography from "@/components/ui/Typography";
 import { Info, Plus } from "lucide-react";
 import type { Service } from "../types";
-import Typography from "@/components/ui/Typography";
-import Button from "@/components/ui/Button";
 
 interface ServicesHeaderProps {
   services: Service[];
@@ -27,9 +27,7 @@ export default function ServicesHeader({ services, onOpenInfo, onCreateNew }: Se
         <div className="flex items-center space-x-4 mt-1">
           <div className="text-sm text-[var(--color-body)]">
             Total:{" "}
-            <span className="font-semibold text-[var(--color-primary)]">
-              {services.length}
-            </span>{" "}
+            <span className="font-semibold text-[var(--color-primary)]">{services.length}</span>{" "}
             servicios
           </div>
           <div className="flex items-center space-x-2">

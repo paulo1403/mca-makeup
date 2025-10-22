@@ -1,12 +1,12 @@
-"use client"
-import React from 'react'
-import { motion } from 'framer-motion'
-import { AlertTriangle, Info, X } from 'lucide-react'
+"use client";
+import { motion } from "framer-motion";
+import { AlertTriangle, Info, X } from "lucide-react";
+import React from "react";
 
 interface ValidationToastProps {
-  message: string
-  suggestion: string
-  onDismiss: () => void
+  message: string;
+  suggestion: string;
+  onDismiss: () => void;
 }
 
 export default function ValidationToast({ message, suggestion, onDismiss }: ValidationToastProps) {
@@ -23,7 +23,7 @@ export default function ValidationToast({ message, suggestion, onDismiss }: Vali
         <div className="flex-shrink-0 mt-0.5">
           <AlertTriangle className="w-5 h-5 text-[color:var(--color-accent)]" />
         </div>
-        
+
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
@@ -35,7 +35,7 @@ export default function ValidationToast({ message, suggestion, onDismiss }: Vali
                 {suggestion}
               </p>
             </div>
-            
+
             {/* Close button */}
             <button
               onClick={onDismiss}
@@ -44,7 +44,7 @@ export default function ValidationToast({ message, suggestion, onDismiss }: Vali
               <X className="w-4 h-4 text-[color:var(--color-muted)] opacity-60" />
             </button>
           </div>
-          
+
           {/* Info footer */}
           <div className="flex items-center gap-1.5 mt-3 pt-2 border-t border-[color:var(--color-border)] border-opacity-30">
             <Info className="w-3.5 h-3.5 text-[color:var(--color-accent)]" />
@@ -55,5 +55,5 @@ export default function ValidationToast({ message, suggestion, onDismiss }: Vali
         </div>
       </div>
     </motion.div>
-  )
+  );
 }

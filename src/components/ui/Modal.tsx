@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
-import { X } from "lucide-react";
-import { useClickOutside } from "@/hooks/useClickOutside";
-import Typography from "@/components/ui/Typography";
 import IconButton from "@/components/ui/IconButton";
+import Typography from "@/components/ui/Typography";
+import { useClickOutside } from "@/hooks/useClickOutside";
+import { X } from "lucide-react";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 export type ModalSize = "sm" | "md" | "lg" | "xl";
 

@@ -15,13 +15,13 @@ function parseTimeWithAMPM(timeString: string): {
     // Fallback para formato 24h sin AM/PM
     const [hoursStr, minutesStr] = timeString.split(":");
     return {
-      hours: parseInt(hoursStr, 10),
-      minutes: parseInt(minutesStr, 10),
+      hours: Number.parseInt(hoursStr, 10),
+      minutes: Number.parseInt(minutesStr, 10),
     };
   }
 
-  let hours = parseInt(match[1], 10);
-  const minutes = parseInt(match[2], 10);
+  let hours = Number.parseInt(match[1], 10);
+  const minutes = Number.parseInt(match[2], 10);
   const period = match[3].toLowerCase().replace(/\s/g, ""); // Normalizar a minúsculas sin espacios
 
   // Convertir a formato 24h - manejar tanto AM/PM como a.m./p.m.
@@ -49,7 +49,8 @@ export function parseAppointmentTime(
   // Parse date string as local date to avoid timezone issues
   const [year, month, day] = appointmentDate.split("-").map(Number);
   const date = new Date(year, month - 1, day); // month is 0-based
-  let start: Date, end: Date;
+  let start: Date;
+  let end: Date;
 
   if (appointmentTime.includes(" - ")) {
     const [startStr, endStr] = appointmentTime.split(" - ");
@@ -73,8 +74,8 @@ export function parseAppointmentTime(
   }
 
   // Log only if there are errors
-  if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-    console.error(`⏰ ERROR: Invalid dates parsed for`, {
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+    console.error("⏰ ERROR: Invalid dates parsed for", {
       appointmentDate,
       appointmentTime,
       start: start.toISOString(),

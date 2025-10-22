@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Bell } from 'lucide-react';
+import { Bell } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface Notification {
   id: string;
-  type: 'appointment' | 'system';
+  type: "appointment" | "system";
   title: string;
   message: string;
   link?: string;
@@ -31,38 +31,36 @@ export default function NotificationCenter() {
 
   const fetchNotifications = async () => {
     try {
-      const response = await fetch('/api/admin/notifications');
+      const response = await fetch("/api/admin/notifications");
       const result = await response.json();
 
       if (result.success) {
         setNotifications(result.data);
       }
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      console.error("Error fetching notifications:", error);
     }
   };
 
   const markAsRead = async (notificationId: string) => {
     try {
-      await fetch('/api/admin/notifications', {
-        method: 'PUT',
+      await fetch("/api/admin/notifications", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ id: notificationId, read: true }),
       });
 
-      setNotifications(prev =>
-        prev.map(notif =>
-          notif.id === notificationId ? { ...notif, read: true } : notif
-        )
+      setNotifications((prev) =>
+        prev.map((notif) => (notif.id === notificationId ? { ...notif, read: true } : notif)),
       );
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      console.error("Error marking notification as read:", error);
     }
   };
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -72,7 +70,7 @@ export default function NotificationCenter() {
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
 
-    if (minutes < 1) return 'Ahora';
+    if (minutes < 1) return "Ahora";
     if (minutes < 60) return `${minutes}m`;
     if (hours < 24) return `${hours}h`;
     return `${days}d`;
@@ -87,7 +85,7 @@ export default function NotificationCenter() {
         <Bell className="w-5 h-5" />
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 bg-[color:var(--color-primary)] text-[color:var(--on-accent-contrast)] text-xs rounded-full h-5 w-5 flex items-center justify-center">
-            {unreadCount > 9 ? '9+' : unreadCount}
+            {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </button>
@@ -98,10 +96,14 @@ export default function NotificationCenter() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Bell className="w-4 h-4 text-[color:var(--color-primary)]" />
-                <span className="text-sm font-semibold text-[color:var(--color-heading)]">Notificaciones</span>
+                <span className="text-sm font-semibold text-[color:var(--color-heading)]">
+                  Notificaciones
+                </span>
               </div>
               {unreadCount > 0 && (
-                <span className="px-2 py-0.5 text-xs rounded-full bg-[color:var(--color-selected)] text-[color:var(--color-heading)]">{unreadCount} nuevas</span>
+                <span className="px-2 py-0.5 text-xs rounded-full bg-[color:var(--color-selected)] text-[color:var(--color-heading)]">
+                  {unreadCount} nuevas
+                </span>
               )}
             </div>
           </div>
@@ -110,11 +112,23 @@ export default function NotificationCenter() {
             {notifications.length === 0 ? (
               <div className="p-6 text-center">
                 <div className="text-[color:var(--color-muted)] mb-3">
-                  <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="w-12 h-12 mx-auto"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 17h5l-5 5v-5zM9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </div>
-                <p className="text-[color:var(--color-muted)] text-sm mb-4">No hay citas pendientes</p>
+                <p className="text-[color:var(--color-muted)] text-sm mb-4">
+                  No hay citas pendientes
+                </p>
                 <Link
                   href="/admin/appointments"
                   onClick={() => setShowDropdown(false)}
@@ -128,13 +142,17 @@ export default function NotificationCenter() {
                 <div
                   key={notification.id}
                   className={`p-4 border-b border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-elevated)] ${
-                    !notification.read ? 'bg-[color:var(--color-selected)]' : ''
+                    !notification.read ? "bg-[color:var(--color-selected)]" : ""
                   }`}
                 >
                   <div className="flex items-start space-x-3">
-                    <div className={`w-2 h-2 rounded-full mt-2 ${
-                      !notification.read ? 'bg-[color:var(--color-primary)]' : 'bg-[color:var(--color-border)]'
-                    }`} />
+                    <div
+                      className={`w-2 h-2 rounded-full mt-2 ${
+                        !notification.read
+                          ? "bg-[color:var(--color-primary)]"
+                          : "bg-[color:var(--color-border)]"
+                      }`}
+                    />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <p className="text-sm font-medium text-[color:var(--color-heading)] truncate">
@@ -153,7 +171,8 @@ export default function NotificationCenter() {
                             onClick={async () => {
                               markAsRead(notification.id);
                               setShowDropdown(false);
-                              const targetId = notification.appointmentId || notification.appointment?.id;
+                              const targetId =
+                                notification.appointmentId || notification.appointment?.id;
                               const url = targetId
                                 ? `${notification.link}?highlightId=${targetId}&showDetail=true`
                                 : `${notification.link}`;
@@ -196,10 +215,7 @@ export default function NotificationCenter() {
 
       {/* Overlay para cerrar el dropdown */}
       {showDropdown && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setShowDropdown(false)}
-        />
+        <div className="fixed inset-0 z-40" onClick={() => setShowDropdown(false)} />
       )}
     </div>
   );

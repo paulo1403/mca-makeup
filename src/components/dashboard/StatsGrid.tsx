@@ -1,5 +1,5 @@
-import { Calendar, Clock, CheckCircle, TrendingUp } from 'lucide-react';
-import { type DashboardStats } from '@/hooks/useDashboardStats';
+import type { DashboardStats } from "@/hooks/useDashboardStats";
+import { Calendar, CheckCircle, Clock, TrendingUp } from "lucide-react";
 
 interface StatCardProps {
   title: string;
@@ -14,13 +14,17 @@ function StatCard({ title, value, icon, color, bgColor }: StatCardProps) {
     <div className="bg-[color:var(--color-surface)] rounded-xl shadow-sm border border-[color:var(--color-border)]/30 p-4 sm:p-6 hover:shadow-md hover:border-[color:var(--color-primary)]/30 transition-all duration-200 hover-lift smooth-transition">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-xs sm:text-sm font-medium text-[color:var(--color-muted)] mb-1 mobile-text">{title}</p>
-          <p className="text-xl sm:text-2xl font-bold text-[color:var(--color-heading)]">{value.toLocaleString()}</p>
+          <p className="text-xs sm:text-sm font-medium text-[color:var(--color-muted)] mb-1 mobile-text">
+            {title}
+          </p>
+          <p className="text-xl sm:text-2xl font-bold text-[color:var(--color-heading)]">
+            {value.toLocaleString()}
+          </p>
         </div>
-        <div className={`p-2 sm:p-3 ${bgColor} rounded-lg flex-shrink-0 smooth-transition hover:scale-105`}>
-          <div className={`w-5 h-5 sm:w-6 sm:h-6 ${color}`}>
-            {icon}
-          </div>
+        <div
+          className={`p-2 sm:p-3 ${bgColor} rounded-lg flex-shrink-0 smooth-transition hover:scale-105`}
+        >
+          <div className={`w-5 h-5 sm:w-6 sm:h-6 ${color}`}>{icon}</div>
         </div>
       </div>
     </div>
@@ -34,32 +38,32 @@ interface StatsGridProps {
 export default function StatsGrid({ stats }: StatsGridProps) {
   const statCards = [
     {
-      title: 'Total de Citas',
+      title: "Total de Citas",
       value: stats.totalAppointments,
       icon: <Calendar className="w-full h-full" />,
-      color: 'text-blue-600',
-      bgColor: 'bg-[color:var(--color-surface-elevated)]',
+      color: "text-blue-600",
+      bgColor: "bg-[color:var(--color-surface-elevated)]",
     },
     {
-      title: 'Pendientes',
+      title: "Pendientes",
       value: stats.pendingAppointments,
       icon: <Clock className="w-full h-full" />,
-      color: 'text-amber-600',
-      bgColor: 'bg-[color:var(--color-surface-elevated)]',
+      color: "text-amber-600",
+      bgColor: "bg-[color:var(--color-surface-elevated)]",
     },
     {
-      title: 'Confirmadas',
+      title: "Confirmadas",
       value: stats.confirmedAppointments,
       icon: <CheckCircle className="w-full h-full" />,
-      color: 'text-emerald-600',
-      bgColor: 'bg-[color:var(--color-surface-elevated)]',
+      color: "text-emerald-600",
+      bgColor: "bg-[color:var(--color-surface-elevated)]",
     },
     {
-      title: 'Este Mes',
+      title: "Este Mes",
       value: stats.thisMonthAppointments,
       icon: <TrendingUp className="w-full h-full" />,
-      color: 'text-[color:var(--color-primary)]',
-      bgColor: 'bg-[color:var(--color-surface-elevated)]',
+      color: "text-[color:var(--color-primary)]",
+      bgColor: "bg-[color:var(--color-surface-elevated)]",
     },
   ];
 

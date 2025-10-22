@@ -1,9 +1,9 @@
 "use client";
 
-import { Plus, Sparkles, Tag, DollarSign, Clock, Eye, Pencil, Trash2 } from "lucide-react";
-import type { Service } from "../types";
 import Button from "@/components/ui/Button";
 import Typography from "@/components/ui/Typography";
+import { Clock, DollarSign, Eye, Pencil, Plus, Sparkles, Tag, Trash2 } from "lucide-react";
+import type { Service } from "../types";
 
 interface ServiceListMobileProps {
   services: Service[];
@@ -31,7 +31,11 @@ export default function ServiceListMobile({
           <div className="w-16 h-16 bg-[var(--color-primary)] bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
             <Sparkles className="w-8 h-8 text-[var(--color-primary)]" />
           </div>
-          <Typography as="h3" variant="h4" className="text-[var(--color-heading)] mb-2 font-semibold">
+          <Typography
+            as="h3"
+            variant="h4"
+            className="text-[var(--color-heading)] mb-2 font-semibold"
+          >
             No tienes servicios aún
           </Typography>
           <Typography as="p" variant="small" className="text-[var(--color-body)] mb-6">
@@ -108,7 +112,9 @@ export default function ServiceListMobile({
                   <Clock className="w-4 h-4 text-[var(--color-muted)]" />
                   <div>
                     <p className="text-[var(--color-muted)] text-xs">Duración</p>
-                    <p className="font-medium text-[var(--color-heading)]">{service.duration} min</p>
+                    <p className="font-medium text-[var(--color-heading)]">
+                      {service.duration} min
+                    </p>
                   </div>
                 </div>
               </div>

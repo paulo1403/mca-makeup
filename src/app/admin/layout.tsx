@@ -1,13 +1,13 @@
 "use client";
 
-import { signOut, useSession, SessionProvider } from "next-auth/react";
-import { useState, useEffect } from "react";
-import NotificationCenter from "@/components/NotificationCenter";
 import AdminSidebar from "@/components/AdminSidebar";
-import { LogOut, User, Menu } from "lucide-react";
+import NotificationCenter from "@/components/NotificationCenter";
+import { LogOut, Menu, User } from "lucide-react";
+import { SessionProvider, signOut, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import "@/styles/admin.css";
-import ThemeToggle from "@/components/ThemeToggle";
 import Logo from "@/components/Logo";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function AdminLayout({
   children,
@@ -39,15 +39,15 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
     };
 
     checkIsMobile();
-    window.addEventListener('resize', checkIsMobile);
-    return () => window.removeEventListener('resize', checkIsMobile);
+    window.addEventListener("resize", checkIsMobile);
+    return () => window.removeEventListener("resize", checkIsMobile);
   }, []);
 
   useEffect(() => {
     // Marcar body como admin para ocultar NavBar global
-    document.body.classList.add('admin-mode');
+    document.body.classList.add("admin-mode");
     return () => {
-      document.body.classList.remove('admin-mode');
+      document.body.classList.remove("admin-mode");
     };
   }, []);
 
@@ -79,6 +79,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
               <button
                 onClick={() => setIsSidebarOpen(true)}
                 className="md:hidden p-2 rounded-md text-[color:var(--color-body)] hover:text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface-elevated)] transition-colors focus-ring"
+                type="button"
                 aria-label="Abrir menú"
               >
                 <Menu className="h-5 w-5" />
@@ -93,7 +94,9 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                 <div className="truncate">
                   <div className="text-[color:var(--color-heading)] font-montserrat">
                     <span className="inline-block">
-                      <span className="text-sm md:text-base font-medium tracking-tight">Panel Administrativo</span>
+                      <span className="text-sm md:text-base font-medium tracking-tight">
+                        Panel Administrativo
+                      </span>
                     </span>
                   </div>
                 </div>
@@ -118,6 +121,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                 <button
                   onClick={handleSignOut}
                   className="flex items-center gap-1 text-[color:var(--color-body)] hover:text-red-600 px-2 py-1 rounded-md text-xs font-medium font-montserrat transition-colors focus-ring"
+                  type="button"
                   title="Cerrar sesión"
                   aria-label="Cerrar sesión"
                 >
@@ -132,9 +136,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
         {/* Page Content - Scrollable */}
         <main className="flex-1 overflow-y-auto scrollbar-thin">
           <div className="p-4 md:p-6 lg:p-8">
-            <div className="max-w-7xl mx-auto">
-              {children}
-            </div>
+            <div className="max-w-7xl mx-auto">{children}</div>
           </div>
         </main>
       </div>
@@ -144,6 +146,13 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
           onClick={() => setIsSidebarOpen(false)}
+          onKeyUp={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              setIsSidebarOpen(false);
+            }
+          }}
+          role="button"
+          tabIndex={0}
         />
       )}
     </div>

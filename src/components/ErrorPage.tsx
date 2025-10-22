@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { AlertTriangle, Send, CheckCircle, ArrowLeft } from 'lucide-react';
-import { useErrorReport, type ErrorReport } from '@/hooks/useErrorReport';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { type ErrorReport, useErrorReport } from "@/hooks/useErrorReport";
+import { AlertTriangle, ArrowLeft, CheckCircle, Send } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface ErrorPageProps {
   error?: Error & { digest?: string };
@@ -14,49 +14,49 @@ interface ErrorPageProps {
   description?: string;
 }
 
-export default function ErrorPage({ 
-  error, 
-  reset, 
+export default function ErrorPage({
+  error,
+  reset,
   statusCode = 500,
   title = "¡Ups! Algo salió mal",
-  description = "Parece que hemos encontrado un problema técnico. No te preocupes, estamos trabajando para solucionarlo."
+  description = "Parece que hemos encontrado un problema técnico. No te preocupes, estamos trabajando para solucionarlo.",
 }: ErrorPageProps) {
   const router = useRouter();
   const [showReportForm, setShowReportForm] = useState(false);
   const [formData, setFormData] = useState({
-    userName: '',
-    userEmail: '',
-    userDescription: '',
-    errorType: 'other' as ErrorReport['errorType'],
-    severity: 'medium' as ErrorReport['severity'],
+    userName: "",
+    userEmail: "",
+    userDescription: "",
+    errorType: "other" as ErrorReport["errorType"],
+    severity: "medium" as ErrorReport["severity"],
   });
-  
+
   const errorReportMutation = useErrorReport();
 
   const handleGoBack = () => {
     if (window.history.length > 1) {
       window.history.back();
     } else {
-      router.push('/');
+      router.push("/");
     }
   };
 
   const handleSubmitReport = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       await errorReportMutation.mutateAsync({
         ...formData,
         technicalDetails: {
-          errorMessage: error?.message || 'Error no especificado',
-          errorStack: error?.stack || '',
+          errorMessage: error?.message || "Error no especificado",
+          errorStack: error?.stack || "",
           errorBoundary: true,
         },
       });
-      
+
       setShowReportForm(false);
     } catch (err) {
-      console.error('Error sending report:', err);
+      console.error("Error sending report:", err);
     }
   };
 
@@ -70,52 +70,59 @@ export default function ErrorPage({
     }
   };
 
-
-
   if (errorReportMutation.isSuccess) {
     return (
       <div className="min-h-screen bg-[color:var(--color-background)] flex items-center justify-center px-4">
         <div className="max-w-md w-full bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)]/20 p-8">
           {/* Navigation */}
           <div className="mb-6">
-            <button 
-              onClick={handleGoBack} 
+            <button
+              onClick={handleGoBack}
               className="flex items-center gap-2 text-[color:var(--color-body)] hover:text-[color:var(--color-primary)] transition-colors duration-200"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
               Volver
             </button>
           </div>
-          
+
           <div className="text-center">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6" />
             <h1 className="text-2xl font-bold text-[color:var(--color-heading)] mb-4">
               ¡Reporte Enviado!
             </h1>
-          <p className="text-[color:var(--color-body)] mb-6">
-            Gracias por reportar este problema. Hemos recibido tu reporte y trabajaremos para solucionarlo pronto.
-          </p>
-          <p className="text-sm text-[color:var(--color-muted)] mb-6">
-            ID del reporte: <span className="font-mono bg-[color:var(--color-muted)]/10 px-2 py-1 rounded">{errorReportMutation.data?.reportId}</span>
-          </p>
-          <div className="space-y-3">
-            {reset && (
-              <button
-                onClick={reset}
-                className="w-full bg-[color:var(--color-primary)] text-white px-6 py-3 rounded-lg font-medium hover:bg-[color:var(--color-primary)]/80 transition-colors"
+            <p className="text-[color:var(--color-body)] mb-6">
+              Gracias por reportar este problema. Hemos recibido tu reporte y trabajaremos para
+              solucionarlo pronto.
+            </p>
+            <p className="text-sm text-[color:var(--color-muted)] mb-6">
+              ID del reporte:{" "}
+              <span className="font-mono bg-[color:var(--color-muted)]/10 px-2 py-1 rounded">
+                {errorReportMutation.data?.reportId}
+              </span>
+            </p>
+            <div className="space-y-3">
+              {reset && (
+                <button
+                  onClick={reset}
+                  className="w-full bg-[color:var(--color-primary)] text-white px-6 py-3 rounded-lg font-medium hover:bg-[color:var(--color-primary)]/80 transition-colors"
+                >
+                  Intentar de nuevo
+                </button>
+              )}
+              <Link
+                href="/"
+                className="w-full bg-[color:var(--color-muted)] text-white px-6 py-3 rounded-lg font-medium hover:bg-[color:var(--color-muted)]/80 transition-colors inline-block"
               >
-                Intentar de nuevo
-              </button>
-            )}
-            <Link
-              href="/"
-              className="w-full bg-[color:var(--color-muted)] text-white px-6 py-3 rounded-lg font-medium hover:bg-[color:var(--color-muted)]/80 transition-colors inline-block"
-            >
-              Volver al inicio
-            </Link>
-          </div>
+                Volver al inicio
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -127,15 +134,11 @@ export default function ErrorPage({
       <div className="max-w-2xl w-full bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)]/20 overflow-hidden">
         {/* Header */}
         <div className="bg-[color:var(--color-accent)]/10 border-b border-[color:var(--color-border)]/20 p-6 sm:p-8 text-center">
-          <div className="flex justify-center mb-4">
-            {getErrorIcon()}
-          </div>
+          <div className="flex justify-center mb-4">{getErrorIcon()}</div>
           <h1 className="text-2xl sm:text-3xl font-bold text-[color:var(--color-heading)] mb-2">
             {title}
           </h1>
-          <p className="text-[color:var(--color-body)] text-sm sm:text-base">
-            {description}
-          </p>
+          <p className="text-[color:var(--color-body)] text-sm sm:text-base">{description}</p>
           {statusCode && (
             <div className="mt-4">
               <span className="inline-block bg-[color:var(--color-accent)]/20 text-[color:var(--color-heading)] text-sm font-medium px-3 py-1 rounded-full">
@@ -149,12 +152,17 @@ export default function ErrorPage({
         <div className="p-6 sm:p-8">
           {/* Navigation */}
           <div className="mb-6">
-            <button 
-              onClick={handleGoBack} 
+            <button
+              onClick={handleGoBack}
               className="flex items-center gap-2 text-[color:var(--color-body)] hover:text-[color:var(--color-primary)] transition-colors duration-200"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
               Volver
             </button>
@@ -226,7 +234,8 @@ export default function ErrorPage({
                   Reportar Error
                 </h3>
                 <p className="text-[color:var(--color-body)] text-sm mb-6">
-                  Tu reporte nos ayuda a identificar y solucionar problemas. Toda la información es opcional.
+                  Tu reporte nos ayuda a identificar y solucionar problemas. Toda la información es
+                  opcional.
                 </p>
               </div>
 
@@ -239,7 +248,7 @@ export default function ErrorPage({
                   <input
                     type="text"
                     value={formData.userName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, userName: e.target.value }))}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, userName: e.target.value }))}
                     className="w-full px-3 py-2 border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[color:var(--color-heading)] rounded-lg focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-transparent"
                     placeholder="Ej: María García"
                   />
@@ -251,7 +260,9 @@ export default function ErrorPage({
                   <input
                     type="email"
                     value={formData.userEmail}
-                    onChange={(e) => setFormData(prev => ({ ...prev, userEmail: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, userEmail: e.target.value }))
+                    }
                     className="w-full px-3 py-2 border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[color:var(--color-heading)] rounded-lg focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-transparent"
                     placeholder="tu@email.com"
                   />
@@ -266,7 +277,12 @@ export default function ErrorPage({
                   </label>
                   <select
                     value={formData.errorType}
-                    onChange={(e) => setFormData(prev => ({ ...prev, errorType: e.target.value as ErrorReport['errorType'] }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        errorType: e.target.value as ErrorReport["errorType"],
+                      }))
+                    }
                     className="w-full px-3 py-2 border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[color:var(--color-heading)] rounded-lg focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-transparent"
                   >
                     <option value="ui">Problema visual/interfaz</option>
@@ -282,7 +298,12 @@ export default function ErrorPage({
                   </label>
                   <select
                     value={formData.severity}
-                    onChange={(e) => setFormData(prev => ({ ...prev, severity: e.target.value as ErrorReport['severity'] }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        severity: e.target.value as ErrorReport["severity"],
+                      }))
+                    }
                     className="w-full px-3 py-2 border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[color:var(--color-heading)] rounded-lg focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-transparent"
                   >
                     <option value="low">Leve - Molesto pero puedo continuar</option>
@@ -300,7 +321,9 @@ export default function ErrorPage({
                 </label>
                 <textarea
                   value={formData.userDescription}
-                  onChange={(e) => setFormData(prev => ({ ...prev, userDescription: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, userDescription: e.target.value }))
+                  }
                   className="w-full px-3 py-2 border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[color:var(--color-heading)] rounded-lg focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-transparent resize-none"
                   rows={4}
                   placeholder="Ej: Estaba tratando de reservar una cita para el viernes y cuando hice clic en 'Confirmar', apareció este error..."

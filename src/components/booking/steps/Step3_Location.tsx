@@ -1,13 +1,13 @@
 "use client";
-import React, { useEffect } from "react";
-import { useFormContext, Controller, useWatch } from "react-hook-form";
-import { motion, AnimatePresence } from "framer-motion";
-import { Home, MapPin, FileText, Check, Sparkles } from "lucide-react";
-import { useTransportCost } from "@/hooks/useTransportCost";
 import DistrictSelector from "@/components/DistrictSelector";
 import InputField from "@/components/booking/InputField";
-import type { BookingData } from "@/lib/bookingSchema";
 import Typography from "@/components/ui/Typography";
+import { useTransportCost } from "@/hooks/useTransportCost";
+import type { BookingData } from "@/lib/bookingSchema";
+import { AnimatePresence, motion } from "framer-motion";
+import { Check, FileText, Home, MapPin, Sparkles } from "lucide-react";
+import React, { useEffect } from "react";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 
 // Diccionario de traducciones
 const translations = {
@@ -42,8 +42,7 @@ export default function Step3_Location() {
   const { control, setValue } = useFormContext<BookingData>();
   const locationType = useWatch({ name: "locationType", control });
   const district = useWatch({ name: "district", control });
-  const { transportCost, loading, error, getTransportCost } =
-    useTransportCost();
+  const { transportCost, loading, error, getTransportCost } = useTransportCost();
   const { t } = useTranslations();
 
   useEffect(() => {
@@ -112,9 +111,7 @@ export default function Step3_Location() {
             >
               <MapPin
                 className={`w-5 h-5 flex-shrink-0 ${
-                  locationType === "STUDIO"
-                    ? "text-white"
-                    : "text-[color:var(--color-primary)]"
+                  locationType === "STUDIO" ? "text-white" : "text-[color:var(--color-primary)]"
                 }`}
               />
             </div>
@@ -131,11 +128,7 @@ export default function Step3_Location() {
               >
                 {t("studio")}
               </Typography>
-              <Typography
-                as="p"
-                variant="p"
-                className="text-xs text-[color:var(--color-body)]"
-              >
+              <Typography as="p" variant="p" className="text-xs text-[color:var(--color-body)]">
                 {t("studioDescription")}
               </Typography>
             </div>
@@ -147,9 +140,7 @@ export default function Step3_Location() {
                   : "border-[color:var(--color-border)]"
               }`}
             >
-              {locationType === "STUDIO" && (
-                <Check className="w-3 h-3 text-white" />
-              )}
+              {locationType === "STUDIO" && <Check className="w-3 h-3 text-white" />}
             </div>
           </button>
 
@@ -172,9 +163,7 @@ export default function Step3_Location() {
             >
               <Home
                 className={`w-5 h-5 flex-shrink-0 ${
-                  locationType === "HOME"
-                    ? "text-white"
-                    : "text-[color:var(--color-accent)]"
+                  locationType === "HOME" ? "text-white" : "text-[color:var(--color-accent)]"
                 }`}
               />
             </div>
@@ -191,11 +180,7 @@ export default function Step3_Location() {
               >
                 {t("home")}
               </Typography>
-              <Typography
-                as="p"
-                variant="p"
-                className="text-xs text-[color:var(--color-body)]"
-              >
+              <Typography as="p" variant="p" className="text-xs text-[color:var(--color-body)]">
                 {t("homeDescription")}
               </Typography>
             </div>
@@ -207,9 +192,7 @@ export default function Step3_Location() {
                   : "border-[color:var(--color-border)]"
               }`}
             >
-              {locationType === "HOME" && (
-                <Check className="w-3 h-3 text-white" />
-              )}
+              {locationType === "HOME" && <Check className="w-3 h-3 text-white" />}
             </div>
           </button>
         </div>
@@ -267,9 +250,7 @@ export default function Step3_Location() {
                         {loading && (
                           <div className="flex items-center gap-2 text-xs text-[color:var(--color-body)]">
                             <div className="w-3 h-3 border-2 border-[color:var(--color-primary)]/30 border-t-[color:var(--color-primary)] rounded-full animate-spin flex-shrink-0"></div>
-                            <span className="truncate">
-                              {t("calculatingCost")}
-                            </span>
+                            <span className="truncate">{t("calculatingCost")}</span>
                           </div>
                         )}
                         {!loading && error && (

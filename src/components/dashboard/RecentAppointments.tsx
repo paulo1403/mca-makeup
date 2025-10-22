@@ -1,15 +1,15 @@
-import Link from "next/link";
-import { ArrowRight, User, Calendar, Clock } from "lucide-react";
-import { type RecentAppointment } from "@/hooks/useRecentAppointments";
 import { useIsSmallMobile } from "@/hooks/useMediaQuery";
+import type { RecentAppointment } from "@/hooks/useRecentAppointments";
 import {
   formatDate,
-  formatTime,
   formatServices,
+  formatTime,
+  getClientInitials,
   getStatusColor,
   getStatusText,
-  getClientInitials,
 } from "@/utils/dashboardUtils";
+import { ArrowRight, Calendar, Clock, User } from "lucide-react";
+import Link from "next/link";
 
 interface AppointmentItemProps {
   appointment: RecentAppointment;
@@ -31,13 +31,24 @@ function AppointmentItem({ appointment }: AppointmentItemProps) {
         {/* Header with avatar and name */}
         <div className="flex items-center space-x-3 p-3 border-b border-[color:var(--color-border)]/10">
           <div className="w-8 h-8 bg-[color:var(--color-primary)]/18 rounded-full flex items-center justify-center flex-shrink-0">
-            <span className="text-[color:var(--color-primary)] font-semibold text-sm">{initials}</span>
+            <span className="text-[color:var(--color-primary)] font-semibold text-sm">
+              {initials}
+            </span>
           </div>
           <div className="min-w-0 flex-1">
-            <p className="font-medium text-[color:var(--color-heading)] text-sm truncate">{appointment.clientName}</p>
+            <p className="font-medium text-[color:var(--color-heading)] text-sm truncate">
+              {appointment.clientName}
+            </p>
             <div className="text-xs text-[color:var(--color-muted)] truncate flex items-center gap-1">
               {visible.map((service, idx) => (
-                <span key={idx} className="inline-flex items-center gap-1">{service.displayText}{service.quantity > 1 && <span className="ml-1 inline-flex items-center px-1 py-0.5 rounded-full text-[10px] font-medium bg-[color:var(--color-primary)]/10 text-[color:var(--color-primary)]">{service.quantity}</span>}</span>
+                <span key={idx} className="inline-flex items-center gap-1">
+                  {service.displayText}
+                  {service.quantity > 1 && (
+                    <span className="ml-1 inline-flex items-center px-1 py-0.5 rounded-full text-[10px] font-medium bg-[color:var(--color-primary)]/10 text-[color:var(--color-primary)]">
+                      {service.quantity}
+                    </span>
+                  )}
+                </span>
               ))}
               {more > 0 && <span className="ml-1 text-[color:var(--color-muted)]/80">+{more}</span>}
             </div>
@@ -55,7 +66,11 @@ function AppointmentItem({ appointment }: AppointmentItemProps) {
             <span>{formatTime(appointment.appointmentTime)}</span>
           </div>
           <div className="flex items-center justify-between mt-2">
-            <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${statusColor}`}>{statusText}</span>
+            <span
+              className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${statusColor}`}
+            >
+              {statusText}
+            </span>
             {/* Edit: pasar highlightId y showDetail en el enlace */}
             <Link
               href={{
@@ -76,21 +91,33 @@ function AppointmentItem({ appointment }: AppointmentItemProps) {
     <div className="flex items-center justify-between p-3 md:p-4 bg-[color:var(--color-surface-elevated)] rounded-lg hover:shadow-md transition-shadow duration-200">
       <div className="flex items-center space-x-3 min-w-0 flex-1">
         <div className="w-10 h-10 md:w-12 md:h-12 bg-[color:var(--color-primary)]/18 rounded-full flex items-center justify-center flex-shrink-0">
-          <span className="text-[color:var(--color-primary)] font-semibold text-sm md:text-base">{initials}</span>
+          <span className="text-[color:var(--color-primary)] font-semibold text-sm md:text-base">
+            {initials}
+          </span>
         </div>
         <div className="min-w-0 flex-1">
-          <p className="font-medium text-[color:var(--color-heading)] text-sm md:text-base truncate">{appointment.clientName}</p>
+          <p className="font-medium text-[color:var(--color-heading)] text-sm md:text-base truncate">
+            {appointment.clientName}
+          </p>
           <div className="text-sm text-[color:var(--color-body)] truncate">
             {services.slice(0, 2).map((service, index) => (
               <span key={index} className="inline-flex items-center">
                 {service.displayText}
                 {service.quantity > 1 && (
-                  <span className="ml-1 inline-flex items-center px-1 py-0.5 rounded-full text-[10px] font-medium bg-[color:var(--color-primary)]/10 text-[color:var(--color-primary)]">{service.quantity}</span>
+                  <span className="ml-1 inline-flex items-center px-1 py-0.5 rounded-full text-[10px] font-medium bg-[color:var(--color-primary)]/10 text-[color:var(--color-primary)]">
+                    {service.quantity}
+                  </span>
                 )}
-                {index < Math.min(2, services.length) - 1 && <span className="mx-1 text-[color:var(--color-muted)]/60">•</span>}
+                {index < Math.min(2, services.length) - 1 && (
+                  <span className="mx-1 text-[color:var(--color-muted)]/60">•</span>
+                )}
               </span>
             ))}
-            {services.length > 2 && <span className="ml-1 text-[color:var(--color-muted)]/80">+{services.length - 2}</span>}
+            {services.length > 2 && (
+              <span className="ml-1 text-[color:var(--color-muted)]/80">
+                +{services.length - 2}
+              </span>
+            )}
           </div>
           <div className="flex items-center space-x-4 text-xs text-[color:var(--color-muted)] mt-1">
             <div className="flex items-center space-x-1">
@@ -106,7 +133,11 @@ function AppointmentItem({ appointment }: AppointmentItemProps) {
       </div>
 
       <div className="flex items-center space-x-3 flex-shrink-0">
-        <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${statusColor}`}>{statusText}</span>
+        <span
+          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${statusColor}`}
+        >
+          {statusText}
+        </span>
         {/* Edit: pasar highlightId y showDetail en el enlace */}
         <Link
           href={{
@@ -127,10 +158,7 @@ interface RecentAppointmentsProps {
   isLoading?: boolean;
 }
 
-export default function RecentAppointments({
-  appointments,
-  isLoading,
-}: RecentAppointmentsProps) {
+export default function RecentAppointments({ appointments, isLoading }: RecentAppointmentsProps) {
   if (isLoading) {
     return (
       <div className="bg-[color:var(--color-surface)] rounded-xl shadow-sm border border-[color:var(--color-border)]/20">

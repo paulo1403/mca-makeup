@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { type NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
@@ -89,10 +89,10 @@ export async function GET(request: NextRequest) {
 
     for (const serviceTypeOrId of serviceTypeArray) {
       let matchedService;
-      
+
       // First try to find by ID (new format)
       matchedService = allServices.find((s) => s.id === serviceTypeOrId);
-      
+
       // If not found by ID, try the old format (service name with price)
       if (!matchedService) {
         // Extract service name from serviceType (remove price if present)
@@ -162,12 +162,8 @@ export async function GET(request: NextRequest) {
     const blockedRanges: { start: number; end: number }[] = [];
 
     // First, separate appointments by location type for optimized blocking
-    const studioAppointments = bookedAppointments.filter(
-      (apt) => apt.locationType === "STUDIO",
-    );
-    const homeAppointments = bookedAppointments.filter(
-      (apt) => apt.locationType === "HOME",
-    );
+    const studioAppointments = bookedAppointments.filter((apt) => apt.locationType === "STUDIO");
+    const homeAppointments = bookedAppointments.filter((apt) => apt.locationType === "HOME");
 
     // Handle studio appointments - group consecutive ones
     if (studioAppointments.length > 0) {
@@ -183,8 +179,7 @@ export async function GET(request: NextRequest) {
       let currentGroup = [sortedStudio[0]];
 
       for (let i = 1; i < sortedStudio.length; i++) {
-        const prevEnd =
-          currentGroup[currentGroup.length - 1].appointmentTime.split(" - ")[1];
+        const prevEnd = currentGroup[currentGroup.length - 1].appointmentTime.split(" - ")[1];
         const currentStart = sortedStudio[i].appointmentTime.split(" - ")[0];
 
         // If appointments are consecutive (within 30 minutes), group them
@@ -200,8 +195,7 @@ export async function GET(request: NextRequest) {
       // For each group of studio appointments, create blocking ranges
       for (const group of studioGroups) {
         const groupStart = group[0].appointmentTime.split(" - ")[0];
-        const groupEnd =
-          group[group.length - 1].appointmentTime.split(" - ")[1];
+        const groupEnd = group[group.length - 1].appointmentTime.split(" - ")[1];
 
         if (locationType === "STUDIO") {
           // Same location: no transport time needed
@@ -281,11 +275,13 @@ export async function GET(request: NextRequest) {
 
     if (specialDate && specialDate.isAvailable && specialDate.startTime && specialDate.endTime) {
       // Use special date custom hours
-      workingPeriods = [{
-        start: timeToMinutes(specialDate.startTime),
-        end: timeToMinutes(specialDate.endTime),
-      }];
-      
+      workingPeriods = [
+        {
+          start: timeToMinutes(specialDate.startTime),
+          end: timeToMinutes(specialDate.endTime),
+        },
+      ];
+
       console.log("Using special date hours:", {
         date: date,
         customHours: `${specialDate.startTime} - ${specialDate.endTime}`,
@@ -301,7 +297,7 @@ export async function GET(request: NextRequest) {
         dayOfWeek,
         isActive: true,
       };
-      
+
       // Only filter by locationType if it's not "any"
       if (locationType !== "any") {
         whereClause.locationType = locationType as "STUDIO" | "HOME";
@@ -347,14 +343,17 @@ export async function GET(request: NextRequest) {
         service: b.serviceType,
         location: b.locationType,
       })),
-      specialDate: specialDate ? {
-        date: specialDate.date,
-        isAvailable: specialDate.isAvailable,
-        customHours: specialDate.startTime && specialDate.endTime 
-          ? `${specialDate.startTime} - ${specialDate.endTime}` 
-          : null,
-        note: specialDate.note,
-      } : null,
+      specialDate: specialDate
+        ? {
+            date: specialDate.date,
+            isAvailable: specialDate.isAvailable,
+            customHours:
+              specialDate.startTime && specialDate.endTime
+                ? `${specialDate.startTime} - ${specialDate.endTime}`
+                : null,
+            note: specialDate.note,
+          }
+        : null,
     });
 
     // Process each working period separately
@@ -367,10 +366,7 @@ export async function GET(request: NextRequest) {
 
       // Add all blocked range boundaries that intersect with this working period
       blockedRanges.forEach((blocked) => {
-        if (
-          blocked.start < endWorkingHours &&
-          blocked.end > startWorkingHours
-        ) {
+        if (blocked.start < endWorkingHours && blocked.end > startWorkingHours) {
           allTimePoints.push(
             Math.max(blocked.start, startWorkingHours),
             Math.min(blocked.end, endWorkingHours),
@@ -379,9 +375,7 @@ export async function GET(request: NextRequest) {
       });
 
       // Sort and remove duplicates
-      const uniqueTimePoints = [...new Set(allTimePoints)].sort(
-        (a, b) => a - b,
-      );
+      const uniqueTimePoints = [...new Set(allTimePoints)].sort((a, b) => a - b);
 
       // Generate optimized slots using available gaps within this working period
       for (let i = 0; i < uniqueTimePoints.length - 1; i++) {
@@ -418,9 +412,7 @@ export async function GET(request: NextRequest) {
             // Verify this slot doesn't conflict with any blocked range
             let hasConflict = false;
             for (const blocked of blockedRanges) {
-              if (
-                !(slotEnd <= blocked.start || currentSlotStart >= blocked.end)
-              ) {
+              if (!(slotEnd <= blocked.start || currentSlotStart >= blocked.end)) {
                 hasConflict = true;
                 break;
               }
@@ -519,9 +511,7 @@ export async function GET(request: NextRequest) {
         const rangeEndMinutes = timeToMinutes(rangeEnd);
 
         // Check for overlap with blocked time
-        return (
-          rangeEndMinutes <= blockedStart || rangeStartMinutes >= blockedEnd
-        );
+        return rangeEndMinutes <= blockedStart || rangeStartMinutes >= blockedEnd;
       });
     });
 
@@ -534,11 +524,11 @@ export async function GET(request: NextRequest) {
       const cutoffMinutes = currentMinutes + 120; // 2 hours notice required
 
       console.log("Same day booking restriction:", {
-        currentTime: `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`,
+        currentTime: `${now.getHours()}:${now.getMinutes().toString().padStart(2, "0")}`,
         currentMinutes,
         cutoffMinutes,
-        cutoffTime: `${Math.floor(cutoffMinutes / 60)}:${(cutoffMinutes % 60).toString().padStart(2, '0')}`,
-        timezone: "America/Lima"
+        cutoffTime: `${Math.floor(cutoffMinutes / 60)}:${(cutoffMinutes % 60).toString().padStart(2, "0")}`,
+        timezone: "America/Lima",
       });
 
       const filteredRanges = availableRanges.filter((range) => {
@@ -551,8 +541,7 @@ export async function GET(request: NextRequest) {
         date: date,
         availableRanges: filteredRanges,
         isToday: true,
-        message:
-          "Para citas del mismo día se requiere al menos 2 horas de anticipación",
+        message: "Para citas del mismo día se requiere al menos 2 horas de anticipación",
         isSpecialDate: !!specialDate,
         specialDateNote: specialDate?.note,
       });
@@ -563,15 +552,15 @@ export async function GET(request: NextRequest) {
       availableRanges,
       isSpecialDate: !!specialDate,
       specialDateNote: specialDate?.note,
-      ...(specialDate && specialDate.isAvailable && specialDate.startTime && specialDate.endTime && {
-        message: `Horario especial: ${specialDate.startTime} - ${specialDate.endTime}${specialDate.note ? ` (${specialDate.note})` : ''}`,
-      }),
+      ...(specialDate &&
+        specialDate.isAvailable &&
+        specialDate.startTime &&
+        specialDate.endTime && {
+          message: `Horario especial: ${specialDate.startTime} - ${specialDate.endTime}${specialDate.note ? ` (${specialDate.note})` : ""}`,
+        }),
     });
   } catch (error) {
     console.error("Error fetching availability:", error);
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }

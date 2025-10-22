@@ -1,8 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import ThemeToggle from "@/components/ThemeToggle";
+import Button from "@/components/ui/Button";
+import Typography from "@/components/ui/Typography";
+import { useQuery } from "@tanstack/react-query";
+import { AlertCircle, CheckCircle, Send, Star } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { Star, Send, CheckCircle, AlertCircle } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface ReviewData {
   id: string;
@@ -18,6 +22,7 @@ interface ReviewData {
     serviceType: string;
     appointmentDate: string;
     services: Array<{ name?: string; serviceName?: string }> | null;
+    clientEmail?: string;
   };
 }
 
@@ -26,8 +31,6 @@ export default function ReviewPage() {
   const router = useRouter();
   const token = params.token as string;
 
-  const [reviewData, setReviewData] = useState<ReviewData | null>(null);
-  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -40,43 +43,6 @@ export default function ReviewPage() {
   });
 
   const [hoveredRating, setHoveredRating] = useState(0);
-
-  const fetchReviewData = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/api/reviews/${token}`);
-      const data = await response.json();
-
-      if (!data.success) {
-        setError(data.error || "Error al cargar los datos de la reseña");
-        return;
-      }
-
-      setReviewData(data.review);
-
-      // Pre-fill form with existing data
-      setFormData({
-        rating: data.review.rating || 0,
-        reviewText: data.review.reviewText || "",
-        reviewerName:
-          data.review.reviewerName || data.review.appointment.clientName || "",
-        reviewerEmail: data.review.reviewerEmail || "",
-      });
-
-      // If already completed, show success message
-      if (data.review.isCompleted) {
-        setSuccess(true);
-      }
-    } catch {
-      setError("Error de conexión. Por favor, intente nuevamente.");
-    } finally {
-      setLoading(false);
-    }
-  }, [token]);
-
-  useEffect(() => {
-    fetchReviewData();
-  }, [fetchReviewData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -141,8 +107,7 @@ export default function ReviewPage() {
     if (services && Array.isArray(services) && services.length > 0) {
       return services
         .map(
-          (service: { name?: string; serviceName?: string }) =>
-            service.name || service.serviceName,
+          (service: { name?: string; serviceName?: string }) => service.name || service.serviceName,
         )
         .filter(Boolean)
         .join(", ");
@@ -150,30 +115,65 @@ export default function ReviewPage() {
     return serviceType || "Servicio de maquillaje";
   };
 
-  if (loading) {
+  const {
+    data: reviewResponse,
+    isLoading,
+    error: queryError,
+  } = useQuery({
+    queryKey: ["review", token],
+    queryFn: async () => {
+      const response = await fetch(`/api/reviews/${token}`);
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.error || "Error al cargar los datos de la reseña");
+      }
+      return data;
+    },
+  });
+
+  const reviewData = reviewResponse?.review ?? null;
+
+  useEffect(() => {
+    if (reviewData) {
+      setFormData({
+        rating: reviewData.rating || 0,
+        reviewText: reviewData.reviewText || "",
+        reviewerName: reviewData.reviewerName || reviewData.appointment?.clientName || "",
+        reviewerEmail: reviewData.reviewerEmail || reviewData.appointment?.clientEmail || "",
+      });
+      if (reviewData.isCompleted) {
+        setSuccess(true);
+      }
+    }
+  }, [reviewData]);
+
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#1C1C1C] to-[#5A5A5A] flex items-center justify-center">
-        <div className="text-center text-white">
+      <div className="min-h-screen bg-[color:var(--color-background)] flex items-center justify-center">
+        <div className="text-center text-[color:var(--color-main)]">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[color:var(--color-primary)] mx-auto mb-4"></div>
-          <p>Cargando información de la reseña...</p>
+          <Typography variant="p">Cargando información de la reseña...</Typography>
         </div>
       </div>
     );
   }
 
-  if (error && !reviewData) {
+  if (queryError && !reviewData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#1C1C1C] to-[#5A5A5A] flex items-center justify-center">
-        <div className="bg-white rounded-lg shadow-xl p-8 max-w-md mx-4 text-center">
+      <div className="min-h-screen bg-[color:var(--color-background)] flex items-center justify-center">
+        <div className="bg-[color:var(--color-surface)] rounded-lg shadow-xl p-8 max-w-md mx-4 text-center">
           <AlertCircle className="h-16 w-16 text-[color:var(--status-cancelled-text)] mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-[color:var(--color-heading)] mb-4">Error</h1>
-          <p className="text-[color:var(--color-muted)] mb-6">{error}</p>
-          <button
-            onClick={() => router.push("/")}
-            className="bg-[color:var(--color-primary)] text-white px-6 py-2 rounded-lg hover:opacity-90 transition-colors"
-          >
-            Volver al inicio
-          </button>
+          <Typography variant="h2" className="mb-4">
+            Error
+          </Typography>
+          <Typography variant="p" className="text-[color:var(--color-muted)] mb-6">
+            {String(queryError.message)}
+          </Typography>
+          <Button variant="primary" size="md" onClick={() => router.push("/")}>
+            <Typography variant="p" className="text-white">
+              Volver al inicio
+            </Typography>
+          </Button>
         </div>
       </div>
     );
@@ -181,60 +181,69 @@ export default function ReviewPage() {
 
   if (success || reviewData?.isCompleted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#1C1C1C] to-[#5A5A5A] flex items-center justify-center">
-        <div className="bg-white rounded-lg shadow-xl p-8 max-w-md mx-4 text-center">
+      <div className="min-h-screen bg-[color:var(--color-background)] flex items-center justify-center">
+        <div className="bg-[color:var(--color-surface)] rounded-lg shadow-xl p-8 max-w-md mx-4 text-center">
           <CheckCircle className="h-16 w-16 text-[color:var(--status-confirmed-text)] mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-[color:var(--color-heading)] mb-4">
+          <Typography variant="h2" className="mb-4">
             ¡Gracias por tu reseña!
-          </h1>
-          <p className="text-[color:var(--color-muted)] mb-6">
-            Tu reseña ha sido enviada exitosamente. Será revisada antes de ser
-            publicada.
-          </p>
-          <button
-            onClick={() => router.push("/")}
-            className="bg-[color:var(--color-primary)] text-white px-6 py-2 rounded-lg hover:opacity-90 transition-colors"
-          >
-            Volver al inicio
-          </button>
+          </Typography>
+          <Typography variant="p" className="text-[color:var(--color-muted)] mb-6">
+            Tu reseña ha sido enviada exitosamente. Será revisada antes de ser publicada.
+          </Typography>
+          <Button variant="primary" size="md" onClick={() => router.push("/")}>
+            <Typography variant="p" className="text-white">
+              Volver al inicio
+            </Typography>
+          </Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1C1C1C] to-[#5A5A5A] py-12 px-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-[color:var(--color-surface)] rounded-lg border border-[color:var(--color-border)]/30 overflow-hidden">
+    <section className="relative min-h-screen section-bg-hero py-16 px-4 sm:px-6 lg:px-8">
+      <div className="section-overlay-top"></div>
+      <div className="section-overlay-bottom"></div>
+      <div className="relative z-10 max-w-3xl mx-auto">
+        <div className="bg-[color:var(--color-surface)]/90 backdrop-blur-sm rounded-2xl border border-[color:var(--color-border)]/40 shadow-2xl overflow-hidden">
           {/* Header */}
-          <div className="bg-[color:var(--color-primary)] text-white p-6 text-center">
-            <h1 className="text-3xl font-bold mb-2">Reseña de Servicio</h1>
-            <p className="text-lg opacity-90">
+          <div className="bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)] text-white p-6 text-center relative">
+            <div className="absolute right-4 top-4">
+              <ThemeToggle />
+            </div>
+            <Typography variant="h1" className="mb-2 text-white">
+              Reseña de Servicio
+            </Typography>
+            <Typography variant="p" className="opacity-90 text-white">
               Marcela Cordero - Makeup Artist
-            </p>
+            </Typography>
           </div>
 
           {/* Appointment Info */}
           {reviewData && (
             <div className="p-6 bg-[color:var(--color-surface)] border-b border-[color:var(--color-border)]/30">
-              <h2 className="text-lg font-semibold text-[color:var(--color-heading)] mb-4">
+              <Typography variant="h4" className="mb-4">
                 Información de tu cita
-              </h2>
+              </Typography>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-[color:var(--color-muted)]">Fecha</p>
-                  <p className="font-medium text-[color:var(--color-heading)]">
+                  <Typography variant="small" className="text-[color:var(--color-muted)]">
+                    Fecha
+                  </Typography>
+                  <Typography variant="p" className="font-medium text-[color:var(--color-heading)]">
                     {formatDate(reviewData.appointment.appointmentDate)}
-                  </p>
+                  </Typography>
                 </div>
                 <div>
-                  <p className="text-sm text-[color:var(--color-muted)]">Servicios</p>
-                  <p className="font-medium text-[color:var(--color-heading)]">
+                  <Typography variant="small" className="text-[color:var(--color-muted)]">
+                    Servicios
+                  </Typography>
+                  <Typography variant="p" className="font-medium text-[color:var(--color-heading)]">
                     {getServiceNames(
                       reviewData.appointment.services,
                       reviewData.appointment.serviceType,
                     )}
-                  </p>
+                  </Typography>
                 </div>
               </div>
             </div>
@@ -245,9 +254,13 @@ export default function ReviewPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Rating */}
               <div>
-                <label className="block text-sm font-medium text-[color:var(--color-heading)] mb-2">
+                <Typography
+                  as="label"
+                  variant="small"
+                  className="font-medium text-[color:var(--color-heading)] mb-2"
+                >
                   Calificación general *
-                </label>
+                </Typography>
                 <div className="flex items-center space-x-1">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
@@ -257,41 +270,42 @@ export default function ReviewPage() {
                       onMouseEnter={() => setHoveredRating(star)}
                       onMouseLeave={() => setHoveredRating(0)}
                       className="focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)] rounded p-1"
+                      aria-label={`${star} estrellas`}
                     >
                       <Star
-                        className={`h-8 w-8 ${
+                        className={`h-8 w-8 transition-colors ${
                           star <= (hoveredRating || formData.rating)
                             ? "text-[color:var(--color-primary)] fill-current"
-                            : "text-[color:var(--color-border)]/40"
-                        } transition-colors`}
+                            : "text-[color:var(--color-muted)] hover:text-[color:var(--color-primary)]"
+                        }`}
                       />
                     </button>
                   ))}
-                  <span className="ml-2 text-sm text-[color:var(--color-muted)]">
+                  <Typography variant="small" className="ml-2 text-[color:var(--color-muted)]">
                     (
                     {formData.rating > 0
                       ? `${formData.rating} estrella${formData.rating !== 1 ? "s" : ""}`
                       : "Sin calificar"}
                     )
-                  </span>
+                  </Typography>
                 </div>
               </div>
 
               {/* Review Text */}
               <div>
-                <label
+                <Typography
+                  as="label"
                   htmlFor="reviewText"
-                  className="block text-sm font-medium text-[color:var(--color-heading)] mb-2"
+                  variant="small"
+                  className="font-medium text-[color:var(--color-heading)] mb-2"
                 >
                   Tu experiencia (opcional)
-                </label>
+                </Typography>
                 <textarea
                   id="reviewText"
                   rows={4}
                   value={formData.reviewText}
-                  onChange={(e) =>
-                    setFormData({ ...formData, reviewText: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, reviewText: e.target.value })}
                   placeholder="Cuéntanos sobre tu experiencia con nuestro servicio..."
                   className="w-full px-3 py-2 border border-[color:var(--color-border)]/30 rounded-lg focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-[color:var(--color-primary)] resize-none"
                 />
@@ -299,19 +313,19 @@ export default function ReviewPage() {
 
               {/* Name */}
               <div>
-                <label
+                <Typography
+                  as="label"
                   htmlFor="reviewerName"
-                  className="block text-sm font-medium text-[color:var(--color-heading)] mb-2"
+                  variant="small"
+                  className="font-medium text-[color:var(--color-heading)] mb-2"
                 >
                   Tu nombre *
-                </label>
+                </Typography>
                 <input
                   type="text"
                   id="reviewerName"
                   value={formData.reviewerName}
-                  onChange={(e) =>
-                    setFormData({ ...formData, reviewerName: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, reviewerName: e.target.value })}
                   placeholder="Ingresa tu nombre"
                   className="w-full px-3 py-2 border border-[color:var(--color-border)]/30 rounded-lg focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-[color:var(--color-primary)]"
                   required
@@ -320,19 +334,19 @@ export default function ReviewPage() {
 
               {/* Email */}
               <div>
-                <label
+                <Typography
+                  as="label"
                   htmlFor="reviewerEmail"
-                  className="block text-sm font-medium text-[color:var(--color-heading)] mb-2"
+                  variant="small"
+                  className="font-medium text-[color:var(--color-heading)] mb-2"
                 >
                   Tu email *
-                </label>
+                </Typography>
                 <input
                   type="email"
                   id="reviewerEmail"
                   value={formData.reviewerEmail}
-                  onChange={(e) =>
-                    setFormData({ ...formData, reviewerEmail: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, reviewerEmail: e.target.value })}
                   placeholder="tu@email.com"
                   className="w-full px-3 py-2 border border-[color:var(--color-border)]/30 rounded-lg focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-[color:var(--color-primary)]"
                   required
@@ -342,41 +356,52 @@ export default function ReviewPage() {
               {/* Error Message */}
               {error && (
                 <div className="bg-[color:var(--color-surface)] border border-[color:var(--status-cancelled-text)]/30 rounded-lg p-4">
-                  <p className="text-[color:var(--status-cancelled-text)] text-sm">{error}</p>
+                  <Typography variant="small" className="text-[color:var(--status-cancelled-text)]">
+                    {error}
+                  </Typography>
                 </div>
               )}
 
               {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full bg-[color:var(--color-primary)] text-white py-3 px-4 rounded-lg font-medium hover:opacity-90 focus:ring-2 focus:ring-[color:var(--color-primary)] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-              >
-                {submitting ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Enviando reseña...
-                  </>
-                ) : (
-                  <>
-                    <Send className="h-4 w-4 mr-2" />
-                    Enviar reseña
-                  </>
-                )}
-              </button>
+              <div className="w-full">
+                <Button
+                  as="button"
+                  type="submit"
+                  disabled={submitting}
+                  variant="primary"
+                  size="md"
+                  className="w-full flex items-center justify-center"
+                >
+                  {submitting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[color:var(--color-cta-text)] mr-2"></div>
+                      <Typography variant="p" className="text-white">
+                        Enviando reseña...
+                      </Typography>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4 mr-2" />
+                      <Typography variant="p" className="text-white">
+                        Enviar reseña
+                      </Typography>
+                    </>
+                  )}
+                </Button>
+              </div>
             </form>
 
             {/* Privacy Note */}
-            <div className="mt-6 p-4 bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/30 rounded-lg">
-              <p className="text-xs text-[color:var(--color-muted)]">
-                <strong>Nota de privacidad:</strong> Tu reseña será revisada
-                antes de ser publicada. Nos reservamos el derecho de no publicar
-                reseñas que contengan contenido inapropiado.
-              </p>
+            <div className="mt-6 p-4 bg-[color:var(--color-surface)]/80 backdrop-blur-sm border border-[color:var(--color-border)]/30 rounded-lg">
+              <Typography variant="caption" className="text-[color:var(--color-muted)]">
+                <strong>Nota de privacidad:</strong> Tu reseña será revisada antes de ser publicada.
+                Nos reservamos el derecho de no publicar reseñas que contengan contenido
+                inapropiado.
+              </Typography>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

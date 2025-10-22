@@ -1,24 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Building, Home } from "lucide-react";
+import Button from "@/components/ui/Button";
 import Modal, { ModalHeader, ModalBody } from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
-import Button from "@/components/ui/Button";
-import { TimeSlot } from "@/hooks/useAvailability";
+import type { TimeSlot } from "@/hooks/useAvailability";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Building, Home } from "lucide-react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-const DAYS_OF_WEEK = [
-  "Domingo",
-  "Lunes",
-  "Martes",
-  "Miércoles",
-  "Jueves",
-  "Viernes",
-  "Sábado",
-];
+const DAYS_OF_WEEK = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
 const editTimeSlotSchema = z
   .object({
@@ -87,21 +79,31 @@ export default function EditTimeSlotModal({
   if (!isOpen || !slot) return null;
 
   return (
-    <Modal open={isOpen && !!slot} onClose={handleClose} size="sm" ariaLabelledBy="edit-timeslot-title">
+    <Modal
+      open={isOpen && !!slot}
+      onClose={handleClose}
+      size="sm"
+      ariaLabelledBy="edit-timeslot-title"
+    >
       <ModalHeader title="Editar Horario" onClose={handleClose} />
       <ModalBody>
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="space-y-4">
             <div>
-              <Typography as="label" variant="small" className="block text-sm font-medium text-[color:var(--color-muted)] mb-2">
+              <Typography
+                as="label"
+                variant="small"
+                className="block text-sm font-medium text-[color:var(--color-muted)] mb-2"
+              >
                 Tipo de Servicio
               </Typography>
               <div className="grid grid-cols-2 gap-3">
                 <label
-                  className={`flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition-colors ${selectedLocationType === "STUDIO"
+                  className={`flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition-colors ${
+                    selectedLocationType === "STUDIO"
                       ? "border-[color:var(--color-primary)] bg-[color:var(--color-primary)]/10 text-[color:var(--color-primary)]"
                       : "border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-elevated)] text-[color:var(--color-body)]"
-                    }`}
+                  }`}
                 >
                   <input
                     type="radio"
@@ -110,19 +112,23 @@ export default function EditTimeSlotModal({
                     className="text-[color:var(--color-primary)] focus:ring-[color:var(--color-primary)]"
                   />
                   <Building
-                    className={`h-4 w-4 ${selectedLocationType === "STUDIO"
+                    className={`h-4 w-4 ${
+                      selectedLocationType === "STUDIO"
                         ? "text-[color:var(--color-primary)]"
                         : "text-[color:var(--color-muted)]"
-                      }`}
+                    }`}
                   />
-                  <Typography variant="small" className="font-medium">En Estudio</Typography>
+                  <Typography variant="small" className="font-medium">
+                    En Estudio
+                  </Typography>
                 </label>
 
                 <label
-                  className={`flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition-colors ${selectedLocationType === "HOME"
+                  className={`flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition-colors ${
+                    selectedLocationType === "HOME"
                       ? "border-[color:var(--color-primary)] bg-[color:var(--color-primary)]/10 text-[color:var(--color-primary)]"
                       : "border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-elevated)] text-[color:var(--color-body)]"
-                    }`}
+                  }`}
                 >
                   <input
                     type="radio"
@@ -131,23 +137,28 @@ export default function EditTimeSlotModal({
                     className="text-[color:var(--color-primary)] focus:ring-[color:var(--color-primary)]"
                   />
                   <Home
-                    className={`h-4 w-4 ${selectedLocationType === "HOME"
+                    className={`h-4 w-4 ${
+                      selectedLocationType === "HOME"
                         ? "text-[color:var(--color-primary)]"
                         : "text-[color:var(--color-muted)]"
-                      }`}
+                    }`}
                   />
-                  <Typography variant="small" className="font-medium">A Domicilio</Typography>
+                  <Typography variant="small" className="font-medium">
+                    A Domicilio
+                  </Typography>
                 </label>
               </div>
               {errors.locationType && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.locationType.message}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{errors.locationType.message}</p>
               )}
             </div>
 
             <div>
-              <Typography as="label" variant="small" className="block text-sm font-medium text-[color:var(--color-muted)] mb-1">
+              <Typography
+                as="label"
+                variant="small"
+                className="block text-sm font-medium text-[color:var(--color-muted)] mb-1"
+              >
                 Día de la semana
               </Typography>
               <select
@@ -161,9 +172,7 @@ export default function EditTimeSlotModal({
                 ))}
               </select>
               {errors.dayOfWeek && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.dayOfWeek.message}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{errors.dayOfWeek.message}</p>
               )}
             </div>
           </div>
@@ -180,9 +189,7 @@ export default function EditTimeSlotModal({
                 style={{ colorScheme: "dark" }}
               />
               {errors.startTime && (
-                <p className="text-red-600 text-sm mt-1">
-                  {errors.startTime.message}
-                </p>
+                <p className="text-red-600 text-sm mt-1">{errors.startTime.message}</p>
               )}
             </div>
 
@@ -197,16 +204,15 @@ export default function EditTimeSlotModal({
                 style={{ colorScheme: "dark" }}
               />
               {errors.endTime && (
-                <p className="text-red-600 text-sm mt-1">
-                  {errors.endTime.message}
-                </p>
+                <p className="text-red-600 text-sm mt-1">{errors.endTime.message}</p>
               )}
             </div>
           </div>
 
           <div className="bg-[color:var(--color-primary)]/10 border border-[color:var(--color-primary)]/30 rounded-lg p-3">
             <Typography variant="small" className="text-[color:var(--color-primary)]">
-              <strong>Editando:</strong> {DAYS_OF_WEEK[slot.dayOfWeek]} de {slot.startTime} a {slot.endTime}
+              <strong>Editando:</strong> {DAYS_OF_WEEK[slot.dayOfWeek]} de {slot.startTime} a{" "}
+              {slot.endTime}
             </Typography>
           </div>
 

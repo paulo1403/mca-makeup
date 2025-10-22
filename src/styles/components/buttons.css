@@ -1,6 +1,6 @@
 /* Estilos de botones - Nueva Paleta Clara y Profesional */
 .btn-primary {
-  background-color: #DAA520; /* Dorado suave - Acento principal */
+  background-color: #daa520; /* Dorado suave - Acento principal */
   color: white;
   font-weight: 500;
   padding: 0.75rem 1.5rem;
@@ -15,7 +15,7 @@
 }
 
 .btn-secondary {
-  background-color: #8B0000; /* Burgundy/Vino - Elegancia clásica */
+  background-color: #8b0000; /* Burgundy/Vino - Elegancia clásica */
   color: white;
   font-weight: 500;
   padding: 0.75rem 1.5rem;
@@ -30,23 +30,26 @@
 }
 
 /* Efectos de brillo en botones */
-.btn-primary::before, .btn-secondary::before {
-  content: '';
+.btn-primary::before,
+.btn-secondary::before {
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transition: left 0.5s;
 }
 
-.btn-primary:hover::before, .btn-secondary:hover::before {
+.btn-primary:hover::before,
+.btn-secondary:hover::before {
   left: 100%;
 }
 
 /* Estados de foco para accesibilidad */
-button:focus-visible, a:focus-visible {
+button:focus-visible,
+a:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
   border-radius: 4px;

@@ -1,4 +1,4 @@
-import { Appointment } from "@/hooks/useAppointments";
+import type { Appointment } from "@/hooks/useAppointments";
 import { formatDateForDisplay, formatTimeRange } from "@/utils/dateUtils";
 
 export const getStatusColor = (status: Appointment["status"]) => {
@@ -32,19 +32,25 @@ export const getStatusText = (status: Appointment["status"]) => {
 };
 
 export const formatServices = (appointment: Appointment) => {
-  if (appointment.services && Array.isArray(appointment.services) && appointment.services.length > 0) {
-    return appointment.services.map(service => ({
+  if (
+    appointment.services &&
+    Array.isArray(appointment.services) &&
+    appointment.services.length > 0
+  ) {
+    return appointment.services.map((service) => ({
       name: service.name,
       quantity: service.quantity,
-      displayText: service.quantity > 1 ? `${service.name} x${service.quantity}` : service.name
+      displayText: service.quantity > 1 ? `${service.name} x${service.quantity}` : service.name,
     }));
   }
-  
-  return [{
-    name: appointment.serviceType,
-    quantity: 1,
-    displayText: appointment.serviceType
-  }];
+
+  return [
+    {
+      name: appointment.serviceType,
+      quantity: 1,
+      displayText: appointment.serviceType,
+    },
+  ];
 };
 
 export const formatDate = (dateString: string) => {

@@ -1,16 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import {
-  ChevronDown,
-  Sparkles,
-  Clock,
-  AlertTriangle,
-  Plus,
-  Minus,
-} from "lucide-react";
-import { Service, ServiceSelection } from "@/types";
-import { CATEGORY_LABELS, CATEGORY_COLORS, validateSelection } from '@/lib/serviceRules'
+import { CATEGORY_COLORS, CATEGORY_LABELS, validateSelection } from "@/lib/serviceRules";
+import type { Service, ServiceSelection } from "@/types";
+import { AlertTriangle, ChevronDown, Clock, Minus, Plus, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 interface ServiceSelectorProps {
   value: ServiceSelection;
@@ -22,7 +15,7 @@ interface ServiceSelectorProps {
   onLoadingChangeAction?: (loading: boolean) => void;
 }
 
-  // ...existing code...
+// ...existing code...
 
 export default function ServiceSelector({
   value,
@@ -37,7 +30,10 @@ export default function ServiceSelector({
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [validationError, setValidationError] = useState<{ message: string; suggestion: string } | null>(null);
+  const [validationError, setValidationError] = useState<{
+    message: string;
+    suggestion: string;
+  } | null>(null);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -69,10 +65,7 @@ export default function ServiceSelector({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
         setSearchTerm("");
       }
@@ -83,10 +76,10 @@ export default function ServiceSelector({
   }, []);
 
   const validateServiceCombination = (
-    selectedServices: ServiceSelection
+    selectedServices: ServiceSelection,
   ): { message: string; suggestion: string } | null => {
     // selectedServices is a map of serviceId -> quantity
-    return validateSelection(selectedServices, services)
+    return validateSelection(selectedServices, services);
   };
 
   const filteredServices = services.filter((service) => {
@@ -100,16 +93,17 @@ export default function ServiceSelector({
     );
   });
 
-  const servicesByCategory = filteredServices.reduce((acc, service) => {
-    const category = service.category as keyof typeof CATEGORY_LABELS;
-    if (!acc[category]) acc[category] = [];
-    acc[category].push(service);
-    return acc;
-  }, {} as Record<keyof typeof CATEGORY_LABELS, Service[]>);
-
-  const selectedServices = services.filter(
-    (service) => value[service.id] && value[service.id] > 0
+  const servicesByCategory = filteredServices.reduce(
+    (acc, service) => {
+      const category = service.category as keyof typeof CATEGORY_LABELS;
+      if (!acc[category]) acc[category] = [];
+      acc[category].push(service);
+      return acc;
+    },
+    {} as Record<keyof typeof CATEGORY_LABELS, Service[]>,
   );
+
+  const selectedServices = services.filter((service) => value[service.id] && value[service.id] > 0);
 
   const handleQuantityChange = (service: Service, quantity: number) => {
     const newSelection = { ...value };
@@ -155,14 +149,14 @@ export default function ServiceSelector({
   const getTotalDuration = () => {
     return selectedServices.reduce(
       (total, service) => total + service.duration * (value[service.id] || 0),
-      0
+      0,
     );
   };
 
   const getTotalPrice = () => {
     return selectedServices.reduce(
       (total, service) => total + service.price * (value[service.id] || 0),
-      0
+      0,
     );
   };
 
@@ -244,13 +238,10 @@ export default function ServiceSelector({
         <div className="mt-2 flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
           <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
           <div className="flex-1">
-            <span className="text-sm text-amber-800 font-medium">
-              {validationError.message}
-            </span>
+            <span className="text-sm text-amber-800 font-medium">{validationError.message}</span>
             <p className="text-sm text-amber-700 mt-1">{validationError.suggestion}</p>
             <p className="text-xs text-amber-600 mt-2">
-              💡 Puedes seguir seleccionando servicios, pero esta combinación no
-              podrá ser enviada.
+              💡 Puedes seguir seleccionando servicios, pero esta combinación no podrá ser enviada.
             </p>
           </div>
         </div>
@@ -260,13 +251,9 @@ export default function ServiceSelector({
       {selectedServices.length > 0 && !isOpen && !loading && (
         <div className="mt-3 p-3 bg-gradient-to-r from-primary-accent/5 to-secondary-accent/5 rounded-lg border border-primary-accent/20">
           <div className="flex justify-between items-center mb-2">
-            <span className="font-medium text-black text-sm">
-              Servicios seleccionados:
-            </span>
+            <span className="font-medium text-black text-sm">Servicios seleccionados:</span>
             <div className="text-right">
-              <div className="text-lg font-bold text-primary-accent">
-                S/ {getTotalPrice()}
-              </div>
+              <div className="text-lg font-bold text-primary-accent">S/ {getTotalPrice()}</div>
               <div className="text-xs text-gray-500 flex items-center gap-1">
                 <Clock className="h-3 w-3" />
                 {formatDuration(getTotalDuration())}
@@ -276,21 +263,14 @@ export default function ServiceSelector({
 
           <div className="space-y-2">
             {selectedServices.map((service, index) => (
-              <div
-                key={index}
-                className="flex justify-between items-center text-sm"
-              >
+              <div key={index} className="flex justify-between items-center text-sm">
                 <span className="text-black">
                   {value[service.id] > 1 && (
-                    <span className="font-bold text-primary-accent mr-1">
-                      {value[service.id]}x
-                    </span>
+                    <span className="font-bold text-primary-accent mr-1">{value[service.id]}x</span>
                   )}
                   {service.name}
                 </span>
-                <span className="font-medium">
-                  S/ {service.price * (value[service.id] || 0)}
-                </span>
+                <span className="font-medium">S/ {service.price * (value[service.id] || 0)}</span>
               </div>
             ))}
           </div>
@@ -303,157 +283,128 @@ export default function ServiceSelector({
           {loading ? (
             <div className="p-4 text-center">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-accent mx-auto mb-2"></div>
-              <span className="text-sm text-gray-500">
-                Cargando servicios...
-              </span>
+              <span className="text-sm text-gray-500">Cargando servicios...</span>
             </div>
           ) : filteredServices.length === 0 ? (
             <div className="p-4 text-center text-gray-500 text-sm">
-              {searchTerm
-                ? "No se encontraron servicios"
-                : "No hay servicios disponibles"}
+              {searchTerm ? "No se encontraron servicios" : "No hay servicios disponibles"}
             </div>
           ) : (
             <div className="max-h-80 overflow-y-auto">
-              {Object.entries(servicesByCategory).map(
-                ([category, categoryServices]) => (
+              {Object.entries(servicesByCategory).map(([category, categoryServices]) => (
+                <div key={category} className="border-b border-gray-100 last:border-b-0">
+                  {/* Header de categoría */}
                   <div
-                    key={category}
-                    className="border-b border-gray-100 last:border-b-0"
+                    className={`px-3 py-2 text-xs font-medium border-l-4 ${
+                      CATEGORY_COLORS[category as keyof typeof CATEGORY_COLORS]
+                    }`}
                   >
-                    {/* Header de categoría */}
-                    <div
-                      className={`px-3 py-2 text-xs font-medium border-l-4 ${
-                        CATEGORY_COLORS[
-                          category as keyof typeof CATEGORY_COLORS
-                        ]
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <Sparkles className="h-3 w-3" />
-                        {
-                          CATEGORY_LABELS[
-                            category as keyof typeof CATEGORY_LABELS
-                          ]
-                        }
-                      </div>
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="h-3 w-3" />
+                      {CATEGORY_LABELS[category as keyof typeof CATEGORY_LABELS]}
                     </div>
+                  </div>
 
-                    {/* Servicios de la categoría */}
-                    {categoryServices.map((service) => {
-                      const currentQuantity = value[service.id] || 0;
-                      const isSelected = currentQuantity > 0;
+                  {/* Servicios de la categoría */}
+                  {categoryServices.map((service) => {
+                    const currentQuantity = value[service.id] || 0;
+                    const isSelected = currentQuantity > 0;
 
-                      return (
-                        <div
-                          key={service.id}
-                          role="button"
-                          tabIndex={0}
-                          onClick={() => handleToggleService(service)}
-                          onKeyDown={(e) => {
-                            if (
-                              e.key === "Enter" ||
-                              e.key === " " ||
-                              e.key === "Spacebar"
-                            ) {
-                              e.preventDefault();
-                              handleToggleService(service);
-                            }
-                          }}
-                          className={`
+                    return (
+                      <div
+                        key={service.id}
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => handleToggleService(service)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+                            e.preventDefault();
+                            handleToggleService(service);
+                          }
+                        }}
+                        className={`
                           flex items-start gap-3 p-3 transition-colors duration-150
                           hover:bg-gray-50 border-l-4 border-transparent
-                          ${
-                            isSelected
-                              ? "bg-primary-accent/5 border-l-primary-accent"
-                              : ""
-                          }
+                          ${isSelected ? "bg-primary-accent/5 border-l-primary-accent" : ""}
                         `}
-                        >
-                          {/* Checkbox */}
-                          <div className="flex items-center mt-1">
-                            <input
-                              type="checkbox"
-                              checked={isSelected}
-                              onChange={() => handleToggleService(service)}
-                              onClick={(e) => e.stopPropagation()}
-                              className="rounded border-gray-300 text-primary-accent focus:ring-primary-accent focus:ring-2"
-                            />
-                          </div>
+                      >
+                        {/* Checkbox */}
+                        <div className="flex items-center mt-1">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => handleToggleService(service)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="rounded border-gray-300 text-primary-accent focus:ring-primary-accent focus:ring-2"
+                          />
+                        </div>
 
-                          {/* Información del servicio */}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex justify-between items-start gap-2">
-                              <div className="flex-1 min-w-0">
-                                <h4 className="font-medium text-black text-sm leading-tight">
-                                  {service.name}
-                                </h4>
-                                {service.description && (
-                                  <p className="text-xs text-gray-600 mt-1 leading-relaxed">
-                                    {service.description}
-                                  </p>
-                                )}
-                              </div>
-                              <div className="text-right flex-shrink-0">
-                                <span className="font-bold text-primary-accent">
-                                  S/ {service.price}
-                                </span>
-                              </div>
-                            </div>
-
-                            {/* Duración y controls de cantidad */}
-                            <div className="flex items-center justify-between mt-2">
-                              <div className="flex items-center gap-1 text-xs text-black">
-                                <Clock className="h-3 w-3" />
-                                <span>{formatDuration(service.duration)}</span>
-                              </div>
-
-                              {/* Quantity controls */}
-                              {isSelected && (
-                                <div className="flex items-center gap-2">
-                                  <button
-                                    type="button"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleQuantityChange(
-                                        service,
-                                        currentQuantity - 1
-                                      );
-                                    }}
-                                    className="w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors"
-                                    disabled={currentQuantity <= 1}
-                                  >
-                                    <Minus className="h-3 w-3" />
-                                  </button>
-
-                                  <span className="min-w-[20px] text-center text-sm font-medium text-black">
-                                    {currentQuantity}
-                                  </span>
-
-                                  <button
-                                    type="button"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleQuantityChange(
-                                        service,
-                                        currentQuantity + 1
-                                      );
-                                    }}
-                                    className="w-6 h-6 rounded-full bg-primary-accent hover:bg-primary-accent/80 text-white flex items-center justify-center transition-colors"
-                                    disabled={currentQuantity >= 5} // Límite máximo de 5
-                                  >
-                                    <Plus className="h-3 w-3" />
-                                  </button>
-                                </div>
+                        {/* Información del servicio */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex justify-between items-start gap-2">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-medium text-black text-sm leading-tight">
+                                {service.name}
+                              </h4>
+                              {service.description && (
+                                <p className="text-xs text-gray-600 mt-1 leading-relaxed">
+                                  {service.description}
+                                </p>
                               )}
                             </div>
+                            <div className="text-right flex-shrink-0">
+                              <span className="font-bold text-primary-accent">
+                                S/ {service.price}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Duración y controls de cantidad */}
+                          <div className="flex items-center justify-between mt-2">
+                            <div className="flex items-center gap-1 text-xs text-black">
+                              <Clock className="h-3 w-3" />
+                              <span>{formatDuration(service.duration)}</span>
+                            </div>
+
+                            {/* Quantity controls */}
+                            {isSelected && (
+                              <div className="flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleQuantityChange(service, currentQuantity - 1);
+                                  }}
+                                  className="w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors"
+                                  disabled={currentQuantity <= 1}
+                                >
+                                  <Minus className="h-3 w-3" />
+                                </button>
+
+                                <span className="min-w-[20px] text-center text-sm font-medium text-black">
+                                  {currentQuantity}
+                                </span>
+
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleQuantityChange(service, currentQuantity + 1);
+                                  }}
+                                  className="w-6 h-6 rounded-full bg-primary-accent hover:bg-primary-accent/80 text-white flex items-center justify-center transition-colors"
+                                  disabled={currentQuantity >= 5} // Límite máximo de 5
+                                >
+                                  <Plus className="h-3 w-3" />
+                                </button>
+                              </div>
+                            )}
                           </div>
                         </div>
-                      );
-                    })}
-                  </div>
-                )
-              )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
             </div>
           )}
         </div>

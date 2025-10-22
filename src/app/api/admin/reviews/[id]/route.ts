@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { type NextRequest, NextResponse } from "next/server";
 
 // DELETE /api/admin/reviews/[id] - Eliminar review específica
 export async function DELETE(
@@ -12,10 +12,7 @@ export async function DELETE(
     const session = await getServerSession(authOptions);
 
     if (!session || session.user?.role !== "ADMIN") {
-      return NextResponse.json(
-        { success: false, error: "No autorizado" },
-        { status: 401 },
-      );
+      return NextResponse.json({ success: false, error: "No autorizado" }, { status: 401 });
     }
 
     const { id } = await params;

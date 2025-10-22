@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { authOptions } from "@/lib/auth";
 import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { type NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
@@ -15,10 +15,7 @@ export async function GET() {
     return NextResponse.json({ services });
   } catch (error) {
     console.error("Error fetching services:", error);
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
 
@@ -53,8 +50,7 @@ export async function POST(request: NextRequest) {
     if (price < 0 || duration < 0) {
       return NextResponse.json(
         {
-          error:
-            "Precio debe ser mayor o igual a 0 y duración debe ser mayor o igual a 0",
+          error: "Precio debe ser mayor o igual a 0 y duración debe ser mayor o igual a 0",
         },
         { status: 400 },
       );
@@ -66,18 +62,15 @@ export async function POST(request: NextRequest) {
     });
 
     if (existingService) {
-      return NextResponse.json(
-        { error: "Ya existe un servicio con este nombre" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Ya existe un servicio con este nombre" }, { status: 400 });
     }
 
     const service = await prisma.service.create({
       data: {
         name,
         description,
-        price: parseFloat(price),
-        duration: parseInt(duration),
+        price: Number.parseFloat(price),
+        duration: Number.parseInt(duration),
         category,
         isActive: isActive !== undefined ? isActive : true,
       },
@@ -89,9 +82,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error creating service:", error);
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }

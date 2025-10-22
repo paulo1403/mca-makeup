@@ -2,7 +2,11 @@
 .step1 {
   --step1-spacing: var(--spacing-8);
   --step1-icon-size: var(--spacing-12);
-  --step1-icon-bg: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+  --step1-icon-bg: linear-gradient(
+    135deg,
+    var(--color-accent-primary),
+    var(--color-accent-secondary)
+  );
   --step1-icon-color: var(--color-text-light);
   --step1-title-color: var(--color-accent-primary);
   --step1-subtitle-color: var(--color-text-secondary);
@@ -10,7 +14,7 @@
   --step1-trust-bg: color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
   --step1-trust-icon-color: var(--color-accent-primary);
   --step1-trust-text-color: var(--color-text-secondary);
-  
+
   /* Input Field Tokens */
   --input-label-color: var(--color-accent-primary);
   --input-bg: var(--color-surface-secondary);
@@ -194,7 +198,7 @@
   .step1 {
     --step1-spacing: var(--spacing-10);
   }
-  
+
   .step1__subtitle {
     max-width: 28rem;
   }

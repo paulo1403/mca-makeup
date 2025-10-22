@@ -5,16 +5,8 @@
   --contact-text: var(--color-body);
   --contact-heading: var(--color-heading);
   --contact-accent: var(--color-primary);
-  --contact-border: color-mix(
-    in srgb,
-    var(--color-border) 30%,
-    transparent
-  );
-  --contact-info-bg: color-mix(
-    in srgb,
-    var(--color-surface) 80%,
-    transparent
-  );
+  --contact-border: color-mix(in srgb, var(--color-border) 30%, transparent);
+  --contact-info-bg: color-mix(in srgb, var(--color-surface) 80%, transparent);
 }
 
 .contact-section {
@@ -220,7 +212,8 @@
 .contact-decoration {
   position: absolute;
   border-radius: 50%;
-  background: linear-gradient(135deg, 
+  background: linear-gradient(
+    135deg,
     color-mix(in srgb, var(--color-primary) 15%, transparent),
     color-mix(in srgb, var(--color-accent) 10%, transparent)
   );

@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import ConfirmModal from "@/components/ui/ConfirmModal";
+import Modal, { ModalHeader, ModalBody, ModalFooter } from "@/components/ui/Modal";
+import { CheckCircle, DollarSign, MapPin, Pencil, Trash2, XCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { MapPin, DollarSign, CheckCircle, XCircle, Pencil, Trash2 } from "lucide-react";
-import Modal, { ModalHeader, ModalBody, ModalFooter } from "@/components/ui/Modal";
-import ConfirmModal from "@/components/ui/ConfirmModal";
+import { useEffect, useState } from "react";
 
 interface TransportCost {
   id: string;
@@ -81,7 +81,7 @@ export default function TransportCostsPage() {
         },
         body: JSON.stringify({
           district: formData.district,
-          cost: parseFloat(formData.cost),
+          cost: Number.parseFloat(formData.cost),
           isActive: formData.isActive,
           notes: formData.notes || undefined,
         }),
@@ -168,8 +168,12 @@ export default function TransportCostsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[color:var(--color-heading)] mb-2">Costos de Transporte</h1>
-          <p className="text-[color:var(--color-muted)]">Gestiona los costos de transporte para servicios a domicilio</p>
+          <h1 className="text-3xl font-bold text-[color:var(--color-heading)] mb-2">
+            Costos de Transporte
+          </h1>
+          <p className="text-[color:var(--color-muted)]">
+            Gestiona los costos de transporte para servicios a domicilio
+          </p>
         </div>
 
         {/* Error Alert */}
@@ -195,20 +199,27 @@ export default function TransportCostsPage() {
             <table className="min-w-full divide-y divide-[color:var(--color-border)]">
               <thead className="bg-[color:var(--color-surface-elevated)]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">Distrito</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">Costo</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">Estado</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">Notas</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">Acciones</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
+                    Distrito
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
+                    Costo
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
+                    Estado
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
+                    Notas
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
+                    Acciones
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-[color:var(--color-surface)] divide-y divide-[color:var(--color-border)]">
                 {transportCosts.length === 0 ? (
                   <tr>
-                    <td
-                      colSpan={5}
-                      className="px-6 py-12 text-center text-gray-500"
-                    >
+                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
                       No hay costos de transporte configurados
                     </td>
                   </tr>
@@ -217,7 +228,8 @@ export default function TransportCostsPage() {
                     <tr key={cost.id} className="hover:bg-[color:var(--color-surface-elevated)]">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="inline-flex items-center text-sm font-medium text-[color:var(--color-heading)]">
-                          <MapPin className="w-3.5 h-3.5 mr-1 text-[color:var(--color-muted)]" /> {cost.district}
+                          <MapPin className="w-3.5 h-3.5 mr-1 text-[color:var(--color-muted)]" />{" "}
+                          {cost.district}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -226,7 +238,9 @@ export default function TransportCostsPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full ${cost.isActive ? "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]" : "bg-[color:var(--color-danger)]/15 text-[color:var(--color-danger)]"}`}>
+                        <span
+                          className={`inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full ${cost.isActive ? "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]" : "bg-[color:var(--color-danger)]/15 text-[color:var(--color-danger)]"}`}
+                        >
                           {cost.isActive ? (
                             <CheckCircle className="w-3 h-3 mr-1" />
                           ) : (
@@ -236,7 +250,9 @@ export default function TransportCostsPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-[color:var(--color-on-surface)] max-w-xs truncate">{cost.notes || "-"}</div>
+                        <div className="text-sm text-[color:var(--color-on-surface)] max-w-xs truncate">
+                          {cost.notes || "-"}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex items-center gap-2">
@@ -249,7 +265,9 @@ export default function TransportCostsPage() {
                               <Pencil className="w-5 h-5 text-[color:var(--color-accent-secondary)]" />
                               <span className="sr-only">Editar</span>
                             </button>
-                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-xs bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] shadow-sm opacity-0 group-hover:opacity-100">Editar</div>
+                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-xs bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] shadow-sm opacity-0 group-hover:opacity-100">
+                              Editar
+                            </div>
                           </div>
                           <div className="relative group">
                             <button
@@ -260,7 +278,9 @@ export default function TransportCostsPage() {
                               <Trash2 className="w-5 h-5 text-[color:var(--color-danger)]" />
                               <span className="sr-only">Eliminar</span>
                             </button>
-                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-xs bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] shadow-sm opacity-0 group-hover:opacity-100">Eliminar</div>
+                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-xs bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] shadow-sm opacity-0 group-hover:opacity-100">
+                              Eliminar
+                            </div>
                           </div>
                         </div>
                       </td>
@@ -292,7 +312,9 @@ export default function TransportCostsPage() {
           <ModalBody>
             <form id="transport-costs-form" onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[color:var(--color-muted)] mb-1">Distrito *</label>
+                <label className="block text-sm font-medium text-[color:var(--color-muted)] mb-1">
+                  Distrito *
+                </label>
                 <input
                   type="text"
                   value={formData.district}
@@ -304,7 +326,9 @@ export default function TransportCostsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[color:var(--color-muted)] mb-1">Costo (S/) *</label>
+                <label className="block text-sm font-medium text-[color:var(--color-muted)] mb-1">
+                  Costo (S/) *
+                </label>
                 <input
                   type="number"
                   step="0.01"
@@ -318,7 +342,9 @@ export default function TransportCostsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[color:var(--color-muted)] mb-1">Notas</label>
+                <label className="block text-sm font-medium text-[color:var(--color-muted)] mb-1">
+                  Notas
+                </label>
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
@@ -336,16 +362,29 @@ export default function TransportCostsPage() {
                   onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                   className="rounded border-[color:var(--color-border)] text-[color:var(--color-primary)] focus:ring-[color:var(--color-primary)]"
                 />
-                <label htmlFor="isActive" className="ml-2 text-sm text-[color:var(--color-on-surface)]">Activo</label>
+                <label
+                  htmlFor="isActive"
+                  className="ml-2 text-sm text-[color:var(--color-on-surface)]"
+                >
+                  Activo
+                </label>
               </div>
             </form>
           </ModalBody>
           <ModalFooter>
             <div className="flex gap-3 pt-2 w-full justify-end">
-              <button type="button" onClick={handleCloseModal} className="px-4 py-2 border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] rounded-md hover:bg-[color:var(--color-surface-elevated)]">
+              <button
+                type="button"
+                onClick={handleCloseModal}
+                className="px-4 py-2 border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] rounded-md hover:bg-[color:var(--color-surface-elevated)]"
+              >
                 Cancelar
               </button>
-              <button form="transport-costs-form" type="submit" className="px-4 py-2 bg-[color:var(--color-accent-secondary)] text-[color:var(--color-on-accent-contrast)] rounded-md hover:opacity-90">
+              <button
+                form="transport-costs-form"
+                type="submit"
+                className="px-4 py-2 bg-[color:var(--color-accent-secondary)] text-[color:var(--color-on-accent-contrast)] rounded-md hover:opacity-90"
+              >
                 {editingCost ? "Actualizar" : "Crear"}
               </button>
             </div>

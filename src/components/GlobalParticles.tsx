@@ -1,17 +1,17 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import React from "react";
-import { usePathname } from "next/navigation";
 import {
   Brush,
+  Feather,
+  Flower2,
+  Gem,
+  Palette,
   Sparkles as SparklesIcon,
   Star,
-  Flower2,
-  Feather,
-  Palette,
-  Gem,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
+import type React from "react";
 
 type Particle = {
   x: number;
@@ -182,18 +182,13 @@ export default function GlobalParticles() {
                   y: [0, p.driftY, -p.driftY, 0],
                   scale: [0.96, 1.04, 0.98, 1.02],
                   rotate: [0, 10, -8, 0],
-                  opacity: [
-                    p.opacity * 0.9,
-                    p.opacity,
-                    p.opacity * 0.95,
-                    p.opacity,
-                  ],
+                  opacity: [p.opacity * 0.9, p.opacity, p.opacity * 0.95, p.opacity],
                 }
           }
           transition={{
             duration: p.duration * 2,
             delay: p.delay ?? 0,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             ease: "easeInOut",
           }}
           style={{
@@ -229,7 +224,7 @@ export default function GlobalParticles() {
           transition={{
             duration: s.duration,
             delay: s.delay ?? 0,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             ease: "easeInOut",
           }}
           style={{
@@ -260,18 +255,13 @@ export default function GlobalParticles() {
                   x: [0, icon.driftX, -icon.driftX, 0],
                   y: [0, icon.driftY, -icon.driftY, 0],
                   rotate: [0, 8, -6, 0],
-                  opacity: [
-                    icon.opacity * 0.9,
-                    icon.opacity,
-                    icon.opacity * 0.95,
-                    icon.opacity,
-                  ],
+                  opacity: [icon.opacity * 0.9, icon.opacity, icon.opacity * 0.95, icon.opacity],
                 }
           }
           transition={{
             duration: icon.duration,
             delay: icon.delay ?? 0,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             ease: "easeInOut",
           }}
           style={{
@@ -439,11 +429,7 @@ function getIconSetForPath(pathname: string): IconSpec[] {
   if (pathname.startsWith("/admin")) return [];
 
   // Complaint and review pages: calmer set
-  if (
-    pathname.includes("libro") ||
-    pathname.includes("reclamo") ||
-    pathname.includes("review")
-  ) {
+  if (pathname.includes("libro") || pathname.includes("reclamo") || pathname.includes("review")) {
     return [
       {
         Icon: Feather,

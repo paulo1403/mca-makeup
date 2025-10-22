@@ -1,5 +1,5 @@
-import { format, toZonedTime, fromZonedTime } from "date-fns-tz";
-import { parseISO, isValid } from "date-fns";
+import { isValid, parseISO } from "date-fns";
+import { format, fromZonedTime, toZonedTime } from "date-fns-tz";
 import { es } from "date-fns/locale";
 
 // Zona horaria de Perú - usar variable personalizada para Vercel
@@ -119,12 +119,12 @@ export function formatTimeRange(timeRange: string): string {
         return trimmedTime;
       }
 
-      const hours = parseInt(timeParts[0], 10);
-      const minutes = parseInt(timeParts[1], 10);
+      const hours = Number.parseInt(timeParts[0], 10);
+      const minutes = Number.parseInt(timeParts[1], 10);
 
       if (
-        isNaN(hours) ||
-        isNaN(minutes) ||
+        Number.isNaN(hours) ||
+        Number.isNaN(minutes) ||
         hours < 0 ||
         hours > 23 ||
         minutes < 0 ||
@@ -212,13 +212,11 @@ export function formatDateTimeForAdmin(date: Date): string {
 /**
  * Debug: Muestra información de una fecha en diferentes zonas horarias
  */
-export function debugDate(date: Date, label: string = "Date"): void {
+export function debugDate(date: Date, label = "Date"): void {
   if (process.env.NODE_ENV === "development") {
     console.log(`🕐 ${label}:`);
     console.log(`  UTC: ${date.toISOString()}`);
-    console.log(
-      `  Peru: ${format(toPeruTime(date), "yyyy-MM-dd HH:mm:ss zzz", { locale: es })}`,
-    );
+    console.log(`  Peru: ${format(toPeruTime(date), "yyyy-MM-dd HH:mm:ss zzz", { locale: es })}`);
     console.log(`  Local: ${date.toLocaleString()}`);
   }
 }

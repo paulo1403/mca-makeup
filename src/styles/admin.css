@@ -74,7 +74,7 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
-  
+
   .admin-nav-mobile::-webkit-scrollbar {
     display: none;
   }
@@ -87,7 +87,7 @@
 }
 
 .nav-item::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -109,7 +109,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {

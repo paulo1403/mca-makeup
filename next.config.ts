@@ -7,9 +7,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'marcelacorderomakeup.my.canva.site',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "marcelacorderomakeup.my.canva.site",
+        pathname: "/**",
       },
     ],
   },

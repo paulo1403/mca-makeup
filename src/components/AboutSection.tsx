@@ -1,22 +1,23 @@
 "use client";
 
-import React, { useRef } from "react";
-import Image from "next/image";
+import { motion, useInView } from "framer-motion";
 import {
-  User,
-  Heart,
+  Award,
   Calendar,
-  MapPin,
+  CheckCircle,
+  Heart,
   Instagram,
   Mail,
+  MapPin,
   Phone,
   Sparkles,
-  CheckCircle,
-  Award,
+  User,
 } from "lucide-react";
-import { motion, useInView } from "framer-motion";
-import Typography from "./ui/Typography";
+import Image from "next/image";
+import type React from "react";
+import { useRef } from "react";
 import Button from "./ui/Button";
+import Typography from "./ui/Typography";
 
 type Specialty = {
   id: string;
@@ -50,7 +51,7 @@ export default function AboutSection() {
     <section
       id="about"
       className="hidden sm:block py-10 sm:py-20 about-section relative overflow-hidden"
-      style={{ scrollMarginTop: '120px' }}
+      style={{ scrollMarginTop: "120px" }}
       ref={sectionRef}
     >
       {/* Elementos decorativos de fondo */}
@@ -130,25 +131,19 @@ export default function AboutSection() {
                 <div className="text-xl sm:text-2xl font-bold text-[color:var(--color-primary)]">
                   8+
                 </div>
-                <div className="text-xs text-[color:var(--color-body)]">
-                  Años
-                </div>
+                <div className="text-xs text-[color:var(--color-body)]">Años</div>
               </div>
               <div className="text-center p-3 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
                 <div className="text-xl sm:text-2xl font-bold text-[color:var(--color-primary)]">
                   370+
                 </div>
-                <div className="text-xs text-[color:var(--color-body)]">
-                  Clientas
-                </div>
+                <div className="text-xs text-[color:var(--color-body)]">Clientas</div>
               </div>
               <div className="text-center p-3 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
                 <div className="text-xl sm:text-2xl font-bold text-[color:var(--color-primary)]">
                   5.0
                 </div>
-                <div className="text-xs text-[color:var(--color-body)]">
-                  Rating
-                </div>
+                <div className="text-xs text-[color:var(--color-body)]">Rating</div>
               </div>
             </div>
 
@@ -157,9 +152,7 @@ export default function AboutSection() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() =>
-                  window.open("https://wa.me/51989164990", "_blank")
-                }
+                onClick={() => window.open("https://wa.me/51989164990", "_blank")}
                 className="flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-colors"
               >
                 <Phone className="w-4 h-4" />
@@ -169,10 +162,7 @@ export default function AboutSection() {
                 variant="ghost"
                 size="sm"
                 onClick={() =>
-                  window.open(
-                    "https://www.instagram.com/marcelacorderobeauty/",
-                    "_blank"
-                  )
+                  window.open("https://www.instagram.com/marcelacorderobeauty/", "_blank")
                 }
                 className="hidden sm:inline-flex px-6 py-3 rounded-full border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-colors"
               >
@@ -203,11 +193,10 @@ export default function AboutSection() {
                 variant="p"
                 className="text-[color:var(--color-body)] mb-4 leading-relaxed"
               >
-                Creo que cada mujer tiene una belleza única que merece ser
-                realzada. Mi especialidad es crear looks que resalten tus
-                mejores rasgos sin ocultar tu esencia, utilizando técnicas de
-                maquillaje de alta definición que garantizan un resultado
-                impecable tanto en persona como en fotografía.
+                Creo que cada mujer tiene una belleza única que merece ser realzada. Mi especialidad
+                es crear looks que resalten tus mejores rasgos sin ocultar tu esencia, utilizando
+                técnicas de maquillaje de alta definición que garantizan un resultado impecable
+                tanto en persona como en fotografía.
               </Typography>
 
               <Typography
@@ -215,9 +204,9 @@ export default function AboutSection() {
                 variant="p"
                 className="text-[color:var(--color-body)] leading-relaxed"
               >
-                Con más de 8 años de experiencia y más de 370 clientas
-                satisfechas, he perfeccionado mi arte para asegurar que te
-                sientas increíblemente hermosa en tus momentos más importantes.
+                Con más de 8 años de experiencia y más de 370 clientas satisfechas, he perfeccionado
+                mi arte para asegurar que te sientas increíblemente hermosa en tus momentos más
+                importantes.
               </Typography>
             </div>
 
@@ -237,9 +226,7 @@ export default function AboutSection() {
                     key={specialty.id}
                     className="flex items-center gap-2 px-4 py-2 rounded-full bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20"
                   >
-                    <div className="text-[color:var(--color-primary)]">
-                      {specialty.icon}
-                    </div>
+                    <div className="text-[color:var(--color-primary)]">{specialty.icon}</div>
                     <span className="text-sm font-medium text-[color:var(--color-heading)]">
                       {specialty.name}
                     </span>
@@ -273,17 +260,17 @@ export default function AboutSection() {
                 onClick={() => {
                   const element = document.querySelector("#contacto");
                   if (element) {
-                    const header = document.querySelector('header');
+                    const header = document.querySelector("header");
                     const headerHeight = header ? header.offsetHeight : 80;
                     const isMobile = window.innerWidth < 768;
                     const extraMargin = isMobile ? 60 : 30;
-                    
+
                     const elementPosition = element.getBoundingClientRect().top + window.scrollY;
                     const offsetPosition = elementPosition - headerHeight - extraMargin;
-                    
+
                     window.scrollTo({
                       top: offsetPosition,
-                      behavior: "smooth"
+                      behavior: "smooth",
                     });
                   }
                 }}
@@ -296,10 +283,7 @@ export default function AboutSection() {
                 variant="ghost"
                 size="lg"
                 onClick={() =>
-                  window.open(
-                    "https://www.instagram.com/marcelacorderobeauty/",
-                    "_blank"
-                  )
+                  window.open("https://www.instagram.com/marcelacorderobeauty/", "_blank")
                 }
                 className="hidden sm:inline-flex px-6 py-3 rounded-full border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-colors"
               >
@@ -319,9 +303,7 @@ export default function AboutSection() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
             <MapPin className="w-4 h-4 text-[color:var(--color-primary)]" />
-            <span className="text-sm text-[color:var(--color-body)]">
-              Pueblo Libre, Lima, Perú
-            </span>
+            <span className="text-sm text-[color:var(--color-body)]">Pueblo Libre, Lima, Perú</span>
           </div>
         </motion.div>
       </div>

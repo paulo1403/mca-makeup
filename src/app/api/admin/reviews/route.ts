@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import type { ReviewStatus } from "@prisma/client";
+import { getServerSession } from "next-auth";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { ReviewStatus } from "@prisma/client";
 
 const updateReviewSchema = z.object({
   id: z.string(),
@@ -18,16 +18,13 @@ export async function GET(request: NextRequest) {
     const session = await getServerSession(authOptions);
 
     if (!session || session.user?.role !== "ADMIN") {
-      return NextResponse.json(
-        { success: false, error: "No autorizado" },
-        { status: 401 },
-      );
+      return NextResponse.json({ success: false, error: "No autorizado" }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "10");
+    const page = Number.parseInt(searchParams.get("page") || "1");
+    const limit = Number.parseInt(searchParams.get("limit") || "10");
     const skip = (page - 1) * limit;
 
     const where: {
@@ -95,10 +92,7 @@ export async function PUT(request: NextRequest) {
     const session = await getServerSession(authOptions);
 
     if (!session || session.user?.role !== "ADMIN") {
-      return NextResponse.json(
-        { success: false, error: "No autorizado" },
-        { status: 401 },
-      );
+      return NextResponse.json({ success: false, error: "No autorizado" }, { status: 401 });
     }
 
     const body = await request.json();

@@ -1,4 +1,4 @@
-import { type DashboardStats } from '@/hooks/useDashboardStats';
+import type { DashboardStats } from "@/hooks/useDashboardStats";
 
 interface StatusSummaryProps {
   stats: DashboardStats;
@@ -7,32 +7,32 @@ interface StatusSummaryProps {
 export default function StatusSummary({ stats }: StatusSummaryProps) {
   const summaryItems = [
     {
-      label: 'Pendientes de revisar',
+      label: "Pendientes de revisar",
       value: stats.pendingAppointments,
-      color: 'text-amber-600',
-      bgColor: 'bg-[color:var(--color-surface-elevated)]',
-      borderColor: 'border-[color:var(--color-border)]/30',
+      color: "text-amber-600",
+      bgColor: "bg-[color:var(--color-surface-elevated)]",
+      borderColor: "border-[color:var(--color-border)]/30",
     },
     {
-      label: 'Confirmadas',
+      label: "Confirmadas",
       value: stats.confirmedAppointments,
-      color: 'text-emerald-600',
-      bgColor: 'bg-[color:var(--color-surface-elevated)]',
-      borderColor: 'border-[color:var(--color-border)]/30',
+      color: "text-emerald-600",
+      bgColor: "bg-[color:var(--color-surface-elevated)]",
+      borderColor: "border-[color:var(--color-border)]/30",
     },
     {
-      label: 'Completadas',
+      label: "Completadas",
       value: stats.completedAppointments,
-      color: 'text-blue-600',
-      bgColor: 'bg-[color:var(--color-surface-elevated)]',
-      borderColor: 'border-[color:var(--color-border)]/30',
+      color: "text-blue-600",
+      bgColor: "bg-[color:var(--color-surface-elevated)]",
+      borderColor: "border-[color:var(--color-border)]/30",
     },
     {
-      label: 'Canceladas',
+      label: "Canceladas",
       value: stats.cancelledAppointments,
-      color: 'text-red-600',
-      bgColor: 'bg-[color:var(--color-surface-elevated)]',
-      borderColor: 'border-[color:var(--color-border)]/30',
+      color: "text-red-600",
+      bgColor: "bg-[color:var(--color-surface-elevated)]",
+      borderColor: "border-[color:var(--color-border)]/30",
     },
   ];
 

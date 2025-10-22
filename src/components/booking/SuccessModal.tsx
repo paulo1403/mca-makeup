@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
-import { ShieldCheck, PartyPopper, Sparkles, Calendar, MapPin, CreditCard } from "lucide-react";
-import Typography from "../ui/Typography";
-import Button from "../ui/Button";
 import Modal, { ModalHeader, ModalBody, ModalFooter } from "@/components/ui/Modal";
+import { Calendar, CreditCard, MapPin, PartyPopper, ShieldCheck, Sparkles } from "lucide-react";
+import React from "react";
+import Button from "../ui/Button";
+import Typography from "../ui/Typography";
 
 type SuccessModalProps = {
   open: boolean;
@@ -48,7 +48,13 @@ const useTranslations = () => {
   };
 };
 
-export default function SuccessModal({ open, onClose, clientName, pricing, serviceNames }: SuccessModalProps) {
+export default function SuccessModal({
+  open,
+  onClose,
+  clientName,
+  pricing,
+  serviceNames,
+}: SuccessModalProps) {
   const { t } = useTranslations();
 
   return (
@@ -60,7 +66,11 @@ export default function SuccessModal({ open, onClose, clientName, pricing, servi
               <ShieldCheck className="w-6 h-6 text-white" />
             </div>
             <div>
-              <Typography as="h3" variant="h3" className="text-[color:var(--color-heading)] font-serif text-xl">
+              <Typography
+                as="h3"
+                variant="h3"
+                className="text-[color:var(--color-heading)] font-serif text-xl"
+              >
                 {t("title")}
               </Typography>
               <div className="flex items-center gap-2 mt-1">
@@ -93,7 +103,11 @@ export default function SuccessModal({ open, onClose, clientName, pricing, servi
             <div className="p-4 rounded-xl bg-[color:var(--color-primary)]/5 border border-[color:var(--color-primary)]/20">
               <div className="flex items-center gap-2 mb-3">
                 <Sparkles className="w-4 h-4 text-[color:var(--color-primary)]" />
-                <Typography as="h4" variant="h4" className="text-[color:var(--color-heading)] font-medium text-sm">
+                <Typography
+                  as="h4"
+                  variant="h4"
+                  className="text-[color:var(--color-heading)] font-medium text-sm"
+                >
                   {t("quickSummary")}
                 </Typography>
               </div>
@@ -102,7 +116,11 @@ export default function SuccessModal({ open, onClose, clientName, pricing, servi
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 items-start">
                   <div className="flex items-center gap-2">
                     <CreditCard className="w-4 h-4 text-[color:var(--color-body)]/50" />
-                    <Typography as="span" variant="small" className="text-[color:var(--color-body)] text-xs">
+                    <Typography
+                      as="span"
+                      variant="small"
+                      className="text-[color:var(--color-body)] text-xs"
+                    >
                       {t("services")}
                     </Typography>
                   </div>
@@ -113,7 +131,7 @@ export default function SuccessModal({ open, onClose, clientName, pricing, servi
                       className="text-[color:var(--color-heading)] font-medium text-xs break-words whitespace-pre-wrap"
                       title={(serviceNames || []).join(", ")}
                     >
-                      {(serviceNames && serviceNames.length > 0)
+                      {serviceNames && serviceNames.length > 0
                         ? serviceNames.join(", ")
                         : `S/ ${Number(pricing.servicePrice || 0).toFixed(2)}`}
                     </Typography>
@@ -124,11 +142,19 @@ export default function SuccessModal({ open, onClose, clientName, pricing, servi
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
                       <MapPin className="w-4 h-4 text-[color:var(--color-body)]/50" />
-                      <Typography as="span" variant="small" className="text-[color:var(--color-body)] text-xs">
+                      <Typography
+                        as="span"
+                        variant="small"
+                        className="text-[color:var(--color-body)] text-xs"
+                      >
                         {t("transport")}
                       </Typography>
                     </div>
-                    <Typography as="span" variant="small" className="text-[color:var(--color-heading)] font-medium text-xs">
+                    <Typography
+                      as="span"
+                      variant="small"
+                      className="text-[color:var(--color-heading)] font-medium text-xs"
+                    >
                       S/ {Number(pricing.transportCost || 0).toFixed(2)}
                     </Typography>
                   </div>
@@ -138,11 +164,19 @@ export default function SuccessModal({ open, onClose, clientName, pricing, servi
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-[color:var(--color-body)]/50" />
-                      <Typography as="span" variant="small" className="text-[color:var(--color-body)] text-xs">
+                      <Typography
+                        as="span"
+                        variant="small"
+                        className="text-[color:var(--color-body)] text-xs"
+                      >
                         {t("nightShift")}
                       </Typography>
                     </div>
-                    <Typography as="span" variant="small" className="text-[color:var(--color-heading)] font-medium text-xs">
+                    <Typography
+                      as="span"
+                      variant="small"
+                      className="text-[color:var(--color-heading)] font-medium text-xs"
+                    >
                       S/ {Number(pricing.nightShiftCost || 0).toFixed(2)}
                     </Typography>
                   </div>
@@ -150,10 +184,18 @@ export default function SuccessModal({ open, onClose, clientName, pricing, servi
 
                 <div className="border-t border-[color:var(--color-border)]/20 pt-2 mt-2">
                   <div className="flex justify-between items-center">
-                    <Typography as="span" variant="small" className="text-[color:var(--color-heading)] font-medium">
+                    <Typography
+                      as="span"
+                      variant="small"
+                      className="text-[color:var(--color-heading)] font-medium"
+                    >
                       {t("total")}
                     </Typography>
-                    <Typography as="span" variant="h3" className="text-[color:var(--color-primary)] font-bold text-lg">
+                    <Typography
+                      as="span"
+                      variant="h3"
+                      className="text-[color:var(--color-primary)] font-bold text-lg"
+                    >
                       S/ {Number(pricing.totalPrice || 0).toFixed(2)}
                     </Typography>
                   </div>
@@ -167,7 +209,11 @@ export default function SuccessModal({ open, onClose, clientName, pricing, servi
               <div className="w-6 h-6 rounded-full bg-[color:var(--color-primary)]/20 flex items-center justify-center">
                 <Calendar className="w-3 h-3 text-[color:var(--color-primary)]" />
               </div>
-              <Typography as="h4" variant="h4" className="text-[color:var(--color-heading)] font-medium text-sm">
+              <Typography
+                as="h4"
+                variant="h4"
+                className="text-[color:var(--color-heading)] font-medium text-sm"
+              >
                 {t("nextSteps")}
               </Typography>
             </div>
@@ -177,21 +223,27 @@ export default function SuccessModal({ open, onClose, clientName, pricing, servi
                 <div className="w-5 h-5 rounded-full bg-[color:var(--color-primary)]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <span className="text-[color:var(--color-primary)] font-bold text-xs">1</span>
                 </div>
-                <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-xs">{t("step1")}</Typography>
+                <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-xs">
+                  {t("step1")}
+                </Typography>
               </div>
 
               <div className="flex items-start gap-2">
                 <div className="w-5 h-5 rounded-full bg-[color:var(--color-primary)]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <span className="text-[color:var(--color-primary)] font-bold text-xs">2</span>
                 </div>
-                <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-xs">{t("step2")}</Typography>
+                <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-xs">
+                  {t("step2")}
+                </Typography>
               </div>
 
               <div className="flex items-start gap-2">
                 <div className="w-5 h-5 rounded-full bg-[color:var(--color-primary)]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <span className="text-[color:var(--color-primary)] font-bold text-xs">3</span>
                 </div>
-                <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-xs">{t("step3")}</Typography>
+                <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-xs">
+                  {t("step3")}
+                </Typography>
               </div>
             </div>
           </div>
@@ -200,8 +252,17 @@ export default function SuccessModal({ open, onClose, clientName, pricing, servi
 
       <ModalFooter>
         <div className="flex flex-col sm:flex-row gap-3 w-full">
-          <Button variant="ghost" size="md" onClick={onClose} className="flex-1">{t("closeButton")}</Button>
-          <Button variant="primary" size="md" onClick={() => window.open("/terminos-condiciones", "_blank")} className="flex-1">{t("viewTerms")}</Button>
+          <Button variant="ghost" size="md" onClick={onClose} className="flex-1">
+            {t("closeButton")}
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => window.open("/terminos-condiciones", "_blank")}
+            className="flex-1"
+          >
+            {t("viewTerms")}
+          </Button>
         </div>
       </ModalFooter>
     </Modal>

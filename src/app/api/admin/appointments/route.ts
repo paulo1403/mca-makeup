@@ -1,18 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { sendEmailToAdmins, emailTemplates } from "@/lib/serverEmail";
-import {
-  parseDateFromString,
-  debugDate,
-} from "@/utils/dateUtils";
+import { emailTemplates, sendEmailToAdmins } from "@/lib/serverEmail";
+import { debugDate, parseDateFromString } from "@/utils/dateUtils";
+import { type NextRequest, NextResponse } from "next/server";
 
 // GET /api/admin/appointments - Get all appointments
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const status = searchParams.get("status");
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "10");
+    const page = Number.parseInt(searchParams.get("page") || "1");
+    const limit = Number.parseInt(searchParams.get("limit") || "10");
     const search = searchParams.get("search");
     const idParam = searchParams.get("id");
 
@@ -55,12 +52,14 @@ export async function GET(request: NextRequest) {
       });
 
       const formatted = appointment
-        ? [{
-            ...appointment,
-            appointmentDate: appointment.appointmentDate.toISOString(),
-            createdAt: appointment.createdAt.toISOString(),
-            updatedAt: appointment.updatedAt.toISOString(),
-          }]
+        ? [
+            {
+              ...appointment,
+              appointmentDate: appointment.appointmentDate.toISOString(),
+              createdAt: appointment.createdAt.toISOString(),
+              updatedAt: appointment.updatedAt.toISOString(),
+            },
+          ]
         : [];
 
       return NextResponse.json({
@@ -201,10 +200,7 @@ export async function POST(request: NextRequest) {
       parsedAppointmentDate = parseDateFromString(appointmentDate);
       debugDate(parsedAppointmentDate, "Admin creating appointment date");
     } catch {
-      return NextResponse.json(
-        { success: false, message: "Invalid date format" },
-        { status: 400 },
-      );
+      return NextResponse.json({ success: false, message: "Invalid date format" }, { status: 400 });
     }
 
     // Create appointment
@@ -251,10 +247,7 @@ export async function PATCH(request: NextRequest) {
     // Validate status
     const validStatuses = ["PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"];
     if (!validStatuses.includes(status)) {
-      return NextResponse.json(
-        { success: false, message: "Invalid status" },
-        { status: 400 },
-      );
+      return NextResponse.json({ success: false, message: "Invalid status" }, { status: 400 });
     }
 
     // Update appointment status
@@ -315,14 +308,14 @@ export async function PUT(request: NextRequest) {
           // Send email notification to all admins about confirmation
           const confirmedTemplate = emailTemplates.appointmentConfirmed(
             appointment.clientName,
-            appointment.serviceType || 'Servicio',
-            appointment.appointmentDate.toLocaleDateString('es-ES'),
+            appointment.serviceType || "Servicio",
+            appointment.appointmentDate.toLocaleDateString("es-ES"),
             appointment.appointmentTime,
             appointment.locationType,
             appointment.district || undefined,
             appointment.address || undefined,
             appointment.addressReference || undefined,
-            `CITA CONFIRMADA - ${appointment.additionalNotes || 'Sin notas adicionales'}`
+            `CITA CONFIRMADA - ${appointment.additionalNotes || "Sin notas adicionales"}`,
           );
 
           await sendEmailToAdmins({
@@ -334,9 +327,9 @@ export async function PUT(request: NextRequest) {
           // Send email notification to all admins about cancellation
           const cancelledTemplate = emailTemplates.appointmentCancelled(
             appointment.clientName,
-            appointment.serviceType || 'Servicio',
-            appointment.appointmentDate.toLocaleDateString('es-ES'),
-            appointment.appointmentTime
+            appointment.serviceType || "Servicio",
+            appointment.appointmentDate.toLocaleDateString("es-ES"),
+            appointment.appointmentTime,
           );
 
           await sendEmailToAdmins({

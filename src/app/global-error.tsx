@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from 'react';
-import ErrorPage from '@/components/ErrorPage';
-import QueryProvider from '@/providers/QueryProvider';
+import ErrorPage from "@/components/ErrorPage";
+import QueryProvider from "@/providers/QueryProvider";
+import { useEffect } from "react";
 
 export default function GlobalError({
   error,
@@ -13,7 +13,7 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     // Log del error en consola para debugging
-    console.error('Global error:', error);
+    console.error("Global error:", error);
   }, [error]);
 
   return (

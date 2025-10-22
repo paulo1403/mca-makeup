@@ -1,18 +1,11 @@
 "use client";
+import InputField from "@/components/booking/InputField";
+import Typography from "@/components/ui/Typography";
+import type { BookingData } from "@/lib/bookingSchema";
+import { AnimatePresence, motion } from "framer-motion";
+import { CheckCircle, Lock, Mail, Phone, User } from "lucide-react";
 import React, { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  User,
-  Phone,
-  Mail,
-  Lock,
-  CheckCircle,
-  
-} from "lucide-react";
-import type { BookingData } from "@/lib/bookingSchema";
-import Typography from "@/components/ui/Typography";
-import InputField from "@/components/booking/InputField";
 import "@/styles/components/step1.css";
 
 function formatPhone(value: string) {
@@ -20,12 +13,8 @@ function formatPhone(value: string) {
   if (v.startsWith("+51")) {
     const digits = v.substring(3);
     if (digits.length <= 3) return `+51 ${digits}`;
-    if (digits.length <= 6)
-      return `+51 ${digits.substring(0, 3)} ${digits.substring(3)}`;
-    return `+51 ${digits.substring(0, 3)} ${digits.substring(
-      3,
-      6
-    )} ${digits.substring(6, 9)}`;
+    if (digits.length <= 6) return `+51 ${digits.substring(0, 3)} ${digits.substring(3)}`;
+    return `+51 ${digits.substring(0, 3)} ${digits.substring(3, 6)} ${digits.substring(6, 9)}`;
   }
   if (v.startsWith("9") && !v.startsWith("+")) {
     if (v.length <= 3) return v;
@@ -62,11 +51,7 @@ export default function Step1_PersonalInfo() {
         </div>
 
         <div className="space-y-2">
-          <Typography
-            as="h3"
-            variant="h3"
-            className="text-[color:var(--color-heading)] font-serif"
-          >
+          <Typography as="h3" variant="h3" className="text-[color:var(--color-heading)] font-serif">
             Información Personal
           </Typography>
           <Typography
@@ -74,8 +59,7 @@ export default function Step1_PersonalInfo() {
             variant="small"
             className="text-[color:var(--color-body)] max-w-md mx-auto"
           >
-            Comparte tus datos para que podamos crear la experiencia perfecta
-            para ti
+            Comparte tus datos para que podamos crear la experiencia perfecta para ti
           </Typography>
         </div>
       </div>
@@ -170,14 +154,10 @@ export default function Step1_PersonalInfo() {
               transition={{ duration: 0.3 }}
               className="mt-4 p-4 bg-[color:var(--color-surface)]/50 rounded-xl border border-[color:var(--color-border)]/20 text-left"
             >
-              <Typography
-                as="p"
-                variant="caption"
-                className="text-[color:var(--color-body)]"
-              >
-                Tus datos personales son tratados con la máxima confidencialidad
-                y solo se utilizan para gestionar tu cita. No compartimos tu
-                información con terceros sin tu consentimiento explícito.
+              <Typography as="p" variant="caption" className="text-[color:var(--color-body)]">
+                Tus datos personales son tratados con la máxima confidencialidad y solo se utilizan
+                para gestionar tu cita. No compartimos tu información con terceros sin tu
+                consentimiento explícito.
               </Typography>
             </motion.div>
           )}
