@@ -63,11 +63,11 @@ export default function ErrorPage({
   const getErrorIcon = () => {
     if (statusCode >= 500) {
       return <AlertTriangle className="w-16 h-16 text-red-500" />;
-    } else if (statusCode >= 400) {
-      return <AlertTriangle className="w-16 h-16 text-yellow-500" />;
-    } else {
-      return <AlertTriangle className="w-16 h-16 text-blue-500" />;
     }
+    if (statusCode >= 400) {
+      return <AlertTriangle className="w-16 h-16 text-yellow-500" />;
+    }
+    return <AlertTriangle className="w-16 h-16 text-blue-500" />;
   };
 
   if (errorReportMutation.isSuccess) {
@@ -347,7 +347,7 @@ export default function ErrorPage({
                 >
                   {errorReportMutation.isPending ? (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
                       <span>Enviando...</span>
                     </>
                   ) : (

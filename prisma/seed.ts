@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import dotenv from "dotenv";
 
 if (fs.existsSync(".env.development")) {
@@ -562,7 +562,7 @@ async function main() {
   console.log(`   • ${regularAvailability.length} horarios regulares`);
   console.log(`   • ${specialDates.length} fechas especiales`);
   console.log(`   • ${systemSettings.length} configuraciones`);
-  console.log(`   • ~120 slots de disponibilidad (30 días)`);
+  console.log("   • ~120 slots de disponibilidad (30 días)");
   console.log(`   • ${systemNotifications.length} notificaciones`);
   console.log("\n🎉 La base de datos está lista para usar!");
 }

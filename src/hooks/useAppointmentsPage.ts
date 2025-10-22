@@ -99,7 +99,7 @@ export const useAppointmentsPage = () => {
     if (params.has("showDetail") || params.has("highlightId")) {
       params.delete("showDetail");
       params.delete("highlightId");
-      const newUrl = `${window.location.pathname}${params.toString() ? "?" + params.toString() : ""}`;
+      const newUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ""}`;
       router.replace(newUrl);
     }
   };

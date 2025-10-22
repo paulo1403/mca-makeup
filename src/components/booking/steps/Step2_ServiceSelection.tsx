@@ -122,8 +122,8 @@ export default function Step2_ServiceSelection() {
   const categories = Object.keys(grouped);
 
   // Filter services by search query (name or description) and category
-  const normalized = (s: string) => s.trim().toLowerCase();
   const filteredGrouped = useMemo(() => {
+    const normalize = (s: string) => s.trim().toLowerCase();
     let result = grouped;
 
     // Filter by category first
@@ -133,16 +133,16 @@ export default function Step2_ServiceSelection() {
 
     // Then filter by search query
     if (!query.trim()) return result;
-    const q = normalized(query);
+    const q = normalize(query);
     const out: Record<string, (typeof grouped)[string]> = {};
-    Object.entries(result).forEach(([cat, services]) => {
+    for (const [cat, services] of Object.entries(result)) {
       const matched = services.filter((s) => {
-        const name = normalized(s.name);
-        const desc = normalized(s.description ?? "");
+        const name = normalize(s.name);
+        const desc = normalize(s.description ?? "");
         return name.includes(q) || desc.includes(q);
       });
       if (matched.length > 0) out[cat] = matched;
-    });
+    }
     return out;
   }, [grouped, query, selectedCategory]);
 
@@ -191,7 +191,7 @@ export default function Step2_ServiceSelection() {
   if (isLoading)
     return (
       <div className="flex justify-center items-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[color:var(--color-primary)]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[color:var(--color-primary)]" />
         <span className="ml-3 text-[color:var(--color-body)]">{t("loading")}</span>
       </div>
     );
@@ -239,7 +239,11 @@ export default function Step2_ServiceSelection() {
         {/* Barra de búsqueda mejorada para mobile */}
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Search className="w-5 h-5 text-[color:var(--color-body)]/50" />
+            <Search
+              className="w-5 h-5 text-[color:var(--color-body)]/50"
+              aria-hidden="true"
+              focusable="false"
+            />
           </div>
           <input
             type="search"
@@ -254,6 +258,7 @@ export default function Step2_ServiceSelection() {
           <AnimatePresence>
             {query && (
               <motion.button
+                type="button"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
@@ -271,17 +276,26 @@ export default function Step2_ServiceSelection() {
         {/* Filtros de categoría optimizados */}
         <div className="flex items-center justify-between">
           <button
+            type="button"
             onClick={() => setShowFilters(!showFilters)}
             className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-secondary)] transition-colors"
             aria-label={t("filterLabel")}
             aria-expanded={showFilters}
           >
-            <Filter className="w-4 h-4 text-[color:var(--color-heading)]" />
+            <Filter
+              className="w-4 h-4 text-[color:var(--color-heading)]"
+              aria-hidden="true"
+              focusable="false"
+            />
             <span className="text-sm font-medium text-[color:var(--color-heading)]">
               {t("categories")}
             </span>
             <motion.div animate={{ rotate: showFilters ? 180 : 0 }} transition={{ duration: 0.2 }}>
-              <ChevronDown className="w-4 h-4 text-[color:var(--color-heading)]" />
+              <ChevronDown
+                className="w-4 h-4 text-[color:var(--color-heading)]"
+                aria-hidden="true"
+                focusable="false"
+              />
             </motion.div>
           </button>
 
@@ -290,7 +304,11 @@ export default function Step2_ServiceSelection() {
             className="flex items-center gap-2 px-3 py-1.5 bg-[color:var(--color-primary)]/10 rounded-lg"
             aria-label={t("selectedServicesLabel")}
           >
-            <Users className="w-4 h-4 text-[color:var(--color-primary)]" />
+            <Users
+              className="w-4 h-4 text-[color:var(--color-primary)]"
+              aria-hidden="true"
+              focusable="false"
+            />
             <span className="text-sm font-medium text-[color:var(--color-primary)]">
               {formatCount(selectedArr.length, t("service"), t("services"))}
             </span>
@@ -309,6 +327,7 @@ export default function Step2_ServiceSelection() {
             >
               <div className="flex flex-wrap gap-2 p-3 bg-[color:var(--color-surface)] rounded-lg border border-[color:var(--color-border)]">
                 <button
+                  type="button"
                   onClick={() => setSelectedCategory(null)}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                     !selectedCategory
@@ -320,6 +339,7 @@ export default function Step2_ServiceSelection() {
                 </button>
                 {categories.map((category) => (
                   <button
+                    type="button"
                     key={category}
                     onClick={() => setSelectedCategory(category)}
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
@@ -360,6 +380,7 @@ export default function Step2_ServiceSelection() {
                 )}
               </div>
               <button
+                type="button"
                 onClick={clearFilters}
                 className="text-xs text-[color:var(--color-primary)] hover:underline"
                 aria-label={t("clearFilterLabel")}
@@ -381,11 +402,14 @@ export default function Step2_ServiceSelection() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
             className="text-center py-12"
-            role="status"
             aria-live="polite"
           >
             <div className="w-16 h-16 bg-[color:var(--color-surface)]/50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Search className="w-8 h-8 text-[color:var(--color-body)]/50" />
+              <Search
+                className="w-8 h-8 text-[color:var(--color-body)]/50"
+                aria-hidden="true"
+                focusable="false"
+              />
             </div>
             <Typography
               as="p"
@@ -441,7 +465,11 @@ export default function Step2_ServiceSelection() {
       >
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[color:var(--color-primary)]/20 flex items-center justify-center">
-            <Clock className="w-4 h-4 text-[color:var(--color-primary)]" />
+            <Clock
+              className="w-4 h-4 text-[color:var(--color-primary)]"
+              aria-hidden="true"
+              focusable="false"
+            />
           </div>
           <div>
             <Typography

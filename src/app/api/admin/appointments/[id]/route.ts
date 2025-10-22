@@ -1,4 +1,4 @@
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { emailTemplates, sendEmail } from "@/lib/serverEmail";
 import { type NextRequest, NextResponse } from "next/server";

@@ -55,8 +55,8 @@ export default function AboutSection() {
       ref={sectionRef}
     >
       {/* Elementos decorativos de fondo */}
-      <div className="hidden sm:block absolute top-10 right-10 w-32 h-32 bg-[color:var(--color-primary)]/10 rounded-full filter blur-3xl"></div>
-      <div className="hidden sm:block absolute bottom-10 left-10 w-40 h-40 bg-[color:var(--color-accent)]/10 rounded-full filter blur-3xl"></div>
+      <div className="hidden sm:block absolute top-10 right-10 w-32 h-32 bg-[color:var(--color-primary)]/10 rounded-full filter blur-3xl" />
+      <div className="hidden sm:block absolute bottom-10 left-10 w-40 h-40 bg-[color:var(--color-accent)]/10 rounded-full filter blur-3xl" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-12 max-w-6xl relative z-10">
         <motion.div

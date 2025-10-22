@@ -61,14 +61,14 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
               </div>
               <div className="bg-[color:var(--color-surface)] p-3 rounded-lg border border-[color:var(--color-border)]">
                 <p className="text-sm sm:text-base text-[color:var(--color-on-surface)] font-medium mb-2">
-                  {appointment.location && appointment.location.includes("Studio")
+                  {appointment.location?.includes("Studio")
                     ? "En estudio - Av. Bolívar 1073, Pueblo Libre"
                     : "Servicio a domicilio"}
                 </p>
                 {appointment.address && (
                   <div className="space-y-3">
                     <p className="text-sm text-[color:var(--color-muted)] flex items-start space-x-2">
-                      <span className="w-2 h-2 bg-[color:var(--color-primary)] rounded-full mt-2 flex-shrink-0"></span>
+                      <span className="w-2 h-2 bg-[color:var(--color-primary)] rounded-full mt-2 flex-shrink-0" />
                       <span className="text-sm">
                         {appointment.address}
                         {appointment.addressReference && ` (${appointment.addressReference})`}
@@ -77,10 +77,11 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                     </p>
                     <div className="grid grid-cols-2 gap-2">
                       <button
+                        type="button"
                         onClick={(event) => {
                           const fullAddress = `${appointment.address}${appointment.district ? `, ${appointment.district}` : ""}, Lima, Perú`;
                           navigator.clipboard.writeText(fullAddress);
-                          const btn = event.target as HTMLButtonElement;
+                          const btn = event.currentTarget;
                           const originalText = btn.textContent;
                           btn.textContent = "✅ Copiado!";
                           setTimeout(() => {
@@ -92,6 +93,7 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                         Copiar Dirección
                       </button>
                       <button
+                        type="button"
                         onClick={() => {
                           const fullAddress = `${appointment.address}${appointment.district ? `, ${appointment.district}` : ""}, Lima, Perú`;
                           const mapsUrl = `https://maps.google.com/maps?q=${encodeURIComponent(fullAddress)}`;
@@ -115,7 +117,7 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
               return (
                 <div className="bg-[color:var(--color-accent)]/6 p-4 rounded-lg border border-[color:var(--color-accent)]/20">
                   <h3 className="text-sm font-semibold text-[color:var(--color-on-surface)] mb-3 flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-[color:var(--color-accent)] rounded-full flex-shrink-0"></div>
+                    <div className="w-4 h-4 bg-[color:var(--color-accent)] rounded-full flex-shrink-0" />
                     <span>Información de Precios</span>
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -137,7 +139,10 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                         </p>
                         {appointment.district && (
                           <div className="text-xs text-[color:var(--color-muted)] mt-1 flex items-center space-x-1">
-                            <div className="w-2 h-2 bg-[color:var(--color-accent)] rounded-full flex-shrink-0"></div>
+                            <div
+                              className="w-2 h-2 bg-[color:var(--color-accent)] rounded-full flex-shrink-0"
+                              aria-hidden="true"
+                            />
                             <span>{appointment.district}</span>
                           </div>
                         )}
@@ -152,7 +157,10 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                           {formatPrice(priceInfo.nightShiftCost)}
                         </p>
                         <div className="text-xs text-[color:var(--color-muted)] mt-1 flex items-center space-x-1">
-                          <div className="w-2 h-2 bg-indigo-500 rounded-full flex-shrink-0"></div>
+                          <div
+                            className="w-2 h-2 bg-indigo-500 rounded-full flex-shrink-0"
+                            aria-hidden="true"
+                          />
                           <span>7:30 PM - 6:00 AM</span>
                         </div>
                       </div>
@@ -192,7 +200,7 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
 
                     return (
                       <div
-                        key={index}
+                        key={line}
                         className="flex items-start space-x-3 p-4 bg-[color:var(--color-surface)] rounded-lg border border-[color:var(--color-border)] shadow-sm"
                       >
                         <div className="flex items-center space-x-2 min-w-0">
@@ -202,6 +210,8 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
+                              aria-hidden="true"
+                              focusable="false"
                             >
                               <path
                                 strokeLinecap="round"
@@ -217,6 +227,8 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
+                              aria-hidden="true"
+                              focusable="false"
                             >
                               <path
                                 strokeLinecap="round"
@@ -236,6 +248,8 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                             <svg
                               className="w-4 h-4 text-[color:var(--color-accent)] flex-shrink-0"
                               fill="none"
+                              aria-hidden="true"
+                              focusable="false"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
                             >
@@ -258,26 +272,28 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                         </div>
                       </div>
                     );
-                  } else {
-                    return (
-                      <div
-                        key={index}
-                        className="flex items-start space-x-3 p-4 bg-[color:var(--color-surface)] rounded-lg border border-[color:var(--color-border)] shadow-sm"
-                      >
-                        <div className="w-2 h-2 bg-[color:var(--color-muted)] rounded-full mt-2 flex-shrink-0"></div>
-                        <p className="text-sm text-[color:var(--color-muted)] leading-relaxed flex-1">
-                          {line.trim()}
-                        </p>
-                      </div>
-                    );
                   }
+                  return (
+                    <div
+                      key={line}
+                      className="flex items-start space-x-3 p-4 bg-[color:var(--color-surface)] rounded-lg border border-[color:var(--color-border)] shadow-sm"
+                    >
+                      <div className="w-2 h-2 bg-[color:var(--color-muted)] rounded-full mt-2 flex-shrink-0" />
+                      <p className="text-sm text-[color:var(--color-muted)] leading-relaxed flex-1">
+                        {line.trim()}
+                      </p>
+                    </div>
+                  );
                 })}
             </div>
           )}
 
           <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 pt-4 border-t border-[color:var(--color-border)]">
             <div className="text-sm font-semibold text-[color:var(--color-on-surface)] flex items-center space-x-2">
-              <div className="w-3 h-3 bg-[color:var(--color-primary)] rounded-full flex-shrink-0"></div>
+              <div
+                className="w-3 h-3 bg-[color:var(--color-primary)] rounded-full flex-shrink-0"
+                aria-hidden="true"
+              />
               <span>Estado actual:</span>
             </div>
             <StatusBadge status={appointment.status} className="text-sm px-3 py-2 font-semibold" />
@@ -286,7 +302,10 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
           {appointment.status === "COMPLETED" && appointment.review && (
             <div className="bg-[color:var(--color-surface-elevated)] p-4 rounded-lg border border-[color:var(--color-border)]">
               <h3 className="text-sm font-semibold text-[color:var(--color-on-surface)] mb-3 flex items-center space-x-2">
-                <div className="w-4 h-4 bg-[color:var(--color-primary)] rounded-full flex-shrink-0"></div>
+                <div
+                  className="w-4 h-4 bg-[color:var(--color-primary)] rounded-full flex-shrink-0"
+                  aria-hidden="true"
+                />
                 <span>Link de Reseña</span>
               </h3>
               <div className="space-y-3">
@@ -302,11 +321,13 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                     </span>
                     {appointment.review.rating && (
                       <div className="flex items-center space-x-1">
-                        {[...Array(5)].map((_, i) => (
+                        {[1, 2, 3, 4, 5].map((star) => (
                           <svg
-                            key={i}
-                            className={`w-4 h-4 ${i < appointment.review!.rating! ? "text-[color:var(--color-primary)] fill-current" : "text-[color:var(--color-border)]"}`}
+                            key={`star-${star}`}
+                            className={`w-4 h-4 ${star <= (appointment.review?.rating ?? 0) ? "text-[color:var(--color-primary)] fill-current" : "text-[color:var(--color-border)]"}`}
                             viewBox="0 0 20 20"
+                            aria-hidden="true"
+                            focusable="false"
                           >
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                           </svg>
@@ -328,11 +349,11 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                       {getReviewUrl(appointment.review.reviewToken)}
                     </div>
                     <button
+                      type="button"
                       onClick={(event) => {
-                        copyReviewLink(
-                          appointment.review!.reviewToken,
-                          event.target as HTMLButtonElement,
-                        );
+                        const token = appointment.review?.reviewToken;
+                        if (!token) return;
+                        copyReviewLink(token, event.currentTarget as HTMLButtonElement);
                       }}
                       className="px-3 py-2 bg-[color:var(--color-accent-secondary)] text-[color:var(--color-on-accent-contrast)] rounded text-sm font-medium hover:opacity-90 transition-colors whitespace-nowrap"
                     >
@@ -361,13 +382,19 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
 
           <div className="text-xs sm:text-sm text-[color:var(--color-muted)] pt-3 border-t border-[color:var(--color-border)] space-y-2 bg-[color:var(--color-surface)] sm:bg-[color:var(--color-surface-elevated)] p-3 rounded-lg">
             <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-[color:var(--color-primary)]/70 rounded-full flex-shrink-0 mt-1"></div>
+              <div
+                className="w-2 h-2 bg-[color:var(--color-primary)]/70 rounded-full flex-shrink-0 mt-1"
+                aria-hidden="true"
+              />
               <span>
                 <strong>Creada:</strong> {new Date(appointment.createdAt).toLocaleString("es-ES")}
               </span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-[color:var(--color-primary)]/70 rounded-full flex-shrink-0 mt-1"></div>
+              <div
+                className="w-2 h-2 bg-[color:var(--color-primary)]/70 rounded-full flex-shrink-0 mt-1"
+                aria-hidden="true"
+              />
               <span>
                 <strong>Actualizada:</strong>{" "}
                 {new Date(appointment.updatedAt).toLocaleString("es-ES")}
@@ -381,6 +408,7 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
           {appointment.status === "PENDING" && (
             <div className="grid grid-cols-2 gap-3">
               <button
+                type="button"
                 onClick={() => handleStatusUpdate("CONFIRMED")}
                 disabled={updateStatusMutation.isPending}
                 className="px-4 py-3 bg-success text-on-success rounded-lg hover:opacity-90 disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[44px]"
@@ -388,6 +416,7 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                 Confirmar Cita
               </button>
               <button
+                type="button"
                 onClick={() => handleStatusUpdate("CANCELLED")}
                 disabled={updateStatusMutation.isPending}
                 className="px-4 py-3 bg-danger text-on-danger rounded-lg hover:opacity-90 disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[44px]"
@@ -398,6 +427,7 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
           )}
           {appointment.status === "CONFIRMED" && (
             <button
+              type="button"
               onClick={() => handleStatusUpdate("COMPLETED")}
               disabled={updateStatusMutation.isPending}
               className="w-full px-4 py-3 bg-success text-on-success rounded-lg hover:opacity-90 disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[44px]"
@@ -407,6 +437,7 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
           )}
           {/* Delete action - opens confirmation modal */}
           <button
+            type="button"
             onClick={() => setIsDeleteOpen(true)}
             disabled={deleteMutation.isPending}
             className="w-full px-4 py-3 bg-red-600 text-white rounded-lg hover:opacity-90 disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[44px]"
@@ -414,6 +445,7 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
             Eliminar
           </button>
           <button
+            type="button"
             onClick={onClose}
             className="w-full px-4 py-3 bg-[color:var(--color-surface-elevated)] text-[color:var(--color-on-surface)] border border-[color:var(--color-border)] rounded-lg hover:opacity-90 font-medium transition-colors min-h-[44px]"
           >
@@ -444,12 +476,14 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
         <ModalFooter>
           <div className="w-full flex items-center gap-3">
             <button
+              type="button"
               onClick={() => setIsDeleteOpen(false)}
               className="flex-1 px-3 py-2 bg-[color:var(--color-surface-elevated)] text-[color:var(--color-on-surface)] border border-[color:var(--color-border)] rounded-lg"
             >
               Cancelar
             </button>
             <button
+              type="button"
               onClick={() => {
                 deleteMutation.mutate(appointment.id, {
                   onSuccess: () => {

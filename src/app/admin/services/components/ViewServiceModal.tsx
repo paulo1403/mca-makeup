@@ -113,7 +113,7 @@ export default function ViewServiceModal({
 
       <ModalFooter>
         <div className="flex justify-between w-full">
-          <div className="text-xs text-[var(--color-muted)]"></div>
+          <div className="text-xs text-[var(--color-muted)]" />
           <div className="flex space-x-3">
             <Button
               type="button"

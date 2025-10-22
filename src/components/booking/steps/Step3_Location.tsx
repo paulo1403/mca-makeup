@@ -249,7 +249,7 @@ export default function Step3_Location() {
                       <div className="mt-2 w-full" aria-live="polite">
                         {loading && (
                           <div className="flex items-center gap-2 text-xs text-[color:var(--color-body)]">
-                            <div className="w-3 h-3 border-2 border-[color:var(--color-primary)]/30 border-t-[color:var(--color-primary)] rounded-full animate-spin flex-shrink-0"></div>
+                            <div className="w-3 h-3 border-2 border-[color:var(--color-primary)]/30 border-t-[color:var(--color-primary)] rounded-full animate-spin flex-shrink-0" />
                             <span className="truncate">{t("calculatingCost")}</span>
                           </div>
                         )}

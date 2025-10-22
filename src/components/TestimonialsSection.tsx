@@ -156,7 +156,7 @@ export default function TestimonialsSection() {
             rating: r.rating || 5,
             service: formatService(r.appointment?.services, r.appointment?.serviceType),
             date: r.appointment?.appointmentDate
-              ? new Date(r.appointment!.appointmentDate!).getFullYear().toString()
+              ? new Date(r.appointment?.appointmentDate!).getFullYear().toString()
               : "2024",
             initials: getInitials(r.reviewerName),
           }));
@@ -215,8 +215,8 @@ export default function TestimonialsSection() {
       ref={sectionRef}
     >
       {/* Elementos decorativos de fondo */}
-      <div className="hidden sm:block absolute top-10 left-10 w-32 h-32 bg-[color:var(--color-primary)]/10 rounded-full filter blur-3xl"></div>
-      <div className="hidden sm:block absolute bottom-10 right-10 w-40 h-40 bg-[color:var(--color-accent)]/10 rounded-full filter blur-3xl"></div>
+      <div className="hidden sm:block absolute top-10 left-10 w-32 h-32 bg-[color:var(--color-primary)]/10 rounded-full filter blur-3xl" />
+      <div className="hidden sm:block absolute bottom-10 right-10 w-40 h-40 bg-[color:var(--color-accent)]/10 rounded-full filter blur-3xl" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl relative z-10">
         <motion.div
@@ -354,12 +354,12 @@ export default function TestimonialsSection() {
                     className="testimonial-card"
                   >
                     <div className="animate-pulse">
-                      <div className="w-20 h-20 bg-gray-300 rounded-full mx-auto mb-6"></div>
-                      <div className="h-4 bg-gray-300 rounded w-32 mx-auto mb-6"></div>
+                      <div className="w-20 h-20 bg-gray-300 rounded-full mx-auto mb-6" />
+                      <div className="h-4 bg-gray-300 rounded w-32 mx-auto mb-6" />
                       <div className="space-y-2">
-                        <div className="h-4 bg-gray-300 rounded w-3/4 mx-auto"></div>
-                        <div className="h-4 bg-gray-300 rounded w-2/3 mx-auto"></div>
-                        <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto"></div>
+                        <div className="h-4 bg-gray-300 rounded w-3/4 mx-auto" />
+                        <div className="h-4 bg-gray-300 rounded w-2/3 mx-auto" />
+                        <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto" />
                       </div>
                     </div>
                   </motion.div>

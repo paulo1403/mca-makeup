@@ -47,7 +47,7 @@ export default function StepIndicator({ currentStep, totalSteps }: Props) {
       <div className="step-indicator-desktop">
         <div className="step-progress-container">
           {/* Línea de progreso base */}
-          <div className="step-progress-base"></div>
+          <div className="step-progress-base" />
 
           {/* Línea de progreso activa */}
           <div

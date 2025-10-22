@@ -74,7 +74,7 @@ export async function POST(request: Request) {
           reportId,
           severity,
           errorType,
-          userDescription: userDescription.substring(0, 100) + "...",
+          userDescription: `${userDescription.substring(0, 100)}...`,
           url,
         });
       } catch (emailError) {

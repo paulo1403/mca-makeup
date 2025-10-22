@@ -156,7 +156,7 @@ export default function TransportCostsPage() {
     return (
       <div className="min-h-screen bg-[color:var(--color-surface)] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[color:var(--color-primary)] mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[color:var(--color-primary)] mx-auto" />
           <p className="mt-4 text-[color:var(--color-muted)]">Cargando...</p>
         </div>
       </div>

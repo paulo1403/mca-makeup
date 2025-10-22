@@ -66,7 +66,7 @@ export default function Step4_DateTime() {
       >
         <div className="flex justify-center">
           <div className="w-12 h-12 bg-gradient-to-br from-[color:var(--color-primary)] to-[color:var(--color-accent)] rounded-full flex items-center justify-center">
-            <Calendar className="w-6 h-6 text-white" />
+            <Calendar aria-hidden="true" focusable="false" className="w-6 h-6 text-white" />
           </div>
         </div>
 
@@ -111,7 +111,11 @@ export default function Step4_DateTime() {
                       className="p-2 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-secondary)] transition-colors"
                       aria-label={t("previousMonth")}
                     >
-                      <ChevronLeft className="w-4 h-4 text-[color:var(--color-heading)]" />
+                      <ChevronLeft
+                        aria-hidden="true"
+                        focusable="false"
+                        className="w-4 h-4 text-[color:var(--color-heading)]"
+                      />
                     </button>
                     <Typography
                       as="span"
@@ -126,7 +130,11 @@ export default function Step4_DateTime() {
                       className="p-2 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-secondary)] transition-colors"
                       aria-label={t("nextMonth")}
                     >
-                      <ChevronRight className="w-4 h-4 text-[color:var(--color-heading)]" />
+                      <ChevronRight
+                        aria-hidden="true"
+                        focusable="false"
+                        className="w-4 h-4 text-[color:var(--color-heading)]"
+                      />
                     </button>
                   </div>
                 )}
@@ -161,19 +169,18 @@ export default function Step4_DateTime() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 className="mb-4"
-                role="status"
                 aria-live="polite"
               >
                 {rangesData?.availableRanges?.length ? (
                   <div className="flex items-center gap-2 text-sm text-green-600">
-                    <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+                    <div className="w-2 h-2 bg-green-600 rounded-full" />
                     <Typography as="span" variant="small">
                       {t("available")}
                     </Typography>
                   </div>
                 ) : (
                   <div className="flex items-center gap-2 text-sm text-red-500">
-                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                    <div className="w-2 h-2 bg-red-500 rounded-full" />
                     <Typography as="span" variant="small">
                       {t("notAvailable")}
                     </Typography>
@@ -186,27 +193,22 @@ export default function Step4_DateTime() {
           {/* Lista de horarios */}
           {isLoading ? (
             <div className="space-y-2">
-              {[...Array(3)].map((_, i) => (
+              {["sk-1", "sk-2", "sk-3"].map((key) => (
                 <div
-                  key={i}
+                  key={key}
                   className="h-10 bg-[color:var(--color-surface)] rounded-lg animate-pulse"
-                ></div>
+                />
               ))}
             </div>
           ) : rangesData?.availableRanges?.length ? (
-            <div
-              role="listbox"
-              aria-label="Selecciona un horario"
-              className="grid grid-cols-2 gap-2"
-            >
+            <div aria-label="Selecciona un horario" className="grid grid-cols-2 gap-2">
               {rangesData.availableRanges.map((r: string, index: number) => {
                 const isSelected = timeSlot === r;
                 return (
                   <motion.button
                     key={r}
                     type="button"
-                    role="option"
-                    aria-selected={isSelected}
+                    aria-pressed={isSelected}
                     onClick={() =>
                       setValue("timeSlot", r, {
                         shouldDirty: true,
@@ -223,6 +225,8 @@ export default function Step4_DateTime() {
                     }`}
                   >
                     <Clock
+                      aria-hidden="true"
+                      focusable="false"
                       className={`w-4 h-4 ${
                         isSelected ? "text-white" : "text-[color:var(--color-accent)]"
                       }`}
@@ -273,7 +277,7 @@ export default function Step4_DateTime() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="w-6 h-6 rounded-full bg-[color:var(--color-primary)] flex items-center justify-center">
-                      <Check className="w-3 h-3 text-white" />
+                      <Check aria-hidden="true" focusable="false" className="w-3 h-3 text-white" />
                     </div>
                     <div>
                       <Typography
@@ -308,7 +312,11 @@ export default function Step4_DateTime() {
       >
         <div className="flex items-start gap-2">
           <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[color:var(--color-primary)]/20 flex items-center justify-center mt-0.5">
-            <Sparkles className="w-2.5 h-2.5 text-[color:var(--color-primary)]" />
+            <Sparkles
+              aria-hidden="true"
+              focusable="false"
+              className="w-2.5 h-2.5 text-[color:var(--color-primary)]"
+            />
           </div>
           <div className="flex-1">
             <Typography

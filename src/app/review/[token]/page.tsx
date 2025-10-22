@@ -151,7 +151,7 @@ export default function ReviewPage() {
     return (
       <div className="min-h-screen bg-[color:var(--color-background)] flex items-center justify-center">
         <div className="text-center text-[color:var(--color-main)]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[color:var(--color-primary)] mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[color:var(--color-primary)] mx-auto mb-4" />
           <Typography variant="p">Cargando información de la reseña...</Typography>
         </div>
       </div>
@@ -202,8 +202,8 @@ export default function ReviewPage() {
 
   return (
     <section className="relative min-h-screen section-bg-hero py-16 px-4 sm:px-6 lg:px-8">
-      <div className="section-overlay-top"></div>
-      <div className="section-overlay-bottom"></div>
+      <div className="section-overlay-top" />
+      <div className="section-overlay-bottom" />
       <div className="relative z-10 max-w-3xl mx-auto">
         <div className="bg-[color:var(--color-surface)]/90 backdrop-blur-sm rounded-2xl border border-[color:var(--color-border)]/40 shadow-2xl overflow-hidden">
           {/* Header */}
@@ -374,7 +374,7 @@ export default function ReviewPage() {
                 >
                   {submitting ? (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[color:var(--color-cta-text)] mr-2"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[color:var(--color-cta-text)] mr-2" />
                       <Typography variant="p" className="text-white">
                         Enviando reseña...
                       </Typography>

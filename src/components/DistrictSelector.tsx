@@ -284,7 +284,7 @@ export default function DistrictSelector({
         >
           {isLoading ? (
             <div className="px-4 py-6 flex items-center justify-center">
-              <div className="w-4 h-4 border-2 border-[color:var(--color-primary)]/30 border-t-[color:var(--color-primary)] rounded-full animate-spin mr-2"></div>
+              <div className="w-4 h-4 border-2 border-[color:var(--color-primary)]/30 border-t-[color:var(--color-primary)] rounded-full animate-spin mr-2" />
               <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
                 {t("loading")}
               </Typography>

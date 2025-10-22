@@ -91,7 +91,7 @@ export default function AvailabilityPage() {
           </Typography>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs sm:text-sm">
             <div className="flex items-center space-x-2 p-2 rounded-md border border-[color:var(--status-confirmed-border)]/50 bg-[color:var(--status-confirmed-bg)]">
-              <div className="w-3 h-3 rounded-full bg-[color:var(--status-confirmed-text)]"></div>
+              <div className="w-3 h-3 rounded-full bg-[color:var(--status-confirmed-text)]" />
               <div>
                 <Typography
                   as="span"
@@ -106,7 +106,7 @@ export default function AvailabilityPage() {
               </div>
             </div>
             <div className="flex items-center space-x-2 p-2 rounded-md border border-[color:var(--status-pending-border)]/50 bg-[color:var(--status-pending-bg)]">
-              <div className="w-3 h-3 rounded-full bg-[color:var(--status-pending-text)]"></div>
+              <div className="w-3 h-3 rounded-full bg-[color:var(--status-pending-text)]" />
               <div>
                 <Typography
                   as="span"
@@ -121,7 +121,7 @@ export default function AvailabilityPage() {
               </div>
             </div>
             <div className="flex items-center space-x-2 p-2 rounded-md border border-[color:var(--color-border)]/50 bg-[color:var(--color-surface)]">
-              <div className="w-3 h-3 rounded-full bg-[color:var(--color-muted)]"></div>
+              <div className="w-3 h-3 rounded-full bg-[color:var(--color-muted)]" />
               <div>
                 <Typography
                   as="span"

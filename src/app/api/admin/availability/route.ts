@@ -102,7 +102,8 @@ export async function POST(request: NextRequest) {
         success: true,
         ...timeSlot,
       });
-    } else if (type === "specialDate") {
+    }
+    if (type === "specialDate") {
       const { date, isAvailable, customHours, note } = data;
 
       // Validate required fields
@@ -154,15 +155,14 @@ export async function POST(request: NextRequest) {
         success: true,
         ...specialDate,
       });
-    } else {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Tipo de solicitud no válido",
-        },
-        { status: 400 },
-      );
     }
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Tipo de solicitud no válido",
+      },
+      { status: 400 },
+    );
   } catch (error: unknown) {
     console.error("Error creating availability:", error);
 
@@ -177,7 +177,8 @@ export async function POST(request: NextRequest) {
           },
           { status: 400 },
         );
-      } else if (prismaError.meta?.target?.includes("date")) {
+      }
+      if (prismaError.meta?.target?.includes("date")) {
         return NextResponse.json(
           {
             success: false,

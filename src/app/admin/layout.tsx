@@ -147,7 +147,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
           className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
           onClick={() => setIsSidebarOpen(false)}
           onKeyUp={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
+            if (e.key === "Enter" || e.key === " ") {
               setIsSidebarOpen(false);
             }
           }}

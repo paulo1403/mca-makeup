@@ -31,7 +31,7 @@ export const formatServices = (appointment: RecentAppointment) => {
 export const formatDate = (dateString: string): string => {
   try {
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) {
+    if (Number.isNaN(date.getTime())) {
       return "Fecha inválida";
     }
     // Use the short date format for dashboard display
@@ -50,7 +50,7 @@ export const formatTime = (timeString: string): string => {
 
     // Si es solo una hora (ej: "15:00"), formatear normalmente
     const date = new Date(`1970-01-01T${timeString}`);
-    if (isNaN(date.getTime())) {
+    if (Number.isNaN(date.getTime())) {
       return timeString; // Retornar el string original si no se puede parsear
     }
 

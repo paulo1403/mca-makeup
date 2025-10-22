@@ -31,7 +31,7 @@ export default function ServicesHeader({ services, onOpenInfo, onCreateNew }: Se
             servicios
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 rounded-full bg-[var(--status-confirmed-text)]"></div>
+            <div className="w-2 h-2 rounded-full bg-[var(--status-confirmed-text)]" />
             <span className="text-xs text-[var(--color-muted)]">{activeCount} activos</span>
           </div>
           <Button

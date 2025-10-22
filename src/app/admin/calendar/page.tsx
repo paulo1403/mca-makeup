@@ -361,7 +361,7 @@ export default function AdminCalendar() {
       if (!map.has(dayKey)) {
         map.set(dayKey, []);
       }
-      map.get(dayKey)!.push(apt);
+      map.get(dayKey)?.push(apt);
     });
 
     // Ordenar citas por hora
@@ -494,7 +494,7 @@ export default function AdminCalendar() {
                   background: "var(--status-pending-bg)",
                   borderColor: "var(--status-pending-border)",
                 }}
-              ></div>
+              />
               <span className="text-xs md:text-sm text-muted">Pendiente</span>
             </div>
             <div className="flex items-center space-x-2">
@@ -504,7 +504,7 @@ export default function AdminCalendar() {
                   background: "var(--status-confirmed-bg)",
                   borderColor: "var(--status-confirmed-border)",
                 }}
-              ></div>
+              />
               <span className="text-xs md:text-sm text-muted">Confirmada</span>
             </div>
             <div className="flex items-center space-x-2">
@@ -514,7 +514,7 @@ export default function AdminCalendar() {
                   background: "var(--status-completed-bg)",
                   borderColor: "var(--status-completed-border)",
                 }}
-              ></div>
+              />
               <span className="text-xs md:text-sm text-muted">Completada</span>
             </div>
             <div className="flex items-center space-x-2">
@@ -524,7 +524,7 @@ export default function AdminCalendar() {
                   background: "var(--status-cancelled-bg)",
                   borderColor: "var(--status-cancelled-border)",
                 }}
-              ></div>
+              />
               <span className="text-xs md:text-sm text-muted">Cancelada</span>
             </div>
           </div>

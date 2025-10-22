@@ -172,11 +172,11 @@ export default function RecentAppointments({ appointments, isLoading }: RecentAp
             {[...Array(3)].map((_, i) => (
               <div key={i} className="animate-pulse">
                 <div className="flex items-center space-x-3 p-4 bg-[color:var(--color-surface-elevated)] rounded-lg">
-                  <div className="w-12 h-12 bg-[color:var(--color-surface)] rounded-full"></div>
+                  <div className="w-12 h-12 bg-[color:var(--color-surface)] rounded-full" />
                   <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-[color:var(--color-surface)] rounded w-1/3"></div>
-                    <div className="h-3 bg-[color:var(--color-surface)] rounded w-1/2"></div>
-                    <div className="h-3 bg-[color:var(--color-surface)] rounded w-1/4"></div>
+                    <div className="h-4 bg-[color:var(--color-surface)] rounded w-1/3" />
+                    <div className="h-3 bg-[color:var(--color-surface)] rounded w-1/2" />
+                    <div className="h-3 bg-[color:var(--color-surface)] rounded w-1/4" />
                   </div>
                 </div>
               </div>

@@ -221,7 +221,7 @@ export default function ServiceSelector({
               </span>
             )}
             {loading ? (
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-accent"></div>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-accent" />
             ) : (
               <ChevronDown
                 className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${
@@ -282,7 +282,7 @@ export default function ServiceSelector({
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-50 max-h-80 overflow-hidden">
           {loading ? (
             <div className="p-4 text-center">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-accent mx-auto mb-2"></div>
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-accent mx-auto mb-2" />
               <span className="text-sm text-gray-500">Cargando servicios...</span>
             </div>
           ) : filteredServices.length === 0 ? (

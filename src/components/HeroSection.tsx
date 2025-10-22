@@ -373,7 +373,7 @@ export default function HeroSection() {
                 }}
               >
                 <div className="relative">
-                  <div className="absolute inset-0 bg-[color:var(--color-primary)]/20 rounded-full blur-md"></div>
+                  <div className="absolute inset-0 bg-[color:var(--color-primary)]/20 rounded-full blur-md" />
                   <div className="relative p-2 rounded-full bg-[color:var(--color-primary)]/80 backdrop-blur-sm border border-white/30">
                     <Sparkles className="w-6 h-6 text-white" />
                   </div>
@@ -394,7 +394,7 @@ export default function HeroSection() {
                 }}
               >
                 <div className="relative">
-                  <div className="absolute inset-0 bg-[color:var(--color-accent)]/20 rounded-full blur-md"></div>
+                  <div className="absolute inset-0 bg-[color:var(--color-accent)]/20 rounded-full blur-md" />
                   <div className="relative p-2 rounded-full bg-[color:var(--color-accent)]/80 backdrop-blur-sm border border-white/30">
                     <Sparkles className="w-5 h-5 text-white" />
                   </div>
@@ -416,7 +416,7 @@ export default function HeroSection() {
                 }}
               >
                 <div className="relative">
-                  <div className="absolute inset-0 bg-[color:var(--color-primary)]/15 rounded-full blur-sm"></div>
+                  <div className="absolute inset-0 bg-[color:var(--color-primary)]/15 rounded-full blur-sm" />
                   <div className="relative p-1.5 rounded-full bg-[color:var(--color-primary)]/70 backdrop-blur-sm border border-white/20">
                     <Sparkles className="w-4 h-4 text-white/90" />
                   </div>
@@ -437,7 +437,7 @@ export default function HeroSection() {
                 }}
               >
                 <div className="relative">
-                  <div className="absolute inset-0 bg-[color:var(--color-accent)]/15 rounded-full blur-sm"></div>
+                  <div className="absolute inset-0 bg-[color:var(--color-accent)]/15 rounded-full blur-sm" />
                   <div className="relative p-1.5 rounded-full bg-[color:var(--color-accent)]/70 backdrop-blur-sm border border-white/20">
                     <Sparkles className="w-4 h-4 text-white/90" />
                   </div>

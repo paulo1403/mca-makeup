@@ -93,7 +93,7 @@ export async function GET(request: Request) {
         templateName = "🔹 Prueba Básica de Conectividad";
         break;
 
-      case "pending":
+      case "pending": {
         const pendingTemplate = emailTemplates.appointmentPending(
           "María González",
           "Maquillaje de Novia + Peinado",
@@ -114,8 +114,9 @@ export async function GET(request: Request) {
         });
         templateName = "⏳ Cita Pendiente (al cliente)";
         break;
+      }
 
-      case "confirmed":
+      case "confirmed": {
         const confirmedTemplate = emailTemplates.appointmentConfirmed(
           "Ana García",
           "Maquillaje de Novia Completo",
@@ -136,8 +137,9 @@ export async function GET(request: Request) {
         });
         templateName = "✅ Cita Confirmada (al cliente)";
         break;
+      }
 
-      case "admin":
+      case "admin": {
         const adminTemplate = emailTemplates.newAppointmentAlert(
           "Laura Martínez",
           "Maquillaje Social + Cejas",
@@ -159,8 +161,9 @@ export async function GET(request: Request) {
         });
         templateName = "🔔 Nueva Cita (alerta para admins)";
         break;
+      }
 
-      case "cancelled":
+      case "cancelled": {
         const cancelledTemplate = emailTemplates.appointmentCancelled(
           "Carmen Silva",
           "Maquillaje de Día",
@@ -176,8 +179,9 @@ export async function GET(request: Request) {
         });
         templateName = "❌ Cita Cancelada (al cliente)";
         break;
+      }
 
-      case "all":
+      case "all": {
         // Prueba todos los templates
         const allResults: Record<string, boolean> = {};
         const templates = ["basic", "pending", "confirmed", "admin", "cancelled"];
@@ -198,6 +202,7 @@ export async function GET(request: Request) {
           recipient: testEmail,
           timestamp: new Date().toISOString(),
         });
+      }
 
       default:
         return NextResponse.json(
@@ -232,17 +237,16 @@ export async function GET(request: Request) {
         },
         timestamp: new Date().toISOString(),
       });
-    } else {
-      return NextResponse.json(
-        {
-          success: false,
-          message: `❌ Error enviando email "${templateName}"`,
-          template: template,
-          environment: process.env.NODE_ENV,
-        },
-        { status: 500 },
-      );
     }
+    return NextResponse.json(
+      {
+        success: false,
+        message: `❌ Error enviando email "${templateName}"`,
+        template: template,
+        environment: process.env.NODE_ENV,
+      },
+      { status: 500 },
+    );
   } catch (error) {
     console.error("Error en prueba de email de producción:", error);
     return NextResponse.json(

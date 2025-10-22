@@ -46,7 +46,7 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
       if (typeof window === "undefined") return false;
       // Prefer cookie (so it can be read server-side if needed)
       const match = document.cookie.match(/(?:^|; )adminSidebarCollapsed=([^;]+)/);
-      if (match && match[1]) return match[1] === "true";
+      if (match?.[1]) return match[1] === "true";
       const stored = localStorage.getItem("adminSidebarCollapsed");
       if (stored !== null) return stored === "true";
     } catch {

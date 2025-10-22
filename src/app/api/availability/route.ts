@@ -273,7 +273,7 @@ export async function GET(request: NextRequest) {
     const dayOfWeek = appointmentDate.getDay();
     let workingPeriods: { start: number; end: number }[] = [];
 
-    if (specialDate && specialDate.isAvailable && specialDate.startTime && specialDate.endTime) {
+    if (specialDate?.isAvailable && specialDate.startTime && specialDate.endTime) {
       // Use special date custom hours
       workingPeriods = [
         {
@@ -552,8 +552,7 @@ export async function GET(request: NextRequest) {
       availableRanges,
       isSpecialDate: !!specialDate,
       specialDateNote: specialDate?.note,
-      ...(specialDate &&
-        specialDate.isAvailable &&
+      ...(specialDate?.isAvailable &&
         specialDate.startTime &&
         specialDate.endTime && {
           message: `Horario especial: ${specialDate.startTime} - ${specialDate.endTime}${specialDate.note ? ` (${specialDate.note})` : ""}`,

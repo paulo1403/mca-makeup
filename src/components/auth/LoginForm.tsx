@@ -132,7 +132,7 @@ export const LoginForm = ({
       >
         {isLoading ? (
           <div className="flex items-center space-x-2">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--color-cta-text)]"></div>
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--color-cta-text)]" />
             <span>Iniciando sesión...</span>
           </div>
         ) : isBlocked ? (

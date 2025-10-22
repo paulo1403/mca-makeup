@@ -27,7 +27,7 @@ export function isNightShift(timeString: string): boolean {
   const hours = Number.parseInt(hoursStr, 10);
   const minutes = Number.parseInt(minutesStr, 10);
 
-  if (isNaN(hours) || isNaN(minutes)) return false;
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) return false;
 
   // Convertir a minutos desde medianoche
   const totalMinutes = hours * 60 + minutes;
@@ -54,7 +54,7 @@ export function calculateNightShiftCost(timeString: string): number {
  * @returns string - Texto explicativo
  */
 export function getNightShiftExplanation(): string {
-  return `Costo adicional por atención fuera del horario laboral (después de 7:30 PM o antes de 6:00 AM)`;
+  return "Costo adicional por atención fuera del horario laboral (después de 7:30 PM o antes de 6:00 AM)";
 }
 
 /**

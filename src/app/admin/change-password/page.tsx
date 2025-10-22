@@ -206,7 +206,7 @@ export default function ChangePassword() {
           >
             {isLoading ? (
               <div className="flex items-center">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#1C1C1C] mr-2"></div>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#1C1C1C] mr-2" />
                 Cambiando...
               </div>
             ) : (

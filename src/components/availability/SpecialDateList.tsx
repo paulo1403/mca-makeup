@@ -54,7 +54,7 @@ export default function SpecialDateList({
       {sortedDates.map((specialDate) => (
         <div
           key={specialDate.id}
-          className={`p-4 rounded-lg border transition-all`}
+          className={"p-4 rounded-lg border transition-all"}
           style={
             specialDate.isAvailable
               ? {
@@ -98,7 +98,9 @@ export default function SpecialDateList({
                     })()}
                   </div>
                   <span
-                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-1 border`}
+                    className={
+                      "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-1 border"
+                    }
                     style={
                       specialDate.isAvailable
                         ? {

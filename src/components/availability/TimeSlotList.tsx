@@ -50,7 +50,7 @@ export default function TimeSlotList({
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[color:var(--color-primary)]"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[color:var(--color-primary)]" />
       </div>
     );
   }
@@ -278,7 +278,9 @@ export default function TimeSlotList({
 
                     <div className="mt-2">
                       <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border`}
+                        className={
+                          "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border"
+                        }
                         style={
                           hasActiveSlots
                             ? {

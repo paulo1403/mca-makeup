@@ -182,7 +182,7 @@ export default function AdminReviewsPage() {
     (review) =>
       review.reviewerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       review.appointment.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (review.reviewText && review.reviewText.toLowerCase().includes(searchTerm.toLowerCase())),
+      review.reviewText?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -243,7 +243,7 @@ export default function AdminReviewsPage() {
       <div className="bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)]/30">
         {loading ? (
           <div className="p-8 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[color:var(--color-primary)] mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[color:var(--color-primary)] mx-auto mb-4" />
             <p className="text-[color:var(--color-muted)]">Cargando reseñas...</p>
           </div>
         ) : filteredReviews.length === 0 ? (

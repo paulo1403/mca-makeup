@@ -22,7 +22,7 @@ export async function GET() {
 
     const confirmationResult = await sendEmail({
       to: adminEmails[0],
-      subject: "[PRUEBA INLINE] " + confirmationTemplate.subject,
+      subject: `[PRUEBA INLINE] ${confirmationTemplate.subject}`,
       html: confirmationTemplate.html,
       text: confirmationTemplate.text,
     });
@@ -44,7 +44,7 @@ export async function GET() {
 
     const adminResult = await sendEmail({
       to: adminEmails[0],
-      subject: "[PRUEBA INLINE] " + adminTemplate.subject,
+      subject: `[PRUEBA INLINE] ${adminTemplate.subject}`,
       html: adminTemplate.html,
       text: adminTemplate.text,
     });
@@ -59,7 +59,7 @@ export async function GET() {
 
     const cancelResult = await sendEmail({
       to: adminEmails[0],
-      subject: "[PRUEBA INLINE] " + cancelTemplate.subject,
+      subject: `[PRUEBA INLINE] ${cancelTemplate.subject}`,
       html: cancelTemplate.html,
       text: cancelTemplate.text,
     });
@@ -79,7 +79,7 @@ export async function GET() {
 
     const pendingResult = await sendEmail({
       to: adminEmails[0],
-      subject: "[PRUEBA INLINE] " + pendingTemplate.subject,
+      subject: `[PRUEBA INLINE] ${pendingTemplate.subject}`,
       html: pendingTemplate.html,
       text: pendingTemplate.text,
     });

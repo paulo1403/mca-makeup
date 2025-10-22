@@ -171,7 +171,7 @@ export default function ServicesPage() {
   if (status === "loading" || isServicesLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[color:var(--color-primary)]"></div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[color:var(--color-primary)]" />
       </div>
     );
   }
