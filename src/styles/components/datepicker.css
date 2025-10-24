@@ -41,6 +41,9 @@
   font-weight: 600;
   font-size: 0.875rem;
   margin: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Layout completo del calendario (sin CSS por defecto) */
@@ -229,4 +232,38 @@
 /* Mejor contraste para nombres de días/mes en tema oscuro */
 [data-theme="dark"] .react-datepicker__day-name {
   color: var(--calendar-label) !important;
+}
+
+/* Ocultar day-names nativos cuando se use la clase no-daynames */
+.no-daynames .react-datepicker__day-names {
+  display: none !important;
+}
+
+/* Cabecera personalizada de días (Step4) */
+.custom-weekday-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem;
+  padding: 0 0.5rem 0.5rem;
+  align-items: center;
+}
+.custom-weekday-cell {
+  display: grid;
+  place-items: center;
+  height: 2rem;
+  color: var(--calendar-label);
+  font-weight: 600;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+@media screen and (max-width: 480px) {
+  .custom-weekday-header {
+    gap: 0.12rem;
+    padding: 0 0 0.25rem;
+  }
+  .custom-weekday-cell {
+    height: 1.75rem;
+    font-size: 0.8rem;
+  }
 }

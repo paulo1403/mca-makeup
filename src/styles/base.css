@@ -130,6 +130,11 @@
   --color-selected: color-mix(in srgb, var(--color-primary) 15%, transparent);
   --color-neutral: var(--color-muted);
   --color-whatsapp: #25d366;
+
+  /* Global calendar/input tokens required by components */
+  --input-border: var(--color-border);
+  --calendar-inactive: color-mix(in srgb, var(--color-body) 40%, transparent);
+  --calendar-label: var(--color-muted);
 }
 
 /* Dark theme variables */
@@ -194,6 +199,11 @@
   --color-selected: color-mix(in srgb, var(--color-primary) 25%, transparent);
   --color-neutral: var(--color-muted);
   --color-whatsapp: #25d366;
+
+  /* Global calendar/input tokens required by components (dark) */
+  --input-border: var(--color-border);
+  --calendar-inactive: color-mix(in srgb, var(--color-body) 40%, transparent);
+  --calendar-label: var(--color-muted);
 }
 
 /* Minimal global resets relevant to layout */

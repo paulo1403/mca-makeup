@@ -6,11 +6,23 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { AnimatePresence, motion } from "framer-motion";
 import { Calendar, Check, ChevronLeft, ChevronRight, Clock, Sparkles } from "lucide-react";
-import React from "react";
+import type React from "react";
 import DatePicker from "react-datepicker";
 import { Controller, useFormContext } from "react-hook-form";
 
-// Diccionario de traducciones
+const CustomWeekdayHeader: React.FC = () => {
+  const days = ["lun", "mar", "mié", "jue", "vie", "sáb", "dom"];
+  return (
+    <div className="custom-weekday-header" aria-hidden>
+      {days.map((d) => (
+        <span key={d} className="custom-weekday-cell">
+          {d}
+        </span>
+      ))}
+    </div>
+  );
+};
+
 const translations = {
   title: "Selecciona fecha y hora",
   subtitle: "Elige un día en el calendario y luego el horario disponible",
@@ -102,40 +114,56 @@ export default function Step4_DateTime() {
                 onChange={(d) => field.onChange(d)}
                 inline
                 locale={es}
-                calendarClassName="w-full"
+                formatWeekDay={(nameOfDay) => {
+                  const key = nameOfDay.toLowerCase();
+                  if (key.startsWith("lun")) return "lun";
+                  if (key.startsWith("mar")) return "mar";
+                  if (key.startsWith("miér")) return "mié";
+                  if (key.startsWith("mie")) return "mié";
+                  if (key.startsWith("jue")) return "jue";
+                  if (key.startsWith("vie")) return "vie";
+                  if (key.startsWith("sáb")) return "sáb";
+                  if (key.startsWith("sab")) return "sáb";
+                  if (key.startsWith("dom")) return "dom";
+                  return nameOfDay.slice(0, 3).toLowerCase();
+                }}
+                calendarClassName="w-full no-daynames"
                 renderCustomHeader={({ date, decreaseMonth, increaseMonth }) => (
-                  <div className="flex items-center justify-between mb-4">
-                    <button
-                      type="button"
-                      onClick={decreaseMonth}
-                      className="p-2 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-secondary)] transition-colors"
-                      aria-label={t("previousMonth")}
-                    >
-                      <ChevronLeft
-                        aria-hidden="true"
-                        focusable="false"
-                        className="w-4 h-4 text-[color:var(--color-heading)]"
-                      />
-                    </button>
-                    <Typography
-                      as="span"
-                      variant="small"
-                      className="font-medium text-[color:var(--color-heading)]"
-                    >
-                      {format(date, "MMMM yyyy", { locale: es })}
-                    </Typography>
-                    <button
-                      type="button"
-                      onClick={increaseMonth}
-                      className="p-2 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-secondary)] transition-colors"
-                      aria-label={t("nextMonth")}
-                    >
-                      <ChevronRight
-                        aria-hidden="true"
-                        focusable="false"
-                        className="w-4 h-4 text-[color:var(--color-heading)]"
-                      />
-                    </button>
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <button
+                        type="button"
+                        onClick={decreaseMonth}
+                        className="p-2 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-secondary)] transition-colors"
+                        aria-label={t("previousMonth")}
+                      >
+                        <ChevronLeft
+                          aria-hidden="true"
+                          focusable="false"
+                          className="w-4 h-4 text-[color:var(--color-heading)]"
+                        />
+                      </button>
+                      <Typography
+                        as="span"
+                        variant="small"
+                        className="font-medium text-[color:var(--color-heading)]"
+                      >
+                        {format(date, "MMMM yyyy", { locale: es })}
+                      </Typography>
+                      <button
+                        type="button"
+                        onClick={increaseMonth}
+                        className="p-2 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-secondary)] transition-colors"
+                        aria-label={t("nextMonth")}
+                      >
+                        <ChevronRight
+                          aria-hidden="true"
+                          focusable="false"
+                          className="w-4 h-4 text-[color:var(--color-heading)]"
+                        />
+                      </button>
+                    </div>
+                    <CustomWeekdayHeader />
                   </div>
                 )}
               />

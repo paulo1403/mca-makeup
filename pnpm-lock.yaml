@@ -84,7 +84,7 @@ importers:
         specifier: ^1.19.4
         version: 1.19.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react-datepicker:
-        specifier: ^8.4.0
+        specifier: 8.8.0
         version: 8.8.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react-dom:
         specifier: ^19.0.0

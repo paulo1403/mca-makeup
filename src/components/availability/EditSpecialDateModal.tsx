@@ -158,6 +158,19 @@ export default function EditSpecialDateModal({
                   placeholderText="Seleccionar fecha..."
                   className="w-full p-3 border rounded-lg border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] text-[color:var(--color-body)] focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-[color:var(--color-primary)]"
                   calendarClassName="premium-datepicker"
+                  formatWeekDay={(nameOfDay) => {
+                    const key = nameOfDay.toLowerCase();
+                    if (key.startsWith("lun")) return "lun";
+                    if (key.startsWith("mar")) return "mar";
+                    if (key.startsWith("miér")) return "mié";
+                    if (key.startsWith("mie")) return "mié"; // fallback sin tilde
+                    if (key.startsWith("jue")) return "jue";
+                    if (key.startsWith("vie")) return "vie";
+                    if (key.startsWith("sáb")) return "sáb";
+                    if (key.startsWith("sab")) return "sáb"; // fallback sin tilde
+                    if (key.startsWith("dom")) return "dom";
+                    return nameOfDay.slice(0, 3).toLowerCase();
+                  }}
                 />
               )}
             />

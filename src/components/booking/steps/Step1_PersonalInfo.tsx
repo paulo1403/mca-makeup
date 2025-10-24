@@ -6,7 +6,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle, Lock, Mail, Phone, User } from "lucide-react";
 import React, { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import "@/styles/components/step1.css";
 
 function formatPhone(value: string) {
   const v = value.replace(/[^\d+]/g, "");

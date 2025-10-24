@@ -119,6 +119,7 @@ export default function AddSpecialDateModal({
           <div>
             <Typography
               as="label"
+              htmlFor="add-specialdate-date"
               variant="small"
               className="block text-sm font-semibold text-[color:var(--color-heading)] mb-2"
             >
@@ -129,6 +130,7 @@ export default function AddSpecialDateModal({
               control={control}
               render={({ field }) => (
                 <DatePicker
+                  id="add-specialdate-date"
                   selected={field.value}
                   onChange={field.onChange}
                   dateFormat="dd/MM/yyyy"
@@ -137,6 +139,19 @@ export default function AddSpecialDateModal({
                   placeholderText="Seleccionar fecha..."
                   className="w-full p-3 border rounded-lg border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] text-[color:var(--color-body)] focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-[color:var(--color-primary)]"
                   calendarClassName="premium-datepicker"
+                  formatWeekDay={(nameOfDay) => {
+                    const key = nameOfDay.toLowerCase();
+                    if (key.startsWith("lun")) return "lun";
+                    if (key.startsWith("mar")) return "mar";
+                    if (key.startsWith("miér")) return "mié";
+                    if (key.startsWith("mie")) return "mié"; // fallback sin tilde
+                    if (key.startsWith("jue")) return "jue";
+                    if (key.startsWith("vie")) return "vie";
+                    if (key.startsWith("sáb")) return "sáb";
+                    if (key.startsWith("sab")) return "sáb"; // fallback sin tilde
+                    if (key.startsWith("dom")) return "dom";
+                    return nameOfDay.slice(0, 3).toLowerCase();
+                  }}
                 />
               )}
             />
@@ -152,7 +167,7 @@ export default function AddSpecialDateModal({
 
           <div>
             <Typography
-              as="label"
+              as="span"
               variant="small"
               className="block text-sm font-semibold text-[color:var(--color-heading)] mb-3"
             >
@@ -215,10 +230,14 @@ export default function AddSpecialDateModal({
           {isAvailable && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm sm:text-base font-bold text-black mb-2 sm:mb-3">
+                <label
+                  htmlFor="add-specialdate-start"
+                  className="block text-sm sm:text-base font-bold text-black mb-2 sm:mb-3"
+                >
                   Hora de inicio
                 </label>
                 <input
+                  id="add-specialdate-start"
                   type="time"
                   {...register("startTime")}
                   className="w-full p-3 sm:p-2 border rounded-lg border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] focus:ring-2 text-base sm:text-md text-[color:var(--color-body)]"
@@ -231,10 +250,14 @@ export default function AddSpecialDateModal({
                 )}
               </div>
               <div>
-                <label className="block text-sm sm:text-base font-bold text-black mb-2 sm:mb-3">
+                <label
+                  htmlFor="add-specialdate-end"
+                  className="block text-sm sm:text-base font-bold text-black mb-2 sm:mb-3"
+                >
                   Hora de fin
                 </label>
                 <input
+                  id="add-specialdate-end"
                   type="time"
                   {...register("endTime")}
                   className="w-full p-3 sm:p-2 border rounded-lg border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] focus:ring-2 text-base sm:text-md text-[color:var(--color-body)]"
