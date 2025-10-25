@@ -109,7 +109,7 @@ function MobileAppointmentCard({
             </div>
           </div>
           <div className="flex flex-col items-end space-y-1">
-            <StatusBadge status={appointment.status} />
+            <StatusBadge status={appointment.status} className="px-1.5 py-0.5 text-[11px]" />
             {appointment.status === "COMPLETED" && appointment.review && (
               <span className="inline-flex items-center px-1.5 py-0.5 text-[11px] font-medium rounded-full bg-[color:var(--color-accent-secondary)]/15 text-[color:var(--color-accent-secondary)]">
                 <Star className="w-3 h-3 mr-1" /> Review
@@ -197,7 +197,8 @@ function MobileAppointmentCard({
               <button
                 onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
                 disabled={isUpdating}
-                className="bg-success text-on-success hover:opacity-90 px-3 py-2 rounded-lg text-sm disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
+                className="bg-success text-on-success hover:opacity-90 px-3 py-2 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
+                type="button"
               >
                 <CheckCircle className="w-4 h-4 mr-1" />
                 Confirmar
@@ -205,7 +206,8 @@ function MobileAppointmentCard({
               <button
                 onClick={() => onStatusUpdate(appointment.id, "CANCELLED")}
                 disabled={isUpdating}
-                className="bg-danger text-on-danger hover:opacity-90 px-3 py-2 rounded-lg text-sm disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
+                className="bg-danger text-on-danger hover:opacity-90 px-3 py-2 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
+                type="button"
               >
                 <XCircle className="w-4 h-4 mr-1" />
                 Cancelar
@@ -218,7 +220,8 @@ function MobileAppointmentCard({
               <button
                 onClick={() => onStatusUpdate(appointment.id, "COMPLETED")}
                 disabled={isUpdating}
-                className="bg-success text-on-success hover:opacity-90 px-3 py-2 rounded-lg text-sm disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
+                className="bg-success text-on-success hover:opacity-90 px-3 py-2 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
+                type="button"
               >
                 <CheckCircle className="w-4 h-4 mr-1" />
                 Marcar Completada
@@ -227,10 +230,11 @@ function MobileAppointmentCard({
                 onClick={() =>
                   appointment.review?.reviewToken && copyReviewLink(appointment.review.reviewToken)
                 }
-                className="bg-[color:var(--color-accent-secondary)] text-[color:var(--color-on-accent-contrast)] hover:opacity-90 px-3 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center justify-center"
+                type="button"
+                className="bg-[color:var(--color-accent-secondary)] text-[color:var(--color-on-accent-contrast)] hover:opacity-90 px-2.5 py-2 rounded-lg text-xs font-medium transition-colors inline-flex items-center justify-center"
               >
                 <Link className="w-4 h-4 mr-1" />
-                Copiar Link Review
+                Copiar Link
               </button>
             </>
           )}
@@ -240,7 +244,8 @@ function MobileAppointmentCard({
               <button
                 onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
                 disabled={isUpdating}
-                className="bg-info text-on-info hover:opacity-90 px-3 py-2 rounded-lg text-sm disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
+                type="button"
+                className="bg-info text-on-info hover:opacity-90 px-3 py-2 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
               >
                 <RotateCcw className="w-4 h-4 mr-1" />
                 Reabrir (Confirmada)
@@ -249,10 +254,11 @@ function MobileAppointmentCard({
                 onClick={() =>
                   appointment.review?.reviewToken && copyReviewLink(appointment.review.reviewToken)
                 }
-                className="bg-[color:var(--color-accent-secondary)] text-[color:var(--color-on-accent-contrast)] hover:opacity-90 px-3 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center justify-center"
+                type="button"
+                className="bg-[color:var(--color-accent-secondary)] text-[color:var(--color-on-accent-contrast)] hover:opacity-90 px-2.5 py-2 rounded-lg text-xs font-medium transition-colors inline-flex items-center justify-center"
               >
                 <Link className="w-4 h-4 mr-1" />
-                Copiar Link Review
+                Copiar Link
               </button>
             </>
           )}
@@ -261,7 +267,8 @@ function MobileAppointmentCard({
             <button
               onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
               disabled={isUpdating}
-              className="bg-info text-on-info hover:opacity-90 px-3 py-2 rounded-lg text-sm disabled:opacity-50 font-medium transition-colors"
+              type="button"
+              className="bg-info text-on-info hover:opacity-90 px-3 py-2 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors"
             >
               Reabrir (Confirmada)
             </button>
@@ -269,7 +276,8 @@ function MobileAppointmentCard({
 
           <button
             onClick={() => onViewDetails(appointment)}
-            className="bg-accent-secondary text-on-accent-contrast hover:opacity-90 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+            type="button"
+            className="bg-accent-secondary text-on-accent-contrast hover:opacity-90 px-3 py-2 rounded-lg text-xs font-medium transition-colors"
           >
             Ver Detalles
           </button>
@@ -277,7 +285,8 @@ function MobileAppointmentCard({
           <button
             onClick={() => onDelete(appointment.id)}
             disabled={isDeleting}
-            className="bg-danger text-on-danger hover:opacity-90 px-3 py-2 rounded-lg text-sm disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[40px]"
+            type="button"
+            className="bg-danger text-on-danger hover:opacity-90 px-3 py-2 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[40px]"
           >
             Eliminar
           </button>
@@ -287,7 +296,6 @@ function MobileAppointmentCard({
   );
 }
 
-// Desktop Row Component
 function AppointmentRow({
   appointment,
   isHighlighted,
@@ -384,6 +392,7 @@ function AppointmentRow({
                   aria-label="Confirmar"
                   onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
                   disabled={isUpdating}
+                  type="button"
                   className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring disabled:opacity-50"
                 >
                   <CheckCircle className="w-5 h-5 text-[color:var(--color-success)]" />
@@ -398,6 +407,7 @@ function AppointmentRow({
                   aria-label="Cancelar"
                   onClick={() => onStatusUpdate(appointment.id, "CANCELLED")}
                   disabled={isUpdating}
+                  type="button"
                   className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring disabled:opacity-50"
                 >
                   <XCircle className="w-5 h-5 text-[color:var(--color-danger)]" />
@@ -417,6 +427,7 @@ function AppointmentRow({
                   aria-label="Marcar completada"
                   onClick={() => onStatusUpdate(appointment.id, "COMPLETED")}
                   disabled={isUpdating}
+                  type="button"
                   className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring disabled:opacity-50"
                 >
                   <CheckCircle className="w-5 h-5 text-[color:var(--color-success)]" />
@@ -433,6 +444,7 @@ function AppointmentRow({
                     appointment.review?.reviewToken &&
                     copyReviewLink(appointment.review.reviewToken)
                   }
+                  type="button"
                   className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring"
                 >
                   <Link className="w-5 h-5 text-[color:var(--color-accent-secondary)]" />
@@ -452,6 +464,7 @@ function AppointmentRow({
                   aria-label="Reabrir"
                   onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
                   disabled={isUpdating}
+                  type="button"
                   className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring disabled:opacity-50"
                 >
                   <RotateCcw className="w-5 h-5 text-[color:var(--color-info)]" />
@@ -468,6 +481,7 @@ function AppointmentRow({
                     appointment.review?.reviewToken &&
                     copyReviewLink(appointment.review.reviewToken)
                   }
+                  type="button"
                   className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring"
                 >
                   <Link className="w-5 h-5 text-[color:var(--color-accent-secondary)]" />
@@ -486,6 +500,7 @@ function AppointmentRow({
                 aria-label="Reabrir"
                 onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
                 disabled={isUpdating}
+                type="button"
                 className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring disabled:opacity-50"
               >
                 <RotateCcw className="w-5 h-5 text-[color:var(--color-info)]" />
@@ -501,6 +516,7 @@ function AppointmentRow({
             <button
               aria-label="Ver detalles"
               onClick={() => onViewDetails(appointment)}
+              type="button"
               className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring"
             >
               <Eye className="w-5 h-5 text-[color:var(--color-accent-secondary)]" />
@@ -516,6 +532,7 @@ function AppointmentRow({
               aria-label="Eliminar"
               onClick={() => onDelete(appointment.id)}
               disabled={isDeleting}
+              type="button"
               className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring disabled:opacity-50"
             >
               <Trash2 className="w-5 h-5 text-[color:var(--color-danger)]" />
@@ -531,7 +548,6 @@ function AppointmentRow({
   );
 }
 
-// Main Component
 export default function AppointmentTable({
   appointments,
   highlightedId,
@@ -552,7 +568,7 @@ export default function AppointmentTable({
   };
 
   if (!appointments || appointments.length === 0) {
-    return null; // Empty state handled by parent
+    return null;
   }
 
   // Mobile View

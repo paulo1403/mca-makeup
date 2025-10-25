@@ -1,6 +1,7 @@
 import { emailTemplates, sendEmail, sendEmailToAdmins } from "@/lib/serverEmail";
-import { debugDate, parseDateFromString } from "@/utils/dateUtils";
+import { debugDate, parseDateFromString, formatDateForCalendar } from "@/utils/dateUtils";
 import { calculateNightShiftCost } from "@/utils/nightShift";
+import { parseAppointmentTime } from "@/utils/dateRange";
 import { type Prisma, PrismaClient } from "@prisma/client";
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
@@ -162,20 +163,54 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Formato de fecha inválido" }, { status: 400 });
     }
 
-    // Check if the appointment slot (rango) is available
-    const existingAppointment = await prisma.appointment.findFirst({
+    // Verificar solapamiento de horarios (no solo coincidencia exacta)
+    const existingAppointments = await prisma.appointment.findMany({
       where: {
         appointmentDate: appointmentDateTime,
-        appointmentTime: validatedData.appointmentTimeRange,
-        status: {
-          in: ["PENDING", "CONFIRMED"],
-        },
+        status: { in: ["PENDING", "CONFIRMED"] },
+      },
+      select: {
+        appointmentTime: true,
+        totalDuration: true,
+        locationType: true,
       },
     });
 
-    if (existingAppointment) {
+    const appointmentDateStr = formatDateForCalendar(appointmentDateTime); // "YYYY-MM-DD"
+    const requested = parseAppointmentTime(
+      appointmentDateStr,
+      validatedData.appointmentTimeRange,
+      totalDuration || undefined,
+    );
+
+    const transportBufferMinutes = 60;
+
+    const hasOverlap = existingAppointments.some((apt) => {
+      const existing = parseAppointmentTime(
+        appointmentDateStr,
+        apt.appointmentTime,
+        apt.totalDuration || undefined,
+      );
+
+      // Aplicar buffer de transporte si alguno es a domicilio
+      const bufferBefore =
+        validatedData.locationType === "HOME" || apt.locationType === "HOME"
+          ? transportBufferMinutes
+          : 0;
+      const bufferAfter = bufferBefore;
+
+      const existingStartBuffered = new Date(existing.start.getTime() - bufferBefore * 60 * 1000);
+      const existingEndBuffered = new Date(existing.end.getTime() + bufferAfter * 60 * 1000);
+
+      // Solapamiento si [reqStart, reqEnd] intersecta [existingStartBuffered, existingEndBuffered]
+      return (
+        requested.start < existingEndBuffered && requested.end > existingStartBuffered
+      );
+    });
+
+    if (hasOverlap) {
       return NextResponse.json(
-        { error: "Este horario ya está ocupado. Por favor selecciona otro." },
+        { error: "Este horario se solapa con otra cita. Por favor selecciona otro." },
         { status: 400 },
       );
     }

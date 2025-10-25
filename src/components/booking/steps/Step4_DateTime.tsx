@@ -176,14 +176,18 @@ export default function Step4_DateTime() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
-          className="p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
+          className="p-3 sm:p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
         >
-          <div className="flex items-center justify-between mb-4">
-            <Typography as="h3" variant="h3">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2 mb-4">
+            <Typography as="h5" variant="h5" className="text-base sm:text-lg">
               {t("selectTimeSlot")}
             </Typography>
             {date && (
-              <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
+              <Typography
+                as="span"
+                variant="small"
+                className="text-[color:var(--color-body)] text-xs sm:text-sm mt-1 sm:mt-0"
+              >
                 {format(date, "dd/MM/yyyy")}
               </Typography>
             )}
@@ -229,7 +233,10 @@ export default function Step4_DateTime() {
               ))}
             </div>
           ) : rangesData?.availableRanges?.length ? (
-            <div aria-label="Selecciona un horario" className="grid grid-cols-2 gap-2">
+            <div
+              aria-label="Selecciona un horario"
+              className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3"
+            >
               {rangesData.availableRanges.map((r: string, index: number) => {
                 const isSelected = timeSlot === r;
                 return (
@@ -246,7 +253,7 @@ export default function Step4_DateTime() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.2, delay: index * 0.05 }}
-                    className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg transition-all duration-200 w-full ${
+                    className={`flex items-center justify-center gap-1.5 sm:gap-2 px-2 py-1.5 sm:px-3 sm:py-2.5 rounded-lg transition-all duration-200 w-full ${
                       isSelected
                         ? "bg-[color:var(--color-primary)] text-white border-2 border-[color:var(--color-primary)]"
                         : "bg-[color:var(--color-surface)] border border-[color:var(--color-border)] hover:border-[color:var(--color-primary)]/50"
@@ -255,14 +262,14 @@ export default function Step4_DateTime() {
                     <Clock
                       aria-hidden="true"
                       focusable="false"
-                      className={`w-4 h-4 ${
+                      className={`w-3 h-3 sm:w-4 sm:h-4 ${
                         isSelected ? "text-white" : "text-[color:var(--color-accent)]"
                       }`}
                     />
                     <Typography
                       as="span"
                       variant="small"
-                      className={`font-medium ${
+                      className={`font-medium text-xs sm:text-sm ${
                         isSelected ? "text-white" : "text-[color:var(--color-heading)]"
                       }`}
                     >

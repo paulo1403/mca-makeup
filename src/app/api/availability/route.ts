@@ -3,10 +3,8 @@ import { type NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-// Helper function to get current time in Peru timezone
 function getCurrentTimeInPeru(): Date {
   const now = new Date();
-  // Convert to Peru timezone (UTC-5)
   const peruTime = new Date(now.toLocaleString("en-US", { timeZone: "America/Lima" }));
   return peruTime;
 }
@@ -25,7 +23,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Parse date to match database storage format (2025-08-03T17:00:00.000Z)
     let appointmentDate: Date;
     if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       appointmentDate = new Date(`${date}T17:00:00.000Z`);
@@ -33,7 +30,6 @@ export async function GET(request: NextRequest) {
       appointmentDate = new Date(date);
     }
 
-    // Validate date (must be today or future) - using Peru timezone
     const today = getCurrentTimeInPeru();
     today.setHours(0, 0, 0, 0);
     const checkDate = new Date(appointmentDate);
@@ -46,10 +42,16 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get all booked appointments for the date
+    const dayStart = new Date(appointmentDate);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(dayStart.getTime() + 24 * 60 * 60 * 1000);
+
     const bookedAppointments = await prisma.appointment.findMany({
       where: {
-        appointmentDate: appointmentDate,
+        appointmentDate: {
+          gte: dayStart,
+          lt: dayEnd,
+        },
         status: {
           in: ["PENDING", "CONFIRMED"],
         },
@@ -64,7 +66,6 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Parse multiple service types from comma-separated string
     const serviceTypeArray = serviceTypes
       .split(",")
       .map((s) => s.trim())
@@ -77,35 +78,27 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get all active services for matching
     const allServices = await prisma.service.findMany({
       where: { isActive: true },
       select: { id: true, name: true, duration: true },
     });
 
-    // Match and calculate total duration for all selected services
     let totalDuration = 0;
     const matchedServices = [];
 
     for (const serviceTypeOrId of serviceTypeArray) {
-      let matchedService;
+      let matchedService: (typeof allServices)[number] | undefined;
 
-      // First try to find by ID (new format)
       matchedService = allServices.find((s) => s.id === serviceTypeOrId);
 
-      // If not found by ID, try the old format (service name with price)
       if (!matchedService) {
-        // Extract service name from serviceType (remove price if present)
-        // Example: "Maquillaje Social - Estilo Natural (S/ 200)" -> "Maquillaje Social - Estilo Natural"
         let serviceName = serviceTypeOrId;
         if (serviceTypeOrId.includes("(S/")) {
           serviceName = serviceTypeOrId.split(" (S/")[0].trim();
         }
 
-        // Try exact match first
         matchedService = allServices.find((s) => s.name === serviceName);
 
-        // If no exact match, try partial match
         if (!matchedService) {
           matchedService = allServices.find(
             (s) =>
@@ -137,7 +130,6 @@ export async function GET(request: NextRequest) {
 
     const selectedDuration = totalDuration;
 
-    // Helper function to add/subtract minutes from time string
     function addMinutes(time: string, mins: number) {
       const [h, m] = time.split(":").map(Number);
       const date = new Date(1970, 0, 1, h, m);
@@ -145,36 +137,45 @@ export async function GET(request: NextRequest) {
       return date.toTimeString().slice(0, 5);
     }
 
-    // Helper function to convert time string to minutes since midnight
     function timeToMinutes(time: string): number {
-      const [h, m] = time.split(":").map(Number);
+      const trimmed = (time || "").trim();
+
+      const ampmMatch = trimmed.match(/^(\d{1,2}):(\d{2})\s*(AM|PM|a\.\s*m\.|p\.\s*m\.)$/i);
+      if (ampmMatch) {
+        let hours = Number.parseInt(ampmMatch[1], 10);
+        const minutes = Number.parseInt(ampmMatch[2], 10);
+        const period = ampmMatch[3].toLowerCase().replace(/\s/g, "");
+        const isPM = period === "pm" || period === "p.m.";
+        const isAM = period === "am" || period === "a.m.";
+        if (isPM && hours !== 12) hours += 12;
+        if (isAM && hours === 12) hours = 0;
+        return hours * 60 + minutes;
+      }
+
+      const parts = trimmed.split(":");
+      const h = Number.parseInt(parts[0] || "0", 10);
+      const m = Number.parseInt(parts[1] || "0", 10);
       return h * 60 + m;
     }
 
-    // Helper function to convert minutes since midnight to time string
     function minutesToTime(minutes: number): string {
       const h = Math.floor(minutes / 60);
       const m = minutes % 60;
       return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
     }
 
-    // Generate blocked time ranges from booked appointments
     const blockedRanges: { start: number; end: number }[] = [];
 
-    // First, separate appointments by location type for optimized blocking
     const studioAppointments = bookedAppointments.filter((apt) => apt.locationType === "STUDIO");
     const homeAppointments = bookedAppointments.filter((apt) => apt.locationType === "HOME");
 
-    // Handle studio appointments - group consecutive ones
     if (studioAppointments.length > 0) {
-      // Sort by start time
       const sortedStudio = studioAppointments.sort((a, b) => {
         const aStart = a.appointmentTime.split(" - ")[0];
         const bStart = b.appointmentTime.split(" - ")[0];
         return timeToMinutes(aStart) - timeToMinutes(bStart);
       });
 
-      // Group consecutive studio appointments
       const studioGroups: (typeof sortedStudio)[] = [];
       let currentGroup = [sortedStudio[0]];
 
@@ -182,7 +183,6 @@ export async function GET(request: NextRequest) {
         const prevEnd = currentGroup[currentGroup.length - 1].appointmentTime.split(" - ")[1];
         const currentStart = sortedStudio[i].appointmentTime.split(" - ")[0];
 
-        // If appointments are consecutive (within 30 minutes), group them
         if (timeToMinutes(currentStart) - timeToMinutes(prevEnd) <= 30) {
           currentGroup.push(sortedStudio[i]);
         } else {
@@ -192,19 +192,16 @@ export async function GET(request: NextRequest) {
       }
       studioGroups.push(currentGroup);
 
-      // For each group of studio appointments, create blocking ranges
       for (const group of studioGroups) {
         const groupStart = group[0].appointmentTime.split(" - ")[0];
         const groupEnd = group[group.length - 1].appointmentTime.split(" - ")[1];
 
         if (locationType === "STUDIO") {
-          // Same location: no transport time needed
           blockedRanges.push({
             start: timeToMinutes(groupStart),
             end: timeToMinutes(groupEnd),
           });
         } else {
-          // Different location (requesting HOME): add transport time
           const blockedStart = addMinutes(groupStart, -60);
           const blockedEnd = addMinutes(groupEnd, 60);
 
@@ -222,7 +219,6 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Handle home appointments individually (each needs transport time)
     for (const booked of homeAppointments) {
       const bookedStart = booked.appointmentTime.split(" - ")[0];
       const bookedEnd = booked.appointmentTime.split(" - ")[1];
@@ -230,11 +226,9 @@ export async function GET(request: NextRequest) {
       let bookedBlockEnd = bookedEnd;
 
       if (locationType === "STUDIO") {
-        // Different locations (HOME→STUDIO): block 1h before and after for transport
         bookedBlockStart = addMinutes(bookedStart, -60);
         bookedBlockEnd = addMinutes(bookedEnd, 60);
       } else {
-        // Both home services: block 1h before and after for transport between addresses
         bookedBlockStart = addMinutes(bookedStart, -60);
         bookedBlockEnd = addMinutes(bookedEnd, 60);
       }
@@ -251,14 +245,12 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Check for special dates first
     const specialDate = await prisma.specialDate.findFirst({
       where: {
         date: appointmentDate,
       },
     });
 
-    // If it's a special date and not available, return empty slots
     if (specialDate && !specialDate.isAvailable) {
       return NextResponse.json({
         date: date,
@@ -269,12 +261,10 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Get configured working hours from database
     const dayOfWeek = appointmentDate.getDay();
     let workingPeriods: { start: number; end: number }[] = [];
 
     if (specialDate?.isAvailable && specialDate.startTime && specialDate.endTime) {
-      // Use special date custom hours
       workingPeriods = [
         {
           start: timeToMinutes(specialDate.startTime),
@@ -288,7 +278,6 @@ export async function GET(request: NextRequest) {
         note: specialDate.note,
       });
     } else {
-      // Use regular availability
       const whereClause: {
         dayOfWeek: number;
         isActive: boolean;
@@ -298,7 +287,6 @@ export async function GET(request: NextRequest) {
         isActive: true,
       };
 
-      // Only filter by locationType if it's not "any"
       if (locationType !== "any") {
         whereClause.locationType = locationType as "STUDIO" | "HOME";
       }
@@ -324,7 +312,6 @@ export async function GET(request: NextRequest) {
       }));
     }
 
-    // Generate available time slots dynamically with optimized consecutive scheduling
     let availableRanges: string[] = [];
 
     console.log("Working hours debug:", {
@@ -356,39 +343,32 @@ export async function GET(request: NextRequest) {
         : null,
     });
 
-    // Process each working period separately
     for (const workingPeriod of workingPeriods) {
       const startWorkingHours = workingPeriod.start;
       const endWorkingHours = workingPeriod.end;
 
-      // Create a list of all blocked time points for this period
       const allTimePoints: number[] = [startWorkingHours, endWorkingHours];
 
-      // Add all blocked range boundaries that intersect with this working period
-      blockedRanges.forEach((blocked) => {
+      for (const blocked of blockedRanges) {
         if (blocked.start < endWorkingHours && blocked.end > startWorkingHours) {
           allTimePoints.push(
             Math.max(blocked.start, startWorkingHours),
             Math.min(blocked.end, endWorkingHours),
           );
         }
-      });
+      }
 
-      // Sort and remove duplicates
       const uniqueTimePoints = [...new Set(allTimePoints)].sort((a, b) => a - b);
 
-      // Generate optimized slots using available gaps within this working period
       for (let i = 0; i < uniqueTimePoints.length - 1; i++) {
         const gapStart = uniqueTimePoints[i];
         const gapEnd = uniqueTimePoints[i + 1];
         const gapDuration = gapEnd - gapStart;
 
-        // Skip if this gap is outside working hours constraints
         if (gapStart < startWorkingHours || gapEnd > endWorkingHours) {
           continue;
         }
 
-        // Check if this gap is actually available (not blocked)
         let isGapBlocked = false;
         for (const blocked of blockedRanges) {
           if (gapStart >= blocked.start && gapEnd <= blocked.end) {
@@ -401,15 +381,12 @@ export async function GET(request: NextRequest) {
           continue;
         }
 
-        // For studio appointments, prioritize consecutive slots
         if (locationType === "STUDIO" && gapDuration >= selectedDuration) {
-          // Generate consecutive slots that fill the gap efficiently
           let currentSlotStart = gapStart;
 
           while (currentSlotStart + selectedDuration <= gapEnd) {
             const slotEnd = currentSlotStart + selectedDuration;
 
-            // Verify this slot doesn't conflict with any blocked range
             let hasConflict = false;
             for (const blocked of blockedRanges) {
               if (!(slotEnd <= blocked.start || currentSlotStart >= blocked.end)) {
@@ -425,14 +402,11 @@ export async function GET(request: NextRequest) {
               availableRanges.push(timeSlot);
             }
 
-            // Move to next consecutive slot (no gap)
             currentSlotStart = slotEnd;
           }
         } else {
-          // For home services or smaller gaps, use traditional 30-minute intervals
           let currentTime = gapStart;
 
-          // Align to 30-minute boundaries for home services
           if (locationType === "HOME") {
             const remainder = currentTime % 30;
             if (remainder !== 0) {
@@ -444,7 +418,6 @@ export async function GET(request: NextRequest) {
             const slotStart = currentTime;
             const slotEnd = currentTime + selectedDuration;
 
-            // Check if this slot conflicts with any blocked range
             let hasConflict = false;
             for (const blocked of blockedRanges) {
               if (!(slotEnd <= blocked.start || slotStart >= blocked.end)) {
@@ -460,7 +433,6 @@ export async function GET(request: NextRequest) {
               availableRanges.push(timeSlot);
             }
 
-            // For home services, increment by 30 minutes for flexibility
             currentTime += locationType === "HOME" ? 30 : selectedDuration;
           }
         }
@@ -475,7 +447,6 @@ export async function GET(request: NextRequest) {
       blockedRanges: blockedRanges.length,
     });
 
-    // Remove duplicates and sort
     availableRanges = [...new Set(availableRanges)].sort((a, b) => {
       const aStart = timeToMinutes(a.split(" - ")[0]);
       const bStart = timeToMinutes(b.split(" - ")[0]);
@@ -488,7 +459,6 @@ export async function GET(request: NextRequest) {
       location: locationType,
     });
 
-    // Check for blocked availability (custom admin blocks)
     const blockedAvailability = await prisma.availability.findMany({
       where: {
         date: appointmentDate,
@@ -500,8 +470,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Remove blocked time slots
-    blockedAvailability.forEach((blocked) => {
+    for (const blocked of blockedAvailability) {
       const blockedStart = timeToMinutes(blocked.startTime);
       const blockedEnd = timeToMinutes(blocked.endTime);
 
@@ -510,18 +479,16 @@ export async function GET(request: NextRequest) {
         const rangeStartMinutes = timeToMinutes(rangeStart);
         const rangeEndMinutes = timeToMinutes(rangeEnd);
 
-        // Check for overlap with blocked time
         return rangeEndMinutes <= blockedStart || rangeStartMinutes >= blockedEnd;
       });
-    });
+    }
 
-    // Special handling for same day appointments (can't book within 2 hours)
     const now = getCurrentTimeInPeru();
     const isToday = checkDate.getTime() === today.getTime();
 
     if (isToday) {
       const currentMinutes = now.getHours() * 60 + now.getMinutes();
-      const cutoffMinutes = currentMinutes + 120; // 2 hours notice required
+      const cutoffMinutes = currentMinutes + 120;
 
       console.log("Same day booking restriction:", {
         currentTime: `${now.getHours()}:${now.getMinutes().toString().padStart(2, "0")}`,
