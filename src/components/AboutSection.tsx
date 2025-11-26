@@ -108,11 +108,15 @@ export default function AboutSection() {
                   }}
                 >
                   <Image
-                    src="https://marcelacorderomakeup.my.canva.site/_assets/media/6d0773b57fb0bc5f1db1ada4d9461476.jpg"
+                    src="https://marcelacorderomakeup.my.canva.site/_assets/media/a946848d6f1442ce7e9ea68c53c46982.jpg"
                     alt="Marcela Cordero"
                     fill
                     className="about-image"
-                    style={{ objectPosition: "50% 40%" }}
+                    style={{
+                      objectFit: "cover", objectPosition: "center",
+                      width: "100%",
+                      height: "100%",
+                    }}
                     priority
                   />
                 </div>

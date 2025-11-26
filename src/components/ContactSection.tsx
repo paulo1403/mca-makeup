@@ -6,7 +6,9 @@ import { useRef } from "react";
 import BookingFlow from "./BookingFlow";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
+import TransportCostCalculator from "./TransportCostCalculator";
 import "@/styles/components/contact.css";
+import "@/styles/components/transport-calculator.css";
 
 export default function ContactSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -195,6 +197,9 @@ export default function ContactSection() {
                 })}
               </div>
             </div>
+
+            {/* Calculadora de Transporte */}
+            <TransportCostCalculator />
           </motion.div>
 
           {/* Formulario de reserva */}
