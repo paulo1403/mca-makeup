@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { Calendar, CreditCard, MapPin, Send, Sparkles, User } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { FieldPath } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -80,6 +80,46 @@ export default function BookingFlow() {
   const { t } = useTranslations();
   const { data: allServices = [] } = useServicesList();
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const qpDate = params.get("date");
+    const qpTime = params.get("timeSlot");
+    const qpLocation = params.get("locationType");
+    const qpServices = params.get("services");
+
+    const currentDate = methods.getValues("date");
+    const currentTime = methods.getValues("timeSlot");
+
+    if (!currentDate && qpDate) {
+      const parsed = new Date(`${qpDate}T00:00:00`);
+      if (!isNaN(parsed.getTime())) {
+        methods.setValue("date", parsed, { shouldDirty: true, shouldValidate: true });
+      }
+    }
+
+    if (!currentTime && qpTime) {
+      methods.setValue("timeSlot", qpTime, { shouldDirty: true, shouldValidate: true });
+    }
+
+    if (qpLocation === "HOME" || qpLocation === "STUDIO") {
+      methods.setValue("locationType", qpLocation as any, { shouldDirty: false, shouldValidate: false });
+    }
+
+    if (qpServices) {
+      const currentServices = methods.getValues("selectedServices") || [];
+      if (!currentServices.length) {
+        const items = qpServices
+          .split(",")
+          .map((pair) => pair.split(":"))
+          .filter((parts) => parts.length === 2 && parts[0] && Number(parts[1]) > 0)
+          .map(([id, qty]) => ({ id, quantity: Number(qty) }));
+        if (items.length) {
+          methods.setValue("selectedServices", items as any, { shouldDirty: true, shouldValidate: true });
+        }
+      }
+    }
+  }, [methods]);
+
   // Iconos para cada paso
   const stepIcons = [User, Calendar, MapPin, CreditCard, Sparkles];
 
@@ -146,6 +186,13 @@ export default function BookingFlow() {
       setSuccessClientName(methods.getValues("name"));
       setShowSuccess(true);
       toast.success(t("successMessage"));
+
+      try {
+        const url = new URL(window.location.href);
+        ["date", "timeSlot", "locationType", "services"].forEach((k) => url.searchParams.delete(k));
+        window.history.replaceState({}, "", url.toString());
+        window.dispatchEvent(new CustomEvent("availability:reset"));
+      } catch {}
     },
     onError: (err: unknown) => {
       const message = err instanceof Error ? err.message : t("errorSending");
@@ -170,7 +217,7 @@ export default function BookingFlow() {
 
   return (
     <FormProvider {...methods}>
-      <section className="py-8 sm:py-12 overflow-hidden">
+      <section id="booking-flow" className="py-8 sm:py-12 overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
           {/* Encabezado */}
           <motion.div

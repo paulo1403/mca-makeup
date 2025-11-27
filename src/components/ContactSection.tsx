@@ -4,6 +4,7 @@ import { motion, useInView } from "framer-motion";
 import { Calendar, Clock, Instagram, Mail, MapPin, MessageSquare, Phone, Star } from "lucide-react";
 import { useRef } from "react";
 import BookingFlow from "./BookingFlow";
+import AvailabilityCheckSection from "./availability/AvailabilityCheckSection";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
 import TransportCostCalculator from "./TransportCostCalculator";
@@ -209,6 +210,7 @@ export default function ContactSection() {
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
+            <AvailabilityCheckSection />
             <BookingFlow />
           </motion.div>
         </div>
