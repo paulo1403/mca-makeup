@@ -128,7 +128,14 @@ export async function GET(request: NextRequest) {
       totalDuration += matchedService.duration;
     }
 
-    const selectedDuration = totalDuration;
+    let selectedDuration = totalDuration;
+    if (!Number.isFinite(selectedDuration) || selectedDuration <= 0) {
+      console.warn("Selected duration invalid, applying fallback", {
+        totalDuration,
+        serviceTypeArray,
+      });
+      selectedDuration = 120;
+    }
 
     function addMinutes(time: string, mins: number) {
       const [h, m] = time.split(":").map(Number);
@@ -414,6 +421,7 @@ export async function GET(request: NextRequest) {
             }
           }
 
+          const step = Math.max(selectedDuration, 30);
           while (currentTime + selectedDuration <= gapEnd) {
             const slotStart = currentTime;
             const slotEnd = currentTime + selectedDuration;
@@ -433,7 +441,7 @@ export async function GET(request: NextRequest) {
               availableRanges.push(timeSlot);
             }
 
-            currentTime += locationType === "HOME" ? 30 : selectedDuration;
+            currentTime += locationType === "HOME" ? 30 : step;
           }
         }
       }
@@ -446,6 +454,13 @@ export async function GET(request: NextRequest) {
       workingPeriods: workingPeriods.length,
       blockedRanges: blockedRanges.length,
     });
+
+    availableRanges = availableRanges
+      .filter((r) => {
+        const [s, e] = r.split(" - ");
+        return s !== e;
+      })
+      .filter(Boolean);
 
     availableRanges = [...new Set(availableRanges)].sort((a, b) => {
       const aStart = timeToMinutes(a.split(" - ")[0]);
