@@ -43,7 +43,7 @@ export default function TransportCostCalculator() {
     };
 
     return (
-        <div className="transport-calculator">
+        <div className="transport-calculator rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-sm p-4 sm:p-6">
             <motion.div
                 className="transport-calculator-header"
                 initial={{ opacity: 0, y: 10 }}

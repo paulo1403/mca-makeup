@@ -156,12 +156,12 @@
 }
 
 .contact-form-wrapper {
-  background: var(--contact-surface);
-  border: 1px solid var(--contact-border);
-  border-radius: 1.5rem;
+  background: transparent;
+  border: none;
+  border-radius: 0;
   padding: 0;
-  overflow: hidden;
-  box-shadow: 0 4px 20px color-mix(in srgb, var(--color-primary) 8%, transparent);
+  overflow: visible;
+  box-shadow: none;
 }
 
 .contact-quick-actions {

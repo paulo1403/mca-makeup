@@ -54,6 +54,16 @@ export default function AvailabilityCheckSection() {
     }
     window.history.replaceState({}, "", url.toString());
 
+    try {
+      const payload = {
+        date: format(date, "yyyy-MM-dd"),
+        timeSlot: selectedRange,
+        locationType,
+        services: servicesPairs.join(","),
+      };
+      window.dispatchEvent(new CustomEvent("availability:prefill", { detail: payload }));
+    } catch {}
+
     const el = document.querySelector("#booking-flow");
     if (el) {
       (el as HTMLElement).scrollIntoView({ behavior: "smooth", block: "start" });
@@ -61,7 +71,7 @@ export default function AvailabilityCheckSection() {
   };
 
   return (
-    <div className="mb-10 sm:mb-14 p-6 sm:p-2">
+    <div className="mb-10 sm:mb-14 p-4 sm:p-6 rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-sm">
       <div className="flex items-center gap-2 mb-3">
         <div className="w-7 h-7 shrink-0 rounded-full bg-[color:var(--color-primary)]/30 border border-[color:var(--color-border)] flex items-center justify-center">
           <Calendar className="w-4 h-4 text-[color:var(--color-heading)]" />
@@ -71,7 +81,7 @@ export default function AvailabilityCheckSection() {
         </Typography>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:gap-4">
         {/* Fecha */}
         <div className="p-3 sm:p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]">
           <Typography as="h4" variant="h4" className="text-[color:var(--color-heading)] text-sm mb-2">
@@ -195,7 +205,7 @@ export default function AvailabilityCheckSection() {
             </Typography>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
             {availableRanges.map((r) => {
               const isSelected = selectedRange === r;
               return (

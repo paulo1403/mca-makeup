@@ -211,7 +211,9 @@ export default function ContactSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <AvailabilityCheckSection />
-            <BookingFlow />
+            <div className="mt-8 sm:mt-12 p-4 sm:p-6 rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-sm">
+              <BookingFlow />
+            </div>
           </motion.div>
         </div>
       </div>

@@ -87,7 +87,7 @@ export default function CompactServiceSelector({ value, onChangeAction, classNam
   return (
     <div className={`space-y-3 ${className}`}>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-        <div className="flex items-center gap-2 overflow-x-auto -mx-1 px-1" style={{ scrollbarWidth: "none" }}>
+        <div className="flex items-center gap-2 overflow-x-auto -mx-1 px-1 lg:overflow-visible lg:flex-wrap lg:mx-0" style={{ scrollbarWidth: "none" }}>
           {categories.map((cat) => (
             <button
               key={cat}
@@ -120,7 +120,7 @@ export default function CompactServiceSelector({ value, onChangeAction, classNam
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+      <div className="grid grid-cols-1 gap-2 sm:gap-3 lg:gap-5 items-stretch">
         {loading ? (
           Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="h-24 sm:h-28 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] animate-pulse" />
@@ -145,13 +145,13 @@ export default function CompactServiceSelector({ value, onChangeAction, classNam
                     toggleService(svc);
                   }
                 }}
-                className={`text-left p-3 sm:p-4 rounded-xl transition-all duration-200 border w-full ${
+                className={`text-left p-3 sm:p-4 lg:p-5 rounded-xl transition-all duration-200 border w-full overflow-hidden flex flex-col h-full lg:min-h-[200px] ${
                   selected
                     ? "bg-[color:var(--color-primary)]/10 border-[color:var(--color-primary)]"
                     : "bg-[color:var(--color-surface)] border-[color:var(--color-border)] hover:border-[color:var(--color-primary)]/50"
                 }`}
               >
-                <div className="flex items-start justify-between gap-2 sm:gap-3">
+                <div className="flex items-start justify-between gap-2 sm:gap-3 lg:items-center">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
                       <div className={`w-2 h-2 rounded-full ${CATEGORY_COLORS[svc.category as keyof typeof CATEGORY_COLORS] || "bg-gray-300"}`} />
@@ -159,26 +159,26 @@ export default function CompactServiceSelector({ value, onChangeAction, classNam
                         {CATEGORY_LABELS[svc.category as keyof typeof CATEGORY_LABELS] || svc.category}
                       </span>
                     </div>
-                    <h4 className="mt-1 font-medium text-[color:var(--color-heading)] text-sm leading-snug truncate">
+                    <h4 className="mt-1 font-medium text-[color:var(--color-heading)] text-sm lg:text-base leading-snug truncate">
                       {svc.name}
                     </h4>
                     {svc.description && (
                       <p
-                        className={`text-xs mt-1 ${expanded[svc.id] ? "text-[color:var(--color-body)]" : "text-[color:var(--color-body)]/80"} ${expanded[svc.id] ? "line-clamp-none" : "line-clamp-1 sm:line-clamp-2"}`}
+                        className={`text-xs lg:text-sm mt-1 ${expanded[svc.id] ? "text-[color:var(--color-body)]" : "text-[color:var(--color-body)]/80"} ${expanded[svc.id] ? "line-clamp-none" : "line-clamp-1 sm:line-clamp-2 lg:line-clamp-3"}`}
                       >
                         {svc.description}
                       </p>
                     )}
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <span className={`font-bold block ${selected ? "text-[color:var(--color-primary)]" : "text-[color:var(--color-heading)]"}`}>S/ {svc.price}</span>
-                    <div className="mt-0.5 text-xs text-[color:var(--color-body)] inline-flex items-center gap-1">
+                    <span className={`font-bold block ${selected ? "text-[color:var(--color-primary)]" : "text-[color:var(--color-heading)]"} lg:text-lg`}>S/ {svc.price}</span>
+                    <div className="mt-0.5 text-xs lg:text-sm text-[color:var(--color-body)] inline-flex items-center gap-1">
                       <Clock className={`w-3 h-3 ${selected ? "text-[color:var(--color-primary)]" : "text-[color:var(--color-accent)]"}`} />
                       {svc.duration}min
                     </div>
                   </div>
                 </div>
-                <div className="mt-2 sm:mt-3 flex items-center justify-between">
+                <div className="mt-auto pt-2 sm:pt-3 lg:pt-2 flex items-center justify-between">
                   <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs ${
                     selected
                       ? "bg-[color:var(--color-primary)] text-white"
@@ -187,14 +187,14 @@ export default function CompactServiceSelector({ value, onChangeAction, classNam
                     <Check className="w-3 h-3" />
                     {selected ? (selectedQty > 1 ? `${selectedQty} seleccionados` : "Seleccionado") : "Seleccionar"}
                   </div>
-                  <div className="inline-flex items-center gap-2">
+                  <div className="inline-flex items-center gap-2 lg:ml-auto">
                     <button
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleExpanded(svc.id);
                       }}
-                      className="px-2 py-1 rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[11px] text-[color:var(--color-body)] hover:border-[color:var(--color-primary)]/50"
+                      className="px-2 py-1 rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[11px] text-[color:var(--color-body)] hover:border-[color:var(--color-primary)]/50 sm:hidden"
                       aria-expanded={!!expanded[svc.id]}
                     >
                       <span className="inline-flex items-center gap-1">

@@ -6,18 +6,18 @@
 /* Contenedor principal */
 .react-datepicker,
 .premium-datepicker {
-  border: 1px solid var(--input-border);
+  border: none;
   border-radius: 12px;
   background-color: var(--color-card);
   color: var(--color-heading);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: none;
   font-family: inherit;
 }
 
 /* Header del calendario */
 .react-datepicker__header {
   background-color: var(--color-card);
-  border-bottom: 1px solid var(--input-border);
+  border-bottom: none;
   border-radius: 12px 12px 0 0;
   padding: 0.75rem 1rem;
 }

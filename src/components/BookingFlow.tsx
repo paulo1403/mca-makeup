@@ -120,6 +120,42 @@ export default function BookingFlow() {
     }
   }, [methods]);
 
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as {
+        date?: string;
+        timeSlot?: string;
+        locationType?: "HOME" | "STUDIO";
+        services?: string;
+      } | undefined;
+      if (!detail) return;
+      if (detail.date) {
+        const parsed = new Date(`${detail.date}T00:00:00`);
+        if (!isNaN(parsed.getTime())) {
+          methods.setValue("date", parsed, { shouldDirty: true, shouldValidate: true });
+        }
+      }
+      if (detail.timeSlot) {
+        methods.setValue("timeSlot", detail.timeSlot, { shouldDirty: true, shouldValidate: true });
+      }
+      if (detail.locationType === "HOME" || detail.locationType === "STUDIO") {
+        methods.setValue("locationType", detail.locationType as any, { shouldDirty: true, shouldValidate: true });
+      }
+      if (detail.services) {
+        const items = detail.services
+          .split(",")
+          .map((pair) => pair.split(":"))
+          .filter((parts) => parts.length === 2 && parts[0] && Number(parts[1]) > 0)
+          .map(([id, qty]) => ({ id, quantity: Number(qty) }));
+        if (items.length) {
+          methods.setValue("selectedServices", items as any, { shouldDirty: true, shouldValidate: true });
+        }
+      }
+    };
+    window.addEventListener("availability:prefill", handler as EventListener);
+    return () => window.removeEventListener("availability:prefill", handler as EventListener);
+  }, [methods]);
+
   // Iconos para cada paso
   const stepIcons = [User, Calendar, MapPin, CreditCard, Sparkles];
 
@@ -253,7 +289,7 @@ export default function BookingFlow() {
 
           {/* Contenido principal */}
           <div className="mt-6">
-            <div className="bg-[color:var(--color-surface)] rounded-xl shadow-lg border border-[color:var(--color-border)] p-4 sm:p-6">
+            <div className="bg-[color:var(--color-surface)]">
               {/* Título del paso actual */}
               <motion.div
                 className="flex items-center gap-3 mb-6 pb-4 border-b border-[color:var(--color-border)]/20"
@@ -318,54 +354,48 @@ export default function BookingFlow() {
 
               {/* Botones de navegación */}
               <motion.div
-                className={`mt-6 flex flex-col gap-3 ${
-                  currentStep === total ? "sm:flex sm:justify-end" : "sm:flex sm:justify-between"
-                }`}
+                className="mt-6 flex flex-col sm:flex-row sm:justify-end items-center gap-3"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.5 }}
               >
-                <div className="order-2 sm:order-1">
-                  {currentStep > 1 && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="lg"
-                      onClick={handlePrev}
-                      className="w-full sm:w-auto"
-                    >
-                      {t("prevButton")}
-                    </Button>
-                  )}
-                </div>
-                <div className="order-1 sm:order-2">
-                  {currentStep < total ? (
-                    <Button
-                      type="button"
-                      variant="primary"
-                      size="lg"
-                      onClick={handleNext}
-                      className="w-full sm:w-auto"
-                    >
-                      {t("nextButton")}
-                    </Button>
-                  ) : (
-                    <Button
-                      type="button"
-                      variant="primary"
-                      size="lg"
-                      disabled={!canSubmit || sendBooking.isPending}
-                      onClick={methods.handleSubmit((data) => sendBooking.mutate(data))}
-                      aria-busy={sendBooking.isPending}
-                      className="w-full sm:w-auto min-h-[52px]"
-                    >
-                      <span className="inline-flex items-center gap-2">
-                        <Send className="w-5 h-5" />
-                        {sendBooking.isPending ? t("submitting") : t("submitButton")}
-                      </span>
-                    </Button>
-                  )}
-                </div>
+                {currentStep > 1 && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="lg"
+                    onClick={handlePrev}
+                    className="w-full sm:w-auto"
+                  >
+                    {t("prevButton")}
+                  </Button>
+                )}
+                {currentStep < total ? (
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="lg"
+                    onClick={handleNext}
+                    className="w-full sm:w-auto"
+                  >
+                    {t("nextButton")}
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="lg"
+                    disabled={!canSubmit || sendBooking.isPending}
+                    onClick={methods.handleSubmit((data) => sendBooking.mutate(data))}
+                    aria-busy={sendBooking.isPending}
+                    className="w-full sm:w-auto min-h-[52px]"
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <Send className="w-5 h-5" />
+                      {sendBooking.isPending ? t("submitting") : t("submitButton")}
+                    </span>
+                  </Button>
+                )}
               </motion.div>
             </div>
           </div>
