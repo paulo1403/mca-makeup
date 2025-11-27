@@ -71,12 +71,12 @@ export default function AvailabilityCheckSection() {
   };
 
   return (
-    <div className="mb-10 sm:mb-14 p-4 sm:p-6 rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-sm">
+    <div className="mb-10 sm:mb-14 p-4 sm:p-6 rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-sm availability-card">
       <div className="flex items-center gap-2 mb-3">
-        <div className="w-7 h-7 shrink-0 rounded-full bg-[color:var(--color-primary)]/30 border border-[color:var(--color-border)] flex items-center justify-center">
-          <Calendar className="w-4 h-4 text-[color:var(--color-heading)]" />
+        <div className="w-6 h-6 shrink-0 rounded-full bg-[color:var(--color-primary)]/30 border border-[color:var(--color-border)] flex items-center justify-center">
+          <Calendar className="w-3.5 h-3.5 text-[color:var(--color-heading)]" />
         </div>
-        <Typography as="h3" variant="h3" className="text-[color:var(--color-heading)] text-base sm:text-lg">
+        <Typography as="h3" variant="h3" className="text-[color:var(--color-heading)] text-sm sm:text-base">
           Chequear disponibilidad
         </Typography>
       </div>
@@ -84,7 +84,7 @@ export default function AvailabilityCheckSection() {
       <div className="grid grid-cols-1 gap-3 sm:gap-4">
         {/* Fecha */}
         <div className="p-3 sm:p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]">
-          <Typography as="h4" variant="h4" className="text-[color:var(--color-heading)] text-sm mb-2">
+          <Typography as="h4" variant="h4" className="text-[color:var(--color-heading)] text-xs sm:text-sm mb-2">
             Fecha
           </Typography>
           <DatePicker
@@ -144,7 +144,7 @@ export default function AvailabilityCheckSection() {
         {/* Ubicación y servicio */}
         <div className="space-y-3">
           <div className="p-3 sm:p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]">
-            <Typography as="h4" variant="h4" className="text-[color:var(--color-heading)] text-sm mb-3">
+            <Typography as="h4" variant="h4" className="text-[color:var(--color-heading)] text-xs sm:text-sm mb-3">
               Ubicación
             </Typography>
             <div className="flex items-center gap-2">
@@ -168,7 +168,7 @@ export default function AvailabilityCheckSection() {
           </div>
 
           <div className="p-3 sm:p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]">
-            <Typography as="h4" variant="h4" className="text-[color:var(--color-heading)] text-sm mb-2">
+            <Typography as="h4" variant="h4" className="text-[color:var(--color-heading)] text-xs sm:text-sm mb-2">
               Servicio (opcional)
             </Typography>
             <CompactServiceSelector value={serviceSelection} onChangeAction={setServiceSelection} />

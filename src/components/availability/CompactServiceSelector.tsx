@@ -3,6 +3,7 @@
 import type { Service, ServiceSelection } from "@/types";
 import { CATEGORY_COLORS, CATEGORY_LABELS } from "@/lib/serviceRules";
 import { Sparkles, Clock, Check, Search, ChevronDown, ChevronUp } from "lucide-react";
+import Typography from "@/components/ui/Typography";
 import { useEffect, useMemo, useState } from "react";
 
 interface CompactServiceSelectorProps {
@@ -17,6 +18,8 @@ export default function CompactServiceSelector({ value, onChangeAction, classNam
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [showAll, setShowAll] = useState(false);
+  const INITIAL_LIMIT = 4;
 
   useEffect(() => {
     const loadServices = async () => {
@@ -52,6 +55,8 @@ export default function CompactServiceSelector({ value, onChangeAction, classNam
       return matchesCategory && matchesSearch;
     });
   }, [services, activeCategory, searchTerm]);
+
+  
 
   const toggleService = (svc: Service) => {
     const next = { ...value };
@@ -130,7 +135,7 @@ export default function CompactServiceSelector({ value, onChangeAction, classNam
             <span className="text-sm text-[color:var(--color-body)]">No se encontraron servicios</span>
           </div>
         ) : (
-          filtered.map((svc) => {
+          (showAll ? filtered : filtered.slice(0, INITIAL_LIMIT)).map((svc) => {
             const selectedQty = value[svc.id] || 0;
             const selected = selectedQty > 0;
             return (
@@ -155,24 +160,24 @@ export default function CompactServiceSelector({ value, onChangeAction, classNam
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
                       <div className={`w-2 h-2 rounded-full ${CATEGORY_COLORS[svc.category as keyof typeof CATEGORY_COLORS] || "bg-gray-300"}`} />
-                      <span className="text-[11px] text-[color:var(--color-body)]">
+                      <span className="text-[10px] sm:text-[11px] text-[color:var(--color-body)]">
                         {CATEGORY_LABELS[svc.category as keyof typeof CATEGORY_LABELS] || svc.category}
                       </span>
                     </div>
-                    <h4 className="mt-1 font-medium text-[color:var(--color-heading)] text-sm lg:text-base leading-snug truncate">
+                    <Typography as="h6" variant="h6" className="mt-1 font-medium text-[color:var(--color-heading)] text-[11px] sm:text-sm leading-snug truncate">
                       {svc.name}
-                    </h4>
+                    </Typography>
                     {svc.description && (
                       <p
-                        className={`text-xs lg:text-sm mt-1 ${expanded[svc.id] ? "text-[color:var(--color-body)]" : "text-[color:var(--color-body)]/80"} ${expanded[svc.id] ? "line-clamp-none" : "line-clamp-1 sm:line-clamp-2 lg:line-clamp-3"}`}
+                        className={`text-[10px] sm:text-xs mt-1 ${expanded[svc.id] ? "text-[color:var(--color-body)]" : "text-[color:var(--color-body)]/80"} ${expanded[svc.id] ? "line-clamp-none" : "line-clamp-1 sm:line-clamp-2"}`}
                       >
                         {svc.description}
                       </p>
                     )}
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <span className={`font-bold block ${selected ? "text-[color:var(--color-primary)]" : "text-[color:var(--color-heading)]"} lg:text-lg`}>S/ {svc.price}</span>
-                    <div className="mt-0.5 text-xs lg:text-sm text-[color:var(--color-body)] inline-flex items-center gap-1">
+                    <span className={`font-bold block ${selected ? "text-[color:var(--color-primary)]" : "text-[color:var(--color-heading)]"} text-sm`}>S/ {svc.price}</span>
+                    <div className="mt-0.5 text-[11px] sm:text-xs text-[color:var(--color-body)] inline-flex items-center gap-1">
                       <Clock className={`w-3 h-3 ${selected ? "text-[color:var(--color-primary)]" : "text-[color:var(--color-accent)]"}`} />
                       {svc.duration}min
                     </div>
@@ -194,7 +199,7 @@ export default function CompactServiceSelector({ value, onChangeAction, classNam
                         e.stopPropagation();
                         toggleExpanded(svc.id);
                       }}
-                      className="px-2 py-1 rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[11px] text-[color:var(--color-body)] hover:border-[color:var(--color-primary)]/50 sm:hidden"
+                      className="px-0 py-0 text-[11px] text-[color:var(--color-heading)] underline underline-offset-2 decoration-[color:var(--color-muted)] hover:decoration-[color:var(--color-primary)] bg-transparent border-0 sm:hidden"
                       aria-expanded={!!expanded[svc.id]}
                     >
                       <span className="inline-flex items-center gap-1">
@@ -235,6 +240,17 @@ export default function CompactServiceSelector({ value, onChangeAction, classNam
           })
         )}
       </div>
+      {!loading && filtered.length > INITIAL_LIMIT && (
+        <div className="mt-3 sm:mt-4">
+          <button
+            type="button"
+            className="w-full px-3 py-2 rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[color:var(--color-heading)] text-sm hover:border-[color:var(--color-primary)]/50"
+            onClick={() => setShowAll((v) => !v)}
+          >
+            {showAll ? "Ver menos" : "Ver más servicios"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
