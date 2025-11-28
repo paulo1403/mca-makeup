@@ -62,38 +62,45 @@ function MobileAppointmentCard({
   const servicesLabel = formatServices(appointment)
     .map((s) => s.displayText)
     .join(", ");
+  const isStudio = (appointment.location || "").toLowerCase().includes("studio");
+  const locationText = isStudio
+    ? "En estudio - Av. Bolívar 1075, Pueblo Libre"
+    : [appointment.address, appointment.district].filter(Boolean).join(", ");
 
   return (
     <div
       id={`appointment-${appointment.id}`}
       className={[
         "bg-[color:var(--color-surface)]",
-        "rounded-lg",
+        "rounded-xl",
         "border",
         "shadow-sm",
         "hover:shadow-md",
         "transition-all",
         "duration-200",
+        "overflow-hidden",
+        "mb-5",
+        "last:mb-0",
         isHighlighted
           ? "border-[color:var(--color-primary)]/60 bg-[color:var(--color-primary)]/10 ring-2 ring-[color:var(--color-primary)]/40"
-          : "border-[color:var(--color-border)]",
+          : "border-transparent sm:border-[color:var(--color-border)]/40",
       ].join(" ")}
     >
       {/* Header */}
       <div
-        className={`p-3 border-b ${
+        className={`relative px-4 py-3 border-b bg-[color:var(--color-surface-elevated)] rounded-t-xl ${
           isHighlighted
             ? "border-[color:var(--color-primary)]/40"
-            : "border-[color:var(--color-border)]"
+            : "border-transparent sm:border-[color:var(--color-border)]/40"
         }`}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-9 h-9 rounded-full bg-[color:var(--color-primary)]/15 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-full bg-[color:var(--color-primary)]/15 ring-1 ring-[color:var(--color-border)] flex items-center justify-center">
               <User className="w-4 h-4 text-[color:var(--color-primary)]" />
             </div>
-            <div className="min-w-0">
-              <h3 className="font-semibold text-[color:var(--color-on-surface)] text-sm leading-tight truncate max-w-[65vw] sm:max-w-[40vw]">
+            <div className="min-w-0 pr-20">
+              <h3 className="font-semibold text-[color:var(--color-heading)] text-sm leading-tight truncate max-w-[70vw]">
                 <span className="block truncate text-base sm:text-base font-semibold">
                   {appointment.clientName}
                 </span>
@@ -103,24 +110,24 @@ function MobileAppointmentCard({
                   </span>
                 )}
               </h3>
-              <div className="text-xs text-[color:var(--color-muted)] truncate max-w-[65vw] sm:max-w-[40vw]">
-                <span className="inline-block truncate">{servicesLabel}</span>
+              <div className="text-xs text-[color:var(--color-muted)] max-w-[70vw]">
+                <span
+                  className="inline-block"
+                  style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}
+                >
+                  {servicesLabel}
+                </span>
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-end space-y-1">
-            <StatusBadge status={appointment.status} className="px-1.5 py-0.5 text-[11px]" />
-            {appointment.status === "COMPLETED" && appointment.review && (
-              <span className="inline-flex items-center px-1.5 py-0.5 text-[11px] font-medium rounded-full bg-[color:var(--color-accent-secondary)]/15 text-[color:var(--color-accent-secondary)]">
-                <Star className="w-3 h-3 mr-1" /> Review
-              </span>
-            )}
+          <div className="absolute right-3 top-3">
+            <StatusBadge status={appointment.status} className="px-2 py-1 text-[11px]" />
           </div>
         </div>
       </div>
 
       {/* Details */}
-      <div className="p-3 space-y-2.5">
+      <div className="px-4 py-3 space-y-3">
         <div className="grid grid-cols-2 gap-2">
           <div className="flex items-center space-x-1.5">
             <Calendar className="w-3.5 h-3.5 text-[color:var(--color-primary)]/70" />
@@ -139,7 +146,7 @@ function MobileAppointmentCard({
         <div className="flex items-center space-x-1.5 min-w-0">
           <MapPin className="w-3.5 h-3.5 text-[color:var(--color-muted)]" />
           <span className="text-xs text-[color:var(--color-muted)] truncate">
-            {appointment.address}
+            {locationText || (isStudio ? "En estudio - Av. Bolívar 1075, Pueblo Libre" : "Servicio a domicilio")}
           </span>
         </div>
 
@@ -159,11 +166,11 @@ function MobileAppointmentCard({
         </div>
 
         {(priceInfo.hasTransport || priceInfo.hasNightShift || priceInfo.totalPrice > 0) && (
-          <div className="bg-[color:var(--color-surface-elevated)]/40 rounded-lg p-3">
+          <div className="rounded-lg p-3 border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)]/40">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-1.5 text-[color:var(--color-muted)]">
                 <DollarSign className="w-3.5 h-3.5 text-[color:var(--color-primary)]" />
-                <span className="text-xs">Precio</span>
+                <span className="text-xs">Total</span>
               </div>
               <div className="text-sm font-semibold text-[color:var(--color-primary)]">
                 {formatPrice(priceInfo.totalPrice)}
@@ -171,17 +178,12 @@ function MobileAppointmentCard({
             </div>
             {(priceInfo.hasTransport || priceInfo.hasNightShift) && (
               <div className="mt-2 text-[11px] text-[color:var(--color-muted)]">
+                <span>Servicios: {formatPrice(priceInfo.servicePrice)}</span>
                 {priceInfo.hasTransport && (
-                  <>
-                    <br />
-                    Movilidad: {formatPrice(priceInfo.transportCost)}
-                  </>
+                  <span className="ml-2">· Movilidad: {formatPrice(priceInfo.transportCost)}</span>
                 )}
                 {priceInfo.hasNightShift && (
-                  <>
-                    <br />
-                    Nocturno: {formatPrice(priceInfo.nightShiftCost)}
-                  </>
+                  <span className="ml-2">· Nocturno: {formatPrice(priceInfo.nightShiftCost)}</span>
                 )}
               </div>
             )}
@@ -190,7 +192,7 @@ function MobileAppointmentCard({
       </div>
 
       {/* Actions */}
-      <div className="p-4 border-t bg-[color:var(--color-surface-elevated)]/50">
+      <div className="px-4 py-3 border-t border-[color:var(--color-border)]/40 bg-[color:var(--color-surface-elevated)]/40 rounded-b-xl">
         <div className="grid grid-cols-2 gap-2">
           {appointment.status === "PENDING" && (
             <>
@@ -574,7 +576,7 @@ export default function AppointmentTable({
   // Mobile View
   if (isMobile) {
     return (
-      <div className="space-y-4 p-4">
+      <>
         {appointments.map((appointment) => (
           <MobileAppointmentCard
             key={appointment.id}
@@ -587,7 +589,7 @@ export default function AppointmentTable({
             isDeleting={deleteMutation.isPending}
           />
         ))}
-      </div>
+      </>
     );
   }
 

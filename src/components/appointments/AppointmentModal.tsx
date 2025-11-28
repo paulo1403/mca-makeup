@@ -14,7 +14,9 @@ import {
   getReviewStatusText,
   getReviewUrl,
 } from "@/utils/reviewHelpers";
+import { generateQuotePng, copyQuotePngToClipboard, buildQuoteText } from "@/components/share/QuoteShareCard";
 import React, { useState } from "react";
+import { toast } from "react-hot-toast";
 
 interface AppointmentModalProps {
   appointment: Appointment | null;
@@ -26,12 +28,65 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
   const updateStatusMutation = useUpdateAppointmentStatus();
   const deleteMutation = useDeleteAppointment();
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [showLocation, setShowLocation] = useState(true);
+  const [showNotes, setShowNotes] = useState(false);
 
   if (!isOpen || !appointment) return null;
 
   const handleStatusUpdate = (status: Appointment["status"]) => {
     updateStatusMutation.mutate({ id: appointment.id, status });
     onClose();
+  };
+
+  const handleExportPng = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    const btn = event.currentTarget;
+    const original = btn.textContent;
+    btn.disabled = true;
+    try {
+      const copied = await copyQuotePngToClipboard({ appointment, deposit: 150 });
+      if (!copied) {
+        const blob = await generateQuotePng({ appointment, deposit: 150 });
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `presupuesto-${appointment.id}.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          toast.success("Imagen descargada");
+        }
+      } else {
+        toast.success("Imagen copiada al portapapeles");
+      }
+      btn.textContent = "✅ Exportado";
+    } catch {
+      toast.error("No se pudo exportar la imagen");
+      btn.textContent = "⚠️ Error";
+    } finally {
+      setTimeout(() => {
+        btn.textContent = original || "Exportar PNG";
+        btn.disabled = false;
+      }, 1800);
+    }
+  };
+
+  const handleCopyBudgetText = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    const btn = event.currentTarget;
+    const original = btn.textContent;
+    try {
+      await navigator.clipboard.writeText(buildQuoteText({ appointment, deposit: 150 }));
+      toast.success("Texto copiado al portapapeles");
+      btn.textContent = "✅ Copiado";
+    } catch {
+      toast.error("No se pudo copiar el texto");
+      btn.textContent = "⚠️ Error";
+    } finally {
+      setTimeout(() => {
+        btn.textContent = original || "Copiar texto";
+      }, 1800);
+    }
   };
 
   return (
@@ -46,67 +101,79 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
       />
       <ModalBody>
         <div className="space-y-4 sm:space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-            <AppointmentDetailField label="Cliente" value={appointment.clientName} />
-            <AppointmentDetailField label="Email" value={appointment.clientEmail} />
-            <AppointmentDetailField label="Teléfono" value={appointment.clientPhone} />
-            <AppointmentDetailField label="Servicio" value={appointment.serviceType} />
-            <AppointmentDetailField label="Fecha" value={formatDate(appointment.appointmentDate)} />
-            <AppointmentDetailField label="Hora" value={formatTime(appointment.appointmentTime)} />
-            <AppointmentDetailField label="Duración" value={`${appointment.duration} minutos`} />
-
-            <div>
-              <div className="block text-xs sm:text-sm font-medium text-[color:var(--color-muted)] mb-1">
-                Ubicación
+          <div className="space-y-3">
+            <div className="bg-[color:var(--color-surface)] p-4 rounded-xl border border-[color:var(--color-border)]">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                <div className="space-y-1">
+                  <div className="text-lg font-semibold text-[color:var(--color-heading)]">
+                    {appointment.clientName}
+                  </div>
+                  <div className="text-sm text-[color:var(--color-muted)]">
+                    {appointment.clientEmail} · {appointment.clientPhone}
+                  </div>
+                  <div className="text-sm text-[color:var(--color-on-surface)] font-medium">
+                    {appointment.serviceType}
+                  </div>
+                  <div className="text-sm text-[color:var(--color-muted)]">
+                    {formatDate(appointment.appointmentDate)} · {formatTime(appointment.appointmentTime)} · {appointment.duration} min
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <StatusBadge status={appointment.status} className="text-xs px-2 py-1 font-semibold" />
+                </div>
               </div>
-              <div className="bg-[color:var(--color-surface)] p-3 rounded-lg border border-[color:var(--color-border)]">
-                <p className="text-sm sm:text-base text-[color:var(--color-on-surface)] font-medium mb-2">
-                  {appointment.location?.includes("Studio")
-                    ? "En estudio - Av. Bolívar 1073, Pueblo Libre"
-                    : "Servicio a domicilio"}
-                </p>
-                {appointment.address && (
-                  <div className="space-y-3">
-                    <p className="text-sm text-[color:var(--color-muted)] flex items-start space-x-2">
-                      <span className="w-2 h-2 bg-[color:var(--color-primary)] rounded-full mt-2 flex-shrink-0" />
-                      <span className="text-sm">
+            </div>
+
+            <div className="bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)]">
+              <button type="button" onClick={() => setShowLocation((v) => !v)} className="w-full flex items-center justify-between px-4 py-3">
+                <span className="text-sm font-semibold text-[color:var(--color-on-surface)]">Ubicación</span>
+                <span className="text-xs text-[color:var(--color-muted)]">{showLocation ? "Ocultar" : "Mostrar"}</span>
+              </button>
+              {showLocation && (
+                <div className="px-4 pb-4 space-y-3">
+                  <p className="text-sm text-[color:var(--color-on-surface)] font-medium">
+                    {appointment.location?.includes("Studio") ? "En estudio - Av. Bolívar 1075, Pueblo Libre" : "Servicio a domicilio"}
+                  </p>
+                  {appointment.address && (
+                    <div className="space-y-3">
+                      <p className="text-sm text-[color:var(--color-muted)]">
                         {appointment.address}
                         {appointment.addressReference && ` (${appointment.addressReference})`}
                         {appointment.district && `, ${appointment.district}`}
-                      </span>
-                    </p>
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        onClick={(event) => {
-                          const fullAddress = `${appointment.address}${appointment.district ? `, ${appointment.district}` : ""}, Lima, Perú`;
-                          navigator.clipboard.writeText(fullAddress);
-                          const btn = event.currentTarget;
-                          const originalText = btn.textContent;
-                          btn.textContent = "✅ Copiado!";
-                          setTimeout(() => {
-                            btn.textContent = originalText;
-                          }, 2000);
-                        }}
-                        className="flex items-center justify-center gap-2 bg-[color:var(--color-accent-secondary)]/10 text-[color:var(--color-accent-secondary)] px-3 py-2.5 rounded-lg text-sm font-medium hover:opacity-90 transition-colors border border-[color:var(--color-border)]"
-                      >
-                        Copiar Dirección
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const fullAddress = `${appointment.address}${appointment.district ? `, ${appointment.district}` : ""}, Lima, Perú`;
-                          const mapsUrl = `https://maps.google.com/maps?q=${encodeURIComponent(fullAddress)}`;
-                          window.open(mapsUrl, "_blank");
-                        }}
-                        className="flex items-center justify-center gap-2 bg-emerald-400 text-white px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-emerald-500 transition-colors"
-                      >
-                        Abrir en Maps
-                      </button>
+                      </p>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            const fullAddress = `${appointment.address}${appointment.district ? `, ${appointment.district}` : ""}, Lima, Perú`;
+                            navigator.clipboard.writeText(fullAddress);
+                            const btn = event.currentTarget;
+                            const originalText = btn.textContent;
+                            btn.textContent = "✅ Copiado!";
+                            setTimeout(() => {
+                              btn.textContent = originalText;
+                            }, 2000);
+                          }}
+                          className="flex items-center justify-center gap-2 bg-[color:var(--color-accent-secondary)]/10 text-[color:var(--color-accent-secondary)] px-3 py-2.5 rounded-lg text-sm font-medium hover:opacity-90 transition-colors border border-[color:var(--color-border)]"
+                        >
+                          Copiar Dirección
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const fullAddress = `${appointment.address}${appointment.district ? `, ${appointment.district}` : ""}, Lima, Perú`;
+                            const mapsUrl = `https://maps.google.com/maps?q=${encodeURIComponent(fullAddress)}`;
+                            window.open(mapsUrl, "_blank");
+                          }}
+                          className="flex items-center justify-center gap-2 bg-emerald-400 text-white px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-emerald-500 transition-colors"
+                        >
+                          Abrir en Maps
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -115,61 +182,43 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
             const priceInfo = getPriceBreakdown(appointment);
             if (priceInfo.totalPrice > 0) {
               return (
-                <div className="bg-[color:var(--color-accent)]/6 p-4 rounded-lg border border-[color:var(--color-accent)]/20">
-                  <h3 className="text-sm font-semibold text-[color:var(--color-on-surface)] mb-3 flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-[color:var(--color-accent)] rounded-full flex-shrink-0" />
-                    <span>Información de Precios</span>
-                  </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="bg-[color:var(--color-surface)] p-3 rounded-lg border border-[color:var(--color-border)]">
-                      <div className="block text-xs font-medium text-[color:var(--color-muted)] mb-1">
-                        Servicio
-                      </div>
-                      <p className="text-base sm:text-lg font-semibold text-[color:var(--color-on-surface)]">
-                        {formatPrice(priceInfo.servicePrice)}
-                      </p>
+                <div className="bg-[color:var(--color-surface)] p-4 rounded-xl border border-[color:var(--color-border)] space-y-3">
+                  <div className="text-sm font-semibold text-[color:var(--color-on-surface)]">Precios</div>
+                  {appointment.services && appointment.services.length > 0 && (
+                    <div className="space-y-2">
+                      {appointment.services.map((s) => (
+                        <div key={s.id} className="flex items-center justify-between text-sm">
+                          <span className="text-[color:var(--color-on-surface)]">
+                            {s.name}
+                            {s.quantity > 1 ? ` ×${s.quantity}` : ""}
+                          </span>
+                          <span className="font-semibold text-[color:var(--color-on-surface)]">
+                            {formatPrice(s.price * s.quantity)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div className="border-t border-[color:var(--color-border)] pt-3 space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-[color:var(--color-muted)]">Servicios</span>
+                      <span className="text-[color:var(--color-on-surface)]">{formatPrice(priceInfo.servicePrice)}</span>
                     </div>
                     {priceInfo.hasTransport && (
-                      <div className="bg-[color:var(--color-surface)] p-3 rounded-lg border border-[color:var(--color-border)]">
-                        <div className="block text-xs font-medium text-[color:var(--color-muted)] mb-1">
-                          Movilidad
-                        </div>
-                        <p className="text-base sm:text-lg font-semibold text-[color:var(--color-on-surface)]">
-                          {formatPrice(priceInfo.transportCost)}
-                        </p>
-                        {appointment.district && (
-                          <div className="text-xs text-[color:var(--color-muted)] mt-1 flex items-center space-x-1">
-                            <div
-                              className="w-2 h-2 bg-[color:var(--color-accent)] rounded-full flex-shrink-0"
-                              aria-hidden="true"
-                            />
-                            <span>{appointment.district}</span>
-                          </div>
-                        )}
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-[color:var(--color-muted)]">Movilidad</span>
+                        <span className="text-[color:var(--color-on-surface)]">{formatPrice(priceInfo.transportCost)}</span>
                       </div>
                     )}
                     {priceInfo.hasNightShift && (
-                      <div className="bg-[color:var(--color-surface)] p-3 rounded-lg border border-[color:var(--color-border)]">
-                        <div className="block text-xs font-medium text-[color:var(--color-muted)] mb-1">
-                          Costo Nocturno
-                        </div>
-                        <p className="text-base sm:text-lg font-semibold text-[color:var(--color-on-surface)]">
-                          {formatPrice(priceInfo.nightShiftCost)}
-                        </p>
-                        <div className="text-xs text-[color:var(--color-muted)] mt-1 flex items-center space-x-1">
-                          <div
-                            className="w-2 h-2 bg-indigo-500 rounded-full flex-shrink-0"
-                            aria-hidden="true"
-                          />
-                          <span>7:30 PM - 6:00 AM</span>
-                        </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-[color:var(--color-muted)]">Costo nocturno</span>
+                        <span className="text-[color:var(--color-on-surface)]">{formatPrice(priceInfo.nightShiftCost)}</span>
                       </div>
                     )}
-                    <div className="bg-[color:var(--color-accent)] text-white p-3 rounded-lg">
-                      <div className="block text-xs font-medium text-white/80 mb-1">Total</div>
-                      <p className="text-lg sm:text-xl font-bold">
-                        {formatPrice(priceInfo.totalPrice)}
-                      </p>
+                    <div className="flex items-center justify-between font-serif text-lg">
+                      <span className="text-[color:var(--color-heading)]">Total</span>
+                      <span className="text-[color:var(--color-primary)] font-bold">{formatPrice(priceInfo.totalPrice)}</span>
                     </div>
                   </div>
                 </div>
@@ -179,19 +228,25 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
           })()}
 
           {appointment.additionalNotes && (
-            <div className="space-y-3">
-              {appointment.additionalNotes
-                .split("\n")
-                .filter((line) => line.trim() !== "")
-                .map((line, index) => {
-                  const isHeader = line.includes(":") && line.split(":")[1].trim() !== "";
-                  const isServiceInfo =
-                    line.toLowerCase().includes("servicio") ||
-                    line.toLowerCase().includes("maquillaje") ||
-                    line.toLowerCase().includes("peinado");
-                  const isLocationInfo =
-                    line.toLowerCase().includes("ubicación") ||
-                    line.toLowerCase().includes("dirección") ||
+            <div className="bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)]">
+              <button type="button" onClick={() => setShowNotes((v) => !v)} className="w-full flex items-center justify-between px-4 py-3">
+                <span className="text-sm font-semibold text-[color:var(--color-on-surface)]">Notas</span>
+                <span className="text-xs text-[color:var(--color-muted)]">{showNotes ? "Ocultar" : "Mostrar"}</span>
+              </button>
+              {showNotes && (
+                <div className="px-4 pb-4 space-y-3">
+                  {appointment.additionalNotes
+                    .split("\n")
+                    .filter((line) => line.trim() !== "")
+                    .map((line, index) => {
+                    const isHeader = line.includes(":") && line.split(":")[1].trim() !== "";
+                    const isServiceInfo =
+                      line.toLowerCase().includes("servicio") ||
+                      line.toLowerCase().includes("maquillaje") ||
+                      line.toLowerCase().includes("peinado");
+                    const isLocationInfo =
+                      line.toLowerCase().includes("ubicación") ||
+                      line.toLowerCase().includes("dirección") ||
                     line.toLowerCase().includes("local");
 
                   if (isHeader) {
@@ -284,7 +339,9 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                       </p>
                     </div>
                   );
-                })}
+                  })}
+                </div>
+              )}
             </div>
           )}
 
@@ -404,53 +461,35 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
         </div>
       </ModalBody>
       <ModalFooter>
-        <div className="space-y-3 w-full">
-          {appointment.status === "PENDING" && (
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => handleStatusUpdate("CONFIRMED")}
-                disabled={updateStatusMutation.isPending}
-                className="px-4 py-3 bg-success text-on-success rounded-lg hover:opacity-90 disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[44px]"
-              >
-                Confirmar Cita
-              </button>
-              <button
-                type="button"
-                onClick={() => handleStatusUpdate("CANCELLED")}
-                disabled={updateStatusMutation.isPending}
-                className="px-4 py-3 bg-danger text-on-danger rounded-lg hover:opacity-90 disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[44px]"
-              >
-                Cancelar Cita
-              </button>
-            </div>
-          )}
-          {appointment.status === "CONFIRMED" && (
+        <div className="space-y-4 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button
               type="button"
-              onClick={() => handleStatusUpdate("COMPLETED")}
-              disabled={updateStatusMutation.isPending}
-              className="w-full px-4 py-3 bg-success text-on-success rounded-lg hover:opacity-90 disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[44px]"
+              onClick={handleCopyBudgetText}
+              className="px-4 py-3 bg-[color:var(--color-surface-elevated)] text-[color:var(--color-on-surface)] border border-[color:var(--color-border)] rounded-lg hover:opacity-90 text-sm font-medium min-h-[44px]"
             >
-              Marcar como Completada
+              Copiar texto
             </button>
-          )}
-          {/* Delete action - opens confirmation modal */}
-          <button
-            type="button"
-            onClick={() => setIsDeleteOpen(true)}
-            disabled={deleteMutation.isPending}
-            className="w-full px-4 py-3 bg-red-600 text-white rounded-lg hover:opacity-90 disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[44px]"
-          >
-            Eliminar
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="w-full px-4 py-3 bg-[color:var(--color-surface-elevated)] text-[color:var(--color-on-surface)] border border-[color:var(--color-border)] rounded-lg hover:opacity-90 font-medium transition-colors min-h-[44px]"
-          >
-            Cerrar
-          </button>
+            <button
+              type="button"
+              onClick={handleExportPng}
+              className="px-4 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 font-medium transition-colors min-h-[44px]"
+            >
+              Exportar PNG
+            </button>
+            {appointment.status === "CONFIRMED" && (
+              <button
+                type="button"
+                onClick={() => handleStatusUpdate("COMPLETED")}
+                disabled={updateStatusMutation.isPending}
+                className="px-4 py-3 bg-[color:var(--color-cta-bg)] text-[color:var(--color-cta-text)] rounded-lg hover:bg-[color:var(--color-cta-hover)] disabled:opacity-50 font-medium transition-colors min-h-[44px]"
+              >
+                Marcar Completada
+              </button>
+            )}
+          </div>
+
+          <div />
         </div>
       </ModalFooter>
       {/* Delete Confirmation Modal */}

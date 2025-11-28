@@ -53,7 +53,7 @@ export default function Pagination({ pagination, currentPage, onPageChange }: Pa
   return (
     <div className="space-y-4">
       {/* Info Text */}
-      <div className="text-center text-sm text-gray-600">
+      <div className="text-center text-sm text-[color:var(--color-muted)]">
         Mostrando <span className="font-medium">{startItem}</span> a{" "}
         <span className="font-medium">{endItem}</span> de{" "}
         <span className="font-medium">{pagination.total}</span> citas
@@ -65,7 +65,7 @@ export default function Pagination({ pagination, currentPage, onPageChange }: Pa
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="inline-flex items-center px-3 py-2 text-sm font-medium text-[color:var(--color-muted)] bg-[color:var(--color-surface)] border border-[color:var(--color-border)] rounded-lg hover:bg-[color:var(--color-surface-elevated)] hover:text-[color:var(--color-on-surface)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -82,7 +82,7 @@ export default function Pagination({ pagination, currentPage, onPageChange }: Pa
         <div className="flex space-x-1">
           {pageNumbers.map((page, index) =>
             page === "..." ? (
-              <span key={index} className="px-3 py-2 text-sm text-gray-500">
+              <span key={index} className="px-3 py-2 text-sm text-[color:var(--color-muted)]">
                 ...
               </span>
             ) : (
@@ -91,8 +91,8 @@ export default function Pagination({ pagination, currentPage, onPageChange }: Pa
                 onClick={() => onPageChange(page as number)}
                 className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                   currentPage === page
-                    ? "bg-[#D4AF37] text-white shadow-sm"
-                    : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 hover:text-gray-900"
+                    ? "bg-[color:var(--color-primary)] text-[color:var(--color-cta-text)] shadow-sm border border-[color:var(--color-primary)]"
+                    : "text-[color:var(--color-on-surface)] bg-[color:var(--color-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-elevated)]"
                 }`}
               >
                 {page}
@@ -105,7 +105,7 @@ export default function Pagination({ pagination, currentPage, onPageChange }: Pa
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === pagination.pages}
-          className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="inline-flex items-center px-3 py-2 text-sm font-medium text-[color:var(--color-muted)] bg-[color:var(--color-surface)] border border-[color:var(--color-border)] rounded-lg hover:bg-[color:var(--color-surface-elevated)] hover:text-[color:var(--color-on-surface)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           <span className="hidden sm:inline">Siguiente</span>
           <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,11 +116,11 @@ export default function Pagination({ pagination, currentPage, onPageChange }: Pa
 
       {/* Mobile: Quick Jump */}
       <div className="sm:hidden flex items-center justify-center space-x-2">
-        <span className="text-sm text-gray-600">Página</span>
+        <span className="text-sm text-[color:var(--color-muted)]">Página</span>
         <select
           value={currentPage}
           onChange={(e) => onPageChange(Number.parseInt(e.target.value))}
-          className="px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
+          className="px-2 py-1 text-sm bg-[color:var(--color-surface)] border border-[color:var(--color-border)] rounded focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-transparent"
         >
           {Array.from({ length: pagination.pages }, (_, i) => i + 1).map((page) => (
             <option key={page} value={page}>
@@ -128,7 +128,7 @@ export default function Pagination({ pagination, currentPage, onPageChange }: Pa
             </option>
           ))}
         </select>
-        <span className="text-sm text-gray-600">de {pagination.pages}</span>
+        <span className="text-sm text-[color:var(--color-muted)]">de {pagination.pages}</span>
       </div>
     </div>
   );

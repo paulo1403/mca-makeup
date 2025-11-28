@@ -8,6 +8,9 @@ import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useBookingSummary } from "../../hooks/useBookingSummary";
 import useServicesQuery from "../../hooks/useServicesQuery";
+import { generateQuotePng } from "@/components/share/QuoteShareCard";
+import type { Appointment } from "@/hooks/useAppointments";
+import { toast } from "react-hot-toast";
 
 export default function BookingSummary() {
   const { watch } = useFormContext<BookingData>();
@@ -153,6 +156,102 @@ export default function BookingSummary() {
           <span className="text-neutral text-right">
             S/ {Math.max(0, (total || 0) - (deposit || 0))}
           </span>
+        </div>
+        <div className="grid grid-cols-2 gap-3 pt-3">
+          <button
+            type="button"
+            className="px-3 py-2 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-sm"
+            onClick={async (event) => {
+              const btn = event.currentTarget;
+              const original = btn.textContent;
+              const servicesForAppointment: Appointment["services"] = selectedServiceDetails.map((s) => ({
+                id: s.id,
+                name: s.name,
+                quantity: s.quantity,
+                price: s.price,
+                duration: s.duration,
+              }));
+              const mockAppointment: Appointment = {
+                id: "preview",
+                clientName: name || "",
+                clientEmail: email || "",
+                clientPhone: phone || "",
+                serviceType: servicesForAppointment?.[0]?.name || "Servicios",
+                services: servicesForAppointment,
+                appointmentDate: date ? new Date(date).toISOString() : new Date().toISOString(),
+                appointmentTime: timeSlot || "",
+                status: "PENDING",
+                additionalNotes: "",
+                location: locationType === "HOME" ? "HOME" : "Studio",
+                duration,
+                servicePrice: subtotal,
+                transportCost: transport,
+                nightShiftCost: nightShift,
+                totalPrice: total,
+                district,
+                address,
+                addressReference: "",
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              };
+              try {
+                const blob = await generateQuotePng({ appointment: mockAppointment, deposit });
+                if (blob) {
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = `presupuesto-preview.png`;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+                  btn.textContent = "✅ Exportado";
+                  toast.success("Imagen descargada");
+                }
+              } catch {
+                toast.error("No se pudo exportar la imagen");
+                btn.textContent = "⚠️ Error";
+              } finally {
+                setTimeout(() => (btn.textContent = original || "Exportar PNG"), 1800);
+              }
+            }}
+          >
+            Exportar PNG
+          </button>
+          <button
+            type="button"
+            className="px-3 py-2 bg-[color:var(--color-accent-secondary)] text-[color:var(--color-on-accent-contrast)] rounded text-sm"
+            onClick={async (event) => {
+              const btn = event.currentTarget;
+              const original = btn.textContent;
+              const textLines: string[] = [];
+              const fecha = date ? format(date, "dd/MM/yyyy") : format(new Date(), "dd/MM/yyyy");
+              const hora = timeSlot || "";
+              const ubicacion = locationType === "HOME" ? `a domicilio${district ? ` en ${district}:` : ":"}` : "en Room Studio Pueblo Libre:";
+              textLines.push("Este sería el detalle del servicio:");
+              textLines.push(`Cita programada para el ${fecha} a la ${hora} ${ubicacion}`);
+              textLines.push("");
+              selectedServiceDetails.forEach((s) => {
+                const priceLine = s.price * (s.quantity || 1);
+                textLines.push(`${s.name}${s.quantity > 1 ? ` ×${s.quantity}` : ""}: S/ ${priceLine}`);
+              });
+              textLines.push(`Total S/ ${total}`);
+              textLines.push(`Adelanto S/ ${deposit}`);
+              textLines.push(`Restante S/ ${Math.max(0, (total || 0) - (deposit || 0))}`);
+              try {
+                await navigator.clipboard.writeText(textLines.join("\n"));
+                toast.success("Texto copiado al portapapeles");
+                btn.textContent = "✅ Copiado";
+              } catch {
+                toast.error("No se pudo copiar el texto");
+                btn.textContent = "⚠️ Error";
+              } finally {
+                setTimeout(() => (btn.textContent = original || "Copiar texto"), 1800);
+              }
+            }}
+          >
+            Copiar texto
+          </button>
         </div>
       </div>
     </div>

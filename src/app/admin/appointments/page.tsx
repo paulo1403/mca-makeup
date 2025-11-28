@@ -182,7 +182,7 @@ function AppointmentsContent() {
         </div>
 
         {/* Appointments Content */}
-        <div className="bg-[color:var(--color-surface)] rounded-xl shadow-sm border border-[color:var(--color-border)] overflow-hidden">
+        <div className="overflow-hidden">
           {appointments.length === 0 ? (
             <div className="text-center py-12">
               <div className="w-16 h-16 bg-[color:var(--color-surface-elevated)] rounded-full flex items-center justify-center mx-auto mb-4">

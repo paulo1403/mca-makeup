@@ -82,7 +82,7 @@ export default function AppointmentFilters({
           {...register("search")}
           type="text"
           placeholder="Buscar citas..."
-          className="w-full pl-10 pr-4 py-3 text-sm rounded-xl bg-[color:var(--color-surface-elevated)] text-[color:var(--color-on-surface)] border border-[color:var(--color-border)] placeholder-[color:var(--color-muted)] focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-[color:var(--color-primary)] transition-all"
+          className="w-full pl-10 pr-12 py-3 text-sm rounded-2xl bg-[color:var(--color-surface-elevated)]/70 text-[color:var(--color-on-surface)] border border-[color:var(--color-border)]/50 placeholder-[color:var(--color-muted)] focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-[color:var(--color-primary)] transition-all"
         />
         {watchedSearch && (
           <button
@@ -110,7 +110,7 @@ export default function AppointmentFilters({
       </div>
 
       {/* Filter Tabs - Mobile First */}
-      <div className="flex overflow-x-auto scrollbar-hide space-x-2 pb-2">
+      <div className="flex flex-wrap gap-2 pb-2">
         {[
           { value: "all", label: "Todas" },
           { value: "PENDING", label: "Pendientes" },
@@ -150,7 +150,7 @@ export default function AppointmentFilters({
                 setValue("status", option.value);
                 onFilterChange(option.value);
               }}
-              className={`flex-shrink-0 inline-flex items-center px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 border ${isActive ? "shadow-sm" : "hover:opacity-90"}`}
+              className={`inline-flex items-center px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200 border ${isActive ? "shadow-sm ring-1 ring-[color:var(--color-border)]/60" : "hover:opacity-90"}`}
               style={style}
             >
               <span className="w-2 h-2 rounded-full mr-2" style={dotStyle} />
@@ -162,7 +162,7 @@ export default function AppointmentFilters({
 
       {/* Active Filter Indicator */}
       {(filter !== "all" || watchedSearch) && (
-        <div className="flex items-center justify-between rounded-lg px-3 py-2 border bg-[color:var(--color-surface-elevated)] border-[color:var(--color-border)]">
+        <div className="flex items-center justify-between rounded-xl px-3 py-2 border bg-[color:var(--color-surface-elevated)]/70 border-[color:var(--color-border)]/50">
           <div className="flex items-center space-x-2 text-[color:var(--color-on-surface)]">
             <svg
               className="w-4 h-4 text-[color:var(--color-muted)]"
