@@ -300,7 +300,7 @@ export async function POST(request: NextRequest) {
         address: validatedData.locationType === "HOME" ? validatedData.address : null,
         addressReference:
           validatedData.locationType === "HOME" ? validatedData.addressReference : null,
-        additionalNotes: `Servicios: ${serviceTypeString}\nUbicación: ${validatedData.locationType === "STUDIO" ? "Local en Av. Bolívar 1073, Pueblo Libre" : `Domicilio - ${validatedData.district || ""}, ${validatedData.address || ""}`}${validatedData.addressReference ? ` (Ref: ${validatedData.addressReference})` : ""}${validatedData.additionalNotes ? `\n\nNotas adicionales: ${validatedData.additionalNotes}` : ""}`,
+        additionalNotes: `Servicios: ${serviceTypeString}\nUbicación: ${validatedData.locationType === "STUDIO" ? "Local en Av. Bolívar 1075, Pueblo Libre" : `Domicilio - ${validatedData.district || ""}, ${validatedData.address || ""}`}${validatedData.addressReference ? ` (Ref: ${validatedData.addressReference})` : ""}${validatedData.additionalNotes ? `\n\nNotas adicionales: ${validatedData.additionalNotes}` : ""}`,
         status: "PENDING",
       },
     });

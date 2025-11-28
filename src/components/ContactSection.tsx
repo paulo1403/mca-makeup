@@ -30,8 +30,8 @@ export default function ContactSection() {
     },
     {
       label: "Ubicación",
-      value: "Av. Bolívar 1073, Pueblo Libre, Lima",
-      href: "https://maps.google.com/?q=Av.+Bolívar+1073,+Pueblo+Libre,+Lima",
+      value: "Av. Bolívar 1075, Pueblo Libre, Lima",
+      href: "https://maps.google.com/?q=Av.+Bolívar+1075,+Pueblo+Libre,+Lima",
       icon: MapPin,
     },
     {

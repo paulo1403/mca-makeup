@@ -137,7 +137,7 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="footer-contact-item">
                 <MapPin className="w-4 h-4 flex-shrink-0" />
-                <span>Av. Bolívar 1073, Pueblo Libre, Lima</span>
+                <span>Av. Bolívar 1075, Pueblo Libre, Lima</span>
               </div>
 
               <div className="footer-contact-item">
