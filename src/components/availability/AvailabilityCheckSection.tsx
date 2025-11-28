@@ -20,6 +20,9 @@ export default function AvailabilityCheckSection() {
   const { data, isLoading } = useAvailableRanges(date, serviceSelection, locationType);
 
   const availableRanges: string[] = useMemo(() => data?.availableRanges || [], [data]);
+  const hasSelectedService = useMemo(() => {
+    return Object.values(serviceSelection).some((q) => q > 0);
+  }, [serviceSelection]);
 
   useEffect(() => {
     setSelectedRange("");
@@ -167,14 +170,20 @@ export default function AvailabilityCheckSection() {
             </div>
           </div>
 
-          <div className="p-3 sm:p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]">
+          <div id="availability-service" className="p-3 sm:p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]">
             <Typography as="h4" variant="h4" className="text-[color:var(--color-heading)] text-xs sm:text-sm mb-2">
-              Servicio (opcional)
+              Servicio (obligatorio)
             </Typography>
             <CompactServiceSelector value={serviceSelection} onChangeAction={setServiceSelection} />
-            <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-xs mt-2">
-              Elegir un servicio ayuda a calcular bloques de tiempo más precisos.
-            </Typography>
+            {hasSelectedService ? (
+              <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-xs mt-2">
+                Elegir un servicio ayuda a calcular bloques de tiempo más precisos.
+              </Typography>
+            ) : (
+              <Typography as="p" variant="p" className="text-[color:var(--color-accent)] text-xs mt-2">
+                Este campo es obligatorio para ver horarios disponibles.
+              </Typography>
+            )}
           </div>
         </div>
       </div>
@@ -192,7 +201,26 @@ export default function AvailabilityCheckSection() {
           )}
         </div>
 
-        {isLoading ? (
+        {!hasSelectedService ? (
+          <div className="text-center py-2">
+            <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-sm mb-2">
+              Selecciona al menos un servicio para ver horarios disponibles
+            </Typography>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                const el = document.querySelector("#availability-service");
+                if (el) {
+                  (el as HTMLElement).scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+              }}
+            >
+              Marcar servicio ahora
+            </Button>
+          </div>
+        ) : isLoading ? (
           <div className="space-y-2">
             {["sk-1", "sk-2", "sk-3"].map((key) => (
               <div key={key} className="h-10 bg-[color:var(--color-surface)] rounded-lg animate-pulse" />
