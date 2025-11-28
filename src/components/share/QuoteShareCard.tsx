@@ -27,6 +27,16 @@ function getHomeAddress(appointment: Appointment) {
   return candidates.join(" ");
 }
 
+function looksLikeStudio(text: string) {
+  const low = (text || "").toLowerCase();
+  return /studio|estudio|local|bol[ií]var|pueblo\s+libre/.test(low);
+}
+
+function normalizeStudioAddress(text: string) {
+  if (!looksLikeStudio(text)) return text;
+  return "Av Bolívar 1075 Pueblo Libre";
+}
+
 export function buildQuoteText({ appointment, deposit = 150 }: QuoteShareData) {
   const services = formatServices(appointment);
   const price = getPriceBreakdown(appointment);
@@ -36,8 +46,11 @@ export function buildQuoteText({ appointment, deposit = 150 }: QuoteShareData) {
   const horaStart = timeRange.includes("-") ? timeRange.split("-")[0].trim() : timeRange;
   const hora = horaStart.replace(" AM", "am").replace(" PM", "pm");
   const locationStr = (appointment.location || "").toLowerCase();
-  const homeText = getHomeAddress(appointment);
-  const isStudio = locationStr.includes("studio") || locationStr === "studio" || (!homeText && (getPriceBreakdown(appointment).transportCost || 0) === 0);
+  const homeTextRaw = getHomeAddress(appointment);
+  const studioFromNotes = looksLikeStudio(homeTextRaw);
+  const isStudio = locationStr.includes("studio") || locationStr === "studio" || studioFromNotes || (!homeTextRaw && (getPriceBreakdown(appointment).transportCost || 0) === 0);
+  const studioAddr = normalizeStudioAddress(homeTextRaw);
+  const homeText = studioFromNotes ? studioAddr : homeTextRaw;
   const ubicacion = isStudio
     ? "en Av Bolívar 1075 Pueblo Libre:"
     : homeText
@@ -108,13 +121,29 @@ export async function generateQuotePng({ appointment, deposit = 150 }: QuoteShar
     [0].trim() : timeRangeHeader;
   const horaHeader = horaStartHeader.replace(" AM", "am").replace(" PM", "pm");
   const locationStr2 = (appointment.location || "").toLowerCase();
-  const homeText2 = getHomeAddress(appointment);
-  const isStudio2 = locationStr2.includes("studio") || locationStr2 === "studio" || (!homeText2 && (price.transportCost || 0) === 0);
+  const homeTextRaw2 = getHomeAddress(appointment);
+  const studioFromNotes2 = looksLikeStudio(homeTextRaw2);
+  const isStudio2 = locationStr2.includes("studio") || locationStr2 === "studio" || studioFromNotes2 || (!homeTextRaw2 && (price.transportCost || 0) === 0);
+  const studioAddr2 = normalizeStudioAddress(homeTextRaw2);
+  const homeText2 = studioFromNotes2 ? studioAddr2 : homeTextRaw2;
   const ubicacion = isStudio2
     ? "en Av Bolívar 1075 Pueblo Libre:"
     : homeText2
       ? `en ${homeText2}:`
       : "a domicilio:";
+  try {
+    console.groupCollapsed("[BudgetPNG]");
+    console.table({
+      location: appointment.location,
+      address: appointment.address,
+      addressReference: appointment.addressReference,
+      district: appointment.district,
+      homeText: homeText2,
+      isStudio: isStudio2,
+    });
+    console.log("HeaderString", `Cita programada para el ${fecha} a la ${horaHeader} ${ubicacion}`);
+    console.groupEnd();
+  } catch {}
   const headerWrapped = wrapLines(measureCtx, `Cita programada para el ${fecha} a la ${horaHeader} ${ubicacion}`, contentWMeasure, smallFont);
   measureCtx.font = lineFont;
   let dynamicLines = baseLines + headerWrapped.length;
