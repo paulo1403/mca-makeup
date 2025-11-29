@@ -152,7 +152,7 @@ export default function MobileMenu({ isOpen, onClose, handleNavClick }: MobileMe
                         variant="small"
                         className="text-[color:var(--color-muted)]"
                       >
-                        Av. Bolívar 1075
+                        Av. Bolívar 1073
                       </Typography>
                       <Typography
                         as="p"

@@ -324,7 +324,7 @@ export const emailTemplates = {
       - Servicio: ${serviceType}
       - Fecha: ${date}
       - Hora: ${time}
-      - Ubicación: ${locationType === "STUDIO" ? "Av. Bolívar 1075 , Pueblo Libre" : "A domicilio"}
+      - Ubicación: ${locationType === "STUDIO" ? "Av. Bolívar 1073 , Pueblo Libre" : "A domicilio"}
       ${locationType === "HOME" && district ? `- Distrito: ${district}` : ""}
       ${locationType === "HOME" && address ? `- Dirección: ${address}` : ""}
       ${locationType === "HOME" && addressReference ? `- Referencia: ${addressReference}` : ""}

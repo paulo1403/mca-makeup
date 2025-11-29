@@ -235,7 +235,7 @@ export default function HeroSection() {
                     variant="p"
                     className="text-[color:var(--color-body)] text-sm leading-tight"
                   >
-                    Av. Bolívar 1075, Pueblo Libre
+                    Av. Bolívar 1073, Pueblo Libre
                   </Typography>
                 </div>
               </div>

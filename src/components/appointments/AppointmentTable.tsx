@@ -64,7 +64,7 @@ function MobileAppointmentCard({
     .join(", ");
   const isStudio = (appointment.location || "").toLowerCase().includes("studio");
   const locationText = isStudio
-    ? "En estudio - Av. Bolívar 1075, Pueblo Libre"
+    ? "En estudio - Av. Bolívar 1073, Pueblo Libre"
     : [appointment.address, appointment.district].filter(Boolean).join(", ");
 
   return (
@@ -146,7 +146,7 @@ function MobileAppointmentCard({
         <div className="flex items-center space-x-1.5 min-w-0">
           <MapPin className="w-3.5 h-3.5 text-[color:var(--color-muted)]" />
           <span className="text-xs text-[color:var(--color-muted)] truncate">
-            {locationText || (isStudio ? "En estudio - Av. Bolívar 1075, Pueblo Libre" : "Servicio a domicilio")}
+            {locationText || (isStudio ? "En estudio - Av. Bolívar 1073, Pueblo Libre" : "Servicio a domicilio")}
           </span>
         </div>
 

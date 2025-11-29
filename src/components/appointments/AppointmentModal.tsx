@@ -132,7 +132,7 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
               {showLocation && (
                 <div className="px-4 pb-4 space-y-3">
                   <p className="text-sm text-[color:var(--color-on-surface)] font-medium">
-                    {appointment.location?.includes("Studio") ? "En estudio - Av. Bolívar 1075, Pueblo Libre" : "Servicio a domicilio"}
+                    {appointment.location?.includes("Studio") ? "En estudio - Av. Bolívar 1073, Pueblo Libre" : "Servicio a domicilio"}
                   </p>
                   {appointment.address && (
                     <div className="space-y-3">
