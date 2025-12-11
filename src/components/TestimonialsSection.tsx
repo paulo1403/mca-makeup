@@ -1,11 +1,10 @@
 "use client";
 
-import { AnimatePresence, motion, useInView } from "framer-motion";
-import { ArrowLeft, ArrowRight, Calendar, Grid, Heart, Quote, Sliders, Star } from "lucide-react";
+import { ArrowLeft, ArrowRight, Star } from "lucide-react";
 import React, { useEffect, useState, useRef } from "react";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
-import "@/styles/components/testimonials.css";
+import "@/styles/components/testimonials-minimal.css";
 
 type ReviewShape = {
   id: string;
@@ -123,11 +122,11 @@ function formatService(services?: { name?: string; serviceName?: string }[], ser
 }
 
 const serviceCategories = [
-  { id: "all", name: "Todos", icon: Grid },
-  { id: "novia", name: "Novias", icon: Heart },
-  { id: "social", name: "Eventos Sociales", icon: Calendar },
-  { id: "gala", name: "Gala", icon: Star },
-  { id: "madura", name: "Piel Madura", icon: Star },
+  { id: "all", name: "Todos" },
+  { id: "novia", name: "Novias" },
+  { id: "social", name: "Eventos Sociales" },
+  { id: "gala", name: "Gala" },
+  { id: "madura", name: "Piel Madura" },
 ];
 
 export default function TestimonialsSection() {
@@ -135,11 +134,8 @@ export default function TestimonialsSection() {
   const [filteredItems, setFilteredItems] = useState<Testimonial[]>(fallbackTestimonials);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState<"carousel" | "grid">("carousel");
   const [selectedService, setSelectedService] = useState("all");
   const timerRef = useRef<number | null>(null);
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   useEffect(() => {
     let mounted = true;
@@ -175,17 +171,15 @@ export default function TestimonialsSection() {
   }, []);
 
   useEffect(() => {
-    if (viewMode === "carousel") {
+    if (timerRef.current) window.clearInterval(timerRef.current);
+    timerRef.current = window.setInterval(
+      () => setIndex((i) => (i + 1) % filteredItems.length),
+      6000,
+    );
+    return () => {
       if (timerRef.current) window.clearInterval(timerRef.current);
-      timerRef.current = window.setInterval(
-        () => setIndex((i) => (i + 1) % filteredItems.length),
-        6000,
-      );
-      return () => {
-        if (timerRef.current) window.clearInterval(timerRef.current);
-      };
-    }
-  }, [filteredItems.length, viewMode]);
+    };
+  }, [filteredItems.length]);
 
   useEffect(() => {
     if (selectedService === "all") {
@@ -199,35 +193,15 @@ export default function TestimonialsSection() {
     setIndex(0);
   }, [selectedService, items]);
 
-  const featuredTestimonials = filteredItems.filter((item) => item.featured);
-  // If user selected a specific service, prioritize featured items for the carousel.
-  // If 'all' is selected, show all filtered items so "Todos" truly shows everything.
-  const displayItems =
-    viewMode === "carousel" && selectedService !== "all" && featuredTestimonials.length > 0
-      ? featuredTestimonials
-      : filteredItems;
-
   return (
     <section
       id="testimonials"
-      className="py-12 sm:py-24 testimonials-section relative overflow-hidden"
-      style={{ scrollMarginTop: "120px" }}
-      ref={sectionRef}
+      className="py-16 sm:py-24 bg-[color:var(--color-background)]"
     >
-      {/* Elementos decorativos de fondo */}
-      <div className="hidden sm:block absolute top-10 left-10 w-32 h-32 bg-[color:var(--color-primary)]/10 rounded-full filter blur-3xl" />
-      <div className="hidden sm:block absolute bottom-10 right-10 w-40 h-40 bg-[color:var(--color-accent)]/10 rounded-full filter blur-3xl" />
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl relative z-10">
-        <motion.div
-          className="text-center mb-10 sm:mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[color:var(--color-surface)]/80 border border-[color:var(--color-accent)]/20 mb-6">
-            <Quote className="w-4 h-4 text-[color:var(--color-primary)]" />
-            <span className="text-sm font-semibold text-[color:var(--color-primary)]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12 sm:mb-16 testimonials-header">
+          <div className="inline-block px-4 py-1.5 rounded-full bg-[color:var(--color-primary)]/10 border border-[color:var(--color-primary)]/20 mb-6">
+            <span className="text-sm font-medium text-[color:var(--color-primary)]">
               Testimonios
             </span>
           </div>
@@ -235,7 +209,7 @@ export default function TestimonialsSection() {
           <Typography
             as="h2"
             variant="h2"
-            className="text-2xl sm:text-5xl font-bold text-[color:var(--color-heading)] mb-2 sm:mb-4"
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[color:var(--color-heading)] mb-4"
           >
             Experiencias que Inspiran
           </Typography>
@@ -243,296 +217,132 @@ export default function TestimonialsSection() {
           <Typography
             as="p"
             variant="p"
-            className="hidden sm:block text-lg text-[color:var(--color-body)] max-w-2xl mx-auto"
+            className="text-base sm:text-lg text-[color:var(--color-body)] max-w-2xl mx-auto leading-relaxed"
           >
-            Descubre por qué más de 370 clientas confían en mi arte para sus momentos más especiales
+            Más de 370 clientas confían en mi arte para sus momentos más especiales
           </Typography>
-        </motion.div>
+        </div>
 
-        {/* Estadísticas rápidas */}
-        <motion.div
-          className="hidden sm:grid sm:grid-cols-4 gap-4 sm:mb-10"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          <div className="text-center p-4 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
-            <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)] mb-1">
-              5.0
-            </div>
-            <div className="text-xs sm:text-sm text-[color:var(--color-body)]">Calificación</div>
-          </div>
-          <div className="text-center p-4 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
-            <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)] mb-1">
-              370+
-            </div>
-            <div className="text-xs sm:text-sm text-[color:var(--color-body)]">Reseñas</div>
-          </div>
-          <div className="text-center p-4 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
-            <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)] mb-1">
-              98%
-            </div>
-            <div className="text-xs sm:text-sm text-[color:var(--color-body)]">Satisfacción</div>
-          </div>
-          <div className="text-center p-4 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
-            <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)] mb-1">
-              8+
-            </div>
-            <div className="text-xs sm:text-sm text-[color:var(--color-body)]">Años Exp.</div>
-          </div>
-        </motion.div>
-
-        {/* Controles de vista y filtro */}
-        <motion.div
-          className="hidden sm:flex sm:flex-row justify-between items-center gap-4 mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          <div className="flex gap-2 p-1 bg-[color:var(--color-surface)]/50 rounded-lg border border-[color:var(--color-border)]/20">
+        <div className="flex flex-wrap justify-center gap-3 mb-12 testimonials-filters">
+          {serviceCategories.map((category) => (
             <button
-              onClick={() => setViewMode("carousel")}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                viewMode === "carousel"
+              key={category.id}
+              onClick={() => setSelectedService(category.id)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                selectedService === category.id
                   ? "bg-[color:var(--color-primary)] text-white"
-                  : "text-[color:var(--color-body)] hover:text-[color:var(--color-heading)]"
+                  : "bg-[color:var(--color-surface)] text-[color:var(--color-body)] border border-[color:var(--color-border)] hover:border-[color:var(--color-primary)]/30"
               }`}
             >
-              <Sliders className="w-4 h-4 inline mr-2" />
-              Carrusel
+              {category.name}
             </button>
-            <button
-              onClick={() => setViewMode("grid")}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                viewMode === "grid"
-                  ? "bg-[color:var(--color-primary)] text-white"
-                  : "text-[color:var(--color-body)] hover:text-[color:var(--color-heading)]"
-              }`}
-            >
-              <Grid className="w-4 h-4 inline mr-2" />
-              Cuadrícula
-            </button>
-          </div>
+          ))}
+        </div>
 
-          <div className="flex gap-2 flex-wrap justify-center">
-            {serviceCategories.map((category) => {
-              const Icon = category.icon;
-              return (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedService(category.id)}
-                  className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all flex items-center gap-1 ${
-                    selectedService === category.id
-                      ? "bg-[color:var(--color-primary)] text-white"
-                      : "bg-[color:var(--color-surface)]/50 text-[color:var(--color-body)] border border-[color:var(--color-border)]/20 hover:text-[color:var(--color-heading)]"
-                  }`}
-                >
-                  <Icon className="w-3 h-3" />
-                  {category.name}
-                </button>
-              );
-            })}
-          </div>
-        </motion.div>
-
-        {/* Vista Carrusel */}
-        {viewMode === "carousel" && (
-          <motion.div
-            className="testimonials-container"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <div className="relative">
-              <AnimatePresence mode="wait">
-                {loading ? (
-                  <motion.div
-                    key="loading"
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    className="testimonial-card"
-                  >
-                    <div className="animate-pulse">
-                      <div className="w-20 h-20 bg-gray-300 rounded-full mx-auto mb-6" />
-                      <div className="h-4 bg-gray-300 rounded w-32 mx-auto mb-6" />
-                      <div className="space-y-2">
-                        <div className="h-4 bg-gray-300 rounded w-3/4 mx-auto" />
-                        <div className="h-4 bg-gray-300 rounded w-2/3 mx-auto" />
-                        <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto" />
-                      </div>
+        <div className="relative max-w-4xl mx-auto mb-12">
+          {loading ? (
+            <div className="p-8 sm:p-12 bg-[color:var(--color-surface)] rounded-2xl border border-[color:var(--color-border)] animate-pulse">
+              <div className="w-16 h-16 bg-[color:var(--color-border)] rounded-full mx-auto mb-6" />
+              <div className="h-4 bg-[color:var(--color-border)] rounded w-32 mx-auto mb-6" />
+              <div className="space-y-3">
+                <div className="h-4 bg-[color:var(--color-border)] rounded w-3/4 mx-auto" />
+                <div className="h-4 bg-[color:var(--color-border)] rounded w-2/3 mx-auto" />
+              </div>
+            </div>
+          ) : (
+            filteredItems.length > 0 && (
+              <div className="testimonial-item">
+                <div className="p-8 sm:p-12 bg-[color:var(--color-surface)] rounded-2xl border border-[color:var(--color-border)]">
+                  <div className="flex justify-center mb-6">
+                    <div className="w-16 h-16 rounded-full bg-[color:var(--color-primary)] flex items-center justify-center text-white font-bold text-xl">
+                      {filteredItems[index].initials}
                     </div>
-                  </motion.div>
-                ) : (
-                  displayItems.length > 0 && (
-                    <motion.div
-                      key={displayItems[index].id}
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.45 }}
-                      className="testimonial-card max-w-4xl mx-auto"
-                    >
-                      <div className="relative">
-                        <div className="absolute -top-4 -left-4 text-6xl text-[color:var(--color-primary)]/20">
-                          <Quote />
-                        </div>
+                  </div>
 
-                        <div className="flex justify-center mb-6">
-                          <div className="testimonial-avatar-enhanced">
-                            <span>{displayItems[index].initials}</span>
-                          </div>
-                        </div>
-
-                        <div className="testimonial-stars mb-4">
-                          {[...Array(displayItems[index].rating)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className="w-5 h-5 mx-0.5 text-[color:var(--color-accent)] fill-current"
-                            />
-                          ))}
-                        </div>
-
-                        <div className="testimonial-quote mb-6 px-4">
-                          <Typography
-                            as="blockquote"
-                            variant="p"
-                            className="text-xl sm:text-2xl font-light text-[color:var(--color-heading)] leading-relaxed"
-                          >
-                            &ldquo;{displayItems[index].text}&rdquo;
-                          </Typography>
-                        </div>
-
-                        <div className="flex flex-col items-center">
-                          <Typography
-                            as="div"
-                            variant="h4"
-                            className="text-xl font-semibold text-[color:var(--color-heading)] mb-1"
-                          >
-                            {displayItems[index].name}
-                          </Typography>
-                          <div className="testimonial-meta text-sm text-[color:var(--color-body)] flex items-center gap-2">
-                            <span className="px-2 py-1 bg-[color:var(--color-surface)]/50 rounded-full text-xs">
-                              {displayItems[index].service}
-                            </span>
-                            <span>•</span>
-                            <span>{displayItems[index].date}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )
-                )}
-              </AnimatePresence>
-
-              {/* Controles de navegación */}
-              {displayItems.length > 1 && (
-                <div className="flex justify-between items-center mt-6 sm:mt-8">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() =>
-                      setIndex((i) => (i - 1 + displayItems.length) % displayItems.length)
-                    }
-                    className="rounded-full p-2"
-                  >
-                    <ArrowLeft className="w-5 h-5" />
-                  </Button>
-
-                  <div className="flex gap-2">
-                    {displayItems.map((_, i) => (
-                      <button
+                  <div className="flex justify-center mb-4">
+                    {[...Array(filteredItems[index].rating)].map((_, i) => (
+                      <Star
                         key={i}
-                        onClick={() => setIndex(i)}
-                        className={`w-2 h-2 rounded-full transition-all ${
-                          i === index
-                            ? "bg-[color:var(--color-primary)] w-8"
-                            : "bg-[color:var(--color-border)]"
-                        }`}
+                        className="w-5 h-5 text-[color:var(--color-primary)] fill-current"
                       />
                     ))}
                   </div>
 
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setIndex((i) => (i + 1) % displayItems.length)}
-                    className="rounded-full p-2"
+                  <Typography
+                    as="blockquote"
+                    variant="p"
+                    className="text-lg sm:text-xl text-[color:var(--color-heading)] text-center mb-6 leading-relaxed italic"
                   >
-                    <ArrowRight className="w-5 h-5" />
-                  </Button>
-                </div>
-              )}
-            </div>
-          </motion.div>
-        )}
+                    &ldquo;{filteredItems[index].text}&rdquo;
+                  </Typography>
 
-        {/* Vista Cuadrícula */}
-        {viewMode === "grid" && (
-          <motion.div
-            className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <AnimatePresence>
-              {filteredItems.map((item, i) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3, delay: i * 0.05 }}
-                  className="testimonial-card-grid p-6 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20 hover:shadow-lg transition-all"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="testimonial-avatar-small">
-                      <span>{item.initials}</span>
-                    </div>
-                    <div className="flex">
-                      {[...Array(item.rating)].map((_, i) => (
-                        <Star
+                  <div className="text-center">
+                    <Typography
+                      as="p"
+                      variant="p"
+                      className="font-semibold text-[color:var(--color-heading)] mb-1"
+                    >
+                      {filteredItems[index].name}
+                    </Typography>
+                    <Typography
+                      as="p"
+                      variant="small"
+                      className="text-[color:var(--color-muted)]"
+                    >
+                      {filteredItems[index].service} • {filteredItems[index].date}
+                    </Typography>
+                  </div>
+                </div>
+
+                {filteredItems.length > 1 && (
+                  <div className="flex justify-between items-center mt-8">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() =>
+                        setIndex((i) => (i - 1 + filteredItems.length) % filteredItems.length)
+                      }
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                    </Button>
+
+                    <div className="flex gap-2">
+                      {filteredItems.slice(0, 5).map((_, i) => (
+                        <button
                           key={i}
-                          className="w-4 h-4 text-[color:var(--color-accent)] fill-current"
+                          onClick={() => setIndex(i)}
+                          className={`w-2 h-2 rounded-full transition-all ${
+                            i === index
+                              ? "bg-[color:var(--color-primary)] w-8"
+                              : "bg-[color:var(--color-border)]"
+                          }`}
                         />
                       ))}
                     </div>
+
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setIndex((i) => (i + 1) % filteredItems.length)}
+                    >
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
                   </div>
+                )}
+              </div>
+            )
+          )}
+        </div>
 
-                  <blockquote className="text-[color:var(--color-heading)] mb-4 text-sm leading-relaxed">
-                    &ldquo;{item.text}&rdquo;
-                  </blockquote>
-
-                  <div className="border-t border-[color:var(--color-border)]/20 pt-4">
-                    <div className="font-semibold text-[color:var(--color-heading)] mb-1">
-                      {item.name}
-                    </div>
-                    <div className="text-xs text-[color:var(--color-body)]">
-                      {item.service} • {item.date}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
-        )}
-
-        {/* Llamada a la acción */}
-        <motion.div
-          className="hidden sm:block text-center sm:mt-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
+        <div className="text-center">
           <Button
             variant="primary"
             size="lg"
             onClick={() => window.open("https://www.instagram.com/marcelacorderobeauty/", "_blank")}
-            className="px-8 py-3 rounded-full"
           >
             Ver más reseñas en Instagram
           </Button>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
