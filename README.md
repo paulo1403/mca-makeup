@@ -101,8 +101,8 @@ Esta migración tiene como objetivo simplificar el diseño de la web para lograr
 - [x] Remover GlobalParticles de layout
 - [x] Simplificar HeroSection (eliminar decoraciones)
 - [x] Aumentar whitespace en secciones
-- [ ] Simplificar tipografía y navbar
-- [ ] Probar en diferentes dispositivos
+- [ ] Simplificar tipografía y navbar- [x] Quitar animaciones de HeroSection
+- [x] Quitar gradientes de página principal- [ ] Probar en diferentes dispositivos
 - [ ] Validar rendimiento
 
 ### 🎯 Beneficios Esperados

@@ -2,48 +2,55 @@
 
 import useServiceGroups, { type ServiceGroup } from "@/hooks/useServiceGroups";
 import { motion, useInView } from "framer-motion";
-import { ArrowRight, Brush, Check, Clock, MapPin, Sparkles, Star } from "lucide-react";
+import {
+  ArrowRight,
+  Brush,
+  Check,
+  Clock,
+  MapPin,
+  Sparkles,
+  Star,
+} from "lucide-react";
 import type React from "react";
 import { useRef } from "react";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
 
-// UI type extends API type with optional UI-only props
 type UIServiceGroup = ServiceGroup & { icon?: React.ReactNode; badge?: string };
 
-function ServiceCard({ service, index }: { service: UIServiceGroup; index: number }) {
+function ServiceCard({
+  service,
+  index,
+}: {
+  service: UIServiceGroup;
+  index: number;
+}) {
   const isPopular = index === 0;
 
   return (
-    <motion.article
-      className={`relative group ${isPopular ? "service-card-featured" : "service-card"}`}
-      whileHover={{ y: -8, transition: { duration: 0.3 } }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.08 }}
+    <article
+      className={`relative ${
+        isPopular ? "service-card-featured" : "service-card"
+      }`}
     >
       {isPopular && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-          <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)] text-white text-xs font-semibold shadow-lg">
+          <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-[color:var(--color-primary)] text-white text-xs font-semibold">
             <Star className="w-3 h-3 fill-current" />
             Popular
           </div>
         </div>
       )}
 
-      <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-[color:var(--color-primary)]/10 via-transparent to-[color:var(--color-accent)]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-      <div className="relative p-5 sm:p-6 bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)]/20 group-hover:border-[color:var(--color-primary)]/50 transition-all duration-300">
+      <div className="relative p-5 sm:p-6 bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)]">
         {/* Header */}
         <header className="mb-3 sm:mb-4">
           <div className="flex items-start justify-between gap-3 mb-3">
-            <motion.div
-              className="p-3 rounded-xl bg-gradient-to-br from-[color:var(--color-primary)]/10 to-[color:var(--color-accent)]/10 border border-[color:var(--color-accent)]/20 flex-shrink-0"
-              whileHover={{ rotate: 360, scale: 1.05 }}
-              transition={{ duration: 0.5 }}
-            >
-              {service.icon || <Brush className="w-5 h-5 text-[color:var(--color-primary)]" />}
-            </motion.div>
+            <div className="p-3 rounded-xl bg-[color:var(--color-accent)]/10 border border-[color:var(--color-accent)]/20 flex-shrink-0">
+              {service.icon || (
+                <Brush className="w-5 h-5 text-[color:var(--color-primary)]" />
+              )}
+            </div>
             <div className="flex-1 min-w-0">
               <Typography
                 as="h3"
@@ -64,15 +71,9 @@ function ServiceCard({ service, index }: { service: UIServiceGroup; index: numbe
         {/* Features */}
         <div className="hidden sm:block mb-4 space-y-2">
           {service.features.map((feature, i) => (
-            <motion.div
-              key={i}
-              className="flex items-start gap-2.5 group/item"
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.08 + i * 0.04 }}
-            >
+            <div key={i} className="flex items-start gap-2.5">
               <div className="flex-shrink-0 mt-0.5">
-                <div className="w-5 h-5 rounded-full bg-[color:var(--color-accent)]/15 flex items-center justify-center group-hover/item:bg-[color:var(--color-accent)]/25 transition-colors">
+                <div className="w-5 h-5 rounded-full bg-[color:var(--color-accent)]/15 flex items-center justify-center">
                   <Check
                     className="w-2.5 h-2.5 text-[color:var(--color-primary)]"
                     strokeWidth={3}
@@ -82,16 +83,16 @@ function ServiceCard({ service, index }: { service: UIServiceGroup; index: numbe
               <Typography
                 as="p"
                 variant="p"
-                className="text-sm text-[color:var(--color-body)] leading-snug group-hover/item:text-[color:var(--color-heading)] transition-colors"
+                className="text-sm text-[color:var(--color-body)] leading-snug"
               >
                 {feature}
               </Typography>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* Divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-[color:var(--color-accent)]/25 to-transparent mb-4" />
+        <div className="h-px bg-[color:var(--color-border)] mb-4" />
 
         {/* Footer */}
         <div className="flex items-end justify-between gap-3">
@@ -106,7 +107,7 @@ function ServiceCard({ service, index }: { service: UIServiceGroup; index: numbe
             <Typography
               as="div"
               variant="h4"
-              className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)] bg-clip-text text-transparent"
+              className="text-xl sm:text-2xl font-bold text-[color:var(--color-primary)]"
             >
               {service.price}
             </Typography>
@@ -123,23 +124,7 @@ function ServiceCard({ service, index }: { service: UIServiceGroup; index: numbe
           </Button>
         </div>
       </div>
-
-      <motion.div
-        className="absolute top-3 right-3 text-[color:var(--color-accent)]/20"
-        animate={{
-          scale: [1, 1.15, 1],
-          rotate: [0, 45, 0],
-          opacity: [0.2, 0.4, 0.2],
-        }}
-        transition={{
-          duration: 3.5,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut",
-        }}
-      >
-        <Sparkles className="w-3.5 h-3.5" />
-      </motion.div>
-    </motion.article>
+    </article>
   );
 }
 
@@ -148,50 +133,33 @@ export default function ServicesSection() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   const { data: serviceGroups = [], isLoading } = useServiceGroups();
-  const visibleServices: UIServiceGroup[] = serviceGroups.map((s) => ({ ...s }));
+  const visibleServices: UIServiceGroup[] = serviceGroups.map((s) => ({
+    ...s,
+  }));
 
   return (
     <section
       id="servicios"
-      className="relative py-12 sm:py-20 overflow-hidden"
+      className="relative py-12 sm:py-20"
       style={{ scrollMarginTop: "120px" }}
       ref={ref}
     >
-      {/* Background */}
-      <div className="absolute inset-0 pointer-events-none hidden md:block">
-        <div className="absolute top-20 left-10 w-48 h-48 bg-[color:var(--color-primary)]/3 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-64 h-64 bg-[color:var(--color-accent)]/3 rounded-full blur-3xl" />
-      </div>
-
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl relative z-10">
         {/* Header */}
-        <motion.div
-          className="text-center mb-10 sm:mb-12"
-          initial={{ opacity: 0, y: 15 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
-          transition={{ duration: 0.5 }}
-        >
-          <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[color:var(--color-accent)]/10 border border-[color:var(--color-accent)]/20 mb-4"
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={isInView ? { scale: 1, opacity: 1 } : { scale: 0.95, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
+        <div className="text-center mb-10 sm:mb-12">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[color:var(--color-surface)] border border-[color:var(--color-border)] mb-4">
             <Sparkles className="w-3.5 h-3.5 text-[color:var(--color-primary)]" />
             <span className="text-sm font-medium text-[color:var(--color-primary)]">
               Servicios Profesionales
             </span>
-          </motion.div>
+          </div>
 
           <Typography
             as="h2"
             variant="h2"
             className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[color:var(--color-heading)] mb-3"
           >
-            Nuestros{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)]">
-              Servicios
-            </span>
+            Nuestros Servicios
           </Typography>
 
           <Typography
@@ -199,10 +167,10 @@ export default function ServicesSection() {
             variant="p"
             className="text-sm sm:text-base text-[color:var(--color-body)] max-w-xl mx-auto leading-relaxed"
           >
-            Maquillaje profesional diseñado para cada ocasión, con atención personalizada y
-            productos de alta calidad.
+            Maquillaje profesional diseñado para cada ocasión, con atención
+            personalizada y productos de alta calidad.
           </Typography>
-        </motion.div>
+        </div>
 
         {/* Stats */}
         <motion.div
@@ -217,10 +185,17 @@ export default function ServicesSection() {
             </div>
             <div className="flex items-center justify-center gap-1 mt-1">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-4 h-4 text-[color:var(--color-accent)] fill-current" />
+                <Star
+                  key={i}
+                  className="w-4 h-4 text-[color:var(--color-accent)] fill-current"
+                />
               ))}
             </div>
-            <Typography as="p" variant="small" className="text-[color:var(--color-body)] mt-1">
+            <Typography
+              as="p"
+              variant="small"
+              className="text-[color:var(--color-body)] mt-1"
+            >
               Calificación
             </Typography>
           </div>
@@ -228,7 +203,11 @@ export default function ServicesSection() {
             <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
               370+
             </div>
-            <Typography as="p" variant="small" className="text-[color:var(--color-body)] mt-1">
+            <Typography
+              as="p"
+              variant="small"
+              className="text-[color:var(--color-body)] mt-1"
+            >
               Clientes
             </Typography>
           </div>
@@ -236,7 +215,11 @@ export default function ServicesSection() {
             <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
               8+
             </div>
-            <Typography as="p" variant="small" className="text-[color:var(--color-body)] mt-1">
+            <Typography
+              as="p"
+              variant="small"
+              className="text-[color:var(--color-body)] mt-1"
+            >
               Años Exp.
             </Typography>
           </div>
@@ -244,7 +227,11 @@ export default function ServicesSection() {
             <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
               100%
             </div>
-            <Typography as="p" variant="small" className="text-[color:var(--color-body)] mt-1">
+            <Typography
+              as="p"
+              variant="small"
+              className="text-[color:var(--color-body)] mt-1"
+            >
               Satisfacción
             </Typography>
           </div>
@@ -253,14 +240,20 @@ export default function ServicesSection() {
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-10">
           {isLoading
-            ? Array.from({ length: visibleServices.length || 2 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-80 rounded-xl bg-[color:var(--color-surface)] animate-pulse"
-                />
-              ))
+            ? Array.from({ length: visibleServices.length || 2 }).map(
+                (_, i) => (
+                  <div
+                    key={i}
+                    className="h-80 rounded-xl bg-[color:var(--color-surface)] animate-pulse"
+                  />
+                )
+              )
             : visibleServices.map((service, index) => (
-                <ServiceCard key={service.title} service={service} index={index} />
+                <ServiceCard
+                  key={service.title}
+                  service={service}
+                  index={index}
+                />
               ))}
         </div>
 
@@ -295,10 +288,17 @@ export default function ServicesSection() {
                     variant="p"
                     className="text-sm text-[color:var(--color-body)] leading-relaxed mb-5"
                   >
-                    Vísitanos en nuestro Room Studio en Pueblo Libre o agenda una cita a domicilio.
+                    Vísitanos en nuestro Room Studio en Pueblo Libre o agenda
+                    una cita a domicilio.
                   </Typography>
 
-                  <Button as="a" href="/reserva" variant="primary" size="lg" className="group/cta">
+                  <Button
+                    as="a"
+                    href="/reserva"
+                    variant="primary"
+                    size="lg"
+                    className="group/cta"
+                  >
                     <Sparkles className="w-4 h-4 group-hover/cta:rotate-12 transition-transform" />
                     Agendar Ahora
                     <ArrowRight className="w-4 h-4 group-hover/cta:translate-x-0.5 transition-transform" />

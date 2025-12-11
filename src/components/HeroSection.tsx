@@ -14,7 +14,6 @@ export default function HeroSection() {
       className="relative bg-[color:var(--color-surface)]"
       style={{ scrollMarginTop: "120px" }}
     >
-
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center min-h-[calc(100vh-80px)] pt-24 sm:pt-24 pb-12 lg:py-32">
           {/* Left: Content */}
@@ -38,8 +37,8 @@ export default function HeroSection() {
                 variant="p"
                 className="text-[color:var(--color-body)] text-lg max-w-xl leading-relaxed"
               >
-                Maquilladora profesional, diseñadora de maquillajes exclusivos para Novias y eventos
-                sociales
+                Maquilladora profesional, diseñadora de maquillajes exclusivos
+                para Novias y eventos sociales
               </Typography>
               <Typography
                 as="p"
@@ -47,7 +46,10 @@ export default function HeroSection() {
                 className="text-[color:var(--color-body)]/80 max-w-xl hidden sm:block"
               >
                 Especialista en{" "}
-                <span className="text-[color:var(--color-primary)] font-semibold">Soft Glam</span> y{" "}
+                <span className="text-[color:var(--color-primary)] font-semibold">
+                  Soft Glam
+                </span>{" "}
+                y{" "}
                 <span className="text-[color:var(--color-primary)] font-semibold">
                   Maquillaje Nupcial
                 </span>
@@ -69,7 +71,11 @@ export default function HeroSection() {
                     />
                   ))}
                 </div>
-                <Typography as="p" variant="small" className="text-[color:var(--color-body)] mt-1">
+                <Typography
+                  as="p"
+                  variant="small"
+                  className="text-[color:var(--color-body)] mt-1"
+                >
                   Calificación
                 </Typography>
               </div>
@@ -77,7 +83,11 @@ export default function HeroSection() {
                 <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
                   370+
                 </div>
-                <Typography as="p" variant="small" className="text-[color:var(--color-body)] mt-1">
+                <Typography
+                  as="p"
+                  variant="small"
+                  className="text-[color:var(--color-body)] mt-1"
+                >
                   Clientes
                 </Typography>
               </div>
@@ -85,19 +95,18 @@ export default function HeroSection() {
                 <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
                   8+
                 </div>
-                <Typography as="p" variant="small" className="text-[color:var(--color-body)] mt-1">
+                <Typography
+                  as="p"
+                  variant="small"
+                  className="text-[color:var(--color-body)] mt-1"
+                >
                   Años Exp.
                 </Typography>
               </div>
             </div>
 
             {/* CTAs */}
-            <div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex flex-col sm:flex-row gap-4"
-            >
+            <div className="flex flex-col sm:flex-row gap-4">
               <Button
                 variant="primary"
                 size="lg"
@@ -109,8 +118,10 @@ export default function HeroSection() {
                     const isMobile = window.innerWidth < 768;
                     const extraMargin = isMobile ? 60 : 30;
 
-                    const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-                    const offsetPosition = elementPosition - headerHeight - extraMargin;
+                    const elementPosition =
+                      element.getBoundingClientRect().top + window.scrollY;
+                    const offsetPosition =
+                      elementPosition - headerHeight - extraMargin;
 
                     window.scrollTo({
                       top: offsetPosition,
@@ -202,7 +213,7 @@ export default function HeroSection() {
                   </Typography>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
 
           {/* Right: Image with enhanced effects */}
@@ -270,7 +281,9 @@ export default function HeroSection() {
                   </a>
 
                   <div className="px-3 py-2 rounded-xl bg-[color:var(--color-surface)]/90 backdrop-blur-sm border border-[color:var(--color-border)]/50">
-                    <p className="text-xs font-medium text-[color:var(--color-muted)]">Sígueme</p>
+                    <p className="text-xs font-medium text-[color:var(--color-muted)]">
+                      Sígueme
+                    </p>
                     <p className="text-sm font-semibold text-[color:var(--color-heading)]">
                       @marcelacorderobeauty
                     </p>

@@ -96,7 +96,7 @@ export default function PortfolioSection() {
               <span>+370 clientes satisfechas</span>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         <div className="hidden md:grid md:grid-cols-3 md:gap-8 md:mb-16">
           {portfolioCategories.map((cat, i) => (
@@ -119,7 +119,9 @@ export default function PortfolioSection() {
                   {cat.title}
                 </Typography>
 
-                <p className="text-[color:var(--color-body)] mb-6 flex-grow">{cat.description}</p>
+                <p className="text-[color:var(--color-body)] mb-6 flex-grow">
+                  {cat.description}
+                </p>
 
                 <div className="mt-auto">
                   <Button
@@ -139,11 +141,7 @@ export default function PortfolioSection() {
           ))}
         </div>
 
-        <div className="hidden sm:block text-center max-w-3xl mx-auto rounded-2xl p-6 sm:p-10 bg-[color:var(--color-surface)] border border-[color:var(--color-border)]"
-          initial={{ opacity: 0, y: 16 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
+        <div className="hidden sm:block text-center max-w-3xl mx-auto rounded-2xl p-6 sm:p-10 bg-[color:var(--color-surface)] border border-[color:var(--color-border)]">
           <div className="text-[color:var(--color-accent)] mb-4">
             <Heart className="w-8 h-8 mx-auto" />
           </div>
@@ -153,8 +151,8 @@ export default function PortfolioSection() {
             variant="p"
             className="text-xl sm:text-2xl font-light text-[color:var(--color-heading)] mb-4 italic"
           >
-            &ldquo;Cada rostro es un lienzo único, cada cliente merece sentirse la más bella en su
-            día especial&rdquo;
+            &ldquo;Cada rostro es un lienzo único, cada cliente merece sentirse
+            la más bella en su día especial&rdquo;
           </Typography>
 
           <div className="flex items-center justify-center gap-4">
@@ -162,13 +160,19 @@ export default function PortfolioSection() {
               MC
             </div>
             <div className="text-left">
-              <p className="font-semibold text-[color:var(--color-heading)]">Marcela Cordero</p>
-              <p className="text-sm text-[color:var(--color-body)]">Maquilladora Profesional</p>
+              <p className="font-semibold text-[color:var(--color-heading)]">
+                Marcela Cordero
+              </p>
+              <p className="text-sm text-[color:var(--color-body)]">
+                Maquilladora Profesional
+              </p>
             </div>
           </div>
 
           <div className="mt-8 pt-6 border-t border-[color:var(--color-accent)]/10">
-            <p className="text-sm text-[color:var(--color-body)] mb-4">Conéctate con mi trabajo</p>
+            <p className="text-sm text-[color:var(--color-body)] mb-4">
+              Conéctate con mi trabajo
+            </p>
             <div className="flex gap-3 justify-center">
               <Button
                 as="a"
@@ -196,7 +200,7 @@ export default function PortfolioSection() {
               </Button>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

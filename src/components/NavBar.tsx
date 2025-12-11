@@ -47,7 +47,8 @@ const NavBar = () => {
         // Margen más generoso en móviles para evitar superposición
         const extraMargin = isMobile ? 60 : 30;
 
-        const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+        const elementPosition =
+          element.getBoundingClientRect().top + window.scrollY;
         const offsetPosition = elementPosition - headerHeight - extraMargin;
 
         window.scrollTo({
