@@ -25,14 +25,14 @@ export default function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center pt-24 pb-16 sm:pt-32 sm:pb-24 bg-[color:var(--color-background)]"
+      className="relative min-h-screen flex items-center justify-center pt-24 pb-16 sm:pt-32 sm:pb-24 bg-(--color-background)"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <div className="space-y-8 lg:space-y-10">
             <div className="space-y-6 animate-fadeInUp">
-              <div className="inline-block px-4 py-1.5 rounded-full bg-[color:var(--color-primary)]/10 border border-[color:var(--color-primary)]/20">
-                <span className="text-sm font-medium text-[color:var(--color-primary)]">
+              <div className="inline-block px-4 py-1.5 rounded-full bg-(--color-primary)/10 border border-(--color-primary)/20">
+                <span className="text-sm font-medium text-(--color-primary)">
                   Maquillaje Profesional
                 </span>
               </div>
@@ -40,10 +40,10 @@ export default function HeroSection() {
               <Typography
                 as="h1"
                 variant="h1"
-                className="text-[color:var(--color-heading)] text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-tight font-bold"
+                className="text-(--color-heading) text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-tight font-bold"
               >
                 Marcela Cordero
-                <span className="block text-[color:var(--color-primary)] mt-2">
+                <span className="block text-(--color-primary) mt-2">
                   Beauty Studio
                 </span>
               </Typography>
@@ -51,7 +51,7 @@ export default function HeroSection() {
               <Typography
                 as="p"
                 variant="p"
-                className="text-[color:var(--color-body)] text-lg sm:text-xl max-w-xl leading-relaxed"
+                className="text-(--color-body) text-lg sm:text-xl max-w-xl leading-relaxed"
               >
                 Especialista en novias y eventos sociales. Diseño maquillajes
                 exclusivos que resaltan tu belleza natural con técnicas
