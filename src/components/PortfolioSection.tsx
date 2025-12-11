@@ -1,24 +1,17 @@
 "use client";
 
-import {
-  Camera,
-  ExternalLink,
-  Heart,
-  ImageIcon,
-  MessageSquare,
-  Sparkles,
-  Users,
-} from "lucide-react";
+import { ExternalLink, Heart, Sparkles, Users } from "lucide-react";
 import type React from "react";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
+import "@/styles/components/portfolio.css";
 
 type PortfolioCategory = {
   title: string;
   description: string;
-  count?: string;
-  url?: string;
-  icon?: React.ReactNode;
+  count: string;
+  url: string;
+  icon: React.ReactNode;
 };
 
 const portfolioCategories: PortfolioCategory[] = [
@@ -49,14 +42,12 @@ export default function PortfolioSection() {
   return (
     <section
       id="portafolio"
-      className="hidden sm:block py-12 sm:py-28 bg-[color:var(--color-background)]"
-      style={{ scrollMarginTop: "120px" }}
+      className="py-16 sm:py-24 bg-[color:var(--color-background)]"
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-        <div className="text-center mb-12 sm:mb-20">
-          <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[color:var(--color-surface)]/80 border border-[color:var(--color-accent)]/10 mb-6">
-            <ImageIcon className="w-4 h-4 text-[color:var(--color-primary)]" />
-            <span className="text-sm font-semibold text-[color:var(--color-primary)]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12 sm:mb-16 portfolio-header">
+          <div className="inline-block px-4 py-1.5 rounded-full bg-[color:var(--color-primary)]/10 border border-[color:var(--color-primary)]/20 mb-6">
+            <span className="text-sm font-medium text-[color:var(--color-primary)]">
               Portafolio
             </span>
           </div>
@@ -64,7 +55,7 @@ export default function PortfolioSection() {
           <Typography
             as="h2"
             variant="h2"
-            className="hidden sm:block section-title text-2xl sm:text-4xl font-bold text-[color:var(--color-heading)] mb-2 sm:mb-3"
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[color:var(--color-heading)] mb-4"
           >
             Mi Arte
           </Typography>
@@ -72,132 +63,103 @@ export default function PortfolioSection() {
           <Typography
             as="p"
             variant="p"
-            className="hidden sm:block text-base text-[color:var(--color-body)] max-w-2xl mx-auto leading-relaxed sm:mb-6"
+            className="text-base sm:text-lg text-[color:var(--color-body)] max-w-2xl mx-auto leading-relaxed mb-8"
           >
-            Transformando miradas, realzando belleza natural
+            Cada maquillaje cuenta una historia, cada rostro refleja mi pasión
+            por realzar la belleza natural.
           </Typography>
 
-          <div className="hidden sm:flex flex-row gap-4 justify-center items-center mt-4 sm:mt-6">
-            <Button
-              as="a"
-              href="https://www.instagram.com/marcelacorderobeauty/"
-              target="_blank"
-              rel="noreferrer"
-              variant="primary"
-              size="md"
-              className="hidden sm:inline-flex items-center gap-2"
-            >
-              <ExternalLink className="w-4 h-4" />
-              Ver Portafolio Completo
-            </Button>
-
-            <div className="hidden sm:flex items-center gap-2 text-sm text-[color:var(--color-body)] bg-[color:var(--color-surface)]/80 px-4 py-2 rounded-full border border-[color:var(--color-accent)]/10">
-              <Sparkles className="w-4 h-4 text-[color:var(--color-accent)]" />
-              <span>+370 clientes satisfechas</span>
-            </div>
-          </div>
+          <Button
+            as="a"
+            href="https://www.instagram.com/marcelacorderobeauty/"
+            target="_blank"
+            rel="noreferrer"
+            variant="primary"
+            size="lg"
+          >
+            <ExternalLink className="w-4 h-4" />
+            Ver Portafolio Completo
+          </Button>
         </div>
 
-        <div className="hidden md:grid md:grid-cols-3 md:gap-8 md:mb-16">
-          {portfolioCategories.map((cat, i) => (
-            <div key={cat.title}>
-              <div className="p-6 rounded-2xl h-full flex flex-col bg-[color:var(--color-surface)] border border-[color:var(--color-border)]">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 rounded-xl bg-[color:var(--color-accent)]/10 text-[color:var(--color-primary)]">
-                    {cat.icon}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16">
+          {portfolioCategories.map((category) => (
+            <article key={category.title} className="portfolio-card group">
+              <div className="h-full p-6 sm:p-8 bg-[color:var(--color-surface)] rounded-2xl border border-[color:var(--color-border)] hover:border-[color:var(--color-primary)]/30 transition-colors">
+                <div className="flex items-start justify-between mb-6">
+                  <div className="w-14 h-14 rounded-xl bg-[color:var(--color-primary)]/10 flex items-center justify-center text-[color:var(--color-primary)]">
+                    {category.icon}
                   </div>
-                  <div className="text-2xl font-bold text-[color:var(--color-primary)]">
-                    {cat.count}
+                  <div className="text-3xl font-bold text-[color:var(--color-primary)]">
+                    {category.count}
                   </div>
                 </div>
 
                 <Typography
                   as="h3"
                   variant="h3"
-                  className="text-xl font-bold text-[color:var(--color-heading)] mb-2"
+                  className="text-xl sm:text-2xl font-bold text-[color:var(--color-heading)] mb-3"
                 >
-                  {cat.title}
+                  {category.title}
                 </Typography>
 
-                <p className="text-[color:var(--color-body)] mb-6 flex-grow">
-                  {cat.description}
-                </p>
+                <Typography
+                  as="p"
+                  variant="p"
+                  className="text-[color:var(--color-body)] mb-6 leading-relaxed"
+                >
+                  {category.description}
+                </Typography>
 
-                <div className="mt-auto">
-                  <Button
-                    as="a"
-                    href={cat.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    variant="secondary"
-                    size="md"
-                    className="w-full py-3 px-4 rounded-lg text-[color:var(--color-body)] font-medium"
-                  >
-                    Ver Galería
-                  </Button>
-                </div>
+                <Button
+                  as="a"
+                  href={category.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  variant="secondary"
+                  size="md"
+                  className="w-full"
+                >
+                  Ver Galería
+                </Button>
               </div>
-            </div>
+            </article>
           ))}
         </div>
 
-        <div className="hidden sm:block text-center max-w-3xl mx-auto rounded-2xl p-6 sm:p-10 bg-[color:var(--color-surface)] border border-[color:var(--color-border)]">
-          <div className="text-[color:var(--color-accent)] mb-4">
-            <Heart className="w-8 h-8 mx-auto" />
+        <div className="max-w-3xl mx-auto p-8 sm:p-12 rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] text-center portfolio-quote">
+          <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[color:var(--color-primary)]/10 flex items-center justify-center">
+            <Heart className="w-8 h-8 text-[color:var(--color-primary)]" />
           </div>
 
           <Typography
             as="blockquote"
             variant="p"
-            className="text-xl sm:text-2xl font-light text-[color:var(--color-heading)] mb-4 italic"
+            className="text-xl sm:text-2xl font-light text-[color:var(--color-heading)] mb-6 italic leading-relaxed"
           >
             &ldquo;Cada rostro es un lienzo único, cada cliente merece sentirse
             la más bella en su día especial&rdquo;
           </Typography>
 
-          <div className="flex items-center justify-center gap-4">
-            <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)]">
+          <div className="flex items-center justify-center gap-4 pt-6 border-t border-[color:var(--color-border)]">
+            <div className="w-14 h-14 rounded-full flex items-center justify-center text-white font-bold bg-[color:var(--color-primary)]">
               MC
             </div>
             <div className="text-left">
-              <p className="font-semibold text-[color:var(--color-heading)]">
+              <Typography
+                as="p"
+                variant="p"
+                className="font-semibold text-[color:var(--color-heading)]"
+              >
                 Marcela Cordero
-              </p>
-              <p className="text-sm text-[color:var(--color-body)]">
+              </Typography>
+              <Typography
+                as="p"
+                variant="small"
+                className="text-[color:var(--color-muted)]"
+              >
                 Maquilladora Profesional
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-8 pt-6 border-t border-[color:var(--color-accent)]/10">
-            <p className="text-sm text-[color:var(--color-body)] mb-4">
-              Conéctate con mi trabajo
-            </p>
-            <div className="flex gap-3 justify-center">
-              <Button
-                as="a"
-                href="https://www.instagram.com/marcelacorderobeauty/"
-                target="_blank"
-                rel="noreferrer"
-                variant="soft"
-                size="sm"
-                className="px-5 py-2 rounded-full inline-flex items-center"
-              >
-                {" "}
-                <Camera className="w-4 h-4 inline-block mr-2" /> Instagram
-              </Button>
-              <Button
-                as="a"
-                href="https://wa.me/51989164990"
-                target="_blank"
-                rel="noreferrer"
-                variant="whatsapp"
-                size="sm"
-                className="px-5 py-2 rounded-full inline-flex items-center"
-              >
-                {" "}
-                <MessageSquare className="w-4 h-4 inline-block mr-2" /> WhatsApp
-              </Button>
+              </Typography>
             </div>
           </div>
         </div>
