@@ -1,31 +1,96 @@
 "use client";
 
-import { Clock, Instagram, MapPin, Truck } from "lucide-react";
+import { Instagram } from "lucide-react";
 import Image from "next/image";
-import React from "react";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
 
 export default function HeroSection() {
+  const scrollToSection = (id: string) => {
+    const element = document.querySelector(id);
+    if (element) {
+      const header = document.querySelector("header");
+      const headerHeight = header?.offsetHeight || 80;
+      const offset = window.innerWidth < 768 ? 20 : 40;
+      const position = element.getBoundingClientRect().top + window.scrollY - headerHeight - offset;
+      window.scrollTo({ top: position, behavior: "smooth" });
+    }
+  };
+
   return (
     <section
       id="hero"
-      className="relative bg-[color:var(--color-background)] py-16 sm:py-24"
-      style={{ scrollMarginTop: "120px" }}
+      className="relative min-h-screen flex items-center justify-center pt-24 pb-16 sm:pt-32 sm:pb-24 bg-[color:var(--color-background)]"
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left: Content */}
-          <div className="flex flex-col gap-8">
-            {/* Title */}
-            <div className="space-y-4">
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        .animate-fadeInUp {
+          animation: fadeInUp 0.8s ease-out forwards;
+          opacity: 0;
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 1s ease-out forwards;
+          opacity: 0;
+        }
+
+        .animate-scaleIn {
+          animation: scaleIn 1s ease-out forwards;
+          opacity: 0;
+        }
+
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+        .delay-600 { animation-delay: 0.6s; }
+      `}</style>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          
+          <div className="space-y-8 lg:space-y-10">
+            <div className="space-y-6 animate-fadeInUp">
+              <div className="inline-block px-4 py-1.5 rounded-full bg-[color:var(--color-primary)]/10 border border-[color:var(--color-primary)]/20">
+                <span className="text-sm font-medium text-[color:var(--color-primary)]">
+                  Maquillaje Profesional
+                </span>
+              </div>
+
               <Typography
                 as="h1"
                 variant="h1"
-                className="text-[color:var(--color-heading)] text-4xl sm:text-5xl lg:text-6xl leading-tight"
+                className="text-[color:var(--color-heading)] text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-tight font-bold"
               >
-                <span className="block">Marcela Cordero</span>
-                <span className="block text-[color:var(--color-primary)]">
+                Marcela Cordero
+                <span className="block text-[color:var(--color-primary)] mt-2">
                   Beauty Studio
                 </span>
               </Typography>
@@ -33,187 +98,105 @@ export default function HeroSection() {
               <Typography
                 as="p"
                 variant="p"
-                className="text-[color:var(--color-body)] text-lg sm:text-xl max-w-lg leading-relaxed"
+                className="text-[color:var(--color-body)] text-lg sm:text-xl max-w-xl leading-relaxed"
               >
-                Maquilladora profesional especializada en novias y eventos
-                sociales. Diseño maquillajes exclusivos que resaltan tu belleza
-                natural.
+                Especialista en novias y eventos sociales. Diseño maquillajes exclusivos que resaltan tu belleza natural con técnicas profesionales.
               </Typography>
             </div>
 
-            {/* Stats - Mobile friendly */}
-            <div className="grid grid-cols-3 gap-4 py-6">
+            <div className="grid grid-cols-3 gap-6 py-8 border-y border-[color:var(--color-border)] animate-fadeInUp delay-200">
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
+                <div className="text-3xl sm:text-4xl font-bold text-[color:var(--color-primary)] mb-2">
                   5.0
                 </div>
-                <Typography
-                  as="p"
-                  variant="small"
-                  className="text-[color:var(--color-muted)] mt-1"
-                >
+                <Typography as="p" variant="small" className="text-[color:var(--color-muted)]">
                   Calificación
                 </Typography>
               </div>
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
+                <div className="text-3xl sm:text-4xl font-bold text-[color:var(--color-primary)] mb-2">
                   370+
                 </div>
-                <Typography
-                  as="p"
-                  variant="small"
-                  className="text-[color:var(--color-muted)] mt-1"
-                >
+                <Typography as="p" variant="small" className="text-[color:var(--color-muted)]">
                   Clientes
                 </Typography>
               </div>
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
+                <div className="text-3xl sm:text-4xl font-bold text-[color:var(--color-primary)] mb-2">
                   8+
                 </div>
-                <Typography
-                  as="p"
-                  variant="small"
-                  className="text-[color:var(--color-muted)] mt-1"
-                >
+                <Typography as="p" variant="small" className="text-[color:var(--color-muted)]">
                   Años Exp.
                 </Typography>
               </div>
             </div>
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 animate-fadeInUp delay-300">
               <Button
                 variant="primary"
                 size="lg"
-                onClick={() => {
-                  const element = document.querySelector("#contacto");
-                  if (element) {
-                    const header = document.querySelector("header");
-                    const headerHeight = header ? header.offsetHeight : 80;
-                    const isMobile = window.innerWidth < 768;
-                    const extraMargin = isMobile ? 60 : 30;
-
-                    const elementPosition =
-                      element.getBoundingClientRect().top + window.scrollY;
-                    const offsetPosition =
-                      elementPosition - headerHeight - extraMargin;
-
-                    window.scrollTo({
-                      top: offsetPosition,
-                      behavior: "smooth",
-                    });
-                  }
-                }}
+                onClick={() => scrollToSection("#contacto")}
               >
                 Agendar Cita
               </Button>
-
               <Button
                 variant="secondary"
                 size="lg"
-                onClick={() => {
-                  const el = document.getElementById("servicios");
-                  el?.scrollIntoView({ behavior: "smooth" });
-                }}
+                onClick={() => scrollToSection("#servicios")}
               >
                 Ver Servicios
               </Button>
             </div>
 
-            {/* Info Cards - Simplified */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="flex items-center gap-3 p-4 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)]">
-                <MapPin className="w-5 h-5 text-[color:var(--color-primary)] flex-shrink-0" />
+            <div className="flex items-center gap-4 pt-4 animate-fadeInUp delay-400">
+              <a
+                href="https://www.instagram.com/marcelacorderobeauty/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-3 text-[color:var(--color-body)] hover:text-[color:var(--color-primary)] transition-colors"
+              >
+                <div className="w-12 h-12 rounded-full bg-[color:var(--color-primary)]/10 flex items-center justify-center group-hover:bg-[color:var(--color-primary)]/20 transition-colors">
+                  <Instagram className="w-5 h-5" />
+                </div>
                 <div>
-                  <Typography
-                    as="p"
-                    variant="small"
-                    className="text-[color:var(--color-muted)] font-medium"
-                  >
-                    Ubicación
+                  <Typography as="p" variant="small" className="text-[color:var(--color-muted)]">
+                    Sígueme en
                   </Typography>
-                  <Typography
-                    as="p"
-                    variant="p"
-                    className="text-[color:var(--color-body)] text-sm"
-                  >
-                    Pueblo Libre, Lima
+                  <Typography as="p" variant="p" className="font-medium">
+                    @marcelacorderobeauty
                   </Typography>
                 </div>
-              </div>
-
-              <div className="flex items-center gap-3 p-4 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)]">
-                <Truck className="w-5 h-5 text-[color:var(--color-primary)] flex-shrink-0" />
-                <div>
-                  <Typography
-                    as="p"
-                    variant="small"
-                    className="text-[color:var(--color-muted)] font-medium"
-                  >
-                    Servicio
-                  </Typography>
-                  <Typography
-                    as="p"
-                    variant="p"
-                    className="text-[color:var(--color-body)] text-sm"
-                  >
-                    A domicilio
-                  </Typography>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 p-4 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)]">
-                <Clock className="w-5 h-5 text-[color:var(--color-primary)] flex-shrink-0" />
-                <div>
-                  <Typography
-                    as="p"
-                    variant="small"
-                    className="text-[color:var(--color-muted)] font-medium"
-                  >
-                    Horarios
-                  </Typography>
-                  <Typography
-                    as="p"
-                    variant="p"
-                    className="text-[color:var(--color-body)] text-sm"
-                  >
-                    Flexibles
-                  </Typography>
-                </div>
-              </div>
+              </a>
             </div>
           </div>
 
-          {/* Right: Image - Clean and minimal */}
-          <div className="relative">
-            <div className="relative h-[400px] sm:h-[500px] lg:h-[600px] rounded-2xl overflow-hidden shadow-lg border border-[color:var(--color-border)]">
+          <div className="relative lg:order-last animate-scaleIn delay-500">
+            <div className="absolute -inset-1 bg-[color:var(--color-primary)]/5 rounded-3xl blur-2xl" />
+            
+            <div className="relative aspect-[3/4] max-h-[600px] rounded-2xl overflow-hidden border border-[color:var(--color-border)] shadow-2xl">
               <Image
                 src="/marcela-hero.jpg"
                 alt="Marcela Cordero - Makeup Artist Profesional"
                 fill
                 className="object-cover"
-                sizes="(max-width: 640px) 100vw, 50vw"
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 priority
               />
+            </div>
 
-              {/* Subtle overlay for text readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
-
-              {/* Instagram link - Minimal */}
-              <div className="absolute bottom-6 left-6">
-                <a
-                  href="https://www.instagram.com/marcelacorderobeauty/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Instagram de Marcela Cordero"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[color:var(--color-surface)]/95 backdrop-blur-sm border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface)] transition-colors"
-                >
-                  <Instagram className="w-5 h-5 text-[color:var(--color-primary)]" />
-                  <span className="text-sm font-medium text-[color:var(--color-heading)]">
-                    @marcelacorderobeauty
-                  </span>
-                </a>
+            <div className="absolute -bottom-6 -right-6 bg-[color:var(--color-surface)] rounded-2xl p-6 shadow-xl border border-[color:var(--color-border)] animate-fadeIn delay-600">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-[color:var(--color-primary)]/10 flex items-center justify-center">
+                  <span className="text-2xl">✨</span>
+                </div>
+                <div>
+                  <Typography as="p" variant="p" className="font-semibold text-[color:var(--color-heading)]">
+                    Soft Glam
+                  </Typography>
+                  <Typography as="p" variant="small" className="text-[color:var(--color-muted)]">
+                    Especialidad de la casa
+                  </Typography>
+                </div>
               </div>
             </div>
           </div>
