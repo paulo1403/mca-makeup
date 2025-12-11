@@ -1,53 +1,55 @@
-/* Nuevo tema base morado (light/dark) enfocado en NavBar y tokens esenciales */
+/* Nuevo tema base marrón elegante (light/dark) */
 
-/* Light theme variables (default) - Azul Confiable palette */
+/* Light theme variables (default) - Brown Elegant palette */
 :root,
 :root[data-theme="light"] {
-  /* Backgrounds */
-  --color-background: #f8fafc; /* Azul muy claro */
+  /* Backgrounds - Tonos marrones claros */
+  --color-background: #f5f5f0; /* Crema muy claro */
   --color-surface: #ffffff; /* Blanco puro */
-  --color-surface-elevated: #ffffff; /* Blanco puro */
+  --color-surface-elevated: #faf8f5; /* Crema suave */
+  --color-surface-secondary: #f0ede9; /* Marrón muy claro */
 
-  /* Blue Palette */
-  --color-primary: #2563eb; /* Azul confiable */
-  --color-primary-hover: #1d4ed8; /* Azul más oscuro */
-  --color-primary-light: #dbeafe; /* Azul muy claro */
-  --color-accent: #1d4ed8; /* Azul oscuro */
-  --color-accent-soft: #bfdbfe; /* Azul suave */
+  /* Brown Palette - Tonos marrones elegantes */
+  --color-primary: #5d4037; /* Marrón medio elegante */
+  --color-primary-hover: #4e342e; /* Marrón más oscuro */
+  --color-primary-light: #d7ccc8; /* Marrón claro suave */
+  --color-accent: #8d6e63; /* Marrón terracota */
+  --color-accent-soft: #bcaaa4; /* Marrón beige */
 
-  /* Text */
-  --color-heading: #1e293b; /* Gris azulado oscuro */
-  --color-body: #475569; /* Gris azulado medio */
-  --color-muted: #64748b; /* Gris azulado claro */
+  /* Text - Tonos marrones oscuros para legibilidad */
+  --color-heading: #3e2723; /* Marrón chocolate oscuro */
+  --color-body: #5d4037; /* Marrón medio para texto */
+  --color-muted: #8d6e63; /* Marrón claro para texto secundario */
 
-  /* Borders */
-  --color-border: #e2e8f0; /* Gris azulado claro */
+  /* Borders - Tonos marrones suaves */
+  --color-border: #d7ccc8; /* Marrón claro */
+  --color-border-light: #ede7e3; /* Marrón muy claro */
 
   /* Semantic */
   --color-cta-bg: var(--color-primary);
   --color-cta-hover: var(--color-primary-hover);
   --color-cta-text: #ffffff;
 
-  /* Status pills (light) */
-  --status-pending-bg: #fef3c7; /* amber-50 */
-  --status-pending-text: #92400e; /* amber-800 */
-  --status-pending-border: #fde68a; /* amber-200 */
+  /* Status pills (brown theme) */
+  --status-pending-bg: #fef7ed; /* Marrón claro cálido */
+  --status-pending-text: #9a3412; /* Marrón rojizo oscuro */
+  --status-pending-border: #fed7aa; /* Marrón rojizo claro */
 
-  --status-confirmed-bg: #ecfdf5; /* emerald-50 */
-  --status-confirmed-text: #065f46; /* emerald-800 */
-  --status-confirmed-border: #a7f3d0; /* emerald-200 */
+  --status-confirmed-bg: #f7f3f0; /* Marrón beige claro */
+  --status-confirmed-text: #5d4037; /* Marrón medio */
+  --status-confirmed-border: #d7ccc8; /* Marrón claro */
 
-  --status-completed-bg: #eff6ff; /* blue-50 */
-  --status-completed-text: #1d4ed8; /* blue-700 */
-  --status-completed-border: #bfdbfe; /* blue-200 */
+  --status-completed-bg: #f0ede9; /* Marrón muy claro */
+  --status-completed-text: #3e2723; /* Marrón chocolate */
+  --status-completed-border: #bcaaa4; /* Marrón beige */
 
-  --status-cancelled-bg: #fef2f2; /* red-50 */
-  --status-cancelled-text: #b91c1c; /* red-700 */
-  --status-cancelled-border: #fecaca; /* red-200 */
+  --status-cancelled-bg: #fef2f2; /* Mantener rojo para cancelaciones */
+  --status-cancelled-text: #b91c1c; /* Rojo oscuro */
+  --status-cancelled-border: #fecaca; /* Rojo claro */
 
-  /* Glassmorphism */
-  --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(176, 132, 99, 0.15);
+  /* Glassmorphism - Marrón elegante */
+  --glass-bg: rgba(250, 248, 245, 0.9);
+  --glass-border: rgba(141, 110, 99, 0.15);
 
   /* Backwards compatible aliases (used in older CSS files) */
   --color-foreground: var(--color-body);
@@ -137,53 +139,55 @@
   --calendar-label: var(--color-muted);
 }
 
-/* Dark theme variables - Azul Confiable palette */
+/* Dark theme variables - Brown Elegant palette */
 :root[data-theme="dark"] {
-  /* Backgrounds */
-  --color-background: #0f172a; /* Azul muy oscuro */
-  --color-surface: #1e293b; /* Azul oscuro */
-  --color-surface-elevated: #334155; /* Azul medio oscuro */
+  /* Backgrounds - Tonos marrones oscuros */
+  --color-background: #2a1810; /* Marrón muy oscuro elegante */
+  --color-surface: #3e2723; /* Marrón chocolate oscuro */
+  --color-surface-elevated: #4e342e; /* Marrón medio oscuro */
+  --color-surface-secondary: #5d4037; /* Marrón medio */
 
-  /* Blue Palette */
-  --color-primary: #3b82f6; /* Azul claro */
-  --color-primary-hover: #2563eb; /* Azul medio */
-  --color-primary-light: #1e40af; /* Azul oscuro */
-  --color-accent: #1e40af; /* Azul muy oscuro */
-  --color-accent-soft: #1e293b; /* Azul grisáceo */
+  /* Brown Palette - Tonos marrones oscuros */
+  --color-primary: #bcaaa4; /* Marrón beige claro */
+  --color-primary-hover: #a1887f; /* Marrón beige medio */
+  --color-primary-light: #8d6e63; /* Marrón terracota */
+  --color-accent: #d7ccc8; /* Marrón claro */
+  --color-accent-soft: #bcaaa4; /* Marrón beige */
 
-  /* Text */
-  --color-heading: #f1f5f9; /* Blanco azulado */
-  --color-body: #cbd5e1; /* Gris azulado claro */
-  --color-muted: #94a3b8; /* Gris azulado medio */
+  /* Text - Tonos claros para contraste */
+  --color-heading: #f5f5f0; /* Crema claro */
+  --color-body: #ede7e3; /* Marrón muy claro */
+  --color-muted: #d7ccc8; /* Marrón claro */
 
-  /* Borders */
-  --color-border: #334155; /* Gris azulado oscuro */
+  /* Borders - Tonos marrones medios */
+  --color-border: #5d4037; /* Marrón medio */
+  --color-border-light: #8d6e63; /* Marrón terracota */
 
   /* Semantic */
   --color-cta-bg: var(--color-primary);
   --color-cta-hover: var(--color-primary-hover);
-  --color-cta-text: #ffffff;
+  --color-cta-text: #2a1810;
 
-  /* Status pills (dark) */
-  --status-pending-bg: color-mix(in srgb, #f59e0b 16%, var(--color-surface));
+  /* Status pills (dark brown theme) */
+  --status-pending-bg: color-mix(in srgb, #d97706 20%, var(--color-surface));
   --status-pending-text: #fbbf24;
-  --status-pending-border: color-mix(in srgb, #f59e0b 30%, transparent);
+  --status-pending-border: color-mix(in srgb, #d97706 35%, var(--color-surface));
 
-  --status-confirmed-bg: color-mix(in srgb, #10b981 16%, var(--color-surface));
-  --status-confirmed-text: #34d399;
-  --status-confirmed-border: color-mix(in srgb, #10b981 30%, transparent);
+  --status-confirmed-bg: color-mix(in srgb, #8d6e63 25%, var(--color-surface));
+  --status-confirmed-text: #d7ccc8;
+  --status-confirmed-border: color-mix(in srgb, #bcaaa4 40%, var(--color-surface));
 
-  --status-completed-bg: color-mix(in srgb, #3b82f6 16%, var(--color-surface));
-  --status-completed-text: #60a5fa;
-  --status-completed-border: color-mix(in srgb, #3b82f6 30%, transparent);
+  --status-completed-bg: color-mix(in srgb, #a1887f 25%, var(--color-surface));
+  --status-completed-text: #ede7e3;
+  --status-completed-border: color-mix(in srgb, #d7ccc8 40%, var(--color-surface));
 
-  --status-cancelled-bg: color-mix(in srgb, #ef4444 16%, var(--color-surface));
-  --status-cancelled-text: #f87171;
-  --status-cancelled-border: color-mix(in srgb, #ef4444 30%, transparent);
+  --status-cancelled-bg: color-mix(in srgb, #dc2626 20%, var(--color-surface));
+  --status-cancelled-text: #fca5a5;
+  --status-cancelled-border: color-mix(in srgb, #dc2626 35%, var(--color-surface));
 
-  /* Glassmorphism */
-  --glass-bg: rgba(19, 17, 31, 0.75);
-  --glass-border: rgba(176, 132, 99, 0.2);
+  /* Glassmorphism - Marrón oscuro elegante */
+  --glass-bg: rgba(62, 39, 35, 0.85);
+  --glass-border: rgba(184, 170, 164, 0.25);
 
   /* Backwards compatible aliases */
   --color-foreground: var(--color-body);

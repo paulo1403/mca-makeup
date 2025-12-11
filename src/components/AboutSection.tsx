@@ -79,7 +79,7 @@ export default function AboutSection() {
               <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-[color:var(--color-surface)] border border-[color:var(--color-border)]">
                 <div className="relative w-full h-full">
                   <Image
-                    src="https://marcelacorderomakeup.my.canva.site/_assets/media/a946848d6f1442ce7e9ea68c53c46982.jpg"
+                    src="/about-me.jpg"
                     alt="Marcela Cordero - Maquilladora Profesional"
                     fill
                     className="about-image object-cover object-center"
