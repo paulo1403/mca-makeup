@@ -27,7 +27,6 @@ export default function HeroSection() {
       id="hero"
       className="relative min-h-screen flex items-center justify-center pt-24 pb-16 sm:pt-32 sm:pb-24 bg-[color:var(--color-background)]"
     >
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <div className="space-y-8 lg:space-y-10">
@@ -156,7 +155,7 @@ export default function HeroSection() {
               />
             </div>
 
-            <div className="absolute -bottom-6 -right-6 bg-[color:var(--color-surface)] rounded-2xl p-6 shadow-xl border border-[color:var(--color-border)] animate-fadeIn delay-600">
+            <div className="hidden lg:block absolute -bottom-6 -right-6 bg-[color:var(--color-surface)] rounded-2xl p-6 shadow-xl border border-[color:var(--color-border)] animate-fadeIn delay-600">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full bg-[color:var(--color-primary)]/10 flex items-center justify-center">
                   <span className="text-2xl">✨</span>
