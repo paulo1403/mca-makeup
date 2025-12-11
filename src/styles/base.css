@@ -1,27 +1,27 @@
 /* Nuevo tema base morado (light/dark) enfocado en NavBar y tokens esenciales */
 
-/* Light theme variables (default) - Minimalist palette v2 */
+/* Light theme variables (default) - Azul Confiable palette */
 :root,
 :root[data-theme="light"] {
   /* Backgrounds */
-  --color-background: #ffffff; /* Blanco puro */
-  --color-surface: #f8f8f8; /* Gris muy claro */
+  --color-background: #f8fafc; /* Azul muy claro */
+  --color-surface: #ffffff; /* Blanco puro */
   --color-surface-elevated: #ffffff; /* Blanco puro */
 
-  /* Neutral Palette */
-  --color-primary: #000000; /* Negro */
-  --color-primary-hover: #333333; /* Gris oscuro */
-  --color-primary-light: #f0f0f0; /* Gris claro */
-  --color-accent: #b0b0b0; /* Gris medio */
-  --color-accent-soft: #d0d0d0; /* Gris suave */
+  /* Blue Palette */
+  --color-primary: #2563eb; /* Azul confiable */
+  --color-primary-hover: #1d4ed8; /* Azul más oscuro */
+  --color-primary-light: #dbeafe; /* Azul muy claro */
+  --color-accent: #1d4ed8; /* Azul oscuro */
+  --color-accent-soft: #bfdbfe; /* Azul suave */
 
   /* Text */
-  --color-heading: #000000; /* Negro */
-  --color-body: #404040; /* Gris oscuro para texto */
-  --color-muted: #808080; /* Gris medio para secundario */
+  --color-heading: #1e293b; /* Gris azulado oscuro */
+  --color-body: #475569; /* Gris azulado medio */
+  --color-muted: #64748b; /* Gris azulado claro */
 
   /* Borders */
-  --color-border: #e0e0e0; /* Gris claro */
+  --color-border: #e2e8f0; /* Gris azulado claro */
 
   /* Semantic */
   --color-cta-bg: var(--color-primary);
@@ -137,27 +137,27 @@
   --calendar-label: var(--color-muted);
 }
 
-/* Dark theme variables - Minimalist palette v2 */
+/* Dark theme variables - Azul Confiable palette */
 :root[data-theme="dark"] {
   /* Backgrounds */
-  --color-background: #000000; /* Negro */
-  --color-surface: #1a1a1a; /* Gris oscuro */
-  --color-surface-elevated: #2a2a2a; /* Gris medio oscuro */
+  --color-background: #0f172a; /* Azul muy oscuro */
+  --color-surface: #1e293b; /* Azul oscuro */
+  --color-surface-elevated: #334155; /* Azul medio oscuro */
 
-  /* Neutral Palette */
-  --color-primary: #ffffff; /* Blanco */
-  --color-primary-hover: #cccccc; /* Gris claro */
-  --color-primary-light: #404040; /* Gris oscuro */
-  --color-accent: #808080; /* Gris */
-  --color-accent-soft: #606060; /* Gris oscuro */
+  /* Blue Palette */
+  --color-primary: #3b82f6; /* Azul claro */
+  --color-primary-hover: #2563eb; /* Azul medio */
+  --color-primary-light: #1e40af; /* Azul oscuro */
+  --color-accent: #1e40af; /* Azul muy oscuro */
+  --color-accent-soft: #1e293b; /* Azul grisáceo */
 
   /* Text */
-  --color-heading: #ffffff; /* Blanco */
-  --color-body: #cccccc; /* Gris claro */
-  --color-muted: #808080; /* Gris */
+  --color-heading: #f1f5f9; /* Blanco azulado */
+  --color-body: #cbd5e1; /* Gris azulado claro */
+  --color-muted: #94a3b8; /* Gris azulado medio */
 
   /* Borders */
-  --color-border: #404040; /* Gris oscuro */
+  --color-border: #334155; /* Gris azulado oscuro */
 
   /* Semantic */
   --color-cta-bg: var(--color-primary);
