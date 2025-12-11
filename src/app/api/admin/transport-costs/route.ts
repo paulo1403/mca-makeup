@@ -29,7 +29,10 @@ export async function GET() {
     return NextResponse.json({ transportCosts });
   } catch (error) {
     console.error("Error fetching transport costs:", error);
-    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Error interno del servidor" },
+      { status: 500 }
+    );
   }
 }
 
@@ -52,7 +55,7 @@ export async function POST(request: NextRequest) {
     if (existingDistrict) {
       return NextResponse.json(
         { error: "Ya existe un costo de transporte para este distrito" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -65,7 +68,7 @@ export async function POST(request: NextRequest) {
         message: "Costo de transporte creado exitosamente",
         transportCost,
       },
-      { status: 201 },
+      { status: 201 }
     );
   } catch (error) {
     console.error("Error creating transport cost:", error);
@@ -76,10 +79,13 @@ export async function POST(request: NextRequest) {
           error: "Datos inválidos",
           details: error.issues,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
-    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Error interno del servidor" },
+      { status: 500 }
+    );
   }
 }

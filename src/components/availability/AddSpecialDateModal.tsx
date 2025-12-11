@@ -33,7 +33,7 @@ const specialDateSchema = z
       message:
         "Para fechas disponibles, las horas son requeridas y la hora de fin debe ser posterior",
       path: ["endTime"],
-    },
+    }
   );
 
 type SpecialDateFormData = z.infer<typeof specialDateSchema>;
@@ -105,7 +105,12 @@ export default function AddSpecialDateModal({
   if (!isOpen) return null;
 
   return (
-    <Modal open={isOpen} onClose={handleClose} size="sm" ariaLabelledBy="add-specialdate-title">
+    <Modal
+      open={isOpen}
+      onClose={handleClose}
+      size="sm"
+      ariaLabelledBy="add-specialdate-title"
+    >
       <ModalHeader
         title={
           <Typography as="span" id="add-specialdate-title" variant="h3">
@@ -160,7 +165,10 @@ export default function AddSpecialDateModal({
                 {errors.date.message}
               </Typography>
             )}
-            <Typography variant="caption" className="text-[color:var(--color-muted)] mt-1">
+            <Typography
+              variant="caption"
+              className="text-[color:var(--color-muted)] mt-1"
+            >
               Formato: DD/MM/AAAA (día/mes/año)
             </Typography>
           </div>
@@ -291,11 +299,15 @@ export default function AddSpecialDateModal({
           </div>
 
           <div className="bg-[color:var(--color-accent)]/6 border border-[color:var(--color-accent)]/20 rounded-lg p-3">
-            <Typography variant="small" className="text-[color:var(--color-on-surface)]">
+            <Typography
+              variant="small"
+              className="text-[color:var(--color-on-surface)]"
+            >
               <span className="font-semibold">Ejemplos:</span>
-              <br />• Día libre: Selecciona &quot;No disponible&quot; para vacaciones
-              <br />• Horario extendido: Selecciona &quot;Disponible&quot; para días especiales como
-              San Valentín
+              <br />• Día libre: Selecciona &quot;No disponible&quot; para
+              vacaciones
+              <br />• Horario extendido: Selecciona &quot;Disponible&quot; para
+              días especiales como San Valentín
             </Typography>
           </div>
 

@@ -1,5 +1,13 @@
-import { emailTemplates, sendEmail, sendEmailToAdmins } from "@/lib/serverEmail";
-import { debugDate, parseDateFromString, formatDateForCalendar } from "@/utils/dateUtils";
+import {
+  emailTemplates,
+  sendEmail,
+  sendEmailToAdmins,
+} from "@/lib/serverEmail";
+import {
+  debugDate,
+  parseDateFromString,
+  formatDateForCalendar,
+} from "@/utils/dateUtils";
 import { calculateNightShiftCost } from "@/utils/nightShift";
 import { parseAppointmentTime } from "@/utils/dateRange";
 import { type Prisma, PrismaClient } from "@prisma/client";
@@ -19,7 +27,11 @@ const appointmentSchema = z
       .max(20, "Teléfono muy largo")
       .refine((phone) => {
         const cleanPhone = phone.replace(/[\s\-\+\(\)]/g, "");
-        return cleanPhone.length >= 9 && cleanPhone.length <= 12 && /^\d+$/.test(cleanPhone);
+        return (
+          cleanPhone.length >= 9 &&
+          cleanPhone.length <= 12 &&
+          /^\d+$/.test(cleanPhone)
+        );
       }, "Formato de teléfono inválido. Ej: +51 999 209 880 o 999209880"),
     services: z
       .record(z.string(), z.number().min(1))
@@ -43,14 +55,20 @@ const appointmentSchema = z
   .refine(
     (data) => {
       if (data.locationType === "HOME") {
-        return data.district && data.district.length > 0 && data.address && data.address.length > 0;
+        return (
+          data.district &&
+          data.district.length > 0 &&
+          data.address &&
+          data.address.length > 0
+        );
       }
       return true;
     },
     {
-      message: "Para servicios a domicilio, distrito y dirección son requeridos",
+      message:
+        "Para servicios a domicilio, distrito y dirección son requeridos",
       path: ["address"],
-    },
+    }
   )
   .refine(
     (data) => {
@@ -60,7 +78,7 @@ const appointmentSchema = z
     {
       message: "Combinación de servicios no válida",
       path: ["services"],
-    },
+    }
   );
 
 export async function POST(request: NextRequest) {
@@ -84,7 +102,9 @@ export async function POST(request: NextRequest) {
     let totalDuration = 0;
     let calculatedServicePrice = 0;
 
-    for (const [serviceId, quantity] of Object.entries(validatedData.services)) {
+    for (const [serviceId, quantity] of Object.entries(
+      validatedData.services
+    )) {
       if (quantity <= 0) continue;
 
       const matchedService = allServices.find((s) => s.id === serviceId);
@@ -92,7 +112,7 @@ export async function POST(request: NextRequest) {
       if (!matchedService) {
         return NextResponse.json(
           { error: `Servicio no encontrado: ${serviceId}` },
-          { status: 400 },
+          { status: 400 }
         );
       }
 
@@ -110,15 +130,17 @@ export async function POST(request: NextRequest) {
     if (uniqueCategories.length === 1 && uniqueCategories[0] === "HAIRSTYLE") {
       return NextResponse.json(
         {
-          error: "No se puede reservar solo peinado. Debe incluir un servicio de maquillaje.",
+          error:
+            "No se puede reservar solo peinado. Debe incluir un servicio de maquillaje.",
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
     // No permitir combinar novia con social/piel madura
     const hasNovia = categories.includes("BRIDAL");
-    const hasSocial = categories.includes("SOCIAL") || categories.includes("MATURE_SKIN");
+    const hasSocial =
+      categories.includes("SOCIAL") || categories.includes("MATURE_SKIN");
 
     if (hasNovia && hasSocial) {
       return NextResponse.json(
@@ -126,7 +148,7 @@ export async function POST(request: NextRequest) {
           error:
             "No se pueden combinar servicios de novia con servicios sociales o de piel madura.",
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -134,7 +156,7 @@ export async function POST(request: NextRequest) {
     if (uniqueCategories.length > 2) {
       return NextResponse.json(
         { error: "Solo se pueden combinar máximo 2 tipos de servicios." },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -149,7 +171,7 @@ export async function POST(request: NextRequest) {
       if (!(hasHairstyle && hasMakeup)) {
         return NextResponse.json(
           { error: "Solo se puede combinar maquillaje con peinado." },
-          { status: 400 },
+          { status: 400 }
         );
       }
     }
@@ -160,7 +182,10 @@ export async function POST(request: NextRequest) {
       appointmentDateTime = parseDateFromString(validatedData.appointmentDate);
       debugDate(appointmentDateTime, "Parsed appointment date");
     } catch {
-      return NextResponse.json({ error: "Formato de fecha inválido" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Formato de fecha inválido" },
+        { status: 400 }
+      );
     }
 
     // Verificar solapamiento de horarios (no solo coincidencia exacta)
@@ -180,7 +205,7 @@ export async function POST(request: NextRequest) {
     const requested = parseAppointmentTime(
       appointmentDateStr,
       validatedData.appointmentTimeRange,
-      totalDuration || undefined,
+      totalDuration || undefined
     );
 
     const transportBufferMinutes = 60;
@@ -189,7 +214,7 @@ export async function POST(request: NextRequest) {
       const existing = parseAppointmentTime(
         appointmentDateStr,
         apt.appointmentTime,
-        apt.totalDuration || undefined,
+        apt.totalDuration || undefined
       );
 
       // Aplicar buffer de transporte si alguno es a domicilio
@@ -199,19 +224,27 @@ export async function POST(request: NextRequest) {
           : 0;
       const bufferAfter = bufferBefore;
 
-      const existingStartBuffered = new Date(existing.start.getTime() - bufferBefore * 60 * 1000);
-      const existingEndBuffered = new Date(existing.end.getTime() + bufferAfter * 60 * 1000);
+      const existingStartBuffered = new Date(
+        existing.start.getTime() - bufferBefore * 60 * 1000
+      );
+      const existingEndBuffered = new Date(
+        existing.end.getTime() + bufferAfter * 60 * 1000
+      );
 
       // Solapamiento si [reqStart, reqEnd] intersecta [existingStartBuffered, existingEndBuffered]
       return (
-        requested.start < existingEndBuffered && requested.end > existingStartBuffered
+        requested.start < existingEndBuffered &&
+        requested.end > existingStartBuffered
       );
     });
 
     if (hasOverlap) {
       return NextResponse.json(
-        { error: "Este horario se solapa con otra cita. Por favor selecciona otro." },
-        { status: 400 },
+        {
+          error:
+            "Este horario se solapa con otra cita. Por favor selecciona otro.",
+        },
+        { status: 400 }
       );
     }
 
@@ -220,7 +253,9 @@ export async function POST(request: NextRequest) {
     let totalPrice = calculatedServicePrice;
 
     // Calculate night shift cost
-    const nightShiftCost = calculateNightShiftCost(validatedData.appointmentTimeRange);
+    const nightShiftCost = calculateNightShiftCost(
+      validatedData.appointmentTimeRange
+    );
 
     if (validatedData.locationType === "HOME" && validatedData.district) {
       const transportCostData = await prisma.transportCost.findFirst({
@@ -248,7 +283,9 @@ export async function POST(request: NextRequest) {
     // Group services by their details and create summary
     const serviceGroups = new Map();
 
-    for (const [serviceId, quantity] of Object.entries(validatedData.services)) {
+    for (const [serviceId, quantity] of Object.entries(
+      validatedData.services
+    )) {
       if (quantity <= 0) continue;
 
       const service = allServices.find((s) => s.id === serviceId);
@@ -296,12 +333,30 @@ export async function POST(request: NextRequest) {
         appointmentDate: appointmentDateTime,
         appointmentTime: validatedData.appointmentTimeRange,
         locationType: validatedData.locationType,
-        district: validatedData.locationType === "HOME" ? validatedData.district : null,
-        address: validatedData.locationType === "HOME" ? validatedData.address : null,
+        district:
+          validatedData.locationType === "HOME" ? validatedData.district : null,
+        address:
+          validatedData.locationType === "HOME" ? validatedData.address : null,
         addressReference:
-          validatedData.locationType === "HOME" ? validatedData.addressReference : null,
+          validatedData.locationType === "HOME"
+            ? validatedData.addressReference
+            : null,
         additionalNotes: `Servicios: ${serviceTypeString}
-Ubicación: ${validatedData.locationType === "STUDIO" ? "Local en Av. Bolívar 1073, Pueblo Libre" : `Domicilio - ${validatedData.district || ""}, ${validatedData.address || ""}`}${validatedData.addressReference ? ` (Ref: ${validatedData.addressReference})` : ""}${validatedData.additionalNotes ? `\n\nNotas adicionales: ${validatedData.additionalNotes}` : ""}`,
+Ubicación: ${
+          validatedData.locationType === "STUDIO"
+            ? "Local en Av. Bolívar 1073, Pueblo Libre"
+            : `Domicilio - ${validatedData.district || ""}, ${
+                validatedData.address || ""
+              }`
+        }${
+          validatedData.addressReference
+            ? ` (Ref: ${validatedData.addressReference})`
+            : ""
+        }${
+          validatedData.additionalNotes
+            ? `\n\nNotas adicionales: ${validatedData.additionalNotes}`
+            : ""
+        }`,
         status: "PENDING",
       },
     });
@@ -311,7 +366,11 @@ Ubicación: ${validatedData.locationType === "STUDIO" ? "Local en Av. Bolívar 1
       data: {
         type: "APPOINTMENT",
         title: "Nueva cita pendiente",
-        message: `${appointment.clientName} ha solicitado ${serviceTypeString} para el ${appointment.appointmentDate.toLocaleDateString("es-PE")} a las ${appointment.appointmentTime}`,
+        message: `${
+          appointment.clientName
+        } ha solicitado ${serviceTypeString} para el ${appointment.appointmentDate.toLocaleDateString(
+          "es-PE"
+        )} a las ${appointment.appointmentTime}`,
         link: "/admin/appointments",
         appointmentId: appointment.id,
         read: false,
@@ -330,7 +389,11 @@ Ubicación: ${validatedData.locationType === "STUDIO" ? "Local en Av. Bolívar 1
       appointment.district || undefined,
       appointment.address || undefined,
       appointment.addressReference || undefined,
-      `Ubicación: ${appointment.locationType === "HOME" ? "Domicilio" : "Studio"}${appointment.district ? ` - Distrito: ${appointment.district}` : ""}${appointment.address ? ` - Dirección: ${appointment.address}` : ""}`,
+      `Ubicación: ${
+        appointment.locationType === "HOME" ? "Domicilio" : "Studio"
+      }${appointment.district ? ` - Distrito: ${appointment.district}` : ""}${
+        appointment.address ? ` - Dirección: ${appointment.address}` : ""
+      }`
     );
 
     const emailSent = await sendEmailToAdmins({
@@ -339,7 +402,10 @@ Ubicación: ${validatedData.locationType === "STUDIO" ? "Local en Av. Bolívar 1
       text: adminEmailTemplate.text,
     });
 
-    console.log("📧 Notificación admin enviada:", emailSent ? "✅ Exitosa" : "❌ Fallida");
+    console.log(
+      "📧 Notificación admin enviada:",
+      emailSent ? "✅ Exitosa" : "❌ Fallida"
+    );
 
     // Send confirmation email to client
     const clientEmailTemplate = emailTemplates.appointmentPending(
@@ -351,7 +417,7 @@ Ubicación: ${validatedData.locationType === "STUDIO" ? "Local en Av. Bolívar 1
       appointment.district || undefined,
       appointment.address || undefined,
       appointment.addressReference || undefined,
-      appointment.additionalNotes || undefined,
+      appointment.additionalNotes || undefined
     );
 
     const clientEmailSent = await sendEmail({
@@ -361,11 +427,15 @@ Ubicación: ${validatedData.locationType === "STUDIO" ? "Local en Av. Bolívar 1
       text: clientEmailTemplate.text,
     });
 
-    console.log("📧 Email cliente enviado:", clientEmailSent ? "✅ Exitosa" : "❌ Fallida");
+    console.log(
+      "📧 Email cliente enviado:",
+      clientEmailSent ? "✅ Exitosa" : "❌ Fallida"
+    );
 
     return NextResponse.json(
       {
-        message: "Cita enviada exitosamente. Te contactaremos pronto para confirmar.",
+        message:
+          "Cita enviada exitosamente. Te contactaremos pronto para confirmar.",
         appointmentId: appointment.id,
         pricing: {
           servicePrice: calculatedServicePrice,
@@ -376,14 +446,16 @@ Ubicación: ${validatedData.locationType === "STUDIO" ? "Local en Av. Bolívar 1
         services: servicesJson,
         totalDuration: totalDuration,
       },
-      { status: 201 },
+      { status: 201 }
     );
   } catch (error) {
     console.error("Error creating appointment:", error);
 
     if (error instanceof z.ZodError) {
       // Encontrar el primer error de teléfono para dar un mensaje más específico
-      const phoneError = error.issues.find((err) => err.path.includes("clientPhone"));
+      const phoneError = error.issues.find((err) =>
+        err.path.includes("clientPhone")
+      );
 
       if (phoneError) {
         return NextResponse.json(
@@ -393,20 +465,24 @@ Ubicación: ${validatedData.locationType === "STUDIO" ? "Local en Av. Bolívar 1
               "Por favor ingresa un número de teléfono válido. Ejemplos: +51 999 209 880 o 999 209 880",
             details: error.issues,
           },
-          { status: 400 },
+          { status: 400 }
         );
       }
 
       return NextResponse.json(
         {
           error: "Datos inválidos",
-          message: "Por favor verifica que todos los campos estén completos y sean válidos.",
+          message:
+            "Por favor verifica que todos los campos estén completos y sean válidos.",
           details: error.issues,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
-    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Error interno del servidor" },
+      { status: 500 }
+    );
   }
 }

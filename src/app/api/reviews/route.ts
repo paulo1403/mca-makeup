@@ -42,7 +42,7 @@ export async function GET() {
         success: false,
         error: "Error al cargar las reseñas",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
           success: false,
           error: "Token de reseña inválido o cita no encontrada",
         },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
           success: false,
           error: "Ya existe una reseña para esta cita",
         },
-        { status: 409 },
+        { status: 409 }
       );
     }
 
@@ -103,7 +103,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: "Reseña enviada exitosamente. Será revisada antes de publicarse.",
+      message:
+        "Reseña enviada exitosamente. Será revisada antes de publicarse.",
       review: updatedReview,
     });
   } catch (error) {
@@ -114,7 +115,7 @@ export async function POST(request: NextRequest) {
           error: "Datos inválidos",
           details: error.issues,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -124,7 +125,7 @@ export async function POST(request: NextRequest) {
         success: false,
         error: "Error al enviar la reseña",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

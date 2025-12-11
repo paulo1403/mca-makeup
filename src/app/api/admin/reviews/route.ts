@@ -18,7 +18,10 @@ export async function GET(request: NextRequest) {
     const session = await getServerSession(authOptions);
 
     if (!session || session.user?.role !== "ADMIN") {
-      return NextResponse.json({ success: false, error: "No autorizado" }, { status: 401 });
+      return NextResponse.json(
+        { success: false, error: "No autorizado" },
+        { status: 401 }
+      );
     }
 
     const { searchParams } = new URL(request.url);
@@ -81,7 +84,7 @@ export async function GET(request: NextRequest) {
         success: false,
         error: "Error al cargar las reseñas",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -92,7 +95,10 @@ export async function PUT(request: NextRequest) {
     const session = await getServerSession(authOptions);
 
     if (!session || session.user?.role !== "ADMIN") {
-      return NextResponse.json({ success: false, error: "No autorizado" }, { status: 401 });
+      return NextResponse.json(
+        { success: false, error: "No autorizado" },
+        { status: 401 }
+      );
     }
 
     const body = await request.json();
@@ -148,7 +154,7 @@ export async function PUT(request: NextRequest) {
           error: "Datos inválidos",
           details: error.issues,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -158,7 +164,7 @@ export async function PUT(request: NextRequest) {
         success: false,
         error: "Error al actualizar la reseña",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

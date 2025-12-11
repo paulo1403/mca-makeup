@@ -35,7 +35,7 @@ const editSpecialDateSchema = z
       message:
         "Para fechas disponibles, las horas son requeridas y la hora de fin debe ser posterior",
       path: ["endTime"],
-    },
+    }
   );
 
 type EditSpecialDateForm = z.infer<typeof editSpecialDateSchema>;
@@ -50,7 +50,7 @@ interface EditSpecialDateModalProps {
       isAvailable: boolean;
       customHours?: { startTime: string; endTime: string };
       note?: string;
-    },
+    }
   ) => void;
   specialDate: SpecialDate | null;
   isLoading?: boolean;
@@ -83,7 +83,7 @@ export default function EditSpecialDateModal({
       const dateObject = new Date(
         Number.parseInt(year),
         Number.parseInt(month) - 1,
-        Number.parseInt(day),
+        Number.parseInt(day)
       );
 
       reset({
@@ -179,7 +179,10 @@ export default function EditSpecialDateModal({
                 {errors.date.message}
               </Typography>
             )}
-            <Typography variant="caption" className="text-[color:var(--color-muted)] mt-1">
+            <Typography
+              variant="caption"
+              className="text-[color:var(--color-muted)] mt-1"
+            >
               Formato: DD/MM/AAAA (día/mes/año)
             </Typography>
           </div>
