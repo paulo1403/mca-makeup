@@ -1,7 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Clock, Instagram, MapPin, Sparkles, Star, Truck } from "lucide-react";
+import { Clock, Instagram, MapPin, Truck } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import Button from "./ui/Button";
@@ -11,70 +10,47 @@ export default function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative bg-[color:var(--color-surface)]"
+      className="relative bg-[color:var(--color-background)] py-16 sm:py-24"
       style={{ scrollMarginTop: "120px" }}
     >
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center min-h-[calc(100vh-80px)] pt-24 sm:pt-24 pb-12 lg:py-32">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Content */}
-          <div className="flex flex-col gap-12">
+          <div className="flex flex-col gap-8">
             {/* Title */}
-            <div>
+            <div className="space-y-4">
               <Typography
                 as="h1"
                 variant="h1"
-                className="text-[color:var(--color-heading)] text-3xl sm:text-4xl lg:text-5xl leading-tight"
+                className="text-[color:var(--color-heading)] text-4xl sm:text-5xl lg:text-6xl leading-tight"
               >
-                <span className="block mb-2">Marcela Cordero</span>
-                <span className="block">Beauty Studio</span>
-              </Typography>
-            </div>
-
-            {/* Description */}
-            <div className="space-y-4">
-              <Typography
-                as="p"
-                variant="p"
-                className="text-[color:var(--color-body)] text-lg max-w-xl leading-relaxed"
-              >
-                Maquilladora profesional, diseñadora de maquillajes exclusivos
-                para Novias y eventos sociales
-              </Typography>
-              <Typography
-                as="p"
-                variant="p"
-                className="text-[color:var(--color-body)]/80 max-w-xl hidden sm:block"
-              >
-                Especialista en{" "}
-                <span className="text-[color:var(--color-primary)] font-semibold">
-                  Soft Glam
-                </span>{" "}
-                y{" "}
-                <span className="text-[color:var(--color-primary)] font-semibold">
-                  Maquillaje Nupcial
+                <span className="block">Marcela Cordero</span>
+                <span className="block text-[color:var(--color-primary)]">
+                  Beauty Studio
                 </span>
-                , personalizado para resaltar tu belleza natural.
+              </Typography>
+
+              <Typography
+                as="p"
+                variant="p"
+                className="text-[color:var(--color-body)] text-lg sm:text-xl max-w-lg leading-relaxed"
+              >
+                Maquilladora profesional especializada en novias y eventos
+                sociales. Diseño maquillajes exclusivos que resaltan tu belleza
+                natural.
               </Typography>
             </div>
 
-            {/* Stats */}
-            <div className="hidden sm:grid grid-cols-3 gap-4 py-4">
+            {/* Stats - Mobile friendly */}
+            <div className="grid grid-cols-3 gap-4 py-6">
               <div className="text-center">
                 <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
                   5.0
                 </div>
-                <div className="flex items-center justify-center gap-1 mt-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="w-4 h-4 text-[color:var(--color-accent)] fill-current"
-                    />
-                  ))}
-                </div>
                 <Typography
                   as="p"
                   variant="small"
-                  className="text-[color:var(--color-body)] mt-1"
+                  className="text-[color:var(--color-muted)] mt-1"
                 >
                   Calificación
                 </Typography>
@@ -86,7 +62,7 @@ export default function HeroSection() {
                 <Typography
                   as="p"
                   variant="small"
-                  className="text-[color:var(--color-body)] mt-1"
+                  className="text-[color:var(--color-muted)] mt-1"
                 >
                   Clientes
                 </Typography>
@@ -98,7 +74,7 @@ export default function HeroSection() {
                 <Typography
                   as="p"
                   variant="small"
-                  className="text-[color:var(--color-body)] mt-1"
+                  className="text-[color:var(--color-muted)] mt-1"
                 >
                   Años Exp.
                 </Typography>
@@ -136,98 +112,82 @@ export default function HeroSection() {
               <Button
                 variant="secondary"
                 size="lg"
-                className="hidden sm:inline-flex"
                 onClick={() => {
                   const el = document.getElementById("servicios");
                   el?.scrollIntoView({ behavior: "smooth" });
                 }}
               >
-                Ver Servicio
+                Ver Servicios
               </Button>
             </div>
 
-            {/* Info Cards */}
-            <div className="hidden sm:grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="flex items-start gap-3 p-4 rounded-xl bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)]">
-                <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/10 flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-5 h-5 text-[color:var(--color-primary)]" />
-                </div>
-                <div className="flex-1 min-w-0">
+            {/* Info Cards - Simplified */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="flex items-center gap-3 p-4 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)]">
+                <MapPin className="w-5 h-5 text-[color:var(--color-primary)] flex-shrink-0" />
+                <div>
                   <Typography
                     as="p"
                     variant="small"
-                    className="text-[color:var(--color-muted)] font-medium mb-1"
+                    className="text-[color:var(--color-muted)] font-medium"
                   >
                     Ubicación
                   </Typography>
                   <Typography
                     as="p"
                     variant="p"
-                    className="text-[color:var(--color-body)] text-sm leading-tight"
+                    className="text-[color:var(--color-body)] text-sm"
                   >
-                    Av. Bolívar 1073, Pueblo Libre
+                    Pueblo Libre, Lima
                   </Typography>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 p-4 rounded-xl bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)]">
-                <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/10 flex items-center justify-center flex-shrink-0">
-                  <Truck className="w-5 h-5 text-[color:var(--color-primary)]" />
-                </div>
-                <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 p-4 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)]">
+                <Truck className="w-5 h-5 text-[color:var(--color-primary)] flex-shrink-0" />
+                <div>
                   <Typography
                     as="p"
                     variant="small"
-                    className="text-[color:var(--color-muted)] font-medium mb-1"
+                    className="text-[color:var(--color-muted)] font-medium"
                   >
                     Servicio
                   </Typography>
                   <Typography
                     as="p"
                     variant="p"
-                    className="text-[color:var(--color-body)] text-sm leading-tight"
+                    className="text-[color:var(--color-body)] text-sm"
                   >
-                    A domicilio disponible
+                    A domicilio
                   </Typography>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 p-4 rounded-xl bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)]">
-                <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/10 flex items-center justify-center flex-shrink-0">
-                  <Clock className="w-5 h-5 text-[color:var(--color-primary)]" />
-                </div>
-                <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 p-4 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)]">
+                <Clock className="w-5 h-5 text-[color:var(--color-primary)] flex-shrink-0" />
+                <div>
                   <Typography
                     as="p"
                     variant="small"
-                    className="text-[color:var(--color-muted)] font-medium mb-1"
+                    className="text-[color:var(--color-muted)] font-medium"
                   >
                     Horarios
                   </Typography>
                   <Typography
                     as="p"
                     variant="p"
-                    className="text-[color:var(--color-body)] text-sm leading-tight"
+                    className="text-[color:var(--color-body)] text-sm"
                   >
-                    Flexibles según tu evento
+                    Flexibles
                   </Typography>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right: Image with enhanced effects */}
-          <motion.div
-            className="relative"
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            {/* Decorative border */}
-            <div className="absolute -inset-4 bg-gradient-to-r from-[color:var(--color-primary)]/20 to-[color:var(--color-accent)]/20 rounded-3xl opacity-60 blur-xl" />
-
-            {/* Main image container */}
-            <div className="relative h-[400px] sm:h-[500px] lg:h-[600px] rounded-2xl overflow-hidden shadow-2xl border border-[color:var(--color-border)]/20">
+          {/* Right: Image - Clean and minimal */}
+          <div className="relative">
+            <div className="relative h-[400px] sm:h-[500px] lg:h-[600px] rounded-2xl overflow-hidden shadow-lg border border-[color:var(--color-border)]">
               <Image
                 src="/marcela-hero.jpg"
                 alt="Marcela Cordero - Makeup Artist Profesional"
@@ -237,151 +197,28 @@ export default function HeroSection() {
                 priority
               />
 
-              {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+              {/* Subtle overlay for text readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
 
-              {/* Floating badge - CORREGIDO */}
-              <motion.div
-                className="absolute top-6 right-6"
-                initial={{ x: 20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.8 }}
-              >
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[color:var(--color-surface)]/90 backdrop-blur-sm border border-[color:var(--color-border)]/50">
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className="w-4 h-4 text-[color:var(--color-accent)] fill-current"
-                      />
-                    ))}
-                  </div>
-                  <span className="text-sm font-semibold text-[color:var(--color-heading)]">
-                    5.0
+              {/* Instagram link - Minimal */}
+              <div className="absolute bottom-6 left-6">
+                <a
+                  href="https://www.instagram.com/marcelacorderobeauty/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram de Marcela Cordero"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[color:var(--color-surface)]/95 backdrop-blur-sm border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface)] transition-colors"
+                >
+                  <Instagram className="w-5 h-5 text-[color:var(--color-primary)]" />
+                  <span className="text-sm font-medium text-[color:var(--color-heading)]">
+                    @marcelacorderobeauty
                   </span>
-                </div>
-              </motion.div>
-
-              {/* Social links - CORREGIDO */}
-              <motion.div
-                className="absolute bottom-6 left-6"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.9 }}
-              >
-                <div className="flex items-center gap-3">
-                  <a
-                    href="https://www.instagram.com/marcelacorderobeauty/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Instagram de Marcela Cordero"
-                    className="p-3 rounded-xl bg-[color:var(--color-surface)]/90 backdrop-blur-sm border border-[color:var(--color-border)]/50 hover:bg-[color:var(--color-surface)] transition-colors"
-                  >
-                    <Instagram className="w-5 h-5 text-[color:var(--color-primary)]" />
-                  </a>
-
-                  <div className="px-3 py-2 rounded-xl bg-[color:var(--color-surface)]/90 backdrop-blur-sm border border-[color:var(--color-border)]/50">
-                    <p className="text-xs font-medium text-[color:var(--color-muted)]">
-                      Sígueme
-                    </p>
-                    <p className="text-sm font-semibold text-[color:var(--color-heading)]">
-                      @marcelacorderobeauty
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Decorative sparkles */}
-              <motion.div
-                className="absolute top-1/4 left-8"
-                animate={{
-                  y: [0, -10, 0],
-                  opacity: [0.7, 1, 0.7],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                }}
-              >
-                <div className="relative">
-                  <div className="absolute inset-0 bg-[color:var(--color-primary)]/20 rounded-full blur-md" />
-                  <div className="relative p-2 rounded-full bg-[color:var(--color-primary)]/80 backdrop-blur-sm border border-white/30">
-                    <Sparkles className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                className="absolute top-1/3 right-12"
-                animate={{
-                  y: [0, -15, 0],
-                  opacity: [0.6, 1, 0.6],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                  delay: 1,
-                }}
-              >
-                <div className="relative">
-                  <div className="absolute inset-0 bg-[color:var(--color-accent)]/20 rounded-full blur-md" />
-                  <div className="relative p-2 rounded-full bg-[color:var(--color-accent)]/80 backdrop-blur-sm border border-white/30">
-                    <Sparkles className="w-5 h-5 text-white" />
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Sparkles adicionales */}
-              <motion.div
-                className="absolute bottom-1/4 right-8"
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.5, 0.8, 0.5],
-                }}
-                transition={{
-                  duration: 5,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                  delay: 2,
-                }}
-              >
-                <div className="relative">
-                  <div className="absolute inset-0 bg-[color:var(--color-primary)]/15 rounded-full blur-sm" />
-                  <div className="relative p-1.5 rounded-full bg-[color:var(--color-primary)]/70 backdrop-blur-sm border border-white/20">
-                    <Sparkles className="w-4 h-4 text-white/90" />
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                className="absolute top-1/2 left-12"
-                animate={{
-                  scale: [1, 1.1, 1],
-                  opacity: [0.4, 0.7, 0.4],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                  delay: 3,
-                }}
-              >
-                <div className="relative">
-                  <div className="absolute inset-0 bg-[color:var(--color-accent)]/15 rounded-full blur-sm" />
-                  <div className="relative p-1.5 rounded-full bg-[color:var(--color-accent)]/70 backdrop-blur-sm border border-white/20">
-                    <Sparkles className="w-4 h-4 text-white/90" />
-                  </div>
-                </div>
-              </motion.div>
+                </a>
+              </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
-
-      {/* Bottom wave separator */}
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[color:var(--color-surface)] to-transparent" />
     </section>
   );
 }
