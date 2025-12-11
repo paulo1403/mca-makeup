@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Mail, MapPin, Phone, Sparkles, Star, Users, X } from "lucide-react";
+import { Mail, MapPin, Phone, Sparkles, Star, Users, X, Truck } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import Logo from "./Logo";
@@ -33,6 +33,7 @@ export default function MobileMenu({ isOpen, onClose, handleNavClick }: MobileMe
               <div className="flex justify-center items-center p-4 pt-20 pb-6 border-b border-[color:var(--color-border)]/20 relative">
                 <Logo />
                 <button
+                  type="button"
                   onClick={onClose}
                   className="absolute top-4 right-4 p-2 rounded-full bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/50 hover:bg-[color:var(--color-surface-secondary)]"
                 >
@@ -40,31 +41,25 @@ export default function MobileMenu({ isOpen, onClose, handleNavClick }: MobileMe
                 </button>
               </div>
 
-              {/* Navegación móvil */}
+              {/* Navegación móvil (mínima) */}
               <nav className="py-4 px-4">
                 <Link
-                  href="/#hero"
+                  href="/"
                   className="flex items-center gap-3 p-4 rounded-lg hover:bg-[color:var(--color-surface)]/50 transition-colors mb-2"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavClick("#hero");
-                  }}
+                  onClick={onClose}
                 >
                   <div className="w-10 h-10 rounded-lg bg-[color:var(--color-accent)]/10 flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-[color:var(--color-accent)]" />
                   </div>
                   <Typography as="span" variant="p" className="text-[color:var(--color-heading)]">
-                    Inicio
+                    Home
                   </Typography>
                 </Link>
 
                 <Link
                   href="/#servicios"
                   className="flex items-center gap-3 p-4 rounded-lg hover:bg-[color:var(--color-surface)]/50 transition-colors mb-2"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavClick("#servicios");
-                  }}
+                  onClick={onClose}
                 >
                   <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/10 flex items-center justify-center">
                     <MapPin className="w-5 h-5 text-[color:var(--color-primary)]" />
@@ -75,66 +70,28 @@ export default function MobileMenu({ isOpen, onClose, handleNavClick }: MobileMe
                 </Link>
 
                 <Link
-                  href="/#portafolio"
+                  href="/reserva"
                   className="flex items-center gap-3 p-4 rounded-lg hover:bg-[color:var(--color-surface)]/50 transition-colors mb-2"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavClick("#portafolio");
-                  }}
-                >
-                  <div className="w-10 h-10 rounded-lg bg-[color:var(--color-accent)]/10 flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-[color:var(--color-accent)]" />
-                  </div>
-                  <Typography as="span" variant="p" className="text-[color:var(--color-heading)]">
-                    Portafolio
-                  </Typography>
-                </Link>
-
-                <Link
-                  href="/#testimonials"
-                  className="flex items-center gap-3 p-4 rounded-lg hover:bg-[color:var(--color-surface)]/50 transition-colors mb-2"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavClick("#testimonials");
-                  }}
-                >
-                  <div className="w-10 h-10 rounded-lg bg-[color:var(--color-accent)]/10 flex items-center justify-center">
-                    <Star className="w-5 h-5 text-[color:var(--color-accent)]" />
-                  </div>
-                  <Typography as="span" variant="p" className="text-[color:var(--color-heading)]">
-                    Testimonios
-                  </Typography>
-                </Link>
-
-                <Link
-                  href="/#about"
-                  className="flex items-center gap-3 p-4 rounded-lg hover:bg-[color:var(--color-surface)]/50 transition-colors mb-2"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavClick("#about");
-                  }}
-                >
-                  <div className="w-10 h-10 rounded-lg bg-[color:var(--color-accent)]/10 flex items-center justify-center">
-                    <Users className="w-5 h-5 text-[color:var(--color-accent)]" />
-                  </div>
-                  <Typography as="span" variant="p" className="text-[color:var(--color-heading)]">
-                    Nosotros
-                  </Typography>
-                </Link>
-
-                <Link
-                  href="/#contacto"
-                  className="flex items-center gap-3 p-4 rounded-lg hover:bg-[color:var(--color-surface)]/50 transition-colors mb-2"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavClick("#contacto");
-                  }}
+                  onClick={onClose}
                 >
                   <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/10 flex items-center justify-center">
                     <Phone className="w-5 h-5 text-[color:var(--color-primary)]" />
                   </div>
                   <Typography as="span" variant="p" className="text-[color:var(--color-heading)]">
-                    Contacto
+                    Reservar
+                  </Typography>
+                </Link>
+
+                <Link
+                  href="/#calculadora-transporte"
+                  className="flex items-center gap-3 p-4 rounded-lg hover:bg-[color:var(--color-surface)]/50 transition-colors mb-2"
+                  onClick={onClose}
+                >
+                  <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/10 flex items-center justify-center">
+                    <Truck className="w-5 h-5 text-[color:var(--color-primary)]" />
+                  </div>
+                  <Typography as="span" variant="p" className="text-[color:var(--color-heading)]">
+                    Calc. transporte
                   </Typography>
                 </Link>
               </nav>

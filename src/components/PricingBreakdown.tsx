@@ -272,12 +272,12 @@ export default function PricingBreakdown({
             <div className="flex justify-between items-start sm:items-center gap-2">
               <div className="flex items-center gap-2 flex-1 min-w-0">
                 <Moon className="h-3 w-3 sm:h-4 sm:w-4 text-indigo-600 flex-shrink-0" />
-                <span className="text-xs sm:text-sm text-black break-words">
+                <span className="text-xs sm:text-sm text-[color:var(--color-heading)] break-words">
                   Por atención fuera del horario laboral
                 </span>
               </div>
               <div className="text-right flex-shrink-0">
-                <span className="font-medium text-black text-sm sm:text-base">
+                <span className="font-medium text-[color:var(--color-heading)] text-sm sm:text-base">
                   S/ {currentNightShiftCost.toFixed(2)}
                 </span>
               </div>
@@ -306,7 +306,7 @@ export default function PricingBreakdown({
         {/* Total */}
         <div className="border-t border-[color:var(--color-border)]/20 pt-3">
           <div className="flex justify-between items-center">
-            <span className="font-bold text-black text-sm sm:text-base">Total:</span>
+            <span className="font-bold text-[color:var(--color-heading)] text-sm sm:text-base">Total:</span>
             <span className="font-bold text-base sm:text-lg text-[color:var(--color-primary)]">
               S/ {totalPrice.toFixed(2)}
             </span>

@@ -1,27 +1,27 @@
 /* Nuevo tema base morado (light/dark) enfocado en NavBar y tokens esenciales */
 
-/* Light theme variables (default) */
+/* Light theme variables (default) - Minimalist palette */
 :root,
 :root[data-theme="light"] {
   /* Backgrounds */
-  --color-background: #f6efe8; /* Beige cálido suave */
-  --color-surface: #ffffff; /* Blanco puro */
-  --color-surface-elevated: #f4ece6; /* Beige casi blanco */
+  --color-background: #ffffff; /* Blanco puro */
+  --color-surface: #f5f5f5; /* Gris muy claro */
+  --color-surface-elevated: #ffffff; /* Blanco puro */
 
-  /* Brown Palette */
-  --color-primary: #b08463; /* Marrón principal */
-  --color-primary-hover: #a37352; /* Marrón hover */
-  --color-primary-light: #d0b9a7; /* Marrón suave */
-  --color-accent: #b9937b; /* Acento camel */
-  --color-accent-soft: #e6d7c9; /* Acento muy suave */
+  /* Neutral Palette */
+  --color-primary: #333333; /* Gris oscuro */
+  --color-primary-hover: #555555; /* Gris más oscuro */
+  --color-primary-light: #e5e5e5; /* Gris claro */
+  --color-accent: #999999; /* Gris medio */
+  --color-accent-soft: #cccccc; /* Gris suave */
 
   /* Text */
-  --color-heading: #2d221b; /* Casi negro cálido */
-  --color-body: #5a4a3e; /* Gris/marrón cuerpo */
-  --color-muted: #8b7a6d; /* Texto secundario */
+  --color-heading: #111111; /* Casi negro */
+  --color-body: #333333; /* Gris oscuro para texto */
+  --color-muted: #666666; /* Gris medio para secundario */
 
   /* Borders */
-  --color-border: #e5d6c8; /* Borde suave cálido */
+  --color-border: #e5e5e5; /* Gris claro */
 
   /* Semantic */
   --color-cta-bg: var(--color-primary);
@@ -137,27 +137,27 @@
   --calendar-label: var(--color-muted);
 }
 
-/* Dark theme variables */
+/* Dark theme variables - Minimalist palette */
 :root[data-theme="dark"] {
   /* Backgrounds */
-  --color-background: #0f0b08; /* Café casi negro */
-  --color-surface: #16110d; /* Surface cards */
-  --color-surface-elevated: #1e1712; /* Elevated elements */
+  --color-background: #111111; /* Gris muy oscuro */
+  --color-surface: #1a1a1a; /* Gris oscuro */
+  --color-surface-elevated: #222222; /* Gris medio oscuro */
 
-  /* Brown Palette */
-  --color-primary: #d0b9a7; /* Marrón claro en oscuro */
-  --color-primary-hover: #b9937b; /* Hover cálido */
-  --color-primary-light: #e6d7c9; /* Suave para fondos */
-  --color-accent: #b08463; /* Marrón medio/acento */
-  --color-accent-soft: #d9c5b4; /* Acento muy suave */
+  /* Neutral Palette */
+  --color-primary: #cccccc; /* Gris claro */
+  --color-primary-hover: #aaaaaa; /* Gris medio claro */
+  --color-primary-light: #666666; /* Gris medio */
+  --color-accent: #888888; /* Gris */
+  --color-accent-soft: #555555; /* Gris oscuro */
 
   /* Text */
-  --color-heading: #f4ece6; /* Títulos cálidos */
-  --color-body: #e9ded3; /* Texto body */
-  --color-muted: #b8a89a; /* Texto secundario */
+  --color-heading: #ffffff; /* Blanco */
+  --color-body: #cccccc; /* Gris claro */
+  --color-muted: #888888; /* Gris */
 
   /* Borders */
-  --color-border: #2a211b; /* Borde oscuro cálido */
+  --color-border: #333333; /* Gris oscuro */
 
   /* Semantic */
   --color-cta-bg: var(--color-primary);

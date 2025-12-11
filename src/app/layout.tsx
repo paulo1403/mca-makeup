@@ -5,7 +5,6 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
-import GlobalParticles from "@/components/GlobalParticles";
 import NavBar from "@/components/NavBar";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -199,7 +198,6 @@ export default function RootLayout({
         <link rel="canonical" href="https://marcelacordero.com" />
       </head>
       <body className="antialiased overflow-x-hidden max-w-full">
-        <GlobalParticles />
         <NavBar />
         <QueryProvider>{children}</QueryProvider>
         <Toaster

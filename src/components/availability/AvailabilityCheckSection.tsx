@@ -84,7 +84,7 @@ export default function AvailabilityCheckSection() {
         </Typography>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 items-start">
         {/* Fecha */}
         <div className="p-3 sm:p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]">
           <Typography as="h4" variant="h4" className="text-[color:var(--color-heading)] text-xs sm:text-sm mb-2">
@@ -221,9 +221,18 @@ export default function AvailabilityCheckSection() {
             </Button>
           </div>
         ) : isLoading ? (
-          <div className="space-y-2">
-            {["sk-1", "sk-2", "sk-3"].map((key) => (
-              <div key={key} className="h-10 bg-[color:var(--color-surface)] rounded-lg animate-pulse" />
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div
+                key={`sk-${i}`}
+                className="flex items-center justify-between px-3 py-2 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)] animate-pulse"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded-full bg-[color:var(--color-accent)]/20" />
+                  <div className="h-3 w-20 rounded bg-[color:var(--color-muted)]/25" />
+                </div>
+                <div className="h-3 w-10 rounded bg-[color:var(--color-muted)]/25" />
+              </div>
             ))}
           </div>
         ) : date && availableRanges.length === 0 ? (

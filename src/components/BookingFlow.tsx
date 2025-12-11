@@ -12,11 +12,16 @@ import toast from "react-hot-toast";
 import BookingSummary from "./booking/BookingSummary";
 import StepIndicator from "./booking/StepIndicator";
 import SuccessModal from "./booking/SuccessModal";
+import BookingMobileSummary from "./booking/BookingMobileSummary";
+import useServicesQuery from "@/hooks/useServicesQuery";
+import { useTransportCost } from "@/hooks/useTransportCost";
+import { useBookingSummary } from "@/hooks/useBookingSummary";
+import { calculateNightShiftCost } from "@/utils/nightShift";
 import Step1 from "./booking/steps/Step1_PersonalInfo";
 import Step2 from "./booking/steps/Step2_ServiceSelection";
 import Step3 from "./booking/steps/Step3_Location";
 import Step4 from "./booking/steps/Step4_DateTime";
-import Step5 from "./booking/steps/Step5_Confirmation";
+import Step5 from "./booking/steps/Step5_Review";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
 
@@ -73,12 +78,15 @@ export default function BookingFlow() {
   const [currentStep, setCurrentStep] = useState(1);
   const total = 5;
   const canSubmit = methods.watch("agreedToTerms") === true;
+  const [alertMessage, setAlertMessage] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
   const [successPricing, setSuccessPricing] = useState<Pricing | undefined>(undefined);
   const [successClientName, setSuccessClientName] = useState<string | undefined>(undefined);
   const [successServiceNames, setSuccessServiceNames] = useState<string[]>([]);
   const { t } = useTranslations();
   const { data: allServices = [] } = useServicesList();
+  const { data: servicesForPricing = [] } = useServicesQuery();
+  const { transportCost, getTransportCost } = useTransportCost();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -102,7 +110,10 @@ export default function BookingFlow() {
     }
 
     if (qpLocation === "HOME" || qpLocation === "STUDIO") {
-      methods.setValue("locationType", qpLocation as any, { shouldDirty: false, shouldValidate: false });
+      methods.setValue("locationType", qpLocation as any, {
+        shouldDirty: false,
+        shouldValidate: false,
+      });
     }
 
     if (qpServices) {
@@ -114,7 +125,10 @@ export default function BookingFlow() {
           .filter((parts) => parts.length === 2 && parts[0] && Number(parts[1]) > 0)
           .map(([id, qty]) => ({ id, quantity: Number(qty) }));
         if (items.length) {
-          methods.setValue("selectedServices", items as any, { shouldDirty: true, shouldValidate: true });
+          methods.setValue("selectedServices", items as any, {
+            shouldDirty: true,
+            shouldValidate: true,
+          });
         }
       }
     }
@@ -122,12 +136,14 @@ export default function BookingFlow() {
 
   useEffect(() => {
     const handler = (e: Event) => {
-      const detail = (e as CustomEvent).detail as {
-        date?: string;
-        timeSlot?: string;
-        locationType?: "HOME" | "STUDIO";
-        services?: string;
-      } | undefined;
+      const detail = (e as CustomEvent).detail as
+        | {
+            date?: string;
+            timeSlot?: string;
+            locationType?: "HOME" | "STUDIO";
+            services?: string;
+          }
+        | undefined;
       if (!detail) return;
       if (detail.date) {
         const parsed = new Date(`${detail.date}T00:00:00`);
@@ -139,7 +155,10 @@ export default function BookingFlow() {
         methods.setValue("timeSlot", detail.timeSlot, { shouldDirty: true, shouldValidate: true });
       }
       if (detail.locationType === "HOME" || detail.locationType === "STUDIO") {
-        methods.setValue("locationType", detail.locationType as any, { shouldDirty: true, shouldValidate: true });
+        methods.setValue("locationType", detail.locationType as any, {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
       }
       if (detail.services) {
         const items = detail.services
@@ -148,7 +167,10 @@ export default function BookingFlow() {
           .filter((parts) => parts.length === 2 && parts[0] && Number(parts[1]) > 0)
           .map(([id, qty]) => ({ id, quantity: Number(qty) }));
         if (items.length) {
-          methods.setValue("selectedServices", items as any, { shouldDirty: true, shouldValidate: true });
+          methods.setValue("selectedServices", items as any, {
+            shouldDirty: true,
+            shouldValidate: true,
+          });
         }
       }
     };
@@ -156,15 +178,35 @@ export default function BookingFlow() {
     return () => window.removeEventListener("availability:prefill", handler as EventListener);
   }, [methods]);
 
+  // Total para barra sticky
+  const selected = methods.watch("selectedServices") || [];
+  const locationType = methods.watch("locationType") || "STUDIO";
+  const district = methods.watch("district") || "";
+  const timeSlot = methods.watch("timeSlot") || "";
+  useEffect(() => {
+    if (locationType === "HOME" && district) {
+      getTransportCost(district);
+    }
+  }, [locationType, district, getTransportCost]);
+  const summary = useBookingSummary(
+    selected,
+    servicesForPricing,
+    locationType === "HOME",
+    transportCost?.cost,
+    timeSlot ? calculateNightShiftCost(timeSlot) : 0,
+  );
+
   // Iconos para cada paso
   const stepIcons = [User, Calendar, MapPin, CreditCard, Sparkles];
 
   const sendBooking = useMutation({
     mutationFn: async (payload: BookingData) => {
       const servicesRecord: Record<string, number> = {};
-      (payload.selectedServices || []).forEach(({ id, quantity }) => {
-        if (id && quantity > 0) servicesRecord[id] = quantity;
-      });
+      for (const { id, quantity } of payload.selectedServices || []) {
+        if (id && quantity > 0) {
+          servicesRecord[id] = quantity;
+        }
+      }
 
       const body = {
         clientName: payload.name,
@@ -222,10 +264,13 @@ export default function BookingFlow() {
       setSuccessClientName(methods.getValues("name"));
       setShowSuccess(true);
       toast.success(t("successMessage"));
+      setAlertMessage(t("successMessage"));
 
       try {
         const url = new URL(window.location.href);
-        ["date", "timeSlot", "locationType", "services"].forEach((k) => url.searchParams.delete(k));
+        for (const k of ["date", "timeSlot", "locationType", "services"]) {
+          url.searchParams.delete(k);
+        }
         window.history.replaceState({}, "", url.toString());
         window.dispatchEvent(new CustomEvent("availability:reset"));
       } catch {}
@@ -233,6 +278,7 @@ export default function BookingFlow() {
     onError: (err: unknown) => {
       const message = err instanceof Error ? err.message : t("errorSending");
       toast.error(message);
+      setAlertMessage(message);
     },
   });
 
@@ -251,9 +297,27 @@ export default function BookingFlow() {
 
   const handlePrev = () => setCurrentStep((s) => Math.max(1, s - 1));
 
+  const handleEnterKey = (e: React.KeyboardEvent) => {
+    if (e.key !== "Enter") return;
+    const target = e.target as HTMLElement;
+    const tag = (target?.tagName || "").toLowerCase();
+    if (tag === "textarea") return;
+    e.preventDefault();
+    if (currentStep < total) {
+      void handleNext();
+    } else if (canSubmit && !sendBooking.isPending) {
+      const fn = methods.handleSubmit((data) => sendBooking.mutate(data));
+      fn();
+    }
+  };
+
   return (
     <FormProvider {...methods}>
-      <section id="booking-flow" className="py-8 sm:py-12 overflow-hidden">
+      <section
+        id="booking-flow"
+        className="py-8 sm:py-12 overflow-hidden"
+        onKeyDown={handleEnterKey}
+      >
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
           {/* Encabezado */}
           <motion.div
@@ -333,6 +397,9 @@ export default function BookingFlow() {
                 </motion.div>
               </AnimatePresence>
 
+              {/* Resumen móvil en pasos 1-4 */}
+              {currentStep !== 5 && <BookingMobileSummary />}
+
               {/* Resumen en el paso 5 */}
               {currentStep === 5 && (
                 <motion.div
@@ -401,6 +468,17 @@ export default function BookingFlow() {
           </div>
         </div>
       </section>
+      {sendBooking.isPending && (
+        <div aria-live="polite" role="status" className="sr-only">
+          {t("submitting")}
+        </div>
+      )}
+      {!!alertMessage && (
+        <div aria-live="assertive" role="alert" className="sr-only">
+          {alertMessage}
+        </div>
+      )}
+      {/* Barra sticky eliminada para evitar superposición en móvil */}
       <SuccessModal
         open={showSuccess}
         onClose={() => setShowSuccess(false)}

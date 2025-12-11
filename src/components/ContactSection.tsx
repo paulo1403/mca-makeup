@@ -3,8 +3,6 @@
 import { motion, useInView } from "framer-motion";
 import { Calendar, Clock, Instagram, Mail, MapPin, MessageSquare, Phone, Star } from "lucide-react";
 import { useRef } from "react";
-import BookingFlow from "./BookingFlow";
-import AvailabilityCheckSection from "./availability/AvailabilityCheckSection";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
 import TransportCostCalculator from "./TransportCostCalculator";
@@ -71,8 +69,8 @@ export default function ContactSection() {
           transition={{ duration: 0.6 }}
         >
           <div className="contact-badge hidden sm:inline-flex">
-            <Calendar className="w-4 h-4" />
-            <span>Reserva tu Cita</span>
+            <Phone className="w-4 h-4" />
+            <span>Contacto</span>
           </div>
 
           <Typography
@@ -80,7 +78,7 @@ export default function ContactSection() {
             variant="h2"
             className="contact-title text-3xl sm:text-4xl lg:text-5xl font-bold"
           >
-            Contacta y Reserva tu Cita
+            Contacto
           </Typography>
 
           <Typography
@@ -88,9 +86,7 @@ export default function ContactSection() {
             variant="p"
             className="contact-description hidden sm:block text-base sm:text-lg"
           >
-            Completa el proceso en cinco pasos: selecciona tus servicios, ingresa tus datos, indica
-            la ubicación, elige fecha y horario, y confirma. Te contactaré para coordinar cualquier
-            detalle adicional.
+            Escríbeme por WhatsApp o email, o visita el estudio en Pueblo Libre.
           </Typography>
 
           <Typography
@@ -98,8 +94,7 @@ export default function ContactSection() {
             variant="p"
             className="contact-subtitle hidden sm:block text-sm sm:text-base"
           >
-            Puedes avanzar y retroceder entre pasos sin perder tu selección. Si prefieres
-            asistencia, escríbeme y te guío en el proceso.
+            Para reservar, usa la nueva página de <a href="/reserva" className="underline">reserva</a>.
           </Typography>
         </motion.div>
 
@@ -203,16 +198,27 @@ export default function ContactSection() {
             <TransportCostCalculator />
           </motion.div>
 
-          {/* Formulario de reserva */}
+          {/* CTA hacia la nueva página de reserva */}
           <motion.div
             className="contact-form-wrapper"
             initial={{ opacity: 0, x: 20 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <AvailabilityCheckSection />
-            <div className="mt-8 sm:mt-12 p-4 sm:p-6 rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-sm">
-              <BookingFlow />
+            <div className="p-4 sm:p-6 rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <Typography as="h3" variant="h3" className="text-[color:var(--color-heading)] text-base sm:text-lg">
+                    Reserva en pocos pasos
+                  </Typography>
+                  <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-sm">
+                    Ve a la página de reserva para elegir servicios y horarios.
+                  </Typography>
+                </div>
+                <Button as="a" href="/reserva" variant="primary" size="lg" className="w-full sm:w-auto">
+                  Ir a reservar
+                </Button>
+              </div>
             </div>
           </motion.div>
         </div>

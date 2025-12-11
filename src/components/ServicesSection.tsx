@@ -118,7 +118,7 @@ function ServiceCard({ service, index }: { service: UIServiceGroup; index: numbe
             onClick={() => window.open(service.portfolioUrl, "_blank")}
             className="group/btn whitespace-nowrap"
           >
-            <span className="text-sm">Ver</span>
+            <span className="text-sm">Ver servicios</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 transition-transform" />
           </Button>
         </div>
@@ -298,29 +298,7 @@ export default function ServicesSection() {
                     Vísitanos en nuestro Room Studio en Pueblo Libre o agenda una cita a domicilio.
                   </Typography>
 
-                  <Button
-                    variant="primary"
-                    size="lg"
-                    onClick={() => {
-                      const element = document.querySelector("#contacto");
-                      if (element) {
-                        const header = document.querySelector("header");
-                        const headerHeight = header ? header.offsetHeight : 80;
-                        const isMobile = window.innerWidth < 768;
-                        const extraMargin = isMobile ? 60 : 30;
-
-                        const elementPosition =
-                          element.getBoundingClientRect().top + window.scrollY;
-                        const offsetPosition = elementPosition - headerHeight - extraMargin;
-
-                        window.scrollTo({
-                          top: offsetPosition,
-                          behavior: "smooth",
-                        });
-                      }
-                    }}
-                    className="group/cta"
-                  >
+                  <Button as="a" href="/reserva" variant="primary" size="lg" className="group/cta">
                     <Sparkles className="w-4 h-4 group-hover/cta:rotate-12 transition-transform" />
                     Agendar Ahora
                     <ArrowRight className="w-4 h-4 group-hover/cta:translate-x-0.5 transition-transform" />
