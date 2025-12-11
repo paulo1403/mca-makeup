@@ -116,8 +116,12 @@ function getInitials(name: string) {
     .slice(0, 2);
 }
 
-function formatService(services?: { name?: string; serviceName?: string }[], serviceType?: string) {
-  if (!services || services.length === 0) return serviceType || "Servicio de maquillaje";
+function formatService(
+  services?: { name?: string; serviceName?: string }[],
+  serviceType?: string
+) {
+  if (!services || services.length === 0)
+    return serviceType || "Servicio de maquillaje";
   return services.map((s) => s.name || s.serviceName).join(", ");
 }
 
@@ -131,7 +135,8 @@ const serviceCategories = [
 
 export default function TestimonialsSection() {
   const [items, setItems] = useState<Testimonial[]>(fallbackTestimonials);
-  const [filteredItems, setFilteredItems] = useState<Testimonial[]>(fallbackTestimonials);
+  const [filteredItems, setFilteredItems] =
+    useState<Testimonial[]>(fallbackTestimonials);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [selectedService, setSelectedService] = useState("all");
@@ -144,15 +149,24 @@ export default function TestimonialsSection() {
         const res = await fetch("/api/reviews");
         const data = await res.json();
         if (!mounted) return;
-        if (data?.success && Array.isArray(data.reviews) && data.reviews.length > 0) {
+        if (
+          data?.success &&
+          Array.isArray(data.reviews) &&
+          data.reviews.length > 0
+        ) {
           const list = data.reviews.map((r: ReviewShape) => ({
             id: r.id,
             name: r.reviewerName,
             text: r.reviewText || "Excelente servicio, muy recomendado!",
             rating: r.rating || 5,
-            service: formatService(r.appointment?.services, r.appointment?.serviceType),
+            service: formatService(
+              r.appointment?.services,
+              r.appointment?.serviceType
+            ),
             date: r.appointment?.appointmentDate
-              ? new Date(r.appointment?.appointmentDate!).getFullYear().toString()
+              ? new Date(r.appointment?.appointmentDate!)
+                  .getFullYear()
+                  .toString()
               : "2024",
             initials: getInitials(r.reviewerName),
           }));
@@ -174,7 +188,7 @@ export default function TestimonialsSection() {
     if (timerRef.current) window.clearInterval(timerRef.current);
     timerRef.current = window.setInterval(
       () => setIndex((i) => (i + 1) % filteredItems.length),
-      6000,
+      6000
     );
     return () => {
       if (timerRef.current) window.clearInterval(timerRef.current);
@@ -186,7 +200,7 @@ export default function TestimonialsSection() {
       setFilteredItems(items);
     } else {
       const filtered = items.filter((item) =>
-        item.service.toLowerCase().includes(selectedService.toLowerCase()),
+        item.service.toLowerCase().includes(selectedService.toLowerCase())
       );
       setFilteredItems(filtered);
     }
@@ -219,7 +233,8 @@ export default function TestimonialsSection() {
             variant="p"
             className="text-base sm:text-lg text-[color:var(--color-body)] max-w-2xl mx-auto leading-relaxed"
           >
-            Más de 370 clientas confían en mi arte para sus momentos más especiales
+            Más de 370 clientas confían en mi arte para sus momentos más
+            especiales
           </Typography>
         </div>
 
@@ -289,7 +304,8 @@ export default function TestimonialsSection() {
                       variant="small"
                       className="text-[color:var(--color-muted)]"
                     >
-                      {filteredItems[index].service} • {filteredItems[index].date}
+                      {filteredItems[index].service} •{" "}
+                      {filteredItems[index].date}
                     </Typography>
                   </div>
                 </div>
@@ -300,7 +316,11 @@ export default function TestimonialsSection() {
                       variant="secondary"
                       size="sm"
                       onClick={() =>
-                        setIndex((i) => (i - 1 + filteredItems.length) % filteredItems.length)
+                        setIndex(
+                          (i) =>
+                            (i - 1 + filteredItems.length) %
+                            filteredItems.length
+                        )
                       }
                     >
                       <ArrowLeft className="w-4 h-4" />
@@ -323,7 +343,9 @@ export default function TestimonialsSection() {
                     <Button
                       variant="secondary"
                       size="sm"
-                      onClick={() => setIndex((i) => (i + 1) % filteredItems.length)}
+                      onClick={() =>
+                        setIndex((i) => (i + 1) % filteredItems.length)
+                      }
                     >
                       <ArrowRight className="w-4 h-4" />
                     </Button>
@@ -338,7 +360,12 @@ export default function TestimonialsSection() {
           <Button
             variant="primary"
             size="lg"
-            onClick={() => window.open("https://www.instagram.com/marcelacorderobeauty/", "_blank")}
+            onClick={() =>
+              window.open(
+                "https://www.instagram.com/marcelacorderobeauty/",
+                "_blank"
+              )
+            }
           >
             Ver más reseñas en Instagram
           </Button>

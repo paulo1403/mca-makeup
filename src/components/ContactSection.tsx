@@ -1,226 +1,324 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { Calendar, Clock, Instagram, Mail, MapPin, MessageSquare, Phone, Star } from "lucide-react";
-import { useRef } from "react";
+import {
+  Clock,
+  Instagram,
+  Mail,
+  MapPin,
+  MessageSquare,
+  Phone,
+} from "lucide-react";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
 import TransportCostCalculator from "./TransportCostCalculator";
-import "@/styles/components/contact.css";
-import "@/styles/components/transport-calculator.css";
+import "@/styles/components/contact-minimal.css";
+
+type ContactInfoItem = {
+  label: string;
+  value: string;
+  href?: string;
+  icon: React.ElementType;
+};
+
+const contactInfo: ContactInfoItem[] = [
+  {
+    label: "Teléfono",
+    value: "+51 989 164 990",
+    href: "tel:+51989164990",
+    icon: Phone,
+  },
+  {
+    label: "Email",
+    value: "marcelacordero.bookings@gmail.com",
+    href: "mailto:marcelacordero.bookings@gmail.com",
+    icon: Mail,
+  },
+  {
+    label: "Ubicación",
+    value: "Av. Bolívar 1073, Pueblo Libre, Lima",
+    href: "https://maps.google.com/?q=Av.+Bolívar+1073,+Pueblo+Libre,+Lima",
+    icon: MapPin,
+  },
+];
 
 export default function ContactSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
-
-  const contactInfo = [
-    {
-      label: "Teléfono",
-      value: "+51 989 164 990",
-      href: "tel:+51989164990",
-      icon: Phone,
-    },
-    {
-      label: "Email",
-      value: "marcelacordero.bookings@gmail.com",
-      href: "mailto:marcelacordero.bookings@gmail.com",
-      icon: Mail,
-    },
-    {
-      label: "Ubicación",
-      value: "Av. Bolívar 1073, Pueblo Libre, Lima",
-      href: "https://maps.google.com/?q=Av.+Bolívar+1073,+Pueblo+Libre,+Lima",
-      icon: MapPin,
-    },
-    {
-      label: "Horarios",
-      value: "Lun - Dom: 9:00 AM - 8:00 PM",
-      href: undefined,
-      icon: Clock,
-    },
-  ];
-
-  const quickActions = [
-    {
-      label: "WhatsApp",
-      href: "https://wa.me/51989164990?text=Hola%20Marcela,%20me%20interesa%20agendar%20una%20cita",
-      variant: "primary" as const,
-      icon: MessageSquare,
-    },
-  ];
-
   return (
     <section
       id="contacto"
-      className="contact-section py-10 sm:py-20 relative overflow-hidden"
-      style={{ scrollMarginTop: "120px" }}
-      ref={sectionRef}
+      className="py-12 sm:py-16 md:py-24 bg-[color:var(--color-background)]"
     >
-      {/* Elementos decorativos */}
-      <div className="contact-decoration contact-decoration--1 hidden sm:block" />
-      <div className="contact-decoration contact-decoration--2 hidden sm:block" />
-
-      <div className="contact-container px-4 sm:px-6">
-        {/* Header */}
-        <motion.div
-          className="contact-header mb-8 sm:mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="contact-badge hidden sm:inline-flex">
-            <Phone className="w-4 h-4" />
-            <span>Contacto</span>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-8 sm:mb-12 md:mb-16 contact-header-animation">
+          <div className="inline-block px-4 py-1.5 rounded-full bg-[color:var(--color-primary)]/10 border border-[color:var(--color-primary)]/20 mb-4 sm:mb-6">
+            <span className="text-sm font-medium text-[color:var(--color-primary)]">
+              Contacto
+            </span>
           </div>
 
           <Typography
             as="h2"
             variant="h2"
-            className="contact-title text-3xl sm:text-4xl lg:text-5xl font-bold"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[color:var(--color-heading)] mb-3 sm:mb-4 px-4"
           >
-            Contacto
+            Hablemos de tu Próximo Look
           </Typography>
 
           <Typography
             as="p"
             variant="p"
-            className="contact-description hidden sm:block text-base sm:text-lg"
+            className="text-sm sm:text-base md:text-lg text-[color:var(--color-body)] max-w-2xl mx-auto leading-relaxed px-4"
           >
-            Escríbeme por WhatsApp o email, o visita el estudio en Pueblo Libre.
+            Estoy aquí para hacer realidad el maquillaje de tus sueños.
+            Contáctame por WhatsApp o visita el estudio.
           </Typography>
+        </div>
 
-          <Typography
-            as="p"
-            variant="p"
-            className="contact-subtitle hidden sm:block text-sm sm:text-base"
-          >
-            Para reservar, usa la nueva página de <a href="/reserva" className="underline">reserva</a>.
-          </Typography>
-        </motion.div>
-
-        {/* Layout principal */}
-        <div className="contact-layout gap-6 sm:gap-10">
-          {/* Información de contacto */}
-          <motion.div
-            className="contact-info hidden lg:block"
-            initial={{ opacity: 0, x: -20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            {/* Información de contacto */}
-            <div className="contact-info-card hidden lg:block">
-              <Typography as="h3" variant="h3" className="contact-info-title text-xl">
-                <Star className="contact-info-icon" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
+          <div className="space-y-6 sm:space-y-8 contact-info-animation">
+            <div className="p-5 sm:p-6 md:p-8 bg-[color:var(--color-surface)] rounded-2xl border border-[color:var(--color-border)]">
+              <Typography
+                as="h3"
+                variant="h3"
+                className="text-lg sm:text-xl md:text-2xl font-bold text-[color:var(--color-heading)] mb-5 sm:mb-6"
+              >
                 Información de Contacto
               </Typography>
 
-              <ul className="contact-info-list">
+              <div className="space-y-4 sm:space-y-5">
                 {contactInfo.map((info, index) => {
-                  const IconComponent = info.icon;
+                  const Icon = info.icon;
                   return (
-                    <li key={index} className="contact-info-item">
-                      <IconComponent className="contact-info-icon" />
-                      <div className="flex flex-col">
-                        <span className="text-sm font-medium text-[color:var(--contact-accent)]">
+                    <div
+                      key={index}
+                      className="flex items-start gap-3 sm:gap-4"
+                    >
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[color:var(--color-primary)]/10 flex items-center justify-center flex-shrink-0">
+                        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-[color:var(--color-primary)]" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <Typography
+                          as="p"
+                          variant="small"
+                          className="text-[color:var(--color-muted)] font-medium mb-1 text-xs sm:text-sm"
+                        >
                           {info.label}
-                        </span>
+                        </Typography>
                         {info.href ? (
                           <a
                             href={info.href}
-                            className="contact-info-link"
-                            target={info.href.startsWith("http") ? "_blank" : undefined}
-                            rel={info.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                            className="text-[color:var(--color-body)] hover:text-[color:var(--color-primary)] transition-colors text-sm sm:text-base break-words"
+                            target={
+                              info.href.startsWith("http")
+                                ? "_blank"
+                                : undefined
+                            }
+                            rel={
+                              info.href.startsWith("http")
+                                ? "noopener noreferrer"
+                                : undefined
+                            }
                           >
                             {info.value}
                           </a>
                         ) : (
-                          <span>{info.value}</span>
+                          <Typography
+                            as="p"
+                            variant="p"
+                            className="text-[color:var(--color-body)] text-sm sm:text-base"
+                          >
+                            {info.value}
+                          </Typography>
                         )}
                       </div>
-                    </li>
+                    </div>
                   );
                 })}
-              </ul>
+              </div>
 
-              {/* Redes sociales */}
-              <div className="contact-social">
-                <a
-                  href="https://www.instagram.com/marcelacorderobeauty/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="contact-social-link"
-                  aria-label="Instagram"
+              <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-[color:var(--color-border)]">
+                <Typography
+                  as="p"
+                  variant="small"
+                  className="text-[color:var(--color-muted)] mb-3 sm:mb-4 text-xs sm:text-sm"
                 >
-                  <Instagram className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://wa.me/51989164990"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="contact-social-link"
-                  aria-label="WhatsApp"
-                >
-                  <MessageSquare className="w-5 h-5" />
-                </a>
+                  Sígueme en redes sociales
+                </Typography>
+                <div className="flex gap-3">
+                  <a
+                    href="https://www.instagram.com/marcelacorderobeauty/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-[color:var(--color-primary)]/10 flex items-center justify-center hover:bg-[color:var(--color-primary)]/20 transition-colors"
+                    aria-label="Instagram"
+                  >
+                    <Instagram className="w-5 h-5 text-[color:var(--color-primary)]" />
+                  </a>
+                  <a
+                    href="https://wa.me/51989164990"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-[color:var(--color-primary)]/10 flex items-center justify-center hover:bg-[color:var(--color-primary)]/20 transition-colors"
+                    aria-label="WhatsApp"
+                  >
+                    <MessageSquare className="w-5 h-5 text-[color:var(--color-primary)]" />
+                  </a>
+                </div>
               </div>
             </div>
 
-            {/* Acciones rápidas */}
-            <div className="contact-info-card">
-              <Typography as="h3" variant="h3" className="contact-info-title text-xl">
-                <MessageSquare className="contact-info-icon" />
-                Contacto Directo
+            <TransportCostCalculator />
+          </div>
+
+          <div className="space-y-6 sm:space-y-8 contact-cta-animation">
+            <div className="p-5 sm:p-6 md:p-8 bg-[color:var(--color-surface)] rounded-2xl border border-[color:var(--color-border)]">
+              <Typography
+                as="h3"
+                variant="h3"
+                className="text-lg sm:text-xl md:text-2xl font-bold text-[color:var(--color-heading)] mb-3 sm:mb-4"
+              >
+                ¿Lista para Reservar?
               </Typography>
 
-              <div className="contact-quick-actions">
-                {quickActions.map((action, index) => {
-                  const IconComponent = action.icon;
-                  return (
-                    <Button
-                      key={index}
-                      variant={action.variant}
-                      size="md"
-                      as="a"
-                      href={action.href}
-                      className="flex-1 justify-center gap-2"
-                      target={action.href.startsWith("http") ? "_blank" : undefined}
-                      rel={action.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    >
-                      <IconComponent className="w-4 h-4" />
-                      {action.label}
-                    </Button>
-                  );
-                })}
-              </div>
-            </div>
+              <Typography
+                as="p"
+                variant="p"
+                className="text-[color:var(--color-body)] mb-5 sm:mb-6 leading-relaxed text-sm sm:text-base"
+              >
+                Agenda tu cita directamente desde nuestra plataforma de
+                reservas. Elige servicios, fecha y horario en pocos pasos.
+              </Typography>
 
-            {/* Calculadora de Transporte */}
-            <TransportCostCalculator />
-          </motion.div>
+              <Button
+                as="a"
+                href="/reserva"
+                variant="primary"
+                size="lg"
+                className="w-full mb-4"
+              >
+                Ir a Reservar
+              </Button>
 
-          {/* CTA hacia la nueva página de reserva */}
-          <motion.div
-            className="contact-form-wrapper"
-            initial={{ opacity: 0, x: 20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <div className="p-4 sm:p-6 rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-sm">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <div>
-                  <Typography as="h3" variant="h3" className="text-[color:var(--color-heading)] text-base sm:text-lg">
-                    Reserva en pocos pasos
-                  </Typography>
-                  <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-sm">
-                    Ve a la página de reserva para elegir servicios y horarios.
-                  </Typography>
-                </div>
-                <Button as="a" href="/reserva" variant="primary" size="lg" className="w-full sm:w-auto">
-                  Ir a reservar
+              <div className="text-center">
+                <Typography
+                  as="p"
+                  variant="small"
+                  className="text-[color:var(--color-muted)] mb-3 text-xs sm:text-sm"
+                >
+                  o contáctame directamente
+                </Typography>
+                <Button
+                  as="a"
+                  href="https://wa.me/51989164990?text=Hola%20Marcela,%20me%20interesa%20agendar%20una%20cita"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="secondary"
+                  size="lg"
+                  className="w-full"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  WhatsApp
                 </Button>
               </div>
             </div>
-          </motion.div>
+
+            <div className="p-6 sm:p-7 md:p-8 bg-gradient-to-br from-[color:var(--color-primary)]/5 to-[color:var(--color-primary)]/10 rounded-2xl border border-[color:var(--color-primary)]/30">
+              <Typography
+                as="h4"
+                variant="h4"
+                className="text-lg sm:text-xl font-bold text-[color:var(--color-heading)] mb-5 sm:mb-6"
+              >
+                ¿Por qué elegirme?
+              </Typography>
+              <ul className="space-y-4 sm:space-y-5">
+                <li className="flex items-start gap-3 sm:gap-4">
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-[color:var(--color-primary)] flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg
+                      className="w-3 h-3 sm:w-4 sm:h-4 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={3}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <Typography
+                    as="p"
+                    variant="p"
+                    className="text-sm sm:text-base text-(--color-body) leading-relaxed"
+                  >
+                    <span className="font-semibold text-(--color-heading)">
+                      +8 años
+                    </span>{" "}
+                    de experiencia profesional
+                  </Typography>
+                </li>
+                <li className="flex items-start gap-3 sm:gap-4">
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-(--color-primary) flex items-center justify-center shrink-0 mt-0.5">
+                    <svg
+                      className="w-3 h-3 sm:w-4 sm:h-4 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={3}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <Typography
+                    as="p"
+                    variant="p"
+                    className="text-sm sm:text-base text-(--color-body) leading-relaxed"
+                  >
+                    Atención{" "}
+                    <span className="font-semibold text-(--color-heading)">
+                      personalizada
+                    </span>{" "}
+                    y productos de{" "}
+                    <span className="font-semibold text-[color:var(--color-heading)]">
+                      alta calidad
+                    </span>
+                  </Typography>
+                </li>
+                <li className="flex items-start gap-3 sm:gap-4">
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-[color:var(--color-primary)] flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg
+                      className="w-3 h-3 sm:w-4 sm:h-4 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={3}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <Typography
+                    as="p"
+                    variant="p"
+                    className="text-sm sm:text-base text-[color:var(--color-body)] leading-relaxed"
+                  >
+                    Servicio a{" "}
+                    <span className="font-semibold text-[color:var(--color-heading)]">
+                      domicilio
+                    </span>{" "}
+                    en toda Lima
+                  </Typography>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </section>

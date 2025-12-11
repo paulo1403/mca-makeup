@@ -1,0 +1,35 @@
+@keyframes aboutFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.about-header-animation {
+  animation: aboutFadeIn 0.7s ease-out forwards;
+  opacity: 0;
+}
+
+.about-image-animation {
+  animation: aboutFadeIn 0.6s ease-out forwards;
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+
+.about-content-animation {
+  animation: aboutFadeIn 0.6s ease-out forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+
+.about-image {
+  transition: transform 0.3s ease;
+}
+
+.about-image:hover {
+  transform: scale(1.02);
+}
