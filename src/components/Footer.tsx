@@ -230,7 +230,16 @@ export default function Footer() {
             © {currentYear} Marcela Cordero. Todos los derechos reservados.
           </Typography>
           <Typography as="p" variant="p" className="footer-made-with">
-            Hecho con ❤️ en Lima
+            Desarrollado por{" "}
+            <a
+              href="https://paulo-llanos.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[color:var(--color-primary)] hover:underline font-medium"
+            >
+              Paulo Llanos
+            </a>
+            {" "}con ❤️ en Lima
           </Typography>
         </div>
       </div>

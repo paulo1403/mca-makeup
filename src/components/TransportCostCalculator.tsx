@@ -43,7 +43,10 @@ export default function TransportCostCalculator() {
   };
 
   return (
-    <div className="p-6 sm:p-8 bg-[color:var(--color-surface)] rounded-2xl border border-[color:var(--color-border)]">
+    <div 
+      id="calculadora-transporte"
+      className="p-6 sm:p-8 bg-[color:var(--color-surface)] rounded-2xl border border-[color:var(--color-border)]"
+    >
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-12 h-12 rounded-xl bg-[color:var(--color-primary)]/10 flex items-center justify-center flex-shrink-0">
