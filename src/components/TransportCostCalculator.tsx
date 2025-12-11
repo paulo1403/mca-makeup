@@ -43,7 +43,7 @@ export default function TransportCostCalculator() {
   };
 
   return (
-    <div 
+    <div
       id="calculadora-transporte"
       className="p-6 sm:p-8 bg-[color:var(--color-surface)] rounded-2xl border border-[color:var(--color-border)]"
     >

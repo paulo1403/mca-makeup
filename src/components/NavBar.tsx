@@ -4,16 +4,19 @@ import Logo from "@/components/Logo";
 import ThemeToggle from "@/components/ThemeToggle";
 import Button from "@/components/ui/Button";
 import Typography from "@/components/ui/Typography";
-import { Menu } from "lucide-react";
+import { Menu, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useState, useEffect, useTransition } from "react";
 import MobileMenu from "./MobileMenu";
 
 const NavBar = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const [isNavigating, setIsNavigating] = useState(false);
 
   const isReviewPath = pathname?.startsWith("/review") ?? false;
 
@@ -34,6 +37,16 @@ const NavBar = () => {
   if (isReviewPath) {
     return null;
   }
+
+  const handleReservaClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setIsNavigating(true);
+
+    startTransition(() => {
+      router.push("/reserva");
+      setTimeout(() => setIsNavigating(false), 500);
+    });
+  };
 
   const handleNavClick = (href: string) => {
     setIsMenuOpen(false);
@@ -103,11 +116,19 @@ const NavBar = () => {
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
-            <Link href="/reserva" className="inline-flex">
-              <Button variant="primary" size="sm">
-                <Typography variant="p" className="text-white">
-                  Reservar Cita
-                </Typography>
+            <Link
+              href="/reserva"
+              className="inline-flex"
+              onClick={handleReservaClick}
+            >
+              <Button variant="primary" size="sm" disabled={isNavigating}>
+                {isNavigating ? (
+                  <Loader2 className="w-4 h-4 text-white animate-spin" />
+                ) : (
+                  <Typography variant="p" className="text-white">
+                    Reservar Cita
+                  </Typography>
+                )}
               </Button>
             </Link>
           </div>

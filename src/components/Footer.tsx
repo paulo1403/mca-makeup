@@ -238,8 +238,8 @@ export default function Footer() {
               className="text-[color:var(--color-primary)] hover:underline font-medium"
             >
               Paulo Llanos
-            </a>
-            {" "}con ❤️ en Lima
+            </a>{" "}
+            con ❤️ en Lima
           </Typography>
         </div>
       </div>
