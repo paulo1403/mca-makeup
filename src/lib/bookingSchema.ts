@@ -20,7 +20,7 @@ export const BookingSchema = z.object({
   address: z.string().max(255).optional(),
   addressReference: z.string().max(255).optional(),
 
-  date: z.date({ required_error: "Fecha requerida." }),
+  date: z.date({ message: "Fecha requerida." }),
   timeSlot: z.string().min(1, "Horario requerido."),
 
   message: z.string().max(500).optional(),

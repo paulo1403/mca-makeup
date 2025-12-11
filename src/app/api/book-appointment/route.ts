@@ -33,7 +33,7 @@ const appointmentSchema = z
     appointmentDate: z.string().min(1, "Fecha requerida"),
     appointmentTimeRange: z.string().min(1, "Horario requerido"),
     locationType: z.enum(["STUDIO", "HOME"], {
-      errorMap: () => ({ message: "Selecciona una ubicación válida" }),
+      message: "Selecciona una ubicación válida",
     }),
     district: z.string().optional(),
     address: z.string().optional(),
@@ -383,7 +383,7 @@ Ubicación: ${validatedData.locationType === "STUDIO" ? "Local en Av. Bolívar 1
 
     if (error instanceof z.ZodError) {
       // Encontrar el primer error de teléfono para dar un mensaje más específico
-      const phoneError = error.errors.find((err) => err.path.includes("clientPhone"));
+      const phoneError = error.issues.find((err) => err.path.includes("clientPhone"));
 
       if (phoneError) {
         return NextResponse.json(
@@ -391,7 +391,7 @@ Ubicación: ${validatedData.locationType === "STUDIO" ? "Local en Av. Bolívar 1
             error: "Formato de teléfono inválido",
             message:
               "Por favor ingresa un número de teléfono válido. Ejemplos: +51 999 209 880 o 999 209 880",
-            details: error.errors,
+            details: error.issues,
           },
           { status: 400 },
         );
@@ -401,7 +401,7 @@ Ubicación: ${validatedData.locationType === "STUDIO" ? "Local en Av. Bolívar 1
         {
           error: "Datos inválidos",
           message: "Por favor verifica que todos los campos estén completos y sean válidos.",
-          details: error.errors,
+          details: error.issues,
         },
         { status: 400 },
       );

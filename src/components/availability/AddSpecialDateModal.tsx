@@ -12,7 +12,7 @@ import { z } from "zod";
 const specialDateSchema = z
   .object({
     date: z.date({
-      required_error: "Fecha es requerida",
+      message: "Fecha es requerida",
     }),
     isAvailable: z.boolean(),
     startTime: z.string().optional(),

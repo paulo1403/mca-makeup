@@ -57,7 +57,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json(
         {
           error: "Datos inválidos",
-          details: error.errors,
+          details: error.issues,
         },
         { status: 400 },
       );
