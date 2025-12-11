@@ -1,6 +1,5 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
 import {
   Camera,
   ExternalLink,
@@ -11,7 +10,6 @@ import {
   Users,
 } from "lucide-react";
 import type React from "react";
-import { useRef } from "react";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
 
@@ -48,33 +46,14 @@ const portfolioCategories: PortfolioCategory[] = [
 ];
 
 export default function PortfolioSection() {
-  const ref = useRef<HTMLElement | null>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const cardVariants: any = {
-    hidden: { opacity: 0, y: 24 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.08, duration: 0.5 },
-    }),
-  };
-
   return (
     <section
       id="portafolio"
       className="hidden sm:block py-12 sm:py-28 bg-[color:var(--color-background)]"
       style={{ scrollMarginTop: "120px" }}
-      ref={ref}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-        <motion.div
-          className="text-center mb-12 sm:mb-20"
-          initial={{ opacity: 0, y: 16 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-          transition={{ duration: 0.6 }}
-        >
+        <div className="text-center mb-12 sm:mb-20">
           <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[color:var(--color-surface)]/80 border border-[color:var(--color-accent)]/10 mb-6">
             <ImageIcon className="w-4 h-4 text-[color:var(--color-primary)]" />
             <span className="text-sm font-semibold text-[color:var(--color-primary)]">
@@ -87,10 +66,7 @@ export default function PortfolioSection() {
             variant="h2"
             className="hidden sm:block section-title text-2xl sm:text-4xl font-bold text-[color:var(--color-heading)] mb-2 sm:mb-3"
           >
-            Mi{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)]">
-              Arte
-            </span>
+            Mi Arte
           </Typography>
 
           <Typography
@@ -122,20 +98,15 @@ export default function PortfolioSection() {
           </div>
         </motion.div>
 
-        <motion.div
-          className="hidden md:grid md:grid-cols-3 md:gap-8 md:mb-16"
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          variants={{ visible: { transition: { staggerChildren: 0.12 } } }}
-        >
+        <div className="hidden md:grid md:grid-cols-3 md:gap-8 md:mb-16">
           {portfolioCategories.map((cat, i) => (
-            <motion.div key={cat.title} className="group" custom={i} variants={cardVariants}>
-              <div className="p-6 rounded-2xl h-full flex flex-col bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/20 group-hover:border-[color:var(--color-primary)]/50 transition-all duration-300">
+            <div key={cat.title}>
+              <div className="p-6 rounded-2xl h-full flex flex-col bg-[color:var(--color-surface)] border border-[color:var(--color-border)]">
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 rounded-xl bg-[color:var(--color-accent)]/10 text-[color:var(--color-primary)]">
                     {cat.icon}
                   </div>
-                  <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)]">
+                  <div className="text-2xl font-bold text-[color:var(--color-primary)]">
                     {cat.count}
                   </div>
                 </div>
@@ -164,12 +135,11 @@ export default function PortfolioSection() {
                   </Button>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="hidden sm:block text-center max-w-3xl mx-auto rounded-2xl p-6 sm:p-10 bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/20"
+        <div className="hidden sm:block text-center max-w-3xl mx-auto rounded-2xl p-6 sm:p-10 bg-[color:var(--color-surface)] border border-[color:var(--color-border)]"
           initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
           transition={{ duration: 0.6, delay: 0.4 }}

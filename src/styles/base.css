@@ -1,27 +1,27 @@
 /* Nuevo tema base morado (light/dark) enfocado en NavBar y tokens esenciales */
 
-/* Light theme variables (default) - Minimalist palette */
+/* Light theme variables (default) - Minimalist palette v2 */
 :root,
 :root[data-theme="light"] {
   /* Backgrounds */
   --color-background: #ffffff; /* Blanco puro */
-  --color-surface: #f5f5f5; /* Gris muy claro */
+  --color-surface: #f8f8f8; /* Gris muy claro */
   --color-surface-elevated: #ffffff; /* Blanco puro */
 
   /* Neutral Palette */
-  --color-primary: #333333; /* Gris oscuro */
-  --color-primary-hover: #555555; /* Gris más oscuro */
-  --color-primary-light: #e5e5e5; /* Gris claro */
-  --color-accent: #999999; /* Gris medio */
-  --color-accent-soft: #cccccc; /* Gris suave */
+  --color-primary: #000000; /* Negro */
+  --color-primary-hover: #333333; /* Gris oscuro */
+  --color-primary-light: #f0f0f0; /* Gris claro */
+  --color-accent: #b0b0b0; /* Gris medio */
+  --color-accent-soft: #d0d0d0; /* Gris suave */
 
   /* Text */
-  --color-heading: #111111; /* Casi negro */
-  --color-body: #333333; /* Gris oscuro para texto */
-  --color-muted: #666666; /* Gris medio para secundario */
+  --color-heading: #000000; /* Negro */
+  --color-body: #404040; /* Gris oscuro para texto */
+  --color-muted: #808080; /* Gris medio para secundario */
 
   /* Borders */
-  --color-border: #e5e5e5; /* Gris claro */
+  --color-border: #e0e0e0; /* Gris claro */
 
   /* Semantic */
   --color-cta-bg: var(--color-primary);
@@ -137,27 +137,27 @@
   --calendar-label: var(--color-muted);
 }
 
-/* Dark theme variables - Minimalist palette */
+/* Dark theme variables - Minimalist palette v2 */
 :root[data-theme="dark"] {
   /* Backgrounds */
-  --color-background: #111111; /* Gris muy oscuro */
+  --color-background: #000000; /* Negro */
   --color-surface: #1a1a1a; /* Gris oscuro */
-  --color-surface-elevated: #222222; /* Gris medio oscuro */
+  --color-surface-elevated: #2a2a2a; /* Gris medio oscuro */
 
   /* Neutral Palette */
-  --color-primary: #cccccc; /* Gris claro */
-  --color-primary-hover: #aaaaaa; /* Gris medio claro */
-  --color-primary-light: #666666; /* Gris medio */
-  --color-accent: #888888; /* Gris */
-  --color-accent-soft: #555555; /* Gris oscuro */
+  --color-primary: #ffffff; /* Blanco */
+  --color-primary-hover: #cccccc; /* Gris claro */
+  --color-primary-light: #404040; /* Gris oscuro */
+  --color-accent: #808080; /* Gris */
+  --color-accent-soft: #606060; /* Gris oscuro */
 
   /* Text */
   --color-heading: #ffffff; /* Blanco */
   --color-body: #cccccc; /* Gris claro */
-  --color-muted: #888888; /* Gris */
+  --color-muted: #808080; /* Gris */
 
   /* Borders */
-  --color-border: #333333; /* Gris oscuro */
+  --color-border: #404040; /* Gris oscuro */
 
   /* Semantic */
   --color-cta-bg: var(--color-primary);

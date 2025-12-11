@@ -20,11 +20,7 @@ export default function HeroSection() {
           {/* Left: Content */}
           <div className="flex flex-col gap-12">
             {/* Title */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
+            <div>
               <Typography
                 as="h1"
                 variant="h1"
@@ -33,15 +29,10 @@ export default function HeroSection() {
                 <span className="block mb-2">Marcela Cordero</span>
                 <span className="block">Beauty Studio</span>
               </Typography>
-            </motion.div>
+            </div>
 
             {/* Description */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="space-y-4"
-            >
+            <div className="space-y-4">
               <Typography
                 as="p"
                 variant="p"
@@ -62,15 +53,10 @@ export default function HeroSection() {
                 </span>
                 , personalizado para resaltar tu belleza natural.
               </Typography>
-            </motion.div>
+            </div>
 
             {/* Stats */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="hidden sm:grid grid-cols-3 gap-4 py-4"
-            >
+            <div className="hidden sm:grid grid-cols-3 gap-4 py-4">
               <div className="text-center">
                 <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
                   5.0
@@ -103,10 +89,10 @@ export default function HeroSection() {
                   Años Exp.
                 </Typography>
               </div>
-            </motion.div>
+            </div>
 
             {/* CTAs */}
-            <motion.div
+            <div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.5 }}
@@ -132,9 +118,7 @@ export default function HeroSection() {
                     });
                   }
                 }}
-                className="group"
               >
-                <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                 Agendar Cita
               </Button>
 
@@ -149,16 +133,11 @@ export default function HeroSection() {
               >
                 Ver Servicio
               </Button>
-            </motion.div>
+            </div>
 
             {/* Info Cards */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="hidden sm:grid grid-cols-1 sm:grid-cols-3 gap-4"
-            >
-              <div className="flex items-start gap-3 p-4 rounded-xl bg-[color:var(--color-surface-secondary)] border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-all duration-300">
+            <div className="hidden sm:grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)]">
                 <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/10 flex items-center justify-center flex-shrink-0">
                   <MapPin className="w-5 h-5 text-[color:var(--color-primary)]" />
                 </div>
@@ -180,7 +159,7 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 p-4 rounded-xl bg-[color:var(--color-surface-secondary)] border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-all duration-300">
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)]">
                 <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/10 flex items-center justify-center flex-shrink-0">
                   <Truck className="w-5 h-5 text-[color:var(--color-primary)]" />
                 </div>
@@ -202,7 +181,7 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 p-4 rounded-xl bg-[color:var(--color-surface-secondary)] border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-all duration-300">
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)]">
                 <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/10 flex items-center justify-center flex-shrink-0">
                   <Clock className="w-5 h-5 text-[color:var(--color-primary)]" />
                 </div>
