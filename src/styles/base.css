@@ -171,19 +171,35 @@
   /* Status pills (dark brown theme) */
   --status-pending-bg: color-mix(in srgb, #d97706 20%, var(--color-surface));
   --status-pending-text: #fbbf24;
-  --status-pending-border: color-mix(in srgb, #d97706 35%, var(--color-surface));
+  --status-pending-border: color-mix(
+    in srgb,
+    #d97706 35%,
+    var(--color-surface)
+  );
 
   --status-confirmed-bg: color-mix(in srgb, #8d6e63 25%, var(--color-surface));
   --status-confirmed-text: #d7ccc8;
-  --status-confirmed-border: color-mix(in srgb, #bcaaa4 40%, var(--color-surface));
+  --status-confirmed-border: color-mix(
+    in srgb,
+    #bcaaa4 40%,
+    var(--color-surface)
+  );
 
   --status-completed-bg: color-mix(in srgb, #a1887f 25%, var(--color-surface));
   --status-completed-text: #ede7e3;
-  --status-completed-border: color-mix(in srgb, #d7ccc8 40%, var(--color-surface));
+  --status-completed-border: color-mix(
+    in srgb,
+    #d7ccc8 40%,
+    var(--color-surface)
+  );
 
   --status-cancelled-bg: color-mix(in srgb, #dc2626 20%, var(--color-surface));
   --status-cancelled-text: #fca5a5;
-  --status-cancelled-border: color-mix(in srgb, #dc2626 35%, var(--color-surface));
+  --status-cancelled-border: color-mix(
+    in srgb,
+    #dc2626 35%,
+    var(--color-surface)
+  );
 
   /* Glassmorphism - Marrón oscuro elegante */
   --glass-bg: rgba(62, 39, 35, 0.85);
