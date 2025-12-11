@@ -4,6 +4,7 @@ import { Instagram } from "lucide-react";
 import Image from "next/image";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
+import "@/styles/components/hero.css";
 
 export default function HeroSection() {
   const scrollToSection = (id: string) => {
@@ -12,7 +13,11 @@ export default function HeroSection() {
       const header = document.querySelector("header");
       const headerHeight = header?.offsetHeight || 80;
       const offset = window.innerWidth < 768 ? 20 : 40;
-      const position = element.getBoundingClientRect().top + window.scrollY - headerHeight - offset;
+      const position =
+        element.getBoundingClientRect().top +
+        window.scrollY -
+        headerHeight -
+        offset;
       window.scrollTo({ top: position, behavior: "smooth" });
     }
   };
@@ -22,60 +27,9 @@ export default function HeroSection() {
       id="hero"
       className="relative min-h-screen flex items-center justify-center pt-24 pb-16 sm:pt-32 sm:pb-24 bg-[color:var(--color-background)]"
     >
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-
-        @keyframes scaleIn {
-          from {
-            opacity: 0;
-            transform: scale(0.95);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-
-        .animate-fadeInUp {
-          animation: fadeInUp 0.8s ease-out forwards;
-          opacity: 0;
-        }
-
-        .animate-fadeIn {
-          animation: fadeIn 1s ease-out forwards;
-          opacity: 0;
-        }
-
-        .animate-scaleIn {
-          animation: scaleIn 1s ease-out forwards;
-          opacity: 0;
-        }
-
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-300 { animation-delay: 0.3s; }
-        .delay-400 { animation-delay: 0.4s; }
-        .delay-500 { animation-delay: 0.5s; }
-        .delay-600 { animation-delay: 0.6s; }
-      `}</style>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          
           <div className="space-y-8 lg:space-y-10">
             <div className="space-y-6 animate-fadeInUp">
               <div className="inline-block px-4 py-1.5 rounded-full bg-[color:var(--color-primary)]/10 border border-[color:var(--color-primary)]/20">
@@ -100,7 +54,9 @@ export default function HeroSection() {
                 variant="p"
                 className="text-[color:var(--color-body)] text-lg sm:text-xl max-w-xl leading-relaxed"
               >
-                Especialista en novias y eventos sociales. Diseño maquillajes exclusivos que resaltan tu belleza natural con técnicas profesionales.
+                Especialista en novias y eventos sociales. Diseño maquillajes
+                exclusivos que resaltan tu belleza natural con técnicas
+                profesionales.
               </Typography>
             </div>
 
@@ -109,7 +65,11 @@ export default function HeroSection() {
                 <div className="text-3xl sm:text-4xl font-bold text-[color:var(--color-primary)] mb-2">
                   5.0
                 </div>
-                <Typography as="p" variant="small" className="text-[color:var(--color-muted)]">
+                <Typography
+                  as="p"
+                  variant="small"
+                  className="text-[color:var(--color-muted)]"
+                >
                   Calificación
                 </Typography>
               </div>
@@ -117,7 +77,11 @@ export default function HeroSection() {
                 <div className="text-3xl sm:text-4xl font-bold text-[color:var(--color-primary)] mb-2">
                   370+
                 </div>
-                <Typography as="p" variant="small" className="text-[color:var(--color-muted)]">
+                <Typography
+                  as="p"
+                  variant="small"
+                  className="text-[color:var(--color-muted)]"
+                >
                   Clientes
                 </Typography>
               </div>
@@ -125,7 +89,11 @@ export default function HeroSection() {
                 <div className="text-3xl sm:text-4xl font-bold text-[color:var(--color-primary)] mb-2">
                   8+
                 </div>
-                <Typography as="p" variant="small" className="text-[color:var(--color-muted)]">
+                <Typography
+                  as="p"
+                  variant="small"
+                  className="text-[color:var(--color-muted)]"
+                >
                   Años Exp.
                 </Typography>
               </div>
@@ -159,7 +127,11 @@ export default function HeroSection() {
                   <Instagram className="w-5 h-5" />
                 </div>
                 <div>
-                  <Typography as="p" variant="small" className="text-[color:var(--color-muted)]">
+                  <Typography
+                    as="p"
+                    variant="small"
+                    className="text-[color:var(--color-muted)]"
+                  >
                     Sígueme en
                   </Typography>
                   <Typography as="p" variant="p" className="font-medium">
@@ -172,7 +144,7 @@ export default function HeroSection() {
 
           <div className="relative lg:order-last animate-scaleIn delay-500">
             <div className="absolute -inset-1 bg-[color:var(--color-primary)]/5 rounded-3xl blur-2xl" />
-            
+
             <div className="relative aspect-[3/4] max-h-[600px] rounded-2xl overflow-hidden border border-[color:var(--color-border)] shadow-2xl">
               <Image
                 src="/marcela-hero.jpg"
@@ -190,10 +162,18 @@ export default function HeroSection() {
                   <span className="text-2xl">✨</span>
                 </div>
                 <div>
-                  <Typography as="p" variant="p" className="font-semibold text-[color:var(--color-heading)]">
+                  <Typography
+                    as="p"
+                    variant="p"
+                    className="font-semibold text-[color:var(--color-heading)]"
+                  >
                     Soft Glam
                   </Typography>
-                  <Typography as="p" variant="small" className="text-[color:var(--color-muted)]">
+                  <Typography
+                    as="p"
+                    variant="small"
+                    className="text-[color:var(--color-muted)]"
+                  >
                     Especialidad de la casa
                   </Typography>
                 </div>
