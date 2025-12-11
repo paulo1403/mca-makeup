@@ -35,14 +35,14 @@ function ServiceCard({
     >
       {isPopular && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-          <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-[color:var(--color-primary)] text-white text-xs font-semibold">
+          <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-(--color-primary) text-white text-xs font-semibold">
             <Star className="w-3 h-3 fill-current" />
             Popular
           </div>
         </div>
       )}
 
-      <div className="relative p-5 sm:p-6 bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)]">
+      <div className="relative p-5 sm:p-6 bg-(--color-surface) rounded-xl border border-[color:var(--color-border)]">
         {/* Header */}
         <header className="mb-3 sm:mb-4">
           <div className="flex items-start justify-between gap-3 mb-3">
@@ -114,13 +114,13 @@ function ServiceCard({
           </div>
 
           <Button
-            variant={isPopular ? "primary" : "secondary"}
+            variant="secondary"
             size="sm"
             onClick={() => window.open(service.portfolioUrl, "_blank")}
-            className="group/btn whitespace-nowrap"
+            className="whitespace-nowrap"
           >
             <span className="text-sm">Ver servicios</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 transition-transform" />
+            <ArrowRight className="w-3.5 h-3.5" />
           </Button>
         </div>
       </div>
@@ -173,12 +173,7 @@ export default function ServicesSection() {
         </div>
 
         {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="hidden sm:grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10"
-        >
+        <div className="hidden sm:grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
           <div className="text-center p-4 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
             <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
               5.0
@@ -187,55 +182,55 @@ export default function ServicesSection() {
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  className="w-4 h-4 text-[color:var(--color-accent)] fill-current"
+                  className="w-4 h-4 text-(--color-accent) fill-current"
                 />
               ))}
             </div>
             <Typography
               as="p"
               variant="small"
-              className="text-[color:var(--color-body)] mt-1"
+              className="text-(--color-body) mt-1"
             >
               Calificación
             </Typography>
           </div>
-          <div className="text-center p-4 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
-            <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
+          <div className="text-center p-4 rounded-xl bg-(--color-surface)/50 border border-(--color-border)/20">
+            <div className="text-2xl sm:text-3xl font-bold text-(--color-primary)">
               370+
             </div>
             <Typography
               as="p"
               variant="small"
-              className="text-[color:var(--color-body)] mt-1"
+              className="text-(--color-body) mt-1"
             >
               Clientes
             </Typography>
           </div>
-          <div className="text-center p-4 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
-            <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
+          <div className="text-center p-4 rounded-xl bg-(--color-surface)/50 border border-(--color-border)/20">
+            <div className="text-2xl sm:text-3xl font-bold text-(--color-primary)">
               8+
             </div>
             <Typography
               as="p"
               variant="small"
-              className="text-[color:var(--color-body)] mt-1"
+              className="text-(--color-body) mt-1"
             >
               Años Exp.
             </Typography>
           </div>
-          <div className="text-center p-4 rounded-xl bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)]/20">
-            <div className="text-2xl sm:text-3xl font-bold text-[color:var(--color-primary)]">
+          <div className="text-center p-4 rounded-xl bg-(--color-surface)/50 border border-(--color-border)/20">
+            <div className="text-2xl sm:text-3xl font-bold text-(--color-primary)">
               100%
             </div>
             <Typography
               as="p"
               variant="small"
-              className="text-[color:var(--color-body)] mt-1"
+              className="text-(--color-body) mt-1"
             >
               Satisfacción
             </Typography>
           </div>
-        </motion.div>
+        </div>
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-10">
@@ -244,7 +239,7 @@ export default function ServicesSection() {
                 (_, i) => (
                   <div
                     key={i}
-                    className="h-80 rounded-xl bg-[color:var(--color-surface)] animate-pulse"
+                    className="h-80 rounded-xl bg-(--color-surface) animate-pulse"
                   />
                 )
               )
@@ -258,15 +253,9 @@ export default function ServicesSection() {
         </div>
 
         {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
+        <div>
           <div className="relative max-w-4xl mx-auto">
-            <div className="absolute inset-0 bg-gradient-to-br from-[color:var(--color-primary)]/8 via-[color:var(--color-accent)]/4 to-transparent rounded-2xl blur-xl" />
-
-            <div className="relative p-6 sm:p-8 rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-accent)]/20 backdrop-blur-sm">
+            <div className="relative p-6 sm:p-8 rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)]">
               <div className="grid md:grid-cols-[1.2fr,1fr] gap-6 items-center">
                 {/* Left content */}
                 <div>
@@ -292,25 +281,15 @@ export default function ServicesSection() {
                     una cita a domicilio.
                   </Typography>
 
-                  <Button
-                    as="a"
-                    href="/reserva"
-                    variant="primary"
-                    size="lg"
-                    className="group/cta"
-                  >
-                    <Sparkles className="w-4 h-4 group-hover/cta:rotate-12 transition-transform" />
+                  <Button as="a" href="/reserva" variant="secondary" size="lg">
                     Agendar Ahora
-                    <ArrowRight className="w-4 h-4 group-hover/cta:translate-x-0.5 transition-transform" />
+                    <ArrowRight className="w-4 h-4" />
                   </Button>
                 </div>
 
                 {/* Right info cards */}
                 <div className="hidden md:grid grid-cols-1 gap-3">
-                  <motion.div
-                    className="flex items-center gap-3 p-4 rounded-xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-all duration-300"
-                    whileHover={{ scale: 1.02 }}
-                  >
+                  <div className="flex items-center gap-3 p-4 rounded-xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)]">
                     <div className="p-2 rounded-lg bg-[color:var(--color-primary)]/10 flex-shrink-0">
                       <MapPin className="w-5 h-5 text-[color:var(--color-primary)]" />
                     </div>
@@ -330,12 +309,9 @@ export default function ServicesSection() {
                         En toda Lima
                       </Typography>
                     </div>
-                  </motion.div>
+                  </div>
 
-                  <motion.div
-                    className="flex items-center gap-3 p-4 rounded-xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/20 hover:border-[color:var(--color-primary)]/30 transition-all duration-300"
-                    whileHover={{ scale: 1.02 }}
-                  >
+                  <div className="flex items-center gap-3 p-4 rounded-xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)]">
                     <div className="p-2 rounded-lg bg-[color:var(--color-primary)]/10 flex-shrink-0">
                       <Clock className="w-5 h-5 text-[color:var(--color-primary)]" />
                     </div>
@@ -355,12 +331,12 @@ export default function ServicesSection() {
                         Según tu evento
                       </Typography>
                     </div>
-                  </motion.div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
