@@ -25,7 +25,7 @@ export default function AboutSection() {
           <div className="w-40 h-40 mx-auto mb-4 rounded-full overflow-hidden bg-[color:var(--color-surface)]/40">
             <div className="relative w-full h-full">
               <Image
-                src="https://marcelacorderomakeup.my.canva.site/_assets/media/a946848d6f1442ce7e9ea68c53c46982.jpg"
+                src="/mca-about-me.jpg"
                 alt="Marcela Cordero"
                 fill
                 style={{

@@ -12,7 +12,12 @@ type UIServiceGroup = ServiceGroup & { icon?: React.ReactNode; badge?: string };
 // Simplified static service item - non-selectable, no price shown
 function ServiceItem({ service }: { service: UIServiceGroup }) {
   return (
-    <div className="w-full rounded-[12px] px-5 py-4 bg-[color:var(--color-surface)]/40 text-center">
+    <a
+      href={service.portfolioUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block w-full rounded-[12px] px-5 py-4 bg-[color:var(--color-surface)]/40 text-center hover:bg-[color:var(--color-surface)]/60 transition-colors cursor-pointer"
+    >
       <Typography
         as="h3"
         variant="h3"
@@ -20,7 +25,7 @@ function ServiceItem({ service }: { service: UIServiceGroup }) {
       >
         {service.title}
       </Typography>
-    </div>
+    </a>
   );
 }
 
