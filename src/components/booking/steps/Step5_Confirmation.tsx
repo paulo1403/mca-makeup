@@ -6,50 +6,15 @@ import useServicesQuery from "@/hooks/useServicesQuery";
 import { useTransportCost } from "@/hooks/useTransportCost";
 import type { BookingData } from "@/lib/bookingSchema";
 import { calculateNightShiftCost } from "@/utils/nightShift";
-import { AnimatePresence, motion } from "framer-motion";
-import { Check, Copy, CreditCard, FileText, ShieldCheck, Sparkles } from "lucide-react";
+import { Check, Copy, CreditCard, FileText } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-
-const translations = {
-  title: "Confirmación y Pago",
-  subtitle: "Revisa tu solicitud y sigue la guía de pago",
-  costSummary: "Resumen de costos",
-  services: "Servicios",
-  transport: "Transporte",
-  totalCost: "Total",
-  depositRequired: "Depósito",
-  nightShift: "Horario nocturno",
-  confirmationProcess: "Proceso de Pago",
-  copyPlin: "Copiar",
-  copied: "Copiado",
-  additionalNotes: "Notas (Opcional)",
-  notesPlaceholder: "Cuéntame sobre tu evento...",
-  acceptTerms: "Acepto los términos",
-  requiredToSend: "Requerido",
-  step1: "Envía tu solicitud",
-  step2: "Te contactaré para confirmar",
-  step3: "Deposita S/ 150 por PLIN",
-  step4: "Paga el resto el día de la cita",
-  importantInfo: "Importante",
-  depositInfo: "El depósito confirma tu reserva",
-};
-
-const useTranslations = () => {
-  return {
-    t: (key: string, fallback?: string) => {
-      const value = translations[key as keyof typeof translations];
-      return value || fallback || key;
-    },
-  };
-};
 
 export default function Step5_Confirmation() {
   const { control, watch } = useFormContext<BookingData>();
   const [copied, setCopied] = useState(false);
   const deposit = 150;
   const plinNumber = "+51999209880";
-  const { t } = useTranslations();
 
   // Pricing breakdown
   const { data: services = [] } = useServicesQuery();
@@ -72,7 +37,7 @@ export default function Step5_Confirmation() {
     services,
     transportEnabled,
     transportCost?.cost,
-    nightShiftCost,
+    nightShiftCost
   );
   const remaining = Math.max(0, (total || 0) - 150);
 
@@ -87,51 +52,33 @@ export default function Step5_Confirmation() {
   };
 
   return (
-    <div className="w-full space-y-5 px-2">
-      {/* Encabezado compacto */}
-      <motion.div
-        className="text-center space-y-2"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="flex justify-center">
-          <div className="w-10 h-10 bg-gradient-to-br from-[color:var(--color-primary)] to-[color:var(--color-accent)] rounded-full flex items-center justify-center">
-            <ShieldCheck className="w-5 h-5 text-white" />
-          </div>
-        </div>
+    <div className="space-y-6">
+      {/* Encabezado */}
+      <div className="text-center">
+        <Typography
+          as="h3"
+          variant="h3"
+          className="font-bold text-[color:var(--color-heading)] mb-2"
+        >
+          Confirmación y Pago
+        </Typography>
+        <Typography
+          as="p"
+          variant="small"
+          className="text-[color:var(--color-body)]"
+        >
+          Revisa tu solicitud
+        </Typography>
+      </div>
 
-        <div className="space-y-1">
-          <Typography
-            as="h2"
-            variant="h2"
-            className="text-[color:var(--color-heading)] font-serif !text-base sm:!text-lg"
-          >
-            {t("title")}
-          </Typography>
-          <Typography
-            as="p"
-            variant="p"
-            className="text-[color:var(--color-body)] text-xs sm:text-sm leading-tight"
-          >
-            {t("subtitle")}
-          </Typography>
-        </div>
-      </motion.div>
-
-      {/* Desglose de Precios - Compacto */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-        className="p-3 sm:p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
-      >
+      {/* Desglose de Precios */}
+      <div className="p-4 rounded-[12px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)]/60">
         <Typography
           as="h4"
           variant="h4"
-          className="text-[color:var(--color-heading)] font-medium mb-3 text-sm"
+          className="text-[color:var(--color-heading)] font-medium mb-3"
         >
-          {t("costSummary")}
+          Resumen de costos
         </Typography>
 
         <div className="space-y-2">
@@ -139,14 +86,14 @@ export default function Step5_Confirmation() {
             <Typography
               as="span"
               variant="small"
-              className="text-[color:var(--color-body)] text-xs"
+              className="text-[color:var(--color-body)]"
             >
-              {t("services")}
+              Servicios
             </Typography>
             <Typography
               as="span"
               variant="small"
-              className="text-[color:var(--color-heading)] font-medium text-xs"
+              className="text-[color:var(--color-heading)] font-medium"
             >
               S/ {subtotal || 0}
             </Typography>
@@ -156,14 +103,14 @@ export default function Step5_Confirmation() {
             <Typography
               as="span"
               variant="small"
-              className="text-[color:var(--color-body)] text-xs"
+              className="text-[color:var(--color-body)]"
             >
-              {t("transport")}
+              Transporte
             </Typography>
             <Typography
               as="span"
               variant="small"
-              className="text-[color:var(--color-heading)] font-medium text-xs"
+              className="text-[color:var(--color-heading)] font-medium"
             >
               S/ {transport || 0}
             </Typography>
@@ -174,105 +121,95 @@ export default function Step5_Confirmation() {
               <Typography
                 as="span"
                 variant="small"
-                className="text-[color:var(--color-body)] text-xs"
+                className="text-[color:var(--color-body)]"
               >
-                {t("nightShift")}
+                Horario nocturno
               </Typography>
               <Typography
                 as="span"
                 variant="small"
-                className="text-[color:var(--color-heading)] font-medium text-xs"
+                className="text-[color:var(--color-heading)] font-medium"
               >
                 S/ {nightShift}
               </Typography>
             </div>
           )}
 
-          <div className="border-t border-[color:var(--color-border)]/20 pt-2 mt-2">
-            <div className="flex justify-between items-end gap-2">
-              <div>
-                <Typography
-                  as="span"
-                  variant="small"
-                  className="text-[color:var(--color-body)] text-xs"
-                >
-                  {t("totalCost")}
-                </Typography>
-                <Typography
-                  as="span"
-                  variant="h3"
-                  className="!text-lg sm:!text-xl font-bold text-[color:var(--color-primary)]"
-                >
-                  S/ {total || 0}
-                </Typography>
-              </div>
-
-              <div className="text-right">
-                <Typography
-                  as="span"
-                  variant="small"
-                  className="text-[color:var(--color-body)] text-xs"
-                >
-                  {t("depositRequired")}
-                </Typography>
-                <Typography
-                  as="span"
-                  variant="h3"
-                  className="!text-base sm:!text-lg font-bold text-[color:var(--color-accent)]"
-                >
-                  S/ {deposit}
-                </Typography>
-              </div>
+          <div className="border-t border-[color:var(--color-border)] pt-3 mt-3">
+            <div className="flex justify-between items-center mb-2">
+              <Typography
+                as="span"
+                variant="p"
+                className="text-[color:var(--color-heading)] font-medium"
+              >
+                Total
+              </Typography>
+              <Typography
+                as="span"
+                variant="h3"
+                className="font-bold text-[color:var(--color-primary)]"
+              >
+                S/ {total || 0}
+              </Typography>
+            </div>
+            <div className="flex justify-between items-center">
+              <Typography
+                as="span"
+                variant="small"
+                className="text-[color:var(--color-body)]"
+              >
+                Depósito requerido
+              </Typography>
+              <Typography
+                as="span"
+                variant="p"
+                className="font-bold text-[color:var(--color-primary)]"
+              >
+                S/ {deposit}
+              </Typography>
             </div>
             <div className="flex justify-between items-center mt-2">
               <Typography
                 as="span"
                 variant="small"
-                className="text-[color:var(--color-body)] text-xs"
+                className="text-[color:var(--color-body)]"
               >
                 Restante a pagar
               </Typography>
               <Typography
                 as="span"
                 variant="small"
-                className="text-[color:var(--color-heading)] font-medium text-xs"
+                className="text-[color:var(--color-heading)] font-medium"
               >
                 S/ {remaining}
               </Typography>
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Proceso de Pago - Optimizado */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.5 }}
-        className="p-3 sm:p-4 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
-      >
+      {/* Proceso de Pago */}
+      <div className="p-4 rounded-[12px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)]/60">
         <div className="flex items-center gap-2 mb-3">
-          <div className="w-6 h-6 rounded-lg bg-[color:var(--color-primary)]/20 flex items-center justify-center">
-            <CreditCard className="w-3 h-3 text-[color:var(--color-primary)]" />
-          </div>
+          <CreditCard className="w-5 h-5 text-[color:var(--color-primary)]" />
           <Typography
             as="h4"
             variant="h4"
-            className="text-[color:var(--color-heading)] font-medium text-sm"
+            className="text-[color:var(--color-heading)] font-medium"
           >
-            {t("confirmationProcess")}
+            Proceso de Pago
           </Typography>
         </div>
 
         <div className="space-y-3">
           {/* PLIN Number */}
-          <div className="bg-[color:var(--color-surface-secondary)] border border-[color:var(--color-border)] rounded-lg p-3">
+          <div className="bg-[color:var(--color-surface)] border border-[color:var(--color-border)] rounded-[12px] p-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Typography
                   as="span"
                   variant="small"
-                  className="text-[color:var(--color-body)] text-xs"
+                  className="text-[color:var(--color-body)]"
                 >
                   PLIN:
                 </Typography>
@@ -284,17 +221,17 @@ export default function Step5_Confirmation() {
                 variant="ghost"
                 size="sm"
                 onClick={handleCopyPlin}
-                className="px-3 py-2 text-xs rounded-lg min-w-[80px]"
+                className="px-3 py-2 rounded-[12px]"
               >
                 {copied ? (
                   <>
-                    <Check className="w-3 h-3 text-green-500" />
-                    <span className="text-green-500">{t("copied")}</span>
+                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500">Copiado</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="w-3 h-3" />
-                    <span>{t("copyPlin")}</span>
+                    <Copy className="w-4 h-4" />
+                    <span>Copiar</span>
                   </>
                 )}
               </Button>
@@ -302,132 +239,83 @@ export default function Step5_Confirmation() {
           </div>
 
           {/* Pasos */}
-          <div className="space-y-2">
-            <ol className="space-y-2 text-xs text-[color:var(--color-body)] list-decimal list-inside">
+          <div>
+            <ol className="space-y-2 text-sm text-[color:var(--color-body)] list-decimal list-inside">
               <li>Enviar la captura del adelanto al WhatsApp (989164990)</li>
               <li>Espera la confirmación de tu reserva</li>
               <li>El restante lo cancelas el día de la cita</li>
             </ol>
           </div>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Campo de notas - Compacto */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4, duration: 0.5 }}
-      >
-        <Controller
-          name="additionalNotes"
-          control={control}
-          render={({ field }) => (
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <FileText className="w-4 h-4 text-[color:var(--color-primary)]" />
-                <Typography
-                  as="label"
-                  variant="small"
-                  className="font-medium text-[color:var(--color-heading)] text-sm"
-                >
-                  {t("additionalNotes")}
-                </Typography>
-              </div>
-              <textarea
-                {...field}
-                placeholder={t("notesPlaceholder")}
-                rows={3}
-                className="w-full bg-[color:var(--color-surface)] border border-[color:var(--color-border)] rounded-lg px-3 py-2.5 placeholder:text-[color:var(--color-body)]/50 text-[color:var(--color-text-primary)] outline-none transition-all duration-200 focus:border-[color:var(--color-primary)] text-sm resize-none"
-              />
+      {/* Campo de notas */}
+      <Controller
+        name="additionalNotes"
+        control={control}
+        render={({ field }) => (
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <FileText className="w-4 h-4 text-[color:var(--color-primary)]" />
+              <Typography
+                as="label"
+                variant="small"
+                className="font-medium text-[color:var(--color-heading)]"
+              >
+                Notas (Opcional)
+              </Typography>
             </div>
-          )}
-        />
-      </motion.div>
+            <textarea
+              {...field}
+              placeholder="Cuéntame sobre tu evento..."
+              rows={3}
+              className="w-full bg-[color:var(--color-surface)] border border-[color:var(--color-border)] rounded-[12px] px-3 py-2.5 placeholder:text-[color:var(--color-body)]/50 text-[color:var(--color-text-primary)] outline-none focus:border-[color:var(--color-primary)] resize-none"
+            />
+          </div>
+        )}
+      />
 
-      {/* Aceptación de términos - Optimizado */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.5 }}
-      >
-        <Controller
-          name="agreedToTerms"
-          control={control}
-          render={({ field }) => (
-            <label className="flex items-start gap-3 p-3 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]">
-              <div className="flex-shrink-0 mt-0.5">
-                <input
-                  type="checkbox"
-                  checked={Boolean(field.value)}
-                  onChange={(e) => field.onChange(e.target.checked)}
-                  className="w-5 h-5 text-[color:var(--color-primary)] border-[color:var(--color-border)] rounded focus:ring-[color:var(--color-primary)]"
-                />
-              </div>
-              <div className="flex-1 min-w-0">
+      {/* Aceptación de términos */}
+      <Controller
+        name="agreedToTerms"
+        control={control}
+        render={({ field }) => (
+          <label className="flex items-start gap-3 p-3 rounded-[12px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)]/60">
+            <input
+              type="checkbox"
+              checked={Boolean(field.value)}
+              onChange={(e) => field.onChange(e.target.checked)}
+              className="w-5 h-5 text-[color:var(--color-primary)] border-[color:var(--color-border)] rounded focus:ring-[color:var(--color-primary)] mt-0.5"
+            />
+            <div className="flex-1">
+              <Typography
+                as="span"
+                variant="small"
+                className="text-[color:var(--color-body)]"
+              >
+                Acepto los{" "}
+                <a
+                  href="/terminos-condiciones"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[color:var(--color-primary)] underline hover:opacity-80"
+                >
+                  términos y condiciones
+                </a>
+              </Typography>
+              {!field.value && (
                 <Typography
                   as="span"
-                  variant="small"
-                  className="text-[color:var(--color-body)] text-xs"
+                  variant="caption"
+                  className="!text-red-500 block mt-1"
                 >
-                  {t("acceptTerms")}{" "}
-                  <a
-                    href="/terminos-condiciones"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[color:var(--color-primary)] underline hover:opacity-80"
-                  >
-                    términos
-                  </a>
+                  Requerido para enviar
                 </Typography>
-                <AnimatePresence>
-                  {!field.value && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -5 }}
-                      className="mt-1"
-                    >
-                      <Typography as="span" variant="caption" className="!text-red-500 text-xs">
-                        {t("requiredToSend")}
-                      </Typography>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </label>
-          )}
-        />
-      </motion.div>
-
-      {/* Información importante - Compacta */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6, duration: 0.5 }}
-        className="p-3 bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)]"
-      >
-        <div className="flex items-start gap-2">
-          <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[color:var(--color-primary)]/20 flex items-center justify-center mt-0.5">
-            <Sparkles className="w-2.5 h-2.5 text-[color:var(--color-primary)]" />
-          </div>
-          <div className="flex-1">
-            <Typography
-              as="h4"
-              variant="h4"
-              className="text-[color:var(--color-heading)] mb-1 text-xs font-medium"
-            >
-              {t("importantInfo")}
-            </Typography>
-            <Typography
-              as="p"
-              variant="p"
-              className="text-[color:var(--color-body)] text-xs leading-relaxed"
-            >
-              {t("depositInfo")}
-            </Typography>
-          </div>
-        </div>
-      </motion.div>
+              )}
+            </div>
+          </label>
+        )}
+      />
     </div>
   );
 }

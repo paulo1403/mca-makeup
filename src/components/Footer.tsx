@@ -1,20 +1,16 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
 import { ArrowUp, Instagram, Mail, MapPin } from "lucide-react";
 import Link from "next/link";
-import { useRef } from "react";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
 import "@/styles/components/footer.css";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "auto" });
   };
 
   const navigationLinks = {
@@ -37,16 +33,11 @@ export default function Footer() {
   };
 
   return (
-    <footer className="footer-section" ref={sectionRef}>
+    <footer className="footer-section">
       <div className="footer-container">
         <div className="footer-grid">
           {/* Brand Column */}
-          <motion.div
-            className="footer-brand"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6 }}
-          >
+          <div className="footer-brand">
             <Link href="/" className="footer-logo" aria-label="Inicio">
               <Typography as="h3" variant="h3" className="text-2xl md:text-3xl font-serif">
                 Marcela Cordero
@@ -81,15 +72,10 @@ export default function Footer() {
                 </svg>
               </a>
             </div>
-          </motion.div>
+          </div>
 
           {/* Navigation Columns */}
-          <motion.div
-            className="footer-nav"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
+          <div className="footer-nav">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
               <div>
                 <Typography as="h4" variant="h4" className="footer-nav-title text-sm">
@@ -121,15 +107,10 @@ export default function Footer() {
                 </ul>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Contact & CTA Column */}
-          <motion.div
-            className="footer-contact"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
+          <div className="footer-contact">
             <Typography as="h4" variant="h4" className="footer-nav-title text-lg">
               Contacto
             </Typography>
@@ -200,7 +181,7 @@ export default function Footer() {
                 ))}
               </ul>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
 
@@ -217,18 +198,13 @@ export default function Footer() {
       </div>
 
       {/* Back to Top */}
-      <motion.button
+      <button
         onClick={scrollToTop}
         className="back-to-top"
         aria-label="Volver arriba"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
       >
         <ArrowUp className="w-5 h-5" />
-      </motion.button>
+      </button>
     </footer>
   );
 }

@@ -85,12 +85,9 @@ export default function PortfolioSection() {
           <Typography
             as="h2"
             variant="h2"
-            className="hidden sm:block section-title text-2xl sm:text-4xl font-bold text-[color:var(--color-heading)] mb-2 sm:mb-3"
+            className="hidden sm:block text-[color:var(--color-heading)] mb-2 sm:mb-3"
           >
-            Mi{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[color:var(--color-primary)] to-[color:var(--color-accent)]">
-              Arte
-            </span>
+            Mi Arte
           </Typography>
 
           <Typography

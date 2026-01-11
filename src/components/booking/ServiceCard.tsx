@@ -32,7 +32,7 @@ export default function ServiceCard({ service }: Props) {
     <motion.div
       layout
       className={`
-        bg-service-card rounded-2xl border transition-all duration-300 overflow-hidden min-h-[110px]
+        bg-service-card rounded-2xl border transition-all duration-300 min-h-[110px]
         ${
           isSelected
             ? "border-2 border-[var(--color-accent-primary)] shadow-service-card-selected"

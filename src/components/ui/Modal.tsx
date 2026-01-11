@@ -96,19 +96,25 @@ export function ModalHeader({
   onClose?: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between p-4 sm:p-6 border-b border-[color:var(--color-border)]">
-      <Typography
-        as="h2"
-        variant="h3"
-        className="flex items-center text-[color:var(--color-heading)] font-bold"
-      >
-        {icon && <span className="mr-2">{icon}</span>}
-        {title}
-      </Typography>
+    <div className="relative p-4 sm:p-6 border-b border-[color:var(--color-border)]">
+      <div className="pr-10">
+        {typeof title === "string" ? (
+          <Typography
+            as="h2"
+            variant="h3"
+            className="flex items-center text-[color:var(--color-heading)] font-bold"
+          >
+            {icon && <span className="mr-2">{icon}</span>}
+            {title}
+          </Typography>
+        ) : (
+          title
+        )}
+      </div>
       {onClose && (
         <IconButton
           onClick={onClose}
-          className="text-[color:var(--color-muted)] hover:text-[color:var(--color-body)] transition-colors focus-ring"
+          className="absolute right-4 top-4 sm:right-6 sm:top-6 text-[color:var(--color-muted)] hover:text-[color:var(--color-body)] transition-colors focus-ring"
           aria-label="Cerrar"
         >
           <X className="w-5 h-5 sm:w-6 sm:h-6" />

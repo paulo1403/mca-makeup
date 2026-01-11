@@ -10,6 +10,7 @@
     "format": "biome format --write .",
     "format:check": "biome format --check .",
     "postinstall": "prisma generate",
+    "mcp:playwright": "node scripts/mcp-playwright/server.js",
     "db:seed": "tsx prisma/seed.ts",
     "db:reset": "prisma db push --force-reset && npm run db:seed",
     "db:admin": "tsx prisma/seed-admin.ts",
@@ -45,6 +46,8 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.60.0",
     "react-hot-toast": "^2.6.0",
+    "@modelcontextprotocol/sdk": "^1.25.2",
+    "playwright": "^1.45.0",
     "web-push": "^3.6.7",
     "zod": "^3.25.76"
   },

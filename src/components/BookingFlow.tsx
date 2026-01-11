@@ -3,8 +3,7 @@ import { useServicesList } from "@/hooks/useServices";
 import BookingSchema, { type BookingData } from "@/lib/bookingSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { AnimatePresence, motion } from "framer-motion";
-import { Calendar, CreditCard, MapPin, Send, Sparkles, User } from "lucide-react";
+import { Calendar, CreditCard, MapPin, Send, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { FieldPath } from "react-hook-form";
@@ -74,11 +73,59 @@ export default function BookingFlow() {
   const total = 5;
   const canSubmit = methods.watch("agreedToTerms") === true;
   const [showSuccess, setShowSuccess] = useState(false);
-  const [successPricing, setSuccessPricing] = useState<Pricing | undefined>(undefined);
-  const [successClientName, setSuccessClientName] = useState<string | undefined>(undefined);
+  const [successPricing, setSuccessPricing] = useState<Pricing | undefined>(
+    undefined
+  );
+  const [successClientName, setSuccessClientName] = useState<
+    string | undefined
+  >(undefined);
   const [successServiceNames, setSuccessServiceNames] = useState<string[]>([]);
+  const [isVisible, setIsVisible] = useState(false); // Oculto inicialmente
   const { t } = useTranslations();
   const { data: allServices = [] } = useServicesList();
+
+  // Watch para detectar campos pre-llenados
+  const locationType = methods.watch("locationType");
+  const selectedServices = methods.watch("selectedServices");
+  const dateValue = methods.watch("date");
+  const timeSlot = methods.watch("timeSlot");
+
+  // Determinar qué pasos se deben mostrar
+  const shouldShowStep = (step: number): boolean => {
+    switch (step) {
+      case 1: // Personal info - siempre se muestra
+        return true;
+      case 2: // Services - se oculta si ya hay servicios seleccionados desde disponibilidad
+        return !selectedServices || selectedServices.length === 0;
+      case 3: // Location - se oculta si es STUDIO o si ya se seleccionó desde disponibilidad como STUDIO
+        return locationType === "HOME";
+      case 4: // Date & Time - se oculta si ya hay fecha y hora desde disponibilidad
+        return !dateValue || !timeSlot;
+      case 5: // Confirmation - siempre se muestra
+        return true;
+      default:
+        return true;
+    }
+  };
+
+  // Obtener el siguiente paso visible
+  const getNextVisibleStep = (fromStep: number): number => {
+    for (let i = fromStep + 1; i <= total; i++) {
+      if (shouldShowStep(i)) return i;
+    }
+    return total;
+  };
+
+  // Obtener el paso anterior visible
+  const getPrevVisibleStep = (fromStep: number): number => {
+    for (let i = fromStep - 1; i >= 1; i--) {
+      if (shouldShowStep(i)) return i;
+    }
+    return 1;
+  };
+
+  // Calcular lista de pasos visibles
+  const visibleSteps = [1, 2, 3, 4, 5].filter(shouldShowStep);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -93,16 +140,25 @@ export default function BookingFlow() {
     if (!currentDate && qpDate) {
       const parsed = new Date(`${qpDate}T00:00:00`);
       if (!isNaN(parsed.getTime())) {
-        methods.setValue("date", parsed, { shouldDirty: true, shouldValidate: true });
+        methods.setValue("date", parsed, {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
       }
     }
 
     if (!currentTime && qpTime) {
-      methods.setValue("timeSlot", qpTime, { shouldDirty: true, shouldValidate: true });
+      methods.setValue("timeSlot", qpTime, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
     }
 
     if (qpLocation === "HOME" || qpLocation === "STUDIO") {
-      methods.setValue("locationType", qpLocation as any, { shouldDirty: false, shouldValidate: false });
+      methods.setValue("locationType", qpLocation as any, {
+        shouldDirty: false,
+        shouldValidate: false,
+      });
     }
 
     if (qpServices) {
@@ -111,10 +167,15 @@ export default function BookingFlow() {
         const items = qpServices
           .split(",")
           .map((pair) => pair.split(":"))
-          .filter((parts) => parts.length === 2 && parts[0] && Number(parts[1]) > 0)
+          .filter(
+            (parts) => parts.length === 2 && parts[0] && Number(parts[1]) > 0
+          )
           .map(([id, qty]) => ({ id, quantity: Number(qty) }));
         if (items.length) {
-          methods.setValue("selectedServices", items as any, { shouldDirty: true, shouldValidate: true });
+          methods.setValue("selectedServices", items as any, {
+            shouldDirty: true,
+            shouldValidate: true,
+          });
         }
       }
     }
@@ -122,42 +183,66 @@ export default function BookingFlow() {
 
   useEffect(() => {
     const handler = (e: Event) => {
-      const detail = (e as CustomEvent).detail as {
-        date?: string;
-        timeSlot?: string;
-        locationType?: "HOME" | "STUDIO";
-        services?: string;
-      } | undefined;
+      const detail = (e as CustomEvent).detail as
+        | {
+            date?: string;
+            timeSlot?: string;
+            locationType?: "HOME" | "STUDIO";
+            services?: string;
+          }
+        | undefined;
       if (!detail) return;
+
+      // Mostrar el formulario cuando se usa "Usar en formulario"
+      setIsVisible(true);
+
       if (detail.date) {
         const parsed = new Date(`${detail.date}T00:00:00`);
         if (!isNaN(parsed.getTime())) {
-          methods.setValue("date", parsed, { shouldDirty: true, shouldValidate: true });
+          methods.setValue("date", parsed, {
+            shouldDirty: true,
+            shouldValidate: true,
+          });
         }
       }
       if (detail.timeSlot) {
-        methods.setValue("timeSlot", detail.timeSlot, { shouldDirty: true, shouldValidate: true });
+        methods.setValue("timeSlot", detail.timeSlot, {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
       }
       if (detail.locationType === "HOME" || detail.locationType === "STUDIO") {
-        methods.setValue("locationType", detail.locationType as any, { shouldDirty: true, shouldValidate: true });
+        methods.setValue("locationType", detail.locationType as any, {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
       }
       if (detail.services) {
         const items = detail.services
           .split(",")
           .map((pair) => pair.split(":"))
-          .filter((parts) => parts.length === 2 && parts[0] && Number(parts[1]) > 0)
+          .filter(
+            (parts) => parts.length === 2 && parts[0] && Number(parts[1]) > 0
+          )
           .map(([id, qty]) => ({ id, quantity: Number(qty) }));
         if (items.length) {
-          methods.setValue("selectedServices", items as any, { shouldDirty: true, shouldValidate: true });
+          methods.setValue("selectedServices", items as any, {
+            shouldDirty: true,
+            shouldValidate: true,
+          });
         }
       }
     };
     window.addEventListener("availability:prefill", handler as EventListener);
-    return () => window.removeEventListener("availability:prefill", handler as EventListener);
+    return () =>
+      window.removeEventListener(
+        "availability:prefill",
+        handler as EventListener
+      );
   }, [methods]);
 
   // Iconos para cada paso
-  const stepIcons = [User, Calendar, MapPin, CreditCard, Sparkles];
+  const stepIcons = [User, Calendar, MapPin, CreditCard, Send];
 
   const sendBooking = useMutation({
     mutationFn: async (payload: BookingData) => {
@@ -172,7 +257,9 @@ export default function BookingFlow() {
         clientPhone: payload.phone,
         services: servicesRecord,
         servicePrice: 0,
-        appointmentDate: payload.date ? new Date(payload.date).toISOString() : "",
+        appointmentDate: payload.date
+          ? new Date(payload.date).toISOString()
+          : "",
         appointmentTimeRange: payload.timeSlot,
         locationType: payload.locationType,
         district: payload.district || undefined,
@@ -210,7 +297,9 @@ export default function BookingFlow() {
       const names = selected
         .filter((s: { id: string; quantity: number }) => s.quantity > 0)
         .map((s: { id: string }) => {
-          const svc = allServices.find((x: { id: string; name: string }) => x.id === s.id);
+          const svc = allServices.find(
+            (x: { id: string; name: string }) => x.id === s.id
+          );
           return svc?.name;
         })
         .filter(Boolean) as string[];
@@ -225,7 +314,9 @@ export default function BookingFlow() {
 
       try {
         const url = new URL(window.location.href);
-        ["date", "timeSlot", "locationType", "services"].forEach((k) => url.searchParams.delete(k));
+        ["date", "timeSlot", "locationType", "services"].forEach((k) =>
+          url.searchParams.delete(k)
+        );
         window.history.replaceState({}, "", url.toString());
         window.dispatchEvent(new CustomEvent("availability:reset"));
       } catch {}
@@ -246,168 +337,193 @@ export default function BookingFlow() {
     };
     const fields = stepFields[currentStep] || [];
     const valid = await methods.trigger(fields);
-    if (valid) setCurrentStep((s) => Math.min(total, s + 1));
+    if (valid) {
+      const nextStep = getNextVisibleStep(currentStep);
+      setCurrentStep(nextStep);
+    }
   };
 
-  const handlePrev = () => setCurrentStep((s) => Math.max(1, s - 1));
+  const handlePrev = () => {
+    const prevStep = getPrevVisibleStep(currentStep);
+    setCurrentStep(prevStep);
+  };
+
+  // Si no es visible, no renderizar nada
+  if (!isVisible) {
+    return null;
+  }
 
   return (
-    <FormProvider {...methods}>
-      <section id="booking-flow" className="py-8 sm:py-12 overflow-hidden">
-        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
-          {/* Encabezado */}
-          <motion.div
-            className="text-center mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Typography
-              as="h1"
-              variant="h1"
-              className="text-[color:var(--color-heading)] font-serif text-xl sm:text-3xl mb-2"
-            >
-              {t("title")}
-            </Typography>
-            <Typography
-              as="p"
-              variant="p"
-              className="text-[color:var(--color-body)] max-w-md mx-auto"
-            >
-              {t("subtitle")}
-            </Typography>
-          </motion.div>
-
-          {/* Indicador de pasos */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            <StepIndicator currentStep={currentStep} totalSteps={total} />
-          </motion.div>
-
-          {/* Contenido principal */}
-          <div className="mt-6">
-            <div className="bg-[color:var(--color-surface)]">
-              {/* Título del paso actual */}
-              <motion.div
-                className="flex items-center gap-3 mb-6 pb-4 border-b border-[color:var(--color-border)]/20"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/20 flex items-center justify-center">
-                  {React.createElement(stepIcons[currentStep - 1], {
-                    className: "w-5 h-5 text-[color:var(--color-primary)]",
-                  })}
+    <div className="mt-8 sm:mt-12 p-4 sm:p-6 rounded-2xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-sm">
+      <FormProvider {...methods}>
+        <section id="booking-flow" className="py-8 sm:py-12 w-full max-w-full">
+          <div className="container mx-auto px-4 sm:px-6 max-w-6xl w-full">
+            {/* Badge de paso 3 */}
+            <div className="flex justify-center mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[color:var(--color-primary)]/10 border border-[color:var(--color-primary)]/30">
+                <div className="w-6 h-6 rounded-full bg-[color:var(--color-primary)] text-white flex items-center justify-center text-xs font-bold">
+                  3
                 </div>
-                <div>
-                  <Typography
-                    as="h2"
-                    variant="h2"
-                    className="text-[color:var(--color-heading)] font-medium text-lg"
-                  >
-                    {t(`step${currentStep}Title`)}
-                  </Typography>
-                  <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-sm">
-                    Paso {currentStep} de {total}
-                  </Typography>
-                </div>
-              </motion.div>
-
-              {/* Contenido del paso */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentStep}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
+                <Typography
+                  as="span"
+                  variant="small"
+                  className="text-[color:var(--color-heading)] font-medium"
                 >
-                  {currentStep === 1 && <Step1 />}
-                  {currentStep === 2 && <Step2 />}
-                  {currentStep === 3 && <Step3 />}
-                  {currentStep === 4 && <Step4 />}
-                  {currentStep === 5 && <Step5 />}
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Resumen en el paso 5 */}
-              {currentStep === 5 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.5 }}
-                  className="mt-8 pt-6 border-t border-[color:var(--color-border)]/20"
-                >
-                  <Typography
-                    as="h3"
-                    variant="h3"
-                    className="text-[color:var(--color-heading)] font-medium mb-4"
-                  >
-                    {t("summaryTitle")}
-                  </Typography>
-                  <BookingSummary />
-                </motion.div>
-              )}
-
-              {/* Botones de navegación */}
-              <motion.div
-                className="mt-6 flex flex-col sm:flex-row sm:justify-end items-center gap-3"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
+                  Paso 3: Completa tu reserva
+                </Typography>
+              </div>
+            </div>
+            {/* Encabezado */}
+            <div className="text-center mb-8">
+              <Typography
+                as="h1"
+                variant="h1"
+                className="text-[color:var(--color-heading)] font-serif text-xl sm:text-3xl mb-2 break-words"
               >
-                {currentStep > 1 && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="lg"
-                    onClick={handlePrev}
-                    className="w-full sm:w-auto"
-                  >
-                    {t("prevButton")}
-                  </Button>
+                {t("title")}
+              </Typography>
+              <Typography
+                as="p"
+                variant="p"
+                className="text-[color:var(--color-body)] max-w-md mx-auto break-words px-2"
+              >
+                {t("subtitle")}
+              </Typography>
+            </div>
+
+            {/* Indicador de pasos */}
+            <div>
+              <StepIndicator
+                currentStep={currentStep}
+                totalSteps={total}
+                visibleSteps={visibleSteps}
+              />
+            </div>
+
+            {/* Badge de paso 3 */}
+            <div className="flex justify-center my-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[color:var(--color-primary)]/10 border border-[color:var(--color-primary)]/30">
+                <div className="w-6 h-6 rounded-full bg-[color:var(--color-primary)] text-white flex items-center justify-center text-xs font-bold">
+                  3
+                </div>
+                <Typography
+                  as="span"
+                  variant="small"
+                  className="text-[color:var(--color-heading)] font-medium"
+                >
+                  Paso 3: Completa tu reserva
+                </Typography>
+              </div>
+            </div>
+
+            {/* Contenido principal */}
+            <div className="mt-6 w-full">
+              <div className="bg-[color:var(--color-surface)] w-full">
+                {/* Título del paso actual */}
+                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[color:var(--color-border)]/20">
+                  <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/20 flex items-center justify-center">
+                    {React.createElement(stepIcons[currentStep - 1], {
+                      className: "w-5 h-5 text-[color:var(--color-primary)]",
+                    })}
+                  </div>
+                  <div>
+                    <Typography
+                      as="h2"
+                      variant="h2"
+                      className="text-[color:var(--color-heading)] font-medium text-lg"
+                    >
+                      {t(`step${currentStep}Title`)}
+                    </Typography>
+                    <Typography
+                      as="p"
+                      variant="p"
+                      className="text-[color:var(--color-body)] text-sm"
+                    >
+                      Paso {visibleSteps.indexOf(currentStep) + 1} de{" "}
+                      {visibleSteps.length}
+                    </Typography>
+                  </div>
+                </div>
+
+                {/* Contenido del paso */}
+                <div className="w-full">
+                  {currentStep === 1 && shouldShowStep(1) && <Step1 />}
+                  {currentStep === 2 && shouldShowStep(2) && <Step2 />}
+                  {currentStep === 3 && shouldShowStep(3) && <Step3 />}
+                  {currentStep === 4 && shouldShowStep(4) && <Step4 />}
+                  {currentStep === 5 && shouldShowStep(5) && <Step5 />}
+                </div>
+
+                {/* Resumen en el paso 5 */}
+                {currentStep === 5 && (
+                  <div className="mt-8 pt-6 border-t border-[color:var(--color-border)]/20">
+                    <Typography
+                      as="h3"
+                      variant="h3"
+                      className="text-[color:var(--color-heading)] font-medium mb-4"
+                    >
+                      {t("summaryTitle")}
+                    </Typography>
+                    <BookingSummary />
+                  </div>
                 )}
-                {currentStep < total ? (
-                  <Button
-                    type="button"
-                    variant="primary"
-                    size="lg"
-                    onClick={handleNext}
-                    className="w-full sm:w-auto"
-                  >
-                    {t("nextButton")}
-                  </Button>
-                ) : (
-                  <Button
-                    type="button"
-                    variant="primary"
-                    size="lg"
-                    disabled={!canSubmit || sendBooking.isPending}
-                    onClick={methods.handleSubmit((data) => sendBooking.mutate(data))}
-                    aria-busy={sendBooking.isPending}
-                    className="w-full sm:w-auto min-h-[52px]"
-                  >
-                    <span className="inline-flex items-center gap-2">
-                      <Send className="w-5 h-5" />
-                      {sendBooking.isPending ? t("submitting") : t("submitButton")}
-                    </span>
-                  </Button>
-                )}
-              </motion.div>
+
+                {/* Botones de navegación */}
+                <div className="mt-6 flex flex-col sm:flex-row sm:justify-end items-center gap-3 w-full">
+                  {currentStep > 1 && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="lg"
+                      onClick={handlePrev}
+                      className="w-full sm:w-auto"
+                    >
+                      {t("prevButton")}
+                    </Button>
+                  )}
+                  {currentStep < total ? (
+                    <Button
+                      type="button"
+                      variant="primary"
+                      size="lg"
+                      onClick={handleNext}
+                      className="w-full sm:w-auto"
+                    >
+                      {t("nextButton")}
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="primary"
+                      size="lg"
+                      disabled={!canSubmit || sendBooking.isPending}
+                      onClick={methods.handleSubmit((data) =>
+                        sendBooking.mutate(data)
+                      )}
+                      aria-busy={sendBooking.isPending}
+                      className="w-full sm:w-auto min-h-[52px]"
+                    >
+                      <span className="inline-flex items-center gap-2">
+                        <Send className="w-5 h-5" />
+                        {sendBooking.isPending
+                          ? t("submitting")
+                          : t("submitButton")}
+                      </span>
+                    </Button>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-      <SuccessModal
-        open={showSuccess}
-        onClose={() => setShowSuccess(false)}
-        clientName={successClientName}
-        pricing={successPricing ?? undefined}
-        serviceNames={successServiceNames}
-      />
-    </FormProvider>
+        </section>
+        <SuccessModal
+          open={showSuccess}
+          onClose={() => setShowSuccess(false)}
+          clientName={successClientName}
+          pricing={successPricing ?? undefined}
+          serviceNames={successServiceNames}
+        />
+      </FormProvider>
+    </div>
   );
 }

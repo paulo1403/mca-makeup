@@ -30,7 +30,7 @@ export default {
       },
       fontFamily: {
         sans: [
-          "var(--font-plusjakarta)",
+          "var(--font-montserrat)",
           "system-ui",
           "-apple-system",
           "Segoe UI",
@@ -38,9 +38,9 @@ export default {
           "Helvetica Neue",
           "Arial",
         ],
-        "font-serif": ["var(--font-plusjakarta)", "serif"],
-        allura: ["var(--font-allura)", "cursive"],
-        inter: ["var(--font-plusjakarta)", "ui-sans-serif", "system-ui"],
+        serif: ["var(--font-playfair)", "Georgia", "serif"],
+        playfair: ["var(--font-playfair)", "Georgia", "serif"],
+        montserrat: ["var(--font-montserrat)", "system-ui", "sans-serif"],
       },
     },
   },

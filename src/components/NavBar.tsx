@@ -37,6 +37,13 @@ const NavBar = () => {
 
   const handleNavClick = (href: string) => {
     setIsMenuOpen(false);
+
+    // Si no estamos en la página principal, navegar primero
+    if (pathname !== "/") {
+      window.location.href = `/${href}`;
+      return;
+    }
+
     setTimeout(() => {
       const element = document.querySelector(href);
       if (element) {
@@ -47,7 +54,8 @@ const NavBar = () => {
         // Margen más generoso en móviles para evitar superposición
         const extraMargin = isMobile ? 60 : 30;
 
-        const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+        const elementPosition =
+          element.getBoundingClientRect().top + window.scrollY;
         const offsetPosition = elementPosition - headerHeight - extraMargin;
 
         window.scrollTo({
@@ -78,16 +86,6 @@ const NavBar = () => {
               <Typography variant="p">Servicios</Typography>
             </Link>
             <Link
-              href="/#portafolio"
-              className="text-[color:var(--color-muted)] hover:text-[color:var(--color-primary)] transition-colors"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick("#portafolio");
-              }}
-            >
-              <Typography variant="p">Portafolio</Typography>
-            </Link>
-            <Link
               href="/#testimonials"
               className="text-[color:var(--color-muted)] hover:text-[color:var(--color-primary)] transition-colors"
               onClick={(e) => {
@@ -108,28 +106,17 @@ const NavBar = () => {
               <Typography variant="p">Nosotros</Typography>
             </Link>
             <Link
-              href="/#contacto"
+              href="/booking"
               className="text-[color:var(--color-muted)] hover:text-[color:var(--color-primary)] transition-colors"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick("#contacto");
-              }}
             >
-              <Typography variant="p">Contacto</Typography>
+              <Typography variant="p">Reservar</Typography>
             </Link>
           </div>
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick("#contacto");
-              }}
-            >
+            <Button variant="primary" size="sm" as="a" href="/booking">
               <Typography variant="p" className="text-white">
                 Reservar Cita
               </Typography>

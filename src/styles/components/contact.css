@@ -16,7 +16,8 @@
     color-mix(in srgb, var(--color-surface) 50%, transparent)
   );
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 
 .contact-container {
@@ -25,6 +26,7 @@
   padding: 4rem 1.5rem;
   position: relative;
   z-index: 10;
+  width: 100%;
 }
 
 @media (min-width: 640px) {
@@ -78,6 +80,10 @@
   align-items: start;
 }
 
+.contact-layout > * {
+  min-width: 0;
+}
+
 @media (min-width: 1024px) {
   .contact-layout {
     grid-template-columns: 1fr 2fr;
@@ -101,7 +107,8 @@
 
 .contact-info-card:hover {
   border-color: var(--contact-accent);
-  box-shadow: 0 8px 25px color-mix(in srgb, var(--contact-accent) 15%, transparent);
+  box-shadow: 0 8px 25px
+    color-mix(in srgb, var(--contact-accent) 15%, transparent);
 }
 
 .contact-info-title {
@@ -162,6 +169,8 @@
   padding: 0;
   overflow: visible;
   box-shadow: none;
+  width: 100%;
+  max-width: 100%;
 }
 
 .contact-quick-actions {
