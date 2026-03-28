@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import type { Appointment } from "@/hooks/useAppointments";
 
 const STATUS_LABELS: Record<Appointment["status"], string> = {
@@ -16,8 +17,9 @@ export default function StatusBadge({
 }) {
   const key = status.toLowerCase();
   return (
-    <span
-      className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${className}`}
+    <Badge
+      variant="outline"
+      className={className}
       style={{
         backgroundColor: `var(--status-${key}-bg)`,
         color: `var(--status-${key}-text)`,
@@ -25,6 +27,6 @@ export default function StatusBadge({
       }}
     >
       {STATUS_LABELS[status]}
-    </span>
+    </Badge>
   );
 }

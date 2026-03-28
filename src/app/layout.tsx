@@ -3,6 +3,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Geist, Montserrat, Playfair_Display } from "next/font/google";
 import { Toaster } from "react-hot-toast";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import QueryProvider from "@/providers/QueryProvider";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
@@ -212,7 +213,9 @@ export default function RootLayout({
       </head>
       <body className="antialiased overflow-x-hidden max-w-full">
         <NavBar />
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <TooltipProvider>{children}</TooltipProvider>
+        </QueryProvider>
         <Toaster
           position="top-right"
           toastOptions={{

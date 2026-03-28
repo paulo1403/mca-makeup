@@ -7,12 +7,12 @@ import AppointmentTable from "@/components/appointments/AppointmentTable";
 import LoadingSpinner from "@/components/appointments/LoadingSpinner";
 import ManualAppointmentModal from "@/components/appointments/ManualAppointmentModal";
 import Pagination from "@/components/appointments/Pagination";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useAppointmentsPage } from "@/hooks/useAppointmentsPage";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 
 function AppointmentsContent() {
   const [showManualModal, setShowManualModal] = useState(false);
-  const [showStats, setShowStats] = useState(false);
   const { data: dashboardStats } = useDashboardStats();
 
   const {
@@ -160,46 +160,41 @@ function AppointmentsContent() {
           </div>
 
           {/* Collapsible Stats */}
-          <button
-            type="button"
-            onClick={() => setShowStats(!showStats)}
-            className="w-full flex items-center justify-between px-2.5 py-1.5 text-xs text-[color:var(--color-muted)] hover:text-heading transition-colors"
-          >
-            <span className="font-medium">Ver estadísticas</span>
-            <ChevronDown
-              className={`w-4 h-4 transition-transform ${showStats ? "rotate-180" : ""}`}
-            />
-          </button>
-
-          {showStats && (
-            <div className="mt-3 pt-3 border-t border-[color:var(--color-border)] space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-[color:var(--color-muted)]">Total citas:</span>
-                <span className="font-semibold text-heading">{pagination?.total || 0}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[color:var(--color-muted)]">Ingresos este mes:</span>
-                <span className="font-semibold text-[color:var(--color-success)]">
-                  {currencyFormatter.format(monthlyRevenue)}
-                </span>
-              </div>
-              {topRevenueMonth && (
+          <Collapsible>
+            <CollapsibleTrigger className="w-full flex items-center justify-between px-2.5 py-1.5 text-xs text-[color:var(--color-muted)] hover:text-heading transition-colors group">
+              <span className="font-medium">Ver estadísticas</span>
+              <ChevronDown className="w-4 h-4 transition-transform group-data-[panel-open]:rotate-180" />
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <div className="mt-3 pt-3 border-t border-[color:var(--color-border)] space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-[color:var(--color-muted)]">Mes con más ingresos:</span>
-                  <span className="font-semibold text-heading capitalize">
-                    {topRevenueMonth.monthLabel} (
-                    {currencyFormatter.format(topRevenueMonth.income || 0)})
+                  <span className="text-[color:var(--color-muted)]">Total citas:</span>
+                  <span className="font-semibold text-heading">{pagination?.total || 0}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[color:var(--color-muted)]">Ingresos este mes:</span>
+                  <span className="font-semibold text-[color:var(--color-success)]">
+                    {currencyFormatter.format(monthlyRevenue)}
                   </span>
                 </div>
-              )}
-              {appointments.length > 0 && (
-                <div className="flex items-center space-x-2 pt-2 border-t border-[color:var(--color-border)]">
-                  <div className="w-2 h-2 bg-[color:var(--color-success)] rounded-full" />
-                  <span className="text-[color:var(--color-muted)]">Datos en tiempo real</span>
-                </div>
-              )}
-            </div>
-          )}
+                {topRevenueMonth && (
+                  <div className="flex justify-between">
+                    <span className="text-[color:var(--color-muted)]">Mes con más ingresos:</span>
+                    <span className="font-semibold text-heading capitalize">
+                      {topRevenueMonth.monthLabel} (
+                      {currencyFormatter.format(topRevenueMonth.income || 0)})
+                    </span>
+                  </div>
+                )}
+                {appointments.length > 0 && (
+                  <div className="flex items-center space-x-2 pt-2 border-t border-[color:var(--color-border)]">
+                    <div className="w-2 h-2 bg-[color:var(--color-success)] rounded-full" />
+                    <span className="text-[color:var(--color-muted)]">Datos en tiempo real</span>
+                  </div>
+                )}
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
         </div>
       </div>
 

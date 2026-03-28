@@ -13,6 +13,16 @@ import {
   XCircle,
 } from "lucide-react";
 import StatusBadge from "@/components/appointments/StatusBadge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   type Appointment,
   useDeleteAppointment,
@@ -32,6 +42,38 @@ interface AppointmentTableProps {
   appointments: Appointment[];
   highlightedId?: string;
   onViewDetails: (appointment: Appointment) => void;
+}
+
+// Reusable icon button with tooltip
+function ActionButton({
+  tooltip,
+  onClick,
+  disabled,
+  children,
+}: {
+  tooltip: string;
+  onClick: () => void;
+  disabled?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <Tooltip>
+      <TooltipTrigger
+        render={
+          <button
+            type="button"
+            aria-label={tooltip}
+            disabled={disabled}
+            onClick={onClick}
+            className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-visible:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          />
+        }
+      >
+        {children}
+      </TooltipTrigger>
+      <TooltipContent>{tooltip}</TooltipContent>
+    </Tooltip>
+  );
 }
 
 // Mobile Card Component
@@ -242,41 +284,57 @@ function AppointmentRow({
     .map((s) => s.displayText)
     .join(", ");
 
+  const initials = appointment.clientName
+    .split(" ")
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? "")
+    .join("");
+
   return (
-    <tr
+    <TableRow
       id={`appointment-${appointment.id}`}
-      className={`${isHighlighted ? "bg-[color:var(--color-primary)]/12 ring-2 ring-[color:var(--color-primary)]/40" : ""} hover:bg-[color:var(--color-surface-elevated)]/40 transition-colors`}
+      className={
+        isHighlighted
+          ? "bg-[color:var(--color-primary)]/12 ring-2 ring-inset ring-[color:var(--color-primary)]/40"
+          : ""
+      }
     >
-      <td className="px-6 py-4 whitespace-nowrap">
-        <div className="flex items-center">
-          <div className="flex-shrink-0 h-10 w-10 rounded-full bg-[color:var(--color-primary)]/15 flex items-center justify-center">
-            <User className="w-5 h-5 text-[color:var(--color-primary)]" />
-          </div>
-          <div className="ml-4">
+      <TableCell className="px-6 py-4 whitespace-nowrap">
+        <div className="flex items-center gap-3">
+          <Avatar>
+            <AvatarFallback className="bg-[color:var(--color-primary)]/15 text-[color:var(--color-primary)] font-semibold text-xs">
+              {initials}
+            </AvatarFallback>
+          </Avatar>
+          <div>
             <div className="text-sm font-medium text-[color:var(--color-on-surface)]">
               {appointment.clientName}
             </div>
-            <div className="text-sm text-[color:var(--color-muted)]">{serviceLabel}</div>
+            {isHighlighted && (
+              <span className="text-[10px] font-medium text-[color:var(--color-primary)] bg-[color:var(--color-primary)]/10 px-1.5 py-0.5 rounded">
+                Destacada
+              </span>
+            )}
           </div>
         </div>
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap">
+      </TableCell>
+      <TableCell className="px-6 py-4 whitespace-nowrap">
         <div className="text-sm text-[color:var(--color-on-surface)]">{serviceLabel}</div>
         {appointment.district && (
           <div className="text-xs text-[color:var(--color-muted)] mt-1 inline-flex items-center">
             <MapPin className="w-3.5 h-3.5 mr-1" /> {appointment.district}
           </div>
         )}
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap">
+      </TableCell>
+      <TableCell className="px-6 py-4 whitespace-nowrap">
         <div className="text-sm text-[color:var(--color-on-surface)]">
           {formatDate(appointment.appointmentDate)}
         </div>
         <div className="text-xs text-[color:var(--color-muted)] mt-1">
           {formatTime(appointment.appointmentTime)}
         </div>
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap">
+      </TableCell>
+      <TableCell className="px-6 py-4 whitespace-nowrap">
         {priceInfo.totalPrice > 0 ? (
           <div>
             <div className="text-sm font-semibold text-[color:var(--color-primary)]">
@@ -303,9 +361,9 @@ function AppointmentRow({
         ) : (
           <span className="text-sm text-[color:var(--color-muted)]">—</span>
         )}
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap">
-        <div className="flex items-center space-x-2">
+      </TableCell>
+      <TableCell className="px-6 py-4 whitespace-nowrap">
+        <div className="flex items-center gap-2">
           <StatusBadge status={appointment.status} />
           {appointment.status === "COMPLETED" && appointment.review && (
             <span className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-[color:var(--color-accent-secondary)]/15 text-[color:var(--color-accent-secondary)]">
@@ -313,169 +371,87 @@ function AppointmentRow({
             </span>
           )}
         </div>
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-        <div className="flex flex-wrap gap-2">
+      </TableCell>
+      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+        <div className="flex flex-wrap gap-1.5">
           {appointment.status === "PENDING" && (
             <>
-              <div className="relative group">
-                <button
-                  aria-label="Confirmar"
-                  onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
-                  disabled={isUpdating}
-                  type="button"
-                  className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring disabled:opacity-50"
-                >
-                  <CheckCircle className="w-5 h-5 text-[color:var(--color-success)]" />
-                  <span className="sr-only">Confirmar</span>
-                </button>
-                <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-xs bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] shadow-sm opacity-0 group-hover:opacity-100">
-                  Confirmar
-                </div>
-              </div>
-              <div className="relative group">
-                <button
-                  aria-label="Cancelar"
-                  onClick={() => onStatusUpdate(appointment.id, "CANCELLED")}
-                  disabled={isUpdating}
-                  type="button"
-                  className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring disabled:opacity-50"
-                >
-                  <XCircle className="w-5 h-5 text-[color:var(--color-danger)]" />
-                  <span className="sr-only">Cancelar</span>
-                </button>
-                <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-xs bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] shadow-sm opacity-0 group-hover:opacity-100">
-                  Cancelar
-                </div>
-              </div>
-            </>
-          )}
-
-          {appointment.status === "CONFIRMED" && (
-            <>
-              <div className="relative group">
-                <button
-                  aria-label="Marcar completada"
-                  onClick={() => onStatusUpdate(appointment.id, "COMPLETED")}
-                  disabled={isUpdating}
-                  type="button"
-                  className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring disabled:opacity-50"
-                >
-                  <CheckCircle className="w-5 h-5 text-[color:var(--color-success)]" />
-                  <span className="sr-only">Marcar completada</span>
-                </button>
-                <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-xs bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] shadow-sm opacity-0 group-hover:opacity-100">
-                  Completada
-                </div>
-              </div>
-              <div className="relative group">
-                <button
-                  aria-label="Copiar link de reseña"
-                  onClick={() =>
-                    appointment.review?.reviewToken &&
-                    copyReviewLink(appointment.review.reviewToken)
-                  }
-                  type="button"
-                  className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring"
-                >
-                  <Link className="w-5 h-5 text-[color:var(--color-accent-secondary)]" />
-                  <span className="sr-only">Copiar link de reseña</span>
-                </button>
-                <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-xs bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] shadow-sm opacity-0 group-hover:opacity-100">
-                  Review link
-                </div>
-              </div>
-            </>
-          )}
-
-          {appointment.status === "COMPLETED" && (
-            <>
-              <div className="relative group">
-                <button
-                  aria-label="Reabrir"
-                  onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
-                  disabled={isUpdating}
-                  type="button"
-                  className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring disabled:opacity-50"
-                >
-                  <RotateCcw className="w-5 h-5 text-[color:var(--color-info)]" />
-                  <span className="sr-only">Reabrir</span>
-                </button>
-                <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-xs bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] shadow-sm opacity-0 group-hover:opacity-100">
-                  Reabrir
-                </div>
-              </div>
-              <div className="relative group">
-                <button
-                  aria-label="Copiar link de reseña"
-                  onClick={() =>
-                    appointment.review?.reviewToken &&
-                    copyReviewLink(appointment.review.reviewToken)
-                  }
-                  type="button"
-                  className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring"
-                >
-                  <Link className="w-5 h-5 text-[color:var(--color-accent-secondary)]" />
-                  <span className="sr-only">Copiar link de reseña</span>
-                </button>
-                <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-xs bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] shadow-sm opacity-0 group-hover:opacity-100">
-                  Review link
-                </div>
-              </div>
-            </>
-          )}
-
-          {appointment.status === "CANCELLED" && (
-            <div className="relative group">
-              <button
-                aria-label="Reabrir"
+              <ActionButton
+                tooltip="Confirmar"
                 onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
                 disabled={isUpdating}
-                type="button"
-                className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring disabled:opacity-50"
               >
-                <RotateCcw className="w-5 h-5 text-[color:var(--color-info)]" />
-                <span className="sr-only">Reabrir</span>
-              </button>
-              <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-xs bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] shadow-sm opacity-0 group-hover:opacity-100">
-                Reabrir
-              </div>
-            </div>
+                <CheckCircle className="w-4 h-4 text-[color:var(--color-success)]" />
+              </ActionButton>
+              <ActionButton
+                tooltip="Cancelar"
+                onClick={() => onStatusUpdate(appointment.id, "CANCELLED")}
+                disabled={isUpdating}
+              >
+                <XCircle className="w-4 h-4 text-[color:var(--color-danger)]" />
+              </ActionButton>
+            </>
           )}
-
-          <div className="relative group">
-            <button
-              aria-label="Ver detalles"
-              onClick={() => onViewDetails(appointment)}
-              type="button"
-              className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring"
+          {appointment.status === "CONFIRMED" && (
+            <>
+              <ActionButton
+                tooltip="Marcar completada"
+                onClick={() => onStatusUpdate(appointment.id, "COMPLETED")}
+                disabled={isUpdating}
+              >
+                <CheckCircle className="w-4 h-4 text-[color:var(--color-success)]" />
+              </ActionButton>
+              <ActionButton
+                tooltip="Copiar link de reseña"
+                onClick={() =>
+                  appointment.review?.reviewToken && copyReviewLink(appointment.review.reviewToken)
+                }
+              >
+                <Link className="w-4 h-4 text-[color:var(--color-accent-secondary)]" />
+              </ActionButton>
+            </>
+          )}
+          {appointment.status === "COMPLETED" && (
+            <>
+              <ActionButton
+                tooltip="Reabrir"
+                onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
+                disabled={isUpdating}
+              >
+                <RotateCcw className="w-4 h-4 text-[color:var(--color-info)]" />
+              </ActionButton>
+              <ActionButton
+                tooltip="Copiar link de reseña"
+                onClick={() =>
+                  appointment.review?.reviewToken && copyReviewLink(appointment.review.reviewToken)
+                }
+              >
+                <Link className="w-4 h-4 text-[color:var(--color-accent-secondary)]" />
+              </ActionButton>
+            </>
+          )}
+          {appointment.status === "CANCELLED" && (
+            <ActionButton
+              tooltip="Reabrir"
+              onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
+              disabled={isUpdating}
             >
-              <Eye className="w-5 h-5 text-[color:var(--color-accent-secondary)]" />
-              <span className="sr-only">Ver detalles</span>
-            </button>
-            <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-xs bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] shadow-sm opacity-0 group-hover:opacity-100">
-              Ver detalles
-            </div>
-          </div>
-
-          <div className="relative group">
-            <button
-              aria-label="Eliminar"
-              onClick={() => onDelete(appointment.id)}
-              disabled={isDeleting}
-              type="button"
-              className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-ring disabled:opacity-50"
-            >
-              <Trash2 className="w-5 h-5 text-[color:var(--color-danger)]" />
-              <span className="sr-only">Eliminar</span>
-            </button>
-            <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-xs bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] shadow-sm opacity-0 group-hover:opacity-100">
-              Eliminar
-            </div>
-          </div>
+              <RotateCcw className="w-4 h-4 text-[color:var(--color-info)]" />
+            </ActionButton>
+          )}
+          <ActionButton tooltip="Ver detalles" onClick={() => onViewDetails(appointment)}>
+            <Eye className="w-4 h-4 text-[color:var(--color-accent-secondary)]" />
+          </ActionButton>
+          <ActionButton
+            tooltip="Eliminar"
+            onClick={() => onDelete(appointment.id)}
+            disabled={isDeleting}
+          >
+            <Trash2 className="w-4 h-4 text-[color:var(--color-danger)]" />
+          </ActionButton>
         </div>
-      </td>
-    </tr>
+      </TableCell>
+    </TableRow>
   );
 }
 
@@ -524,31 +500,31 @@ export default function AppointmentTable({
 
   // Desktop View
   return (
-    <div className="overflow-x-auto bg-[color:var(--color-surface)]">
-      <table className="min-w-full divide-y divide-[color:var(--color-border)]">
-        <thead className="bg-[color:var(--color-surface-elevated)]">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
+    <div className="rounded-lg border border-[color:var(--color-border)] overflow-hidden bg-[color:var(--color-surface)]">
+      <Table>
+        <TableHeader className="bg-[color:var(--color-surface-elevated)]">
+          <TableRow className="border-b border-[color:var(--color-border)] hover:bg-transparent">
+            <TableHead className="px-6 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs">
               Cliente
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
+            </TableHead>
+            <TableHead className="px-6 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs">
               Servicio
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
+            </TableHead>
+            <TableHead className="px-6 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs">
               Fecha & Hora
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
+            </TableHead>
+            <TableHead className="px-6 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs">
               Precio
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
+            </TableHead>
+            <TableHead className="px-6 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs">
               Estado
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-[color:var(--color-muted)] uppercase tracking-wider">
+            </TableHead>
+            <TableHead className="px-6 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs">
               Acciones
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-[color:var(--color-surface)] divide-y divide-[color:var(--color-border)]">
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {appointments.map((appointment) => (
             <AppointmentRow
               key={appointment.id}
@@ -561,8 +537,8 @@ export default function AppointmentTable({
               isDeleting={deleteMutation.isPending}
             />
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   );
 }
