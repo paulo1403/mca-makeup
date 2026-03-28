@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUp, Instagram, Mail, MapPin } from "lucide-react";
+import { ArrowUp, Camera, Mail, MapPin } from "lucide-react";
 import Link from "next/link";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
@@ -57,7 +57,7 @@ export default function Footer() {
                 aria-label="Instagram"
                 className="footer-social-link"
               >
-                <Instagram className="w-5 h-5" />
+                <Camera className="w-5 h-5" />
               </a>
 
               <a

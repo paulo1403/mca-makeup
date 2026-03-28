@@ -1,6 +1,6 @@
 "use client";
 
-import { Award, Instagram, MapPin, Phone } from "lucide-react";
+import { Award, Camera, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
 import Typography from "./ui/Typography";
 
@@ -155,7 +155,7 @@ export default function AboutSection() {
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 px-4 py-3 rounded-[12px] bg-[color:var(--color-surface)]/40 hover:bg-[color:var(--color-surface)]/60 transition-colors"
           >
-            <Instagram className="w-4 h-4 text-[color:var(--color-primary)]" />
+              <Camera className="w-4 h-4 text-[color:var(--color-primary)]" />
             <Typography
               as="span"
               variant="small"

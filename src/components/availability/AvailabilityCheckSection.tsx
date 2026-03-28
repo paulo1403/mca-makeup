@@ -216,7 +216,7 @@ export default function AvailabilityCheckSection() {
             </Typography>
             <DatePicker
               selected={date}
-              onChange={(d) => setDate(d)}
+              onChange={(d: Date | null) => setDate(d)}
               inline
               locale={es}
               formatWeekDay={(nameOfDay) => {

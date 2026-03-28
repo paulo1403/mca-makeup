@@ -78,7 +78,7 @@ export default function Step4_DateTime() {
             render={({ field }) => (
               <DatePicker
                 selected={field.value}
-                onChange={(d) => field.onChange(d)}
+                onChange={(d: Date | null) => field.onChange(d)}
                 inline
                 locale={es}
                 formatWeekDay={(nameOfDay) => {
