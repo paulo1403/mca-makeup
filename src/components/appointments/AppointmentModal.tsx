@@ -317,7 +317,7 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                     <button
                       type="button"
                       onClick={(event) =>
-                        copyReviewLink(appointment.review?.reviewToken, event.currentTarget)
+                        copyReviewLink(appointment.review?.reviewToken ?? "", event.currentTarget)
                       }
                       className="px-2 py-1 rounded border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] hover:bg-[color:var(--color-surface)] transition-colors"
                     >
