@@ -172,7 +172,7 @@ export default function SuccessModal({
               </div>
 
               <ol className="space-y-2 text-sm text-[color:var(--color-body)] list-decimal list-inside">
-                <li>Enviar la captura del adelanto al WhatsApp (989164990)</li>
+                <li>Enviar la captura del adelanto al WhatsApp (999209880)</li>
                 <li>Espera la confirmación de tu reserva</li>
                 <li>El restante lo cancelas el día de la cita</li>
               </ol>

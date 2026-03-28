@@ -2,10 +2,13 @@ import QueryProvider from "@/providers/QueryProvider";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
-import { Playfair_Display, Montserrat } from "next/font/google";
+import { Playfair_Display, Montserrat, Geist } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -192,7 +195,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="es" className={`${playfair.variable} ${montserrat.variable}`}>
+    <html lang="es" className={cn(playfair.variable, montserrat.variable, "font-sans", geist.variable)}>
       <head>
         <script
           type="application/ld+json"

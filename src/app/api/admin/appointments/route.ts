@@ -177,6 +177,15 @@ export async function POST(request: NextRequest) {
       appointmentTime,
       additionalNotes,
       status = "PENDING",
+      duration,
+      locationType,
+      address,
+      addressReference,
+      district,
+      servicePrice,
+      transportCost,
+      nightShiftCost,
+      totalPrice,
     } = body;
 
     // Validate required fields
@@ -203,7 +212,25 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: "Invalid date format" }, { status: 400 });
     }
 
-    // Create appointment
+    const validStatuses = ["PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"];
+    const normalizedStatus = validStatuses.includes(status) ? status : "PENDING";
+
+    const normalizedServicePrice =
+      typeof servicePrice === "number" && Number.isFinite(servicePrice) ? servicePrice : null;
+    const normalizedTransportCost =
+      typeof transportCost === "number" && Number.isFinite(transportCost) ? transportCost : 0;
+    const normalizedNightShiftCost =
+      typeof nightShiftCost === "number" && Number.isFinite(nightShiftCost) ? nightShiftCost : 0;
+
+    const calculatedTotalPrice =
+      typeof totalPrice === "number" && Number.isFinite(totalPrice)
+        ? totalPrice
+        : (normalizedServicePrice || 0) + normalizedTransportCost + normalizedNightShiftCost;
+
+    const normalizedDuration =
+      typeof duration === "number" && Number.isFinite(duration) && duration > 0 ? duration : 120;
+
+    // Create appointment (supports manual/private bookings with custom pricing)
     const appointment = await prisma.appointment.create({
       data: {
         clientName,
@@ -213,7 +240,16 @@ export async function POST(request: NextRequest) {
         appointmentDate: parsedAppointmentDate,
         appointmentTime,
         additionalNotes,
-        status,
+        status: normalizedStatus,
+        duration: normalizedDuration,
+        locationType: locationType === "STUDIO" ? "STUDIO" : "HOME",
+        address: address || null,
+        addressReference: addressReference || null,
+        district: district || null,
+        servicePrice: normalizedServicePrice,
+        transportCost: normalizedTransportCost,
+        nightShiftCost: normalizedNightShiftCost,
+        totalPrice: calculatedTotalPrice,
       },
     });
 

@@ -9,6 +9,14 @@ export interface DashboardStats {
   todayAppointments: number;
   thisWeekAppointments: number;
   thisMonthAppointments: number;
+  completedRevenueTotal: number;
+  completedRevenueThisMonth: number;
+  monthlyRevenueByIncome: Array<{
+    month: string;
+    monthLabel: string;
+    income: number;
+    completedAppointments: number;
+  }>;
   totalReviews: number;
   pendingReviews: number;
   approvedReviews: number;

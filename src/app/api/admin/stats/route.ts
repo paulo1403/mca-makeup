@@ -9,6 +9,7 @@ export async function GET() {
     const weekStart = new Date(today);
     weekStart.setDate(today.getDate() - today.getDay());
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const revenueRangeStart = new Date(now.getFullYear(), now.getMonth() - 11, 1);
 
     // Get appointment counts and review stats
     const [
@@ -26,6 +27,9 @@ export async function GET() {
       rejectedReviews,
       publicReviews,
       averageRating,
+      completedRevenueTotal,
+      completedRevenueThisMonth,
+      completedAppointmentsForMonthlyRevenue,
     ] = await Promise.all([
       prisma.appointment.count(),
       prisma.appointment.count({ where: { status: "PENDING" } }),
@@ -97,7 +101,74 @@ export async function GET() {
           },
         })
         .then((result) => result._avg.rating || 0),
+      prisma.appointment
+        .aggregate({
+          where: {
+            status: "COMPLETED",
+            totalPrice: { not: null },
+          },
+          _sum: {
+            totalPrice: true,
+          },
+        })
+        .then((result) => result._sum.totalPrice || 0),
+      prisma.appointment
+        .aggregate({
+          where: {
+            status: "COMPLETED",
+            totalPrice: { not: null },
+            appointmentDate: {
+              gte: monthStart,
+            },
+          },
+          _sum: {
+            totalPrice: true,
+          },
+        })
+        .then((result) => result._sum.totalPrice || 0),
+      prisma.appointment.findMany({
+        where: {
+          status: "COMPLETED",
+          totalPrice: { not: null },
+          appointmentDate: {
+            gte: revenueRangeStart,
+          },
+        },
+        select: {
+          appointmentDate: true,
+          totalPrice: true,
+        },
+      }),
     ]);
+
+    const monthlyRevenueMap = new Map<
+      string,
+      { month: string; monthLabel: string; income: number; completedAppointments: number }
+    >();
+
+    for (const appointment of completedAppointmentsForMonthlyRevenue) {
+      const month = appointment.appointmentDate.toISOString().slice(0, 7);
+      const monthDate = new Date(`${month}-01T00:00:00.000Z`);
+      const monthLabel = monthDate.toLocaleDateString("es-PE", {
+        month: "long",
+        year: "numeric",
+      });
+
+      const current = monthlyRevenueMap.get(month) ?? {
+        month,
+        monthLabel,
+        income: 0,
+        completedAppointments: 0,
+      };
+
+      current.income += appointment.totalPrice || 0;
+      current.completedAppointments += 1;
+      monthlyRevenueMap.set(month, current);
+    }
+
+    const monthlyRevenueByIncome = Array.from(monthlyRevenueMap.values()).sort(
+      (a, b) => b.income - a.income,
+    );
 
     // Get service type distribution
     const serviceStats = await prisma.appointment.groupBy({
@@ -163,6 +234,9 @@ export async function GET() {
         todayAppointments,
         thisWeekAppointments,
         thisMonthAppointments,
+        completedRevenueTotal,
+        completedRevenueThisMonth,
+        monthlyRevenueByIncome,
         serviceStats: serviceStats.map((stat) => ({
           service: stat.serviceType,
           count: stat._count.serviceType,

@@ -4,6 +4,7 @@ import Logo from "@/components/Logo";
 import {
   AlertTriangle,
   Calendar,
+  ChartColumn,
   ChevronLeft,
   Clock,
   Eye,
@@ -28,6 +29,7 @@ interface AdminSidebarProps {
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/income", label: "Ingresos", icon: ChartColumn },
   { href: "/admin/calendar", label: "Calendario", icon: Calendar },
   { href: "/admin/appointments", label: "Citas", icon: Clock },
   { href: "/admin/services", label: "Servicios", icon: Settings },

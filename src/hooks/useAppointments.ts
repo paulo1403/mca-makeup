@@ -50,6 +50,26 @@ export interface AppointmentsResponse {
   pagination: PaginationData;
 }
 
+export interface CreateAppointmentPayload {
+  clientName: string;
+  clientEmail: string;
+  clientPhone: string;
+  serviceType: string;
+  appointmentDate: string;
+  appointmentTime: string;
+  additionalNotes?: string;
+  status?: Appointment["status"];
+  duration?: number;
+  locationType?: "HOME" | "STUDIO";
+  address?: string;
+  addressReference?: string;
+  district?: string;
+  servicePrice?: number;
+  transportCost?: number;
+  nightShiftCost?: number;
+  totalPrice?: number;
+}
+
 interface UseAppointmentsParams {
   page: number;
   filter: string;
@@ -168,6 +188,35 @@ export const useDeleteAppointment = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["appointments"] });
+    },
+  });
+};
+
+// Hook para crear cita manual/privada
+export const useCreateAppointment = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: CreateAppointmentPayload) => {
+      const response = await fetch(`/api/admin/appointments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.message || "Error creating appointment");
+      }
+
+      return result.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["appointments"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
     },
   });
 };

@@ -3,7 +3,7 @@ import { Calendar, CheckCircle, Clock, TrendingUp } from "lucide-react";
 
 interface StatCardProps {
   title: string;
-  value: number;
+  value: string;
   icon: React.ReactNode;
   color: string;
   bgColor: string;
@@ -18,7 +18,7 @@ function StatCard({ title, value, icon, color, bgColor }: StatCardProps) {
             {title}
           </p>
           <p className="text-xl sm:text-2xl font-bold text-[color:var(--color-heading)]">
-            {value.toLocaleString()}
+            {value}
           </p>
         </div>
         <div
@@ -36,42 +36,83 @@ interface StatsGridProps {
 }
 
 export default function StatsGrid({ stats }: StatsGridProps) {
+  const currencyFormatter = new Intl.NumberFormat("es-PE", {
+    style: "currency",
+    currency: "PEN",
+    maximumFractionDigits: 2,
+  });
+
   const statCards = [
     {
       title: "Total de Citas",
-      value: stats.totalAppointments,
+      value: stats.totalAppointments.toLocaleString("es-PE"),
       icon: <Calendar className="w-full h-full" />,
       color: "text-blue-600",
       bgColor: "bg-[color:var(--color-surface-elevated)]",
     },
     {
       title: "Pendientes",
-      value: stats.pendingAppointments,
+      value: stats.pendingAppointments.toLocaleString("es-PE"),
       icon: <Clock className="w-full h-full" />,
       color: "text-amber-600",
       bgColor: "bg-[color:var(--color-surface-elevated)]",
     },
     {
       title: "Confirmadas",
-      value: stats.confirmedAppointments,
+      value: stats.confirmedAppointments.toLocaleString("es-PE"),
       icon: <CheckCircle className="w-full h-full" />,
       color: "text-emerald-600",
       bgColor: "bg-[color:var(--color-surface-elevated)]",
     },
     {
-      title: "Este Mes",
-      value: stats.thisMonthAppointments,
+      title: "Ingresos del Mes",
+      value: currencyFormatter.format(stats.completedRevenueThisMonth || 0),
       icon: <TrendingUp className="w-full h-full" />,
       color: "text-[color:var(--color-primary)]",
       bgColor: "bg-[color:var(--color-surface-elevated)]",
     },
   ];
 
+  const topRevenueMonths = stats.monthlyRevenueByIncome.slice(0, 3);
+
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
-      {statCards.map((card) => (
-        <StatCard key={card.title} {...card} />
-      ))}
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+        {statCards.map((card) => (
+          <StatCard key={card.title} {...card} />
+        ))}
+      </div>
+
+      {topRevenueMonths.length > 0 && (
+        <div className="rounded-xl border border-[color:var(--color-border)]/30 bg-[color:var(--color-surface-elevated)] p-4">
+          <div className="flex items-center justify-between gap-2 mb-3">
+            <p className="text-sm font-semibold text-[color:var(--color-heading)]">
+              Meses con mayor ingreso
+            </p>
+            <span className="text-xs text-[color:var(--color-muted)]">Ultimos 12 meses</span>
+          </div>
+          <div className="space-y-2">
+            {topRevenueMonths.map((month) => (
+              <div
+                key={month.month}
+                className="flex items-center justify-between rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/20 px-3 py-2"
+              >
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-[color:var(--color-heading)] capitalize">
+                    {month.monthLabel}
+                  </p>
+                  <p className="text-xs text-[color:var(--color-muted)]">
+                    {month.completedAppointments} completadas
+                  </p>
+                </div>
+                <p className="text-sm font-semibold text-[color:var(--color-success)]">
+                  {currencyFormatter.format(month.income || 0)}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -18,12 +18,9 @@ import {
   Calendar,
   CheckCircle,
   Clock,
-  DollarSign,
   Eye,
   Link,
-  Mail,
   MapPin,
-  Phone,
   RotateCcw,
   Star,
   Trash2,
@@ -63,9 +60,6 @@ function MobileAppointmentCard({
     .map((s) => s.displayText)
     .join(", ");
   const isStudio = (appointment.location || "").toLowerCase().includes("studio");
-  const locationText = isStudio
-    ? "En estudio - Av. Bolívar 1073, Pueblo Libre"
-    : [appointment.address, appointment.district].filter(Boolean).join(", ");
 
   return (
     <div
@@ -88,20 +82,20 @@ function MobileAppointmentCard({
     >
       {/* Header */}
       <div
-        className={`relative px-4 py-3 border-b bg-[color:var(--color-surface-elevated)] rounded-t-xl ${
+        className={`px-4 py-3 border-b bg-[color:var(--color-surface-elevated)] rounded-t-xl ${
           isHighlighted
             ? "border-[color:var(--color-primary)]/40"
             : "border-transparent sm:border-[color:var(--color-border)]/40"
         }`}
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-start space-x-2 min-w-0">
             <div className="w-9 h-9 rounded-full bg-[color:var(--color-primary)]/15 ring-1 ring-[color:var(--color-border)] flex items-center justify-center">
               <User className="w-4 h-4 text-[color:var(--color-primary)]" />
             </div>
-            <div className="min-w-0 pr-20">
-              <h3 className="font-semibold text-[color:var(--color-heading)] text-sm leading-tight truncate max-w-[70vw]">
-                <span className="block truncate text-base sm:text-base font-semibold">
+            <div className="min-w-0">
+              <h3 className="font-semibold text-[color:var(--color-heading)] text-sm leading-tight">
+                <span className="block truncate text-base font-semibold max-w-[58vw] sm:max-w-[66vw]">
                   {appointment.clientName}
                 </span>
                 {isHighlighted && (
@@ -113,186 +107,117 @@ function MobileAppointmentCard({
               <div className="text-xs text-[color:var(--color-muted)] max-w-[70vw]">
                 <span
                   className="inline-block"
-                  style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}
+                  style={{ display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical", overflow: "hidden" }}
                 >
                   {servicesLabel}
                 </span>
               </div>
             </div>
           </div>
-          <div className="absolute right-3 top-3">
+          <div className="shrink-0">
             <StatusBadge status={appointment.status} className="px-2 py-1 text-[11px]" />
           </div>
         </div>
       </div>
 
       {/* Details */}
-      <div className="px-4 py-3 space-y-3">
-        <div className="grid grid-cols-2 gap-2">
-          <div className="flex items-center space-x-1.5">
-            <Calendar className="w-3.5 h-3.5 text-[color:var(--color-primary)]/70" />
-            <span className="text-xs text-[color:var(--color-muted)]">
+      <div className="px-4 py-2.5 space-y-2">
+        <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs">
+          <div className="flex items-center space-x-1">
+            <Calendar className="w-3.5 h-3.5 text-[color:var(--color-primary)]/70 flex-shrink-0" />
+            <span className="text-[color:var(--color-muted)] truncate">
               {formatDate(appointment.appointmentDate)}
             </span>
           </div>
-          <div className="flex items-center space-x-1.5">
-            <Clock className="w-3.5 h-3.5 text-[color:var(--color-primary)]/70" />
-            <span className="text-xs text-[color:var(--color-muted)]">
+          <div className="flex items-center space-x-1">
+            <Clock className="w-3.5 h-3.5 text-[color:var(--color-primary)]/70 flex-shrink-0" />
+            <span className="text-[color:var(--color-muted)] truncate">
               {formatTime(appointment.appointmentTime)}
             </span>
           </div>
-        </div>
-
-        <div className="flex items-center space-x-1.5 min-w-0">
-          <MapPin className="w-3.5 h-3.5 text-[color:var(--color-muted)]" />
-          <span className="text-xs text-[color:var(--color-muted)] truncate">
-            {locationText || (isStudio ? "En estudio - Av. Bolívar 1073, Pueblo Libre" : "Servicio a domicilio")}
-          </span>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2">
-          <div className="flex items-center space-x-1.5 min-w-0">
-            <Phone className="w-3.5 h-3.5 text-[color:var(--color-muted)]" />
-            <span className="text-xs text-[color:var(--color-muted)] truncate">
-              {appointment.clientPhone}
+          <div className="flex items-center space-x-1">
+            <MapPin className="w-3.5 h-3.5 text-[color:var(--color-primary)]/70 flex-shrink-0" />
+            <span className="text-[color:var(--color-muted)] truncate">
+              {isStudio ? "Studio" : "A domicilio"}
             </span>
           </div>
-          <div className="flex items-center space-x-1.5 min-w-0">
-            <Mail className="w-3.5 h-3.5 text-[color:var(--color-muted)]" />
-            <span className="text-xs text-[color:var(--color-muted)] truncate">
-              {appointment.clientEmail}
+          <div className="flex items-center space-x-1">
+            <span className="text-[color:var(--color-muted)]">Total</span>
+            <span className="text-[color:var(--color-primary)] font-semibold">
+              {priceInfo.totalPrice > 0 ? formatPrice(priceInfo.totalPrice) : "-"}
             </span>
           </div>
         </div>
-
-        {(priceInfo.hasTransport || priceInfo.hasNightShift || priceInfo.totalPrice > 0) && (
-          <div className="rounded-lg p-3 border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)]/40">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-1.5 text-[color:var(--color-muted)]">
-                <DollarSign className="w-3.5 h-3.5 text-[color:var(--color-primary)]" />
-                <span className="text-xs">Total</span>
-              </div>
-              <div className="text-sm font-semibold text-[color:var(--color-primary)]">
-                {formatPrice(priceInfo.totalPrice)}
-              </div>
-            </div>
-            {(priceInfo.hasTransport || priceInfo.hasNightShift) && (
-              <div className="mt-2 text-[11px] text-[color:var(--color-muted)]">
-                <span>Servicios: {formatPrice(priceInfo.servicePrice)}</span>
-                {priceInfo.hasTransport && (
-                  <span className="ml-2">· Movilidad: {formatPrice(priceInfo.transportCost)}</span>
-                )}
-                {priceInfo.hasNightShift && (
-                  <span className="ml-2">· Nocturno: {formatPrice(priceInfo.nightShiftCost)}</span>
-                )}
-              </div>
-            )}
-          </div>
-        )}
       </div>
 
       {/* Actions */}
-      <div className="px-4 py-3 border-t border-[color:var(--color-border)]/40 bg-[color:var(--color-surface-elevated)]/40 rounded-b-xl">
-        <div className="grid grid-cols-2 gap-2">
-          {appointment.status === "PENDING" && (
-            <>
-              <button
-                onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
-                disabled={isUpdating}
-                className="bg-success text-on-success hover:opacity-90 px-3 py-2 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
-                type="button"
-              >
-                <CheckCircle className="w-4 h-4 mr-1" />
-                Confirmar
-              </button>
-              <button
-                onClick={() => onStatusUpdate(appointment.id, "CANCELLED")}
-                disabled={isUpdating}
-                className="bg-danger text-on-danger hover:opacity-90 px-3 py-2 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
-                type="button"
-              >
-                <XCircle className="w-4 h-4 mr-1" />
-                Cancelar
-              </button>
-            </>
-          )}
-
-          {appointment.status === "CONFIRMED" && (
-            <>
-              <button
-                onClick={() => onStatusUpdate(appointment.id, "COMPLETED")}
-                disabled={isUpdating}
-                className="bg-success text-on-success hover:opacity-90 px-3 py-2 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
-                type="button"
-              >
-                <CheckCircle className="w-4 h-4 mr-1" />
-                Marcar Completada
-              </button>
-              <button
-                onClick={() =>
-                  appointment.review?.reviewToken && copyReviewLink(appointment.review.reviewToken)
-                }
-                type="button"
-                className="bg-[color:var(--color-accent-secondary)] text-[color:var(--color-on-accent-contrast)] hover:opacity-90 px-2.5 py-2 rounded-lg text-xs font-medium transition-colors inline-flex items-center justify-center"
-              >
-                <Link className="w-4 h-4 mr-1" />
-                Copiar Link
-              </button>
-            </>
-          )}
-
-          {appointment.status === "COMPLETED" && (
-            <>
-              <button
-                onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
-                disabled={isUpdating}
-                type="button"
-                className="bg-info text-on-info hover:opacity-90 px-3 py-2 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
-              >
-                <RotateCcw className="w-4 h-4 mr-1" />
-                Reabrir (Confirmada)
-              </button>
-              <button
-                onClick={() =>
-                  appointment.review?.reviewToken && copyReviewLink(appointment.review.reviewToken)
-                }
-                type="button"
-                className="bg-[color:var(--color-accent-secondary)] text-[color:var(--color-on-accent-contrast)] hover:opacity-90 px-2.5 py-2 rounded-lg text-xs font-medium transition-colors inline-flex items-center justify-center"
-              >
-                <Link className="w-4 h-4 mr-1" />
-                Copiar Link
-              </button>
-            </>
-          )}
-
-          {appointment.status === "CANCELLED" && (
-            <button
-              onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
-              disabled={isUpdating}
-              type="button"
-              className="bg-info text-on-info hover:opacity-90 px-3 py-2 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors"
-            >
-              Reabrir (Confirmada)
-            </button>
-          )}
-
+      <div className="px-4 py-2.5 border-t border-[color:var(--color-border)]/40 bg-[color:var(--color-surface-elevated)]/40 rounded-b-xl flex gap-2">
+        {/* Primary Action - Status based */}
+        {appointment.status === "PENDING" && (
           <button
-            onClick={() => onViewDetails(appointment)}
+            onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
+            disabled={isUpdating}
+            className="flex-1 bg-[color:var(--color-surface)] text-[color:var(--color-on-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-elevated)] px-2 py-1.5 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
             type="button"
-            className="bg-accent-secondary text-on-accent-contrast hover:opacity-90 px-3 py-2 rounded-lg text-xs font-medium transition-colors"
           >
-            Ver Detalles
+            <CheckCircle className="w-3.5 h-3.5 mr-1 text-[color:var(--color-success)]" />
+            Confirmar
           </button>
+        )}
 
+        {appointment.status === "CONFIRMED" && (
           <button
-            onClick={() => onDelete(appointment.id)}
-            disabled={isDeleting}
+            onClick={() => onStatusUpdate(appointment.id, "COMPLETED")}
+            disabled={isUpdating}
+            className="flex-1 bg-[color:var(--color-surface)] text-[color:var(--color-on-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-elevated)] px-2 py-1.5 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
             type="button"
-            className="bg-danger text-on-danger hover:opacity-90 px-3 py-2 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors flex items-center justify-center min-h-[40px]"
           >
-            Eliminar
+            <CheckCircle className="w-3.5 h-3.5 mr-1 text-[color:var(--color-success)]" />
+            Completada
           </button>
-        </div>
+        )}
+
+        {appointment.status === "COMPLETED" && (
+          <button
+            onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
+            disabled={isUpdating}
+            type="button"
+            className="flex-1 bg-[color:var(--color-surface)] text-[color:var(--color-on-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-elevated)] px-2 py-1.5 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
+          >
+            <RotateCcw className="w-3.5 h-3.5 mr-1 text-[color:var(--color-info)]" />
+            Reabrir
+          </button>
+        )}
+
+        {appointment.status === "CANCELLED" && (
+          <button
+            onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
+            disabled={isUpdating}
+            type="button"
+            className="flex-1 bg-[color:var(--color-surface)] text-[color:var(--color-on-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-elevated)] px-2 py-1.5 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
+          >
+            <RotateCcw className="w-3.5 h-3.5 mr-1 text-[color:var(--color-info)]" />
+            Reabrir
+          </button>
+        )}
+
+        {/* Secondary Actions */}
+        <button
+          onClick={() => onViewDetails(appointment)}
+          type="button"
+          className="bg-[color:var(--color-surface)] text-[color:var(--color-muted)] border border-[color:var(--color-border)] hover:text-[color:var(--color-on-surface)] hover:bg-[color:var(--color-surface-elevated)] px-2 py-1.5 rounded-lg text-xs font-medium transition-colors inline-flex items-center justify-center"
+        >
+          <Eye className="w-3.5 h-3.5" />
+        </button>
+
+        <button
+          onClick={() => onDelete(appointment.id)}
+          disabled={isDeleting}
+          type="button"
+          className="bg-[color:var(--color-surface)] text-[color:var(--color-muted)] border border-[color:var(--color-border)] hover:text-danger hover:bg-danger/5 px-2 py-1.5 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
       </div>
     </div>
   );

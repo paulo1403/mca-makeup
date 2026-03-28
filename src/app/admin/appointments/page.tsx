@@ -1,14 +1,20 @@
 "use client";
 
-import AppointmentFilters from "@/components/appointments/AppointmentFilters";
 import AppointmentModal from "@/components/appointments/AppointmentModal";
 import AppointmentTable from "@/components/appointments/AppointmentTable";
 import LoadingSpinner from "@/components/appointments/LoadingSpinner";
+import ManualAppointmentModal from "@/components/appointments/ManualAppointmentModal";
 import Pagination from "@/components/appointments/Pagination";
 import { useAppointmentsPage } from "@/hooks/useAppointmentsPage";
-import { Suspense } from "react";
+import { useDashboardStats } from "@/hooks/useDashboardStats";
+import { ChevronDown } from "lucide-react";
+import { Suspense, useState } from "react";
 
 function AppointmentsContent() {
+  const [showManualModal, setShowManualModal] = useState(false);
+  const [showStats, setShowStats] = useState(false);
+  const { data: dashboardStats } = useDashboardStats();
+
   const {
     appointments,
     pagination,
@@ -70,115 +76,154 @@ function AppointmentsContent() {
     return <LoadingSpinner message="Cargando citas..." />;
   }
 
+  const currencyFormatter = new Intl.NumberFormat("es-PE", {
+    style: "currency",
+    currency: "PEN",
+    maximumFractionDigits: 2,
+  });
+
+  const monthlyRevenue = dashboardStats?.completedRevenueThisMonth || 0;
+  const topRevenueMonth = dashboardStats?.monthlyRevenueByIncome?.[0];
+  const confirmedCount = appointments.filter((a) => a.status === "CONFIRMED").length;
+  const pendingCount = appointments.filter((a) => a.status === "PENDING").length;
+  const completedCount = appointments.filter((a) => a.status === "COMPLETED").length;
+
   return (
     <div className="min-h-screen bg-[color:var(--color-app-bg)]">
-      {/* Mobile Header */}
+      {/* Minimalist Header */}
       <div className="bg-[color:var(--color-surface)] shadow-sm border-b border-[color:var(--color-border)] sticky top-0 z-10">
-        <div className="px-4 py-4">
-          <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
-            <div>
-              <h1 className="text-xl sm:text-3xl font-bold text-heading font-playfair">
-                Gestión de Citas
-              </h1>
-              <div className="flex items-center space-x-4 mt-1">
-                <div className="text-sm text-muted">
-                  Total:{" "}
-                  <span className="font-semibold text-[color:var(--color-primary)]">
-                    {pagination?.total || 0}
-                  </span>{" "}
-                  citas
-                </div>
-                <div className="text-sm text-muted">
-                  Ingresos:{" "}
-                  <span className="font-semibold text-[color:var(--color-success)]">
-                    {new Intl.NumberFormat("es-PE", {
-                      style: "currency",
-                      currency: "PEN",
-                    }).format(
-                      appointments.reduce((total, apt) => total + (apt.totalPrice || 0), 0),
-                    )}
-                  </span>
-                </div>
-                {appointments.length > 0 && (
-                  <div className="hidden sm:flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-[color:var(--color-success)] rounded-full" />
-                    <span className="text-xs text-muted">En tiempo real</span>
-                  </div>
-                )}
+        <div className="mx-auto max-w-6xl px-4 py-3 sm:py-4">
+          <div className="flex items-center justify-between mb-3">
+            <h1 className="text-2xl sm:text-3xl font-bold text-heading font-playfair">
+              Citas
+            </h1>
+            <button
+              type="button"
+              onClick={() => setShowManualModal(true)}
+              className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg bg-[color:var(--color-primary)] text-white hover:bg-[color:var(--color-primary-hover)] transition-colors text-xs sm:text-sm font-medium whitespace-nowrap"
+            >
+              Ingreso manual
+            </button>
+          </div>
+
+          {/* KPIs - Compact */}
+          <div className="grid grid-cols-3 gap-2 mb-3">
+            <div className="rounded-lg px-2.5 py-2 border" style={{ backgroundColor: "var(--status-confirmed-bg)", borderColor: "var(--status-confirmed-border)" }}>
+              <div className="text-sm font-semibold" style={{ color: "var(--status-confirmed-text)" }}>
+                {confirmedCount}
+              </div>
+              <div className="text-xs" style={{ color: "var(--status-confirmed-text)" }}>
+                Confirmadas
               </div>
             </div>
-
-            {/* Quick Stats - Mobile Optimized */}
-            <div className="grid grid-cols-3 gap-2 sm:flex sm:space-x-3">
-              <div
-                className="rounded-lg px-2 py-1 sm:px-3 sm:py-2 text-center border"
-                style={{
-                  backgroundColor: "var(--status-confirmed-bg)",
-                  borderColor: "var(--status-confirmed-border)",
-                }}
-              >
-                <div
-                  className="text-xs sm:text-sm font-semibold"
-                  style={{ color: "var(--status-confirmed-text)" }}
-                >
-                  {appointments.filter((a) => a.status === "CONFIRMED").length}
-                </div>
-                <div className="text-xs" style={{ color: "var(--status-confirmed-text)" }}>
-                  Confirmadas
-                </div>
+            <div className="rounded-lg px-2.5 py-2 border" style={{ backgroundColor: "var(--status-pending-bg)", borderColor: "var(--status-pending-border)" }}>
+              <div className="text-sm font-semibold" style={{ color: "var(--status-pending-text)" }}>
+                {pendingCount}
               </div>
-              <div
-                className="rounded-lg px-2 py-1 sm:px-3 sm:py-2 text-center border"
-                style={{
-                  backgroundColor: "var(--status-pending-bg)",
-                  borderColor: "var(--status-pending-border)",
-                }}
-              >
-                <div
-                  className="text-xs sm:text-sm font-semibold"
-                  style={{ color: "var(--status-pending-text)" }}
-                >
-                  {appointments.filter((a) => a.status === "PENDING").length}
-                </div>
-                <div className="text-xs" style={{ color: "var(--status-pending-text)" }}>
-                  Pendientes
-                </div>
+              <div className="text-xs" style={{ color: "var(--status-pending-text)" }}>
+                Pendientes
               </div>
-              <div
-                className="rounded-lg px-2 py-1 sm:px-3 sm:py-2 text-center border"
-                style={{
-                  backgroundColor: "var(--status-completed-bg)",
-                  borderColor: "var(--status-completed-border)",
-                }}
-              >
-                <div
-                  className="text-xs sm:text-sm font-semibold"
-                  style={{ color: "var(--status-completed-text)" }}
-                >
-                  {appointments.filter((a) => a.status === "COMPLETED").length}
-                </div>
-                <div className="text-xs" style={{ color: "var(--status-completed-text)" }}>
-                  Completadas
-                </div>
+            </div>
+            <div className="rounded-lg px-2.5 py-2 border" style={{ backgroundColor: "var(--status-completed-bg)", borderColor: "var(--status-completed-border)" }}>
+              <div className="text-sm font-semibold" style={{ color: "var(--status-completed-text)" }}>
+                {completedCount}
+              </div>
+              <div className="text-xs" style={{ color: "var(--status-completed-text)" }}>
+                Completadas
               </div>
             </div>
           </div>
+
+          {/* Collapsible Stats */}
+          <button
+            type="button"
+            onClick={() => setShowStats(!showStats)}
+            className="w-full flex items-center justify-between px-2.5 py-1.5 text-xs text-[color:var(--color-muted)] hover:text-heading transition-colors"
+          >
+            <span className="font-medium">Ver estadísticas</span>
+            <ChevronDown className={`w-4 h-4 transition-transform ${showStats ? "rotate-180" : ""}`} />
+          </button>
+
+          {showStats && (
+            <div className="mt-3 pt-3 border-t border-[color:var(--color-border)] space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-[color:var(--color-muted)]">Total citas:</span>
+                <span className="font-semibold text-heading">{pagination?.total || 0}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[color:var(--color-muted)]">Ingresos este mes:</span>
+                <span className="font-semibold text-[color:var(--color-success)]">{currencyFormatter.format(monthlyRevenue)}</span>
+              </div>
+              {topRevenueMonth && (
+                <div className="flex justify-between">
+                  <span className="text-[color:var(--color-muted)]">Mes con más ingresos:</span>
+                  <span className="font-semibold text-heading capitalize">{topRevenueMonth.monthLabel} ({currencyFormatter.format(topRevenueMonth.income || 0)})</span>
+                </div>
+              )}
+              {appointments.length > 0 && (
+                <div className="flex items-center space-x-2 pt-2 border-t border-[color:var(--color-border)]">
+                  <div className="w-2 h-2 bg-[color:var(--color-success)] rounded-full" />
+                  <span className="text-[color:var(--color-muted)]">Datos en tiempo real</span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="px-4 py-4 space-y-4">
-        {/* Filters Section - Mobile First */}
-        <div
-          className="bg-[color:var(--color-surface)] rounded-xl shadow-sm border border-[color:var(--color-border)] p-4"
-          data-filters
-        >
-          <AppointmentFilters
-            searchTerm={searchTerm}
-            filter={filter}
-            onSearchChange={handleSearchChange}
-            onFilterChange={handleFilterChange}
+      <div className="mx-auto max-w-6xl px-4 py-3 space-y-3">
+        {/* Search - Minimal */}
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg
+              className="h-5 w-5 text-[color:var(--color-muted)]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+          <input
+            type="text"
+            placeholder="Buscar cliente, servicio..."
+            value={searchTerm}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-[color:var(--color-surface)] text-heading placeholder-[color:var(--color-muted)] border border-[color:var(--color-border)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)]/50 text-sm"
           />
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {[
+            { value: "all", label: "Todas" },
+            { value: "PENDING", label: "Pendientes" },
+            { value: "CONFIRMED", label: "Confirmadas" },
+            { value: "COMPLETED", label: "Completadas" },
+            { value: "CANCELLED", label: "Canceladas" },
+          ].map((item) => {
+            const isActive = filter === item.value;
+            return (
+              <button
+                key={item.value}
+                type="button"
+                onClick={() => handleFilterChange(item.value)}
+                className={[
+                  "px-3 py-1.5 text-xs rounded-full border transition-colors",
+                  isActive
+                    ? "bg-[color:var(--color-primary)] text-white border-[color:var(--color-primary)]"
+                    : "bg-[color:var(--color-surface)] text-[color:var(--color-muted)] border-[color:var(--color-border)] hover:text-heading",
+                ].join(" ")}
+              >
+                {item.label}
+              </button>
+            );
+          })}
         </div>
 
         {/* Appointments Content */}
@@ -227,7 +272,7 @@ function AppointmentsContent() {
           )}
         </div>
 
-        {/* Pagination - Mobile Optimized */}
+        {/* Pagination */}
         {pagination && pagination.pages > 1 && (
           <div className="bg-[color:var(--color-surface)] rounded-xl shadow-sm border border-[color:var(--color-border)] p-4">
             <Pagination
@@ -239,39 +284,16 @@ function AppointmentsContent() {
         )}
       </div>
 
-      {/* Floating Action Button for Mobile */}
-      <div className="fixed bottom-6 right-6 sm:hidden">
-        <button
-          type="button"
-          onClick={() => {
-            const filters = document.querySelector("[data-filters]");
-            filters?.scrollIntoView({ behavior: "smooth" });
-          }}
-          className="w-14 h-14 bg-[color:var(--color-primary)] text-white rounded-full shadow-lg hover:bg-[color:var(--color-primary-hover)] transition-all duration-200 flex items-center justify-center hover:scale-105 active:scale-95"
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.414A1 1 0 013 6.707V4z"
-            />
-          </svg>
-        </button>
-      </div>
-
       {/* Modal */}
       <AppointmentModal
         appointment={selectedAppointment}
         isOpen={showModal}
         onClose={handleCloseModal}
+      />
+
+      <ManualAppointmentModal
+        isOpen={showManualModal}
+        onClose={() => setShowManualModal(false)}
       />
     </div>
   );
