@@ -1,9 +1,9 @@
+import type { ReviewStatus } from "@prisma/client";
+import { type NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import type { ReviewStatus } from "@prisma/client";
-import { getServerSession } from "next-auth";
-import { type NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 
 const updateReviewSchema = z.object({
   id: z.string(),
@@ -23,8 +23,8 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
-    const page = Number.parseInt(searchParams.get("page") || "1");
-    const limit = Number.parseInt(searchParams.get("limit") || "10");
+    const page = Number.parseInt(searchParams.get("page") || "1", 10);
+    const limit = Number.parseInt(searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
 
     const where: {

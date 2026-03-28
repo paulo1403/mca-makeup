@@ -1,8 +1,8 @@
 "use client";
 
-import { useIncomeStats } from "@/hooks/useIncomeStats";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useIncomeStats } from "@/hooks/useIncomeStats";
 
 const currency = new Intl.NumberFormat("es-PE", {
   style: "currency",
@@ -46,7 +46,9 @@ export default function IncomePage() {
   if (error || !data) {
     return (
       <div className="rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6">
-        <h2 className="text-lg font-semibold text-[color:var(--color-heading)]">Error al cargar ingresos</h2>
+        <h2 className="text-lg font-semibold text-[color:var(--color-heading)]">
+          Error al cargar ingresos
+        </h2>
         <p className="text-sm text-[color:var(--color-muted)] mt-1">
           {error instanceof Error ? error.message : "No se pudieron cargar los datos"}
         </p>
@@ -60,7 +62,9 @@ export default function IncomePage() {
   return (
     <div className="space-y-5 sm:space-y-6">
       <section>
-        <h1 className="text-2xl sm:text-3xl font-bold text-[color:var(--color-heading)]">Ingresos</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-[color:var(--color-heading)]">
+          Ingresos
+        </h1>
         <p className="text-sm text-[color:var(--color-muted)] mt-1">
           Vista rapida para tomar decisiones sin ruido.
         </p>
@@ -86,7 +90,9 @@ export default function IncomePage() {
 
       <section className="rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4 sm:p-5">
         <div className="flex items-center justify-between gap-2 mb-4">
-          <h2 className="text-lg font-semibold text-[color:var(--color-heading)]">Tendencia mensual</h2>
+          <h2 className="text-lg font-semibold text-[color:var(--color-heading)]">
+            Tendencia mensual
+          </h2>
           <span className="text-xs text-[color:var(--color-muted)]">Ultimos 6 meses</span>
         </div>
 
@@ -94,12 +100,14 @@ export default function IncomePage() {
           <div className="mb-4 text-xs sm:text-sm text-[color:var(--color-muted)]">
             {momentum.direction === "up" && (
               <span>
-                Este mes va <strong className="text-[color:var(--color-success)]">arriba</strong> por {currency.format(momentum.delta)}
+                Este mes va <strong className="text-[color:var(--color-success)]">arriba</strong>{" "}
+                por {currency.format(momentum.delta)}
               </span>
             )}
             {momentum.direction === "down" && (
               <span>
-                Este mes va <strong className="text-[color:var(--color-danger)]">abajo</strong> por {currency.format(Math.abs(momentum.delta))}
+                Este mes va <strong className="text-[color:var(--color-danger)]">abajo</strong> por{" "}
+                {currency.format(Math.abs(momentum.delta))}
               </span>
             )}
             {momentum.direction === "flat" && <span>Este mes va igual que el anterior</span>}
@@ -112,8 +120,12 @@ export default function IncomePage() {
             return (
               <div key={item.month} className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs sm:text-sm">
-                  <span className="font-medium text-[color:var(--color-heading)]">{item.label}</span>
-                  <span className="text-[color:var(--color-muted)]">{currency.format(item.total)}</span>
+                  <span className="font-medium text-[color:var(--color-heading)]">
+                    {item.label}
+                  </span>
+                  <span className="text-[color:var(--color-muted)]">
+                    {currency.format(item.total)}
+                  </span>
                 </div>
                 <div className="h-2.5 w-full rounded-full bg-[color:var(--color-surface-elevated)] overflow-hidden">
                   <div
@@ -152,27 +164,46 @@ export default function IncomePage() {
           <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-[color:var(--color-border)] space-y-4">
             <div className="pt-3 space-y-1 text-sm text-[color:var(--color-muted)]">
               <p>
-                Total historico: <strong className="text-[color:var(--color-heading)]">{currency.format(data.totals.allTime)}</strong>
+                Total historico:{" "}
+                <strong className="text-[color:var(--color-heading)]">
+                  {currency.format(data.totals.allTime)}
+                </strong>
               </p>
               <p>
-                Manual historico: <strong className="text-[color:var(--color-heading)]">{currency.format(data.totals.manualAllTime)}</strong>
+                Manual historico:{" "}
+                <strong className="text-[color:var(--color-heading)]">
+                  {currency.format(data.totals.manualAllTime)}
+                </strong>
               </p>
               <p>
-                Web historico: <strong className="text-[color:var(--color-heading)]">{currency.format(data.totals.webAllTime)}</strong>
+                Web historico:{" "}
+                <strong className="text-[color:var(--color-heading)]">
+                  {currency.format(data.totals.webAllTime)}
+                </strong>
               </p>
               <p>
-                Mejor mes manual: <strong className="text-[color:var(--color-heading)]">{data.insights.topManualMonth?.label || "-"}</strong>
+                Mejor mes manual:{" "}
+                <strong className="text-[color:var(--color-heading)]">
+                  {data.insights.topManualMonth?.label || "-"}
+                </strong>
               </p>
               <p>
-                Mejor mes web: <strong className="text-[color:var(--color-heading)]">{data.insights.topWebMonth?.label || "-"}</strong>
+                Mejor mes web:{" "}
+                <strong className="text-[color:var(--color-heading)]">
+                  {data.insights.topWebMonth?.label || "-"}
+                </strong>
               </p>
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold text-[color:var(--color-heading)] mb-2">Ultimos manuales</h3>
+              <h3 className="text-sm font-semibold text-[color:var(--color-heading)] mb-2">
+                Ultimos manuales
+              </h3>
               <div className="space-y-2">
                 {data.recentManual.length === 0 ? (
-                  <p className="text-sm text-[color:var(--color-muted)]">Aun no hay registros manuales.</p>
+                  <p className="text-sm text-[color:var(--color-muted)]">
+                    Aun no hay registros manuales.
+                  </p>
                 ) : (
                   data.recentManual.map((item) => (
                     <div
@@ -188,7 +219,8 @@ export default function IncomePage() {
                         </p>
                       </div>
                       <p className="text-xs text-[color:var(--color-muted)]">
-                        {item.serviceType || "Servicio"} · {new Date(item.appointmentDate).toLocaleDateString("es-PE")}
+                        {item.serviceType || "Servicio"} ·{" "}
+                        {new Date(item.appointmentDate).toLocaleDateString("es-PE")}
                       </p>
                     </div>
                   ))

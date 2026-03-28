@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/prisma";
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { prisma } from "@/lib/prisma";
 
 const createReviewSchema = z.object({
   reviewToken: z.string(),

@@ -1,9 +1,9 @@
 "use client";
 
-import Button from "@/components/ui/Button";
-import Modal, { ModalHeader, ModalBody, ModalFooter } from "@/components/ui/Modal";
 import { Clock, DollarSign, Info, Pencil, Plus, Sparkles, Tag } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
+import Button from "@/components/ui/Button";
+import Modal, { ModalBody, ModalFooter, ModalHeader } from "@/components/ui/Modal";
 import type { Service, ServiceFormData } from "../types";
 
 interface ServiceFormModalProps {

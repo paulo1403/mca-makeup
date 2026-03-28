@@ -1,30 +1,12 @@
 "use client";
 
-import ThemeToggle from "@/components/ThemeToggle";
-import Button from "@/components/ui/Button";
-import Typography from "@/components/ui/Typography";
 import { useQuery } from "@tanstack/react-query";
 import { AlertCircle, CheckCircle, Send, Star } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
-interface ReviewData {
-  id: string;
-  appointmentId: string;
-  reviewToken: string;
-  rating: number | null;
-  reviewText: string | null;
-  reviewerName: string;
-  reviewerEmail: string;
-  isCompleted: boolean;
-  appointment: {
-    clientName: string;
-    serviceType: string;
-    appointmentDate: string;
-    services: Array<{ name?: string; serviceName?: string }> | null;
-    clientEmail?: string;
-  };
-}
+import ThemeToggle from "@/components/ThemeToggle";
+import Button from "@/components/ui/Button";
+import Typography from "@/components/ui/Typography";
 
 export default function ReviewPage() {
   const params = useParams();

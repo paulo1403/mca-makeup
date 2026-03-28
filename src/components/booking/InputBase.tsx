@@ -1,7 +1,6 @@
 "use client";
-import type { BookingData } from "@/lib/bookingSchema";
-import React from "react";
 import { type Control, useController } from "react-hook-form";
+import type { BookingData } from "@/lib/bookingSchema";
 
 type TextFieldName =
   | "name"

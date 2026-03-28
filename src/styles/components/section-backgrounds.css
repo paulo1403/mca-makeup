@@ -2,7 +2,8 @@
 
 /* Fondos base con degradados difuminados ultra suaves */
 .section-bg-hero {
-  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)),
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)),
     url("https://marcelacorderomakeup.my.canva.site/_assets/media/d896d7f1ed2c9864b0567d571abf3c48.jpg");
   background-size: cover;
   background-position: center 20%;
@@ -25,7 +26,8 @@
 }
 
 .section-bg-portfolio {
-  background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.02) 0%, transparent 65%),
+  background:
+    radial-gradient(ellipse at center, rgba(99, 102, 241, 0.02) 0%, transparent 65%),
     linear-gradient(
       180deg,
       rgba(8, 8, 8, 0.8) 0%,
@@ -39,7 +41,8 @@
 }
 
 .section-bg-testimonials {
-  background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.02) 0%, transparent 60%),
+  background:
+    radial-gradient(ellipse at center, rgba(16, 185, 129, 0.02) 0%, transparent 60%),
     linear-gradient(
       180deg,
       rgba(6, 6, 6, 0.8) 0%,
@@ -53,7 +56,8 @@
 }
 
 .section-bg-about {
-  background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.025) 0%, transparent 65%),
+  background:
+    radial-gradient(ellipse at center, rgba(99, 102, 241, 0.025) 0%, transparent 65%),
     linear-gradient(
       180deg,
       rgba(10, 10, 10, 0.8) 0%,
@@ -67,7 +71,8 @@
 }
 
 .section-bg-contact {
-  background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.02) 0%, transparent 60%),
+  background:
+    radial-gradient(ellipse at center, rgba(16, 185, 129, 0.02) 0%, transparent 60%),
     linear-gradient(
       180deg,
       rgba(8, 8, 8, 0.8) 0%,
@@ -81,7 +86,8 @@
 }
 
 .section-bg-footer {
-  background: radial-gradient(ellipse at top, rgba(99, 102, 241, 0.015) 0%, transparent 50%),
+  background:
+    radial-gradient(ellipse at top, rgba(99, 102, 241, 0.015) 0%, transparent 50%),
     linear-gradient(
       180deg,
       rgba(2, 2, 2, 0.98) 0%,
@@ -151,7 +157,12 @@
   left: 0;
   right: 0;
   height: 30px; /* Reducido de 60px */
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%);
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    transparent 100%
+  );
   backdrop-filter: blur(1px); /* Reducido de 2px */
   pointer-events: none;
   z-index: 2;

@@ -6,18 +6,10 @@ import Typography from "./ui/Typography";
 
 export default function AboutSection() {
   return (
-    <section
-      id="about"
-      className="py-16 sm:py-20 lg:py-24"
-      style={{ scrollMarginTop: "120px" }}
-    >
+    <section id="about" className="py-16 sm:py-20 lg:py-24" style={{ scrollMarginTop: "120px" }}>
       <div className="container mx-auto px-5 sm:px-6 max-w-lg sm:max-w-xl">
         <div className="text-center mb-10">
-          <Typography
-            as="h2"
-            variant="h2"
-            className="text-[color:var(--color-heading)] mb-8"
-          >
+          <Typography as="h2" variant="h2" className="text-[color:var(--color-heading)] mb-8">
             Sobre Mí
           </Typography>
 
@@ -45,11 +37,7 @@ export default function AboutSection() {
             Marcela Cordero
           </Typography>
 
-          <Typography
-            as="p"
-            variant="small"
-            className="text-[color:var(--color-body)]"
-          >
+          <Typography as="p" variant="small" className="text-[color:var(--color-body)]">
             Maquilladora profesional
           </Typography>
         </div>
@@ -64,11 +52,7 @@ export default function AboutSection() {
             >
               8+
             </Typography>
-            <Typography
-              as="div"
-              variant="small"
-              className="text-[color:var(--color-body)]"
-            >
+            <Typography as="div" variant="small" className="text-[color:var(--color-body)]">
               Años
             </Typography>
           </div>
@@ -80,11 +64,7 @@ export default function AboutSection() {
             >
               370+
             </Typography>
-            <Typography
-              as="div"
-              variant="small"
-              className="text-[color:var(--color-body)]"
-            >
+            <Typography as="div" variant="small" className="text-[color:var(--color-body)]">
               Clientas
             </Typography>
           </div>
@@ -96,11 +76,7 @@ export default function AboutSection() {
             >
               5.0
             </Typography>
-            <Typography
-              as="div"
-              variant="small"
-              className="text-[color:var(--color-body)]"
-            >
+            <Typography as="div" variant="small" className="text-[color:var(--color-body)]">
               Rating
             </Typography>
           </div>
@@ -113,8 +89,8 @@ export default function AboutSection() {
             variant="p"
             className="text-[color:var(--color-body)] leading-relaxed text-center"
           >
-            Especializada en realzar tu belleza natural. Más de 8 años creando
-            looks que resaltan tus mejores rasgos.
+            Especializada en realzar tu belleza natural. Más de 8 años creando looks que resaltan
+            tus mejores rasgos.
           </Typography>
         </div>
 
@@ -122,11 +98,7 @@ export default function AboutSection() {
         <div className="mb-6 p-3 rounded-[12px] bg-[color:var(--color-surface)]/40">
           <div className="flex items-center gap-3 justify-center">
             <Award className="w-5 h-5 text-[color:var(--color-primary)]" />
-            <Typography
-              as="span"
-              variant="small"
-              className="text-[color:var(--color-body)]"
-            >
+            <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
               EGRESADA • MUS Makeup Studio
             </Typography>
           </div>
@@ -155,7 +127,7 @@ export default function AboutSection() {
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 px-4 py-3 rounded-[12px] bg-[color:var(--color-surface)]/40 hover:bg-[color:var(--color-surface)]/60 transition-colors"
           >
-              <Camera className="w-4 h-4 text-[color:var(--color-primary)]" />
+            <Camera className="w-4 h-4 text-[color:var(--color-primary)]" />
             <Typography
               as="span"
               variant="small"
@@ -170,11 +142,7 @@ export default function AboutSection() {
         <div className="text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-[12px] bg-[color:var(--color-surface)]/40">
             <MapPin className="w-4 h-4 text-[color:var(--color-primary)]" />
-            <Typography
-              as="span"
-              variant="small"
-              className="text-[color:var(--color-body)]"
-            >
+            <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
               Pueblo Libre, Lima
             </Typography>
           </div>

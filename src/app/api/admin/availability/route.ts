@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/prisma";
 import { type NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 // GET /api/admin/availability - Get availability settings
 export async function GET() {

@@ -1,9 +1,9 @@
 "use client";
 
-import Button from "@/components/ui/Button";
-import Modal, { ModalHeader, ModalBody, ModalFooter } from "@/components/ui/Modal";
-import Typography from "@/components/ui/Typography";
 import { Clock, DollarSign, Eye, Info, Pencil, Sparkles, Tag } from "lucide-react";
+import Button from "@/components/ui/Button";
+import Modal, { ModalBody, ModalFooter, ModalHeader } from "@/components/ui/Modal";
+import Typography from "@/components/ui/Typography";
 import type { Service } from "../types";
 
 interface ViewServiceModalProps {

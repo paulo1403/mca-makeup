@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import { type NextRequest, NextResponse } from "next/server";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 // GET - Obtener costo de transporte por distrito (API pública)
 export async function GET(request: NextRequest) {

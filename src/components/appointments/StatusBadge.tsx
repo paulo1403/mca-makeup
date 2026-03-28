@@ -1,5 +1,4 @@
 import type { Appointment } from "@/hooks/useAppointments";
-import React from "react";
 
 const STATUS_LABELS: Record<Appointment["status"], string> = {
   PENDING: "Pendiente",

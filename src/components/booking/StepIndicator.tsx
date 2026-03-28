@@ -1,5 +1,4 @@
 import { Check } from "lucide-react";
-import React from "react";
 import "@/styles/components/step-indicator.css";
 
 interface Props {
@@ -8,13 +7,8 @@ interface Props {
   visibleSteps?: number[]; // Lista de pasos que deben mostrarse
 }
 
-export default function StepIndicator({
-  currentStep,
-  totalSteps,
-  visibleSteps,
-}: Props) {
-  const steps =
-    visibleSteps || Array.from({ length: totalSteps }, (_, i) => i + 1);
+export default function StepIndicator({ currentStep, totalSteps, visibleSteps }: Props) {
+  const steps = visibleSteps || Array.from({ length: totalSteps }, (_, i) => i + 1);
 
   const allStepNames = [
     "Información Personal",
@@ -41,13 +35,11 @@ export default function StepIndicator({
                   isActive
                     ? "step-circle--active"
                     : isCompleted
-                    ? "step-circle--completed"
-                    : "step-circle--inactive"
+                      ? "step-circle--completed"
+                      : "step-circle--inactive"
                 }`}
               >
-                {isCompleted ? (
-                  <Check className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                ) : null}
+                {isCompleted ? <Check className="w-4 h-4 sm:w-5 sm:h-5 text-white" /> : null}
               </div>
             </div>
           );
@@ -64,11 +56,7 @@ export default function StepIndicator({
           <div
             className="step-progress-active"
             style={{
-              width: `${
-                (Math.max(currentStepIndex, 0) /
-                  Math.max(steps.length - 1, 1)) *
-                100
-              }%`,
+              width: `${(Math.max(currentStepIndex, 0) / Math.max(steps.length - 1, 1)) * 100}%`,
             }}
           />
 
@@ -84,13 +72,11 @@ export default function StepIndicator({
                       isActive
                         ? "step-point-circle--active"
                         : isCompleted
-                        ? "step-point-circle--completed"
-                        : "step-point-circle--inactive"
+                          ? "step-point-circle--completed"
+                          : "step-point-circle--inactive"
                     }`}
                   >
-                    {isCompleted ? (
-                      <Check className="w-4 h-4 text-white" />
-                    ) : null}
+                    {isCompleted ? <Check className="w-4 h-4 text-white" /> : null}
                   </div>
 
                   <span
@@ -98,8 +84,8 @@ export default function StepIndicator({
                       isActive
                         ? "step-label--active"
                         : isCompleted
-                        ? "step-label--completed"
-                        : "step-label--inactive"
+                          ? "step-label--completed"
+                          : "step-label--inactive"
                     }`}
                   >
                     {stepNames[s - 1]}

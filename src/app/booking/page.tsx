@@ -1,8 +1,8 @@
-import BookingFlow from "@/components/BookingFlow";
 import AvailabilityCheckSection from "@/components/availability/AvailabilityCheckSection";
 import PriceQuoteSection from "@/components/availability/PriceQuoteSection";
-import Typography from "@/components/ui/Typography";
+import BookingFlow from "@/components/BookingFlow";
 import TransportCostCalculator from "@/components/TransportCostCalculator";
+import Typography from "@/components/ui/Typography";
 import "@/styles/components/contact.css";
 import "@/styles/components/transport-calculator.css";
 

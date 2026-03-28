@@ -1,6 +1,6 @@
-import type { ServiceSelection } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
+import type { ServiceSelection } from "@/types";
 
 export function useAvailableRanges(
   date: Date | null,

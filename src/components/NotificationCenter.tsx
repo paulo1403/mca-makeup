@@ -3,7 +3,7 @@
 import { Bell } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface Notification {
   id: string;
@@ -23,13 +23,7 @@ export default function NotificationCenter() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  useEffect(() => {
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, 1800000); // 30 minutos
-    return () => clearInterval(interval);
-  }, []);
-
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     try {
       const response = await fetch("/api/admin/notifications");
       const result = await response.json();
@@ -40,7 +34,13 @@ export default function NotificationCenter() {
     } catch (error) {
       console.error("Error fetching notifications:", error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 1800000); // 30 minutos
+    return () => clearInterval(interval);
+  }, [fetchNotifications]);
 
   const markAsRead = async (notificationId: string) => {
     try {

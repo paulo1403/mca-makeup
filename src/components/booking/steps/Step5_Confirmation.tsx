@@ -1,4 +1,7 @@
 "use client";
+import { Check, Copy, CreditCard, FileText } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 import Button from "@/components/ui/Button";
 import Typography from "@/components/ui/Typography";
 import { useBookingSummary } from "@/hooks/useBookingSummary";
@@ -6,9 +9,6 @@ import useServicesQuery from "@/hooks/useServicesQuery";
 import { useTransportCost } from "@/hooks/useTransportCost";
 import type { BookingData } from "@/lib/bookingSchema";
 import { calculateNightShiftCost } from "@/utils/nightShift";
-import { Check, Copy, CreditCard, FileText } from "lucide-react";
-import React, { useState, useEffect } from "react";
-import { Controller, useFormContext } from "react-hook-form";
 
 export default function Step5_Confirmation() {
   const { control, watch } = useFormContext<BookingData>();
@@ -37,7 +37,7 @@ export default function Step5_Confirmation() {
     services,
     transportEnabled,
     transportCost?.cost,
-    nightShiftCost
+    nightShiftCost,
   );
   const remaining = Math.max(0, (total || 0) - 150);
 
@@ -62,11 +62,7 @@ export default function Step5_Confirmation() {
         >
           Confirmación y Pago
         </Typography>
-        <Typography
-          as="p"
-          variant="small"
-          className="text-[color:var(--color-body)]"
-        >
+        <Typography as="p" variant="small" className="text-[color:var(--color-body)]">
           Revisa tu solicitud
         </Typography>
       </div>
@@ -83,11 +79,7 @@ export default function Step5_Confirmation() {
 
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <Typography
-              as="span"
-              variant="small"
-              className="text-[color:var(--color-body)]"
-            >
+            <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
               Servicios
             </Typography>
             <Typography
@@ -100,11 +92,7 @@ export default function Step5_Confirmation() {
           </div>
 
           <div className="flex justify-between items-center">
-            <Typography
-              as="span"
-              variant="small"
-              className="text-[color:var(--color-body)]"
-            >
+            <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
               Transporte
             </Typography>
             <Typography
@@ -118,11 +106,7 @@ export default function Step5_Confirmation() {
 
           {nightShift > 0 && (
             <div className="flex justify-between items-center">
-              <Typography
-                as="span"
-                variant="small"
-                className="text-[color:var(--color-body)]"
-              >
+              <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
                 Horario nocturno
               </Typography>
               <Typography
@@ -153,11 +137,7 @@ export default function Step5_Confirmation() {
               </Typography>
             </div>
             <div className="flex justify-between items-center">
-              <Typography
-                as="span"
-                variant="small"
-                className="text-[color:var(--color-body)]"
-              >
+              <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
                 Depósito requerido
               </Typography>
               <Typography
@@ -169,11 +149,7 @@ export default function Step5_Confirmation() {
               </Typography>
             </div>
             <div className="flex justify-between items-center mt-2">
-              <Typography
-                as="span"
-                variant="small"
-                className="text-[color:var(--color-body)]"
-              >
+              <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
                 Restante a pagar
               </Typography>
               <Typography
@@ -206,11 +182,7 @@ export default function Step5_Confirmation() {
           <div className="bg-[color:var(--color-surface)] border border-[color:var(--color-border)] rounded-[12px] p-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Typography
-                  as="span"
-                  variant="small"
-                  className="text-[color:var(--color-body)]"
-                >
+                <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
                   PLIN:
                 </Typography>
                 <code className="text-sm font-mono text-[color:var(--color-heading)]">
@@ -288,11 +260,7 @@ export default function Step5_Confirmation() {
               className="w-5 h-5 text-[color:var(--color-primary)] border-[color:var(--color-border)] rounded focus:ring-[color:var(--color-primary)] mt-0.5"
             />
             <div className="flex-1">
-              <Typography
-                as="span"
-                variant="small"
-                className="text-[color:var(--color-body)]"
-              >
+              <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
                 Acepto los{" "}
                 <a
                   href="/terminos-condiciones"
@@ -304,11 +272,7 @@ export default function Step5_Confirmation() {
                 </a>
               </Typography>
               {!field.value && (
-                <Typography
-                  as="span"
-                  variant="caption"
-                  className="!text-red-500 block mt-1"
-                >
+                <Typography as="span" variant="caption" className="!text-red-500 block mt-1">
                   Requerido para enviar
                 </Typography>
               )}

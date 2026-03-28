@@ -104,94 +104,94 @@
 
 /* Eventos en vista de mes - MEJORADA PARA MÁXIMA VISIBILIDAD */
 .rbc-month-view .rbc-event {
-  background: #d4af37 !important;
-  border: 1px solid #b8941f !important;
-  padding: 3px 6px !important;
-  margin: 2px 1px !important;
-  font-size: 11px !important;
-  line-height: 1.3 !important;
-  overflow: visible !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) !important;
-  height: auto !important;
-  min-height: 20px !important;
-  max-height: none !important;
-  border-radius: 4px !important;
-  color: white !important;
-  font-weight: 600 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  position: relative !important;
-  z-index: 100 !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  cursor: pointer !important;
-  width: auto !important;
-  transform: none !important;
+  background: #d4af37;
+  border: 1px solid #b8941f;
+  padding: 3px 6px;
+  margin: 2px 1px;
+  font-size: 11px;
+  line-height: 1.3;
+  overflow: visible;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  height: auto;
+  min-height: 20px;
+  max-height: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 100;
+  opacity: 1;
+  visibility: visible;
+  cursor: pointer;
+  width: auto;
+  transform: none;
 }
 
 /* FORZAR renderizado de componentes internos */
 .rbc-month-view .rbc-event > div,
 .rbc-month-view .rbc-event > div > div,
 .rbc-month-view .rbc-event * {
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  background: transparent !important;
-  color: white !important;
-  position: static !important;
-  z-index: auto !important;
-  font-size: inherit !important;
-  line-height: inherit !important;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: block;
+  visibility: visible;
+  opacity: 1;
+  background: transparent;
+  color: white;
+  position: static;
+  z-index: auto;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 .rbc-month-view .rbc-row-content {
-  overflow: visible !important;
-  height: auto !important;
-  min-height: 40px !important;
-  position: relative !important;
-  z-index: 1 !important;
-  padding: 2px !important;
+  overflow: visible;
+  height: auto;
+  min-height: 40px;
+  position: relative;
+  z-index: 1;
+  padding: 2px;
 }
 
 .rbc-month-view .rbc-row {
-  min-height: 100px !important;
-  height: auto !important;
-  overflow: visible !important;
-  padding: 2px 0 !important;
+  min-height: 100px;
+  height: auto;
+  overflow: visible;
+  padding: 2px 0;
 }
 
 .rbc-month-view .rbc-event:hover {
-  transform: translateY(-1px) !important;
-  background: #b8941f !important;
-  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3) !important;
+  transform: translateY(-1px);
+  background: #b8941f;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
 /* FORZAR estilos específicos para el contenedor de eventos */
 .rbc-month-view .rbc-row-content .rbc-row .rbc-row-segment {
-  position: relative !important;
-  z-index: 2 !important;
+  position: relative;
+  z-index: 2;
 }
 
 /* Asegurar que no hay overlays ocultando eventos */
 .rbc-month-view .rbc-overlay {
-  display: none !important;
+  display: none;
 }
 
 /* Estilos adicionales para garantizar visibilidad */
 .rbc-month-view .rbc-event-content {
-  display: block !important;
-  width: 100% !important;
-  height: 100% !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+  display: block;
+  width: 100%;
+  height: 100%;
+  visibility: visible;
+  opacity: 1;
 }
 
 /* Debug: agregar bordes visibles temporalmente */
 .rbc-month-view .rbc-event {
-  border: 2px solid red !important;
+  border: 2px solid red;
 }
 
 /* Permitir que los componentes personalizados manejen su propio hover */
@@ -362,10 +362,10 @@
 
 /* Eventos de agenda personalizados */
 .rbc-agenda-view .rbc-event {
-  background: transparent !important;
-  border: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
 }
 
 /* Mejoras responsivas para columnas de semana */
@@ -481,10 +481,10 @@
 
 /* Eventos de agenda personalizados */
 .rbc-agenda-view .rbc-event {
-  background: transparent !important;
-  border: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
 }
 
 /* Vista de mes */
@@ -621,28 +621,28 @@
 .rbc-allday-cell {
   background-color: #f8f9fa;
   border-bottom: 1px solid #e5e7eb;
-  padding: 0 !important;
-  min-height: 0 !important;
-  max-height: 0 !important;
+  padding: 0;
+  min-height: 0;
+  max-height: 0;
   overflow: hidden;
   position: relative;
   z-index: 1;
-  display: none !important; /* Completely hide for now to prevent overlap */
+  display: none; /* Completely hide for now to prevent overlap */
 }
 
 /* Alternative: If you need all-day events, use this instead of display: none */
 .rbc-time-view .rbc-allday-cell {
-  display: none !important;
+  display: none;
 }
 
 /* Hide all-day section when empty */
 .rbc-allday-cell:empty,
 .rbc-allday-cell .rbc-row-content:empty {
-  min-height: 0 !important;
-  max-height: 0 !important;
-  padding: 0 !important;
-  border: none !important;
-  display: none !important;
+  min-height: 0;
+  max-height: 0;
+  padding: 0;
+  border: none;
+  display: none;
 }
 
 .rbc-allday-cell .rbc-row-bg {
@@ -943,103 +943,103 @@
 
 /* Componente personalizado para eventos mensuales */
 .rbc-month-view .rbc-event .month-event-component {
-  width: 100% !important;
-  height: 100% !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border-radius: 4px !important;
-  overflow: hidden !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .rbc-month-view .rbc-event .month-event-component .event-title {
-  font-weight: 600 !important;
-  font-size: 11px !important;
-  line-height: 1.2 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 1.2;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .rbc-month-view .rbc-event .month-event-component .event-details {
-  font-size: 10px !important;
-  line-height: 1.1 !important;
-  opacity: 0.9 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
+  font-size: 10px;
+  line-height: 1.1;
+  opacity: 0.9;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Asegurar que las celdas del mes tengan altura suficiente */
 .rbc-month-view .rbc-date-cell {
-  min-height: 100px !important;
-  overflow: visible !important;
-  position: relative !important;
+  min-height: 100px;
+  overflow: visible;
+  position: relative;
 }
 
 /* Mejorar la visibilidad de las fechas */
 .rbc-month-view .rbc-date-cell button {
-  font-weight: 600 !important;
-  color: #1f2937 !important;
-  padding: 4px 8px !important;
-  border-radius: 4px !important;
-  transition: all 0.2s ease !important;
+  font-weight: 600;
+  color: #1f2937;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
 }
 
 .rbc-month-view .rbc-date-cell button:hover {
-  background-color: #f3f4f6 !important;
-  color: #d4af37 !important;
+  background-color: #f3f4f6;
+  color: #d4af37;
 }
 
 /* Eventos con estado específico */
 .rbc-month-view .rbc-event.event-pending {
-  background: #fbbf24 !important;
-  border-color: #f59e0b !important;
+  background: #fbbf24;
+  border-color: #f59e0b;
 }
 
 .rbc-month-view .rbc-event.event-confirmed {
-  background: #3b82f6 !important;
-  border-color: #2563eb !important;
+  background: #3b82f6;
+  border-color: #2563eb;
 }
 
 .rbc-month-view .rbc-event.event-completed {
-  background: #10b981 !important;
-  border-color: #059669 !important;
+  background: #10b981;
+  border-color: #059669;
 }
 
 .rbc-month-view .rbc-event.event-cancelled {
-  background: #ef4444 !important;
-  border-color: #dc2626 !important;
-  opacity: 0.8 !important;
+  background: #ef4444;
+  border-color: #dc2626;
+  opacity: 0.8;
 }
 
 /* Asegurar que los eventos sean clickeables */
 .rbc-month-view .rbc-event {
-  cursor: pointer !important;
-  transition: all 0.2s ease !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .rbc-month-view .rbc-event:hover {
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
-  z-index: 200 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 200;
 }
 
 /* Forzar renderizado correcto en navegadores */
 .rbc-month-view .rbc-row-segment {
-  position: relative !important;
-  z-index: 10 !important;
+  position: relative;
+  z-index: 10;
 }
 
 .rbc-month-view .rbc-event-content {
-  width: 100% !important;
-  height: 100% !important;
-  position: relative !important;
-  z-index: 15 !important;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 15;
 }

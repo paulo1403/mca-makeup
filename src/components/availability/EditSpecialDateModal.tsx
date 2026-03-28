@@ -1,15 +1,15 @@
 "use client";
 
-import Button from "@/components/ui/Button";
-import Modal, { ModalHeader, ModalBody } from "@/components/ui/Modal";
-import Typography from "@/components/ui/Typography";
-import type { SpecialDate } from "@/hooks/useAvailability";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { es } from "date-fns/locale";
 import { useEffect } from "react";
 import DatePicker from "react-datepicker";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import Button from "@/components/ui/Button";
+import Modal, { ModalBody, ModalHeader } from "@/components/ui/Modal";
+import Typography from "@/components/ui/Typography";
+import type { SpecialDate } from "@/hooks/useAvailability";
 
 const editSpecialDateSchema = z
   .object({
@@ -79,9 +79,9 @@ export default function EditSpecialDateModal({
       // Parsear la fecha del string YYYY-MM-DD a Date object
       const [year, month, day] = specialDate.date.split("-");
       const dateObject = new Date(
-        Number.parseInt(year),
-        Number.parseInt(month) - 1,
-        Number.parseInt(day),
+        Number.parseInt(year, 10),
+        Number.parseInt(month, 10) - 1,
+        Number.parseInt(day, 10),
       );
 
       reset({

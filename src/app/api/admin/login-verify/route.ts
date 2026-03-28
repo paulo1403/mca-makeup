@@ -1,7 +1,7 @@
-import { prisma } from "@/lib/prisma";
-import { getClientIP, loginRateLimiter, suspiciousIPLimiter } from "@/lib/rateLimiter";
 import bcrypt from "bcryptjs";
 import { type NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { getClientIP, loginRateLimiter, suspiciousIPLimiter } from "@/lib/rateLimiter";
 
 export async function POST(request: NextRequest) {
   try {

@@ -1,8 +1,8 @@
 "use client";
 
+import { Clock, DollarSign, Eye, Pencil, Plus, Sparkles, Tag, Trash2 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Typography from "@/components/ui/Typography";
-import { Clock, DollarSign, Eye, Pencil, Plus, Sparkles, Tag, Trash2 } from "lucide-react";
 import type { Service } from "../types";
 
 interface ServiceListMobileProps {

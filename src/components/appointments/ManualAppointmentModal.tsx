@@ -1,9 +1,9 @@
 "use client";
 
-import Modal, { ModalBody, ModalFooter, ModalHeader } from "@/components/ui/Modal";
-import { useCreateAppointment } from "@/hooks/useAppointments";
 import { useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
+import Modal, { ModalBody, ModalFooter, ModalHeader } from "@/components/ui/Modal";
+import { useCreateAppointment } from "@/hooks/useAppointments";
 
 interface ManualAppointmentModalProps {
   isOpen: boolean;
@@ -132,7 +132,9 @@ export default function ManualAppointmentModal({ isOpen, onClose }: ManualAppoin
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <label className="space-y-1">
-                <span className="text-sm font-medium text-[color:var(--color-heading)]">Nombre *</span>
+                <span className="text-sm font-medium text-[color:var(--color-heading)]">
+                  Nombre *
+                </span>
                 <input
                   value={clientName}
                   onChange={(e) => setClientName(e.target.value)}
@@ -144,7 +146,9 @@ export default function ManualAppointmentModal({ isOpen, onClose }: ManualAppoin
               </label>
 
               <label className="space-y-1">
-                <span className="text-sm font-medium text-[color:var(--color-heading)]">Telefono *</span>
+                <span className="text-sm font-medium text-[color:var(--color-heading)]">
+                  Telefono *
+                </span>
                 <input
                   value={clientPhone}
                   onChange={(e) => setClientPhone(e.target.value)}
@@ -157,7 +161,9 @@ export default function ManualAppointmentModal({ isOpen, onClose }: ManualAppoin
               </label>
 
               <label className="space-y-1 sm:col-span-2">
-                <span className="text-sm font-medium text-[color:var(--color-heading)]">Email *</span>
+                <span className="text-sm font-medium text-[color:var(--color-heading)]">
+                  Email *
+                </span>
                 <input
                   type="email"
                   value={clientEmail}
@@ -173,7 +179,9 @@ export default function ManualAppointmentModal({ isOpen, onClose }: ManualAppoin
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <label className="space-y-1 sm:col-span-2">
-                <span className="text-sm font-medium text-[color:var(--color-heading)]">Servicio *</span>
+                <span className="text-sm font-medium text-[color:var(--color-heading)]">
+                  Servicio *
+                </span>
                 <input
                   value={serviceType}
                   onChange={(e) => setServiceType(e.target.value)}
@@ -184,7 +192,9 @@ export default function ManualAppointmentModal({ isOpen, onClose }: ManualAppoin
               </label>
 
               <label className="space-y-1">
-                <span className="text-sm font-medium text-[color:var(--color-heading)]">Fecha *</span>
+                <span className="text-sm font-medium text-[color:var(--color-heading)]">
+                  Fecha *
+                </span>
                 <input
                   type="date"
                   value={appointmentDate}
@@ -195,7 +205,9 @@ export default function ManualAppointmentModal({ isOpen, onClose }: ManualAppoin
               </label>
 
               <label className="space-y-1">
-                <span className="text-sm font-medium text-[color:var(--color-heading)]">Horario *</span>
+                <span className="text-sm font-medium text-[color:var(--color-heading)]">
+                  Horario *
+                </span>
                 <input
                   value={appointmentTime}
                   onChange={(e) => setAppointmentTime(e.target.value)}
@@ -206,7 +218,9 @@ export default function ManualAppointmentModal({ isOpen, onClose }: ManualAppoin
               </label>
 
               <label className="space-y-1">
-                <span className="text-sm font-medium text-[color:var(--color-heading)]">Duracion (min)</span>
+                <span className="text-sm font-medium text-[color:var(--color-heading)]">
+                  Duracion (min)
+                </span>
                 <input
                   type="number"
                   min="30"
@@ -219,7 +233,9 @@ export default function ManualAppointmentModal({ isOpen, onClose }: ManualAppoin
               </label>
 
               <label className="space-y-1">
-                <span className="text-sm font-medium text-[color:var(--color-heading)]">Estado</span>
+                <span className="text-sm font-medium text-[color:var(--color-heading)]">
+                  Estado
+                </span>
                 <select
                   value={status}
                   onChange={(e) =>
@@ -236,7 +252,9 @@ export default function ManualAppointmentModal({ isOpen, onClose }: ManualAppoin
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <label className="space-y-1">
-                <span className="text-sm font-medium text-[color:var(--color-heading)]">Ubicacion</span>
+                <span className="text-sm font-medium text-[color:var(--color-heading)]">
+                  Ubicacion
+                </span>
                 <select
                   value={locationType}
                   onChange={(e) => setLocationType(e.target.value as "HOME" | "STUDIO")}
@@ -248,7 +266,9 @@ export default function ManualAppointmentModal({ isOpen, onClose }: ManualAppoin
               </label>
 
               <label className="space-y-1">
-                <span className="text-sm font-medium text-[color:var(--color-heading)]">Distrito</span>
+                <span className="text-sm font-medium text-[color:var(--color-heading)]">
+                  Distrito
+                </span>
                 <input
                   value={district}
                   onChange={(e) => setDistrict(e.target.value)}
@@ -258,7 +278,9 @@ export default function ManualAppointmentModal({ isOpen, onClose }: ManualAppoin
               </label>
 
               <label className="space-y-1 sm:col-span-2">
-                <span className="text-sm font-medium text-[color:var(--color-heading)]">Direccion</span>
+                <span className="text-sm font-medium text-[color:var(--color-heading)]">
+                  Direccion
+                </span>
                 <input
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
@@ -269,7 +291,9 @@ export default function ManualAppointmentModal({ isOpen, onClose }: ManualAppoin
               </label>
 
               <label className="space-y-1 sm:col-span-2">
-                <span className="text-sm font-medium text-[color:var(--color-heading)]">Referencia</span>
+                <span className="text-sm font-medium text-[color:var(--color-heading)]">
+                  Referencia
+                </span>
                 <input
                   value={addressReference}
                   onChange={(e) => setAddressReference(e.target.value)}
@@ -280,7 +304,9 @@ export default function ManualAppointmentModal({ isOpen, onClose }: ManualAppoin
             </div>
 
             <div className="rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] p-3 space-y-3">
-              <div className="text-sm font-semibold text-[color:var(--color-heading)]">Costos manuales</div>
+              <div className="text-sm font-semibold text-[color:var(--color-heading)]">
+                Costos manuales
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <label className="space-y-1">
                   <span className="text-sm text-[color:var(--color-muted)]">Servicios (S/)</span>

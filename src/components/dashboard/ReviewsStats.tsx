@@ -1,6 +1,6 @@
+import { CheckCircle, Clock, Eye, MessageSquare, Star, XCircle } from "lucide-react";
 import Typography from "@/components/ui/Typography";
 import type { DashboardStats } from "@/hooks/useDashboardStats";
-import { CheckCircle, Clock, Eye, MessageSquare, Star, XCircle } from "lucide-react";
 
 interface ReviewStatCardProps {
   title: string;

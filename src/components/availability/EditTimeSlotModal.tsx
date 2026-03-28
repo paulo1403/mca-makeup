@@ -1,14 +1,14 @@
 "use client";
 
-import Button from "@/components/ui/Button";
-import Modal, { ModalHeader, ModalBody } from "@/components/ui/Modal";
-import Typography from "@/components/ui/Typography";
-import type { TimeSlot } from "@/hooks/useAvailability";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Building, Home } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Button from "@/components/ui/Button";
+import Modal, { ModalBody, ModalHeader } from "@/components/ui/Modal";
+import Typography from "@/components/ui/Typography";
+import type { TimeSlot } from "@/hooks/useAvailability";
 
 const DAYS_OF_WEEK = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 

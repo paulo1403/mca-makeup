@@ -1,15 +1,15 @@
+import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { emailTemplates, sendEmailToAdmins } from "@/lib/serverEmail";
 import { debugDate, parseDateFromString } from "@/utils/dateUtils";
-import { type NextRequest, NextResponse } from "next/server";
 
 // GET /api/admin/appointments - Get all appointments
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const status = searchParams.get("status");
-    const page = Number.parseInt(searchParams.get("page") || "1");
-    const limit = Number.parseInt(searchParams.get("limit") || "10");
+    const page = Number.parseInt(searchParams.get("page") || "1", 10);
+    const limit = Number.parseInt(searchParams.get("limit") || "10", 10);
     const search = searchParams.get("search");
     const idParam = searchParams.get("id");
 

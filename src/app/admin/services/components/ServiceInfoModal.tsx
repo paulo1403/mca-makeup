@@ -1,8 +1,8 @@
 "use client";
 
-import Button from "@/components/ui/Button";
-import Modal, { ModalHeader, ModalBody, ModalFooter } from "@/components/ui/Modal";
 import { Info } from "lucide-react";
+import Button from "@/components/ui/Button";
+import Modal, { ModalBody, ModalFooter, ModalHeader } from "@/components/ui/Modal";
 
 interface ServiceInfoModalProps {
   show: boolean;

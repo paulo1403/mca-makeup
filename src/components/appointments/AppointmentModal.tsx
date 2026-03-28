@@ -1,6 +1,14 @@
 "use client";
+import type React from "react";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
 import StatusBadge from "@/components/appointments/StatusBadge";
-import Modal, { ModalHeader, ModalBody, ModalFooter } from "@/components/ui/Modal";
+import {
+  buildQuoteText,
+  copyQuotePngToClipboard,
+  generateQuotePng,
+} from "@/components/share/QuoteShareCard";
+import Modal, { ModalBody, ModalFooter, ModalHeader } from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
 import {
   type Appointment,
@@ -8,14 +16,7 @@ import {
   useUpdateAppointmentStatus,
 } from "@/hooks/useAppointments";
 import { formatDate, formatPrice, formatTime, getPriceBreakdown } from "@/utils/appointmentHelpers";
-import {
-  copyReviewLink,
-  getReviewStatusColor,
-  getReviewStatusText,
-} from "@/utils/reviewHelpers";
-import { generateQuotePng, copyQuotePngToClipboard, buildQuoteText } from "@/components/share/QuoteShareCard";
-import React, { useState } from "react";
-import { toast } from "react-hot-toast";
+import { copyReviewLink, getReviewStatusColor, getReviewStatusText } from "@/utils/reviewHelpers";
 
 interface AppointmentModalProps {
   appointment: Appointment | null;
@@ -111,22 +112,36 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                     {appointment.clientEmail}
                   </div>
                   <div className="text-xs text-[color:var(--color-on-surface)]">
-                    {formatDate(appointment.appointmentDate)} · {formatTime(appointment.appointmentTime)}
+                    {formatDate(appointment.appointmentDate)} ·{" "}
+                    {formatTime(appointment.appointmentTime)}
                   </div>
                 </div>
-                <StatusBadge status={appointment.status} className="text-xs px-2 py-1 font-semibold" />
+                <StatusBadge
+                  status={appointment.status}
+                  className="text-xs px-2 py-1 font-semibold"
+                />
               </div>
             </div>
 
             <div className="bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)]">
-              <button type="button" onClick={() => setShowLocation((v) => !v)} className="w-full flex items-center justify-between px-4 py-3">
-                <span className="text-sm font-semibold text-[color:var(--color-on-surface)]">Ubicación</span>
-                <span className="text-xs text-[color:var(--color-muted)]">{showLocation ? "Ocultar" : "Mostrar"}</span>
+              <button
+                type="button"
+                onClick={() => setShowLocation((v) => !v)}
+                className="w-full flex items-center justify-between px-4 py-3"
+              >
+                <span className="text-sm font-semibold text-[color:var(--color-on-surface)]">
+                  Ubicación
+                </span>
+                <span className="text-xs text-[color:var(--color-muted)]">
+                  {showLocation ? "Ocultar" : "Mostrar"}
+                </span>
               </button>
               {showLocation && (
                 <div className="px-4 pb-4 space-y-3">
                   <p className="text-sm text-[color:var(--color-on-surface)] font-medium">
-                    {appointment.location?.includes("Studio") ? "En estudio - Av. Bolívar 1073, Pueblo Libre" : "Servicio a domicilio"}
+                    {appointment.location?.includes("Studio")
+                      ? "En estudio - Av. Bolívar 1073, Pueblo Libre"
+                      : "Servicio a domicilio"}
                   </p>
                   {appointment.address && (
                     <div className="space-y-2">
@@ -177,7 +192,9 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
             if (priceInfo.totalPrice > 0) {
               return (
                 <div className="bg-[color:var(--color-surface)] p-3 rounded-lg border border-[color:var(--color-border)] space-y-2">
-                  <div className="text-xs font-semibold text-[color:var(--color-on-surface)]">Precios</div>
+                  <div className="text-xs font-semibold text-[color:var(--color-on-surface)]">
+                    Precios
+                  </div>
                   {appointment.services && appointment.services.length > 0 && (
                     <div className="space-y-1">
                       {appointment.services.map((s) => (
@@ -196,23 +213,31 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                   <div className="border-t border-[color:var(--color-border)] pt-2 space-y-1">
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-[color:var(--color-muted)]">Servicios</span>
-                      <span className="text-[color:var(--color-on-surface)]">{formatPrice(priceInfo.servicePrice)}</span>
+                      <span className="text-[color:var(--color-on-surface)]">
+                        {formatPrice(priceInfo.servicePrice)}
+                      </span>
                     </div>
                     {priceInfo.hasTransport && (
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-[color:var(--color-muted)]">Movilidad</span>
-                        <span className="text-[color:var(--color-on-surface)]">{formatPrice(priceInfo.transportCost)}</span>
+                        <span className="text-[color:var(--color-on-surface)]">
+                          {formatPrice(priceInfo.transportCost)}
+                        </span>
                       </div>
                     )}
                     {priceInfo.hasNightShift && (
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-[color:var(--color-muted)]">Nocturno</span>
-                        <span className="text-[color:var(--color-on-surface)]">{formatPrice(priceInfo.nightShiftCost)}</span>
+                        <span className="text-[color:var(--color-on-surface)]">
+                          {formatPrice(priceInfo.nightShiftCost)}
+                        </span>
                       </div>
                     )}
                     <div className="flex items-center justify-between font-semibold text-sm pt-1">
                       <span className="text-[color:var(--color-heading)]">Total</span>
-                      <span className="text-[color:var(--color-primary)]">{formatPrice(priceInfo.totalPrice)}</span>
+                      <span className="text-[color:var(--color-primary)]">
+                        {formatPrice(priceInfo.totalPrice)}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -223,9 +248,17 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
 
           {appointment.additionalNotes && (
             <div className="bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)]">
-              <button type="button" onClick={() => setShowNotes((v) => !v)} className="w-full flex items-center justify-between px-4 py-3">
-                <span className="text-sm font-semibold text-[color:var(--color-on-surface)]">Notas</span>
-                <span className="text-xs text-[color:var(--color-muted)]">{showNotes ? "Ocultar" : "Mostrar"}</span>
+              <button
+                type="button"
+                onClick={() => setShowNotes((v) => !v)}
+                className="w-full flex items-center justify-between px-4 py-3"
+              >
+                <span className="text-sm font-semibold text-[color:var(--color-on-surface)]">
+                  Notas
+                </span>
+                <span className="text-xs text-[color:var(--color-muted)]">
+                  {showNotes ? "Ocultar" : "Mostrar"}
+                </span>
               </button>
               {showNotes && (
                 <div className="px-4 pb-4">
@@ -240,13 +273,17 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
           )}
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 pt-3 border-t border-[color:var(--color-border)]">
-            <span className="text-xs font-semibold text-[color:var(--color-on-surface)]">Estado:</span>
+            <span className="text-xs font-semibold text-[color:var(--color-on-surface)]">
+              Estado:
+            </span>
             <StatusBadge status={appointment.status} className="text-xs px-2 py-1 font-semibold" />
           </div>
 
           {appointment.status === "COMPLETED" && appointment.review && (
             <div className="bg-[color:var(--color-surface-elevated)] p-3 rounded-lg border border-[color:var(--color-border)]">
-              <h3 className="text-xs font-semibold text-[color:var(--color-on-surface)] mb-2">Reseña</h3>
+              <h3 className="text-xs font-semibold text-[color:var(--color-on-surface)] mb-2">
+                Reseña
+              </h3>
               <div className="space-y-2 text-xs">
                 <div className="flex items-center justify-between">
                   <span className="text-[color:var(--color-muted)]">Estado:</span>
@@ -279,7 +316,9 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                     <span className="text-[color:var(--color-muted)]">Link:</span>
                     <button
                       type="button"
-                      onClick={(event) => copyReviewLink(appointment.review!.reviewToken, event.currentTarget)}
+                      onClick={(event) =>
+                        copyReviewLink(appointment.review?.reviewToken, event.currentTarget)
+                      }
                       className="px-2 py-1 rounded border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] hover:bg-[color:var(--color-surface)] transition-colors"
                     >
                       Copiar
@@ -416,7 +455,7 @@ interface AppointmentDetailFieldProps {
   value: string;
 }
 
-function AppointmentDetailField({ label, value }: AppointmentDetailFieldProps) {
+function _AppointmentDetailField({ label, value }: AppointmentDetailFieldProps) {
   return (
     <div className="bg-[color:var(--color-surface)] sm:bg-[color:var(--color-surface-elevated)] p-3 rounded-lg border border-[color:var(--color-border)] sm:border-none">
       <div className="block text-xs sm:text-sm font-medium text-[color:var(--color-muted)] mb-1">

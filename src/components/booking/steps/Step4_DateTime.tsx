@@ -1,19 +1,13 @@
 "use client";
-import Typography from "@/components/ui/Typography";
-import { useAvailableRanges } from "@/hooks/useAvailableRanges";
-import type { BookingData } from "@/lib/bookingSchema";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import {
-  Calendar,
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  Clock,
-} from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Clock } from "lucide-react";
 import type React from "react";
 import DatePicker from "react-datepicker";
 import { Controller, useFormContext } from "react-hook-form";
+import Typography from "@/components/ui/Typography";
+import { useAvailableRanges } from "@/hooks/useAvailableRanges";
+import type { BookingData } from "@/lib/bookingSchema";
 
 const CustomWeekdayHeader: React.FC = () => {
   const days = ["lun", "mar", "mié", "jue", "vie", "sáb", "dom"];
@@ -35,18 +29,15 @@ export default function Step4_DateTime() {
   const selectedServices = watch("selectedServices") || [];
   const locationType = watch("locationType");
 
-  const serviceSelection = selectedServices.reduce<Record<string, number>>(
-    (acc, cur) => {
-      acc[cur.id] = cur.quantity;
-      return acc;
-    },
-    {}
-  );
+  const serviceSelection = selectedServices.reduce<Record<string, number>>((acc, cur) => {
+    acc[cur.id] = cur.quantity;
+    return acc;
+  }, {});
 
   const { data: rangesData, isLoading } = useAvailableRanges(
     date || null,
     serviceSelection,
-    (locationType as "STUDIO" | "HOME") || "STUDIO"
+    (locationType as "STUDIO" | "HOME") || "STUDIO",
   );
 
   return (
@@ -60,11 +51,7 @@ export default function Step4_DateTime() {
         >
           Selecciona fecha y hora
         </Typography>
-        <Typography
-          as="p"
-          variant="small"
-          className="text-[color:var(--color-body)]"
-        >
+        <Typography as="p" variant="small" className="text-[color:var(--color-body)]">
           Elige un día y horario disponible
         </Typography>
       </div>
@@ -95,11 +82,7 @@ export default function Step4_DateTime() {
                   return nameOfDay.slice(0, 3).toLowerCase();
                 }}
                 calendarClassName="w-full no-daynames"
-                renderCustomHeader={({
-                  date,
-                  decreaseMonth,
-                  increaseMonth,
-                }) => (
+                renderCustomHeader={({ date, decreaseMonth, increaseMonth }) => (
                   <div>
                     <div className="flex items-center justify-between mb-3">
                       <button
@@ -149,11 +132,7 @@ export default function Step4_DateTime() {
               Horarios disponibles
             </Typography>
             {date && (
-              <Typography
-                as="span"
-                variant="small"
-                className="text-[color:var(--color-body)]"
-              >
+              <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
                 {format(date, "dd/MM/yyyy")}
               </Typography>
             )}
@@ -191,18 +170,14 @@ export default function Step4_DateTime() {
                   >
                     <Clock
                       className={`w-4 h-4 ${
-                        isSelected
-                          ? "text-white"
-                          : "text-[color:var(--color-primary)]"
+                        isSelected ? "text-white" : "text-[color:var(--color-primary)]"
                       }`}
                     />
                     <Typography
                       as="span"
                       variant="small"
                       className={`font-medium ${
-                        isSelected
-                          ? "text-white"
-                          : "text-[color:var(--color-heading)]"
+                        isSelected ? "text-white" : "text-[color:var(--color-heading)]"
                       }`}
                     >
                       {r}
@@ -213,28 +188,16 @@ export default function Step4_DateTime() {
             </div>
           ) : date ? (
             <div className="text-center py-4">
-              <Typography
-                as="p"
-                variant="p"
-                className="text-[color:var(--color-body)]"
-              >
+              <Typography as="p" variant="p" className="text-[color:var(--color-body)]">
                 No hay horarios disponibles
               </Typography>
-              <Typography
-                as="p"
-                variant="small"
-                className="text-[color:var(--color-body)] mt-1"
-              >
+              <Typography as="p" variant="small" className="text-[color:var(--color-body)] mt-1">
                 Elige otra fecha
               </Typography>
             </div>
           ) : (
             <div className="text-center py-4">
-              <Typography
-                as="p"
-                variant="p"
-                className="text-[color:var(--color-body)]"
-              >
+              <Typography as="p" variant="p" className="text-[color:var(--color-body)]">
                 Selecciona una fecha para ver los horarios disponibles
               </Typography>
             </div>

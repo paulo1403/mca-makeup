@@ -107,8 +107,7 @@
 
 .contact-info-card:hover {
   border-color: var(--contact-accent);
-  box-shadow: 0 8px 25px
-    color-mix(in srgb, var(--contact-accent) 15%, transparent);
+  box-shadow: 0 8px 25px color-mix(in srgb, var(--contact-accent) 15%, transparent);
 }
 
 .contact-info-title {

@@ -198,11 +198,7 @@ export default function Footer() {
       </div>
 
       {/* Back to Top */}
-      <button
-        onClick={scrollToTop}
-        className="back-to-top"
-        aria-label="Volver arriba"
-      >
+      <button onClick={scrollToTop} className="back-to-top" aria-label="Volver arriba">
         <ArrowUp className="w-5 h-5" />
       </button>
     </footer>

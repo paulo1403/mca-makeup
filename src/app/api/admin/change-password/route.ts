@@ -1,14 +1,14 @@
+import bcrypt from "bcryptjs";
+import { type NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import bcrypt from "bcryptjs";
-import { getServerSession } from "next-auth/next";
-import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || !session.user) {
+    if (!session?.user) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 });
     }
 

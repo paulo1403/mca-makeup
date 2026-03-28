@@ -1,7 +1,7 @@
 "use client";
 
-import type { SpecialDate } from "@/hooks/useAvailability";
 import { Calendar, CheckCircle, Clock, Edit2, Trash2, XCircle } from "lucide-react";
+import type { SpecialDate } from "@/hooks/useAvailability";
 
 interface SpecialDateListProps {
   specialDates: SpecialDate[];
@@ -37,14 +37,14 @@ export default function SpecialDateList({
     const [yearA, monthA, dayA] = a.date.split("-");
     const [yearB, monthB, dayB] = b.date.split("-");
     const dateA = new Date(
-      Number.parseInt(yearA),
-      Number.parseInt(monthA) - 1,
-      Number.parseInt(dayA),
+      Number.parseInt(yearA, 10),
+      Number.parseInt(monthA, 10) - 1,
+      Number.parseInt(dayA, 10),
     );
     const dateB = new Date(
-      Number.parseInt(yearB),
-      Number.parseInt(monthB) - 1,
-      Number.parseInt(dayB),
+      Number.parseInt(yearB, 10),
+      Number.parseInt(monthB, 10) - 1,
+      Number.parseInt(dayB, 10),
     );
     return dateA.getTime() - dateB.getTime();
   });
@@ -85,9 +85,9 @@ export default function SpecialDateList({
                       // Crear la fecha manualmente para evitar problemas de zona horaria
                       const [year, month, day] = specialDate.date.split("-");
                       const localDate = new Date(
-                        Number.parseInt(year),
-                        Number.parseInt(month) - 1,
-                        Number.parseInt(day),
+                        Number.parseInt(year, 10),
+                        Number.parseInt(month, 10) - 1,
+                        Number.parseInt(day, 10),
                       );
                       return localDate.toLocaleDateString("es-PE", {
                         weekday: "long",

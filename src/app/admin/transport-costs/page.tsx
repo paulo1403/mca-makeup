@@ -1,11 +1,11 @@
 "use client";
 
-import ConfirmModal from "@/components/ui/ConfirmModal";
-import Modal, { ModalHeader, ModalBody, ModalFooter } from "@/components/ui/Modal";
 import { CheckCircle, DollarSign, MapPin, Pencil, Trash2, XCircle } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useCallback, useEffect, useState } from "react";
+import ConfirmModal from "@/components/ui/ConfirmModal";
+import Modal, { ModalBody, ModalFooter, ModalHeader } from "@/components/ui/Modal";
 
 interface TransportCost {
   id: string;
@@ -35,16 +35,7 @@ export default function TransportCostsPage() {
     notes: "",
   });
 
-  useEffect(() => {
-    if (status === "loading") return;
-    if (!session) {
-      router.push("/admin/login");
-      return;
-    }
-    fetchTransportCosts();
-  }, [session, status, router]);
-
-  const fetchTransportCosts = async () => {
+  const fetchTransportCosts = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch("/api/admin/transport-costs");
@@ -61,7 +52,16 @@ export default function TransportCostsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (status === "loading") return;
+    if (!session) {
+      router.push("/admin/login");
+      return;
+    }
+    fetchTransportCosts();
+  }, [session, status, router, fetchTransportCosts]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

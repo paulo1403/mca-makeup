@@ -1,13 +1,13 @@
 "use client";
+import { Search, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useFormContext } from "react-hook-form";
+import toast from "react-hot-toast";
 import Button from "@/components/ui/Button";
 import Typography from "@/components/ui/Typography";
 import { useGroupedServicesQuery } from "@/hooks/useServicesQuery";
 import type { BookingData } from "@/lib/bookingSchema";
 import { CATEGORY_LABELS, validateSelection } from "@/lib/serviceRules";
-import { Search, X } from "lucide-react";
-import React, { useEffect, useRef, useState, useMemo } from "react";
-import { useFormContext } from "react-hook-form";
-import toast from "react-hot-toast";
 import ServiceCategoryGroup from "../../booking/ServiceCategoryGroup";
 import ValidationToast from "../ValidationToast";
 
@@ -22,13 +22,10 @@ export default function Step2_ServiceSelection() {
     id: string;
     quantity: number;
   }>;
-  const selectedServicesMap = selectedArr.reduce<Record<string, number>>(
-    (acc, item) => {
-      acc[item.id] = item.quantity;
-      return acc;
-    },
-    {}
-  );
+  const selectedServicesMap = selectedArr.reduce<Record<string, number>>((acc, item) => {
+    acc[item.id] = item.quantity;
+    return acc;
+  }, {});
 
   const allServices = Object.values(grouped).flat();
   const categories = Object.keys(grouped);
@@ -56,10 +53,7 @@ export default function Step2_ServiceSelection() {
   }, [grouped, query, selectedCategory]);
 
   useEffect(() => {
-    const validationResult = validateSelection(
-      selectedServicesMap || {},
-      allServices
-    );
+    const validationResult = validateSelection(selectedServicesMap || {}, allServices);
 
     if (validationResult) {
       if (currentToastId.current) {
@@ -78,7 +72,7 @@ export default function Step2_ServiceSelection() {
           duration: Number.POSITIVE_INFINITY,
           id: "validation-error",
           position: "top-right",
-        }
+        },
       );
     } else {
       if (currentToastId.current) {
@@ -112,11 +106,7 @@ export default function Step2_ServiceSelection() {
         >
           Selecciona tus servicios
         </Typography>
-        <Typography
-          as="p"
-          variant="small"
-          className="text-[color:var(--color-body)]"
-        >
+        <Typography as="p" variant="small" className="text-[color:var(--color-body)]">
           Elige uno o más servicios
         </Typography>
       </div>
@@ -166,8 +156,7 @@ export default function Step2_ServiceSelection() {
                 : "bg-[color:var(--color-surface)]/60 text-[color:var(--color-body)] hover:bg-[color:var(--color-surface)]"
             }`}
           >
-            {CATEGORY_LABELS[category as keyof typeof CATEGORY_LABELS] ??
-              category}
+            {CATEGORY_LABELS[category as keyof typeof CATEGORY_LABELS] ?? category}
           </button>
         ))}
       </div>
@@ -180,8 +169,7 @@ export default function Step2_ServiceSelection() {
             variant="small"
             className="text-[color:var(--color-primary)] font-medium"
           >
-            {selectedArr.length}{" "}
-            {selectedArr.length === 1 ? "servicio" : "servicios"}
+            {selectedArr.length} {selectedArr.length === 1 ? "servicio" : "servicios"}
           </Typography>
         </div>
       )}
@@ -189,11 +177,7 @@ export default function Step2_ServiceSelection() {
       {/* Resultados */}
       {Object.entries(filteredGrouped).length === 0 ? (
         <div className="text-center py-8">
-          <Typography
-            as="p"
-            variant="p"
-            className="text-[color:var(--color-body)] mb-3"
-          >
+          <Typography as="p" variant="p" className="text-[color:var(--color-body)] mb-3">
             No se encontraron servicios
           </Typography>
           <Button variant="ghost" size="sm" onClick={clearFilters}>

@@ -1,9 +1,9 @@
-import { prisma } from "@/lib/prisma";
 import { type NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 // GET /api/reviews/[token] - Obtener review por token
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ token: string }> },
 ) {
   try {

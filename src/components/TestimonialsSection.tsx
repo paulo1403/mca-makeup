@@ -1,8 +1,8 @@
 "use client";
 
+import { Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import Typography from "./ui/Typography";
-import { Star } from "lucide-react";
 
 export default function TestimonialsSection() {
   const [items, setItems] = useState<Testimonial[]>(fallbackTestimonials);
@@ -15,20 +15,13 @@ export default function TestimonialsSection() {
         const res = await fetch("/api/reviews");
         const data = await res.json();
         if (!mounted) return;
-        if (
-          data?.success &&
-          Array.isArray(data.reviews) &&
-          data.reviews.length > 0
-        ) {
+        if (data?.success && Array.isArray(data.reviews) && data.reviews.length > 0) {
           const list = data.reviews.slice(0, 6).map((r: ReviewShape) => ({
             id: r.id,
             name: r.reviewerName,
             text: r.reviewText || "Excelente servicio, muy recomendado!",
             rating: r.rating || 5,
-            service: formatService(
-              r.appointment?.services,
-              r.appointment?.serviceType
-            ),
+            service: formatService(r.appointment?.services, r.appointment?.serviceType),
             initials: getInitials(r.reviewerName),
           }));
           setItems(list);
@@ -52,11 +45,7 @@ export default function TestimonialsSection() {
     >
       <div className="container mx-auto px-5 sm:px-6 max-w-lg sm:max-w-xl">
         <div className="text-center mb-10 sm:mb-12">
-          <Typography
-            as="h2"
-            variant="h2"
-            className="text-[color:var(--color-heading)]"
-          >
+          <Typography as="h2" variant="h2" className="text-[color:var(--color-heading)]">
             Testimonios
           </Typography>
         </div>
@@ -139,10 +128,7 @@ function getInitials(name: string) {
     .slice(0, 2);
 }
 
-function formatService(
-  services?: { name?: string; serviceName?: string }[],
-  serviceType?: string
-) {
+function formatService(services?: { name?: string; serviceName?: string }[], serviceType?: string) {
   if (!services || services.length === 0) return serviceType || "Servicio";
   return services.map((s) => s.name || s.serviceName).join(", ");
 }
@@ -170,19 +156,12 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
           </Typography>
           <div className="flex gap-1 mt-1">
             {[...Array(testimonial.rating)].map((_, i) => (
-              <Star
-                key={i}
-                className="w-3.5 h-3.5 text-[color:var(--color-accent)] fill-current"
-              />
+              <Star key={i} className="w-3.5 h-3.5 text-[color:var(--color-accent)] fill-current" />
             ))}
           </div>
         </div>
       </div>
-      <Typography
-        as="p"
-        variant="small"
-        className="text-[color:var(--color-body)] leading-relaxed"
-      >
+      <Typography as="p" variant="small" className="text-[color:var(--color-body)] leading-relaxed">
         {testimonial.text}
       </Typography>
     </div>

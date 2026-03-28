@@ -52,7 +52,9 @@
 .dropdown-enter-active {
   opacity: 1;
   transform: scale(1);
-  transition: opacity 0.1s ease-out, transform 0.1s ease-out;
+  transition:
+    opacity 0.1s ease-out,
+    transform 0.1s ease-out;
 }
 
 /* Mejoras para el menú móvil */
@@ -64,7 +66,9 @@
 .mobile-menu-enter-active {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+  transition:
+    opacity 0.2s ease-out,
+    transform 0.2s ease-out;
 }
 
 /* Responsivo mejorado */
@@ -190,5 +194,5 @@
 
 /* Ocultar NavBar global (header.fixed) en páginas de administración */
 .admin-mode header.fixed {
-  display: none !important;
+  display: none;
 }

@@ -1,15 +1,15 @@
 "use client";
 
+import { Lock } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
+import { useEffect, useRef, useState } from "react";
 import { ErrorAlert } from "@/components/auth/ErrorAlert";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { RateLimitAlerts } from "@/components/auth/RateLimitAlerts";
 import { useLogin, useRateLimitCheck } from "@/hooks/useAuth";
 import { useCountdown } from "@/hooks/useCountdown";
-import { type LoginFormData, getMostRestrictiveRateLimit } from "@/lib/auth-utils";
-import { Lock } from "lucide-react";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { getMostRestrictiveRateLimit, type LoginFormData } from "@/lib/auth-utils";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");

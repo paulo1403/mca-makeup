@@ -66,8 +66,9 @@
 
 .step-circle--active {
   background: var(--stepper-active-bg);
-  box-shadow: 0 0 0 4px var(--stepper-active-ring), 0 8px 25px
-    color-mix(in srgb, var(--color-primary) 25%, transparent);
+  box-shadow:
+    0 0 0 4px var(--stepper-active-ring),
+    0 8px 25px color-mix(in srgb, var(--color-primary) 25%, transparent);
 }
 
 .step-circle--completed {
@@ -137,8 +138,9 @@
 
 .step-point-circle--active {
   background: var(--stepper-active-bg);
-  box-shadow: 0 0 0 4px var(--stepper-active-ring), 0 8px 25px
-    color-mix(in srgb, var(--color-primary) 25%, transparent);
+  box-shadow:
+    0 0 0 4px var(--stepper-active-ring),
+    0 8px 25px color-mix(in srgb, var(--color-primary) 25%, transparent);
 }
 
 .step-point-circle--completed {

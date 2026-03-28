@@ -119,7 +119,7 @@ export default function Pagination({ pagination, currentPage, onPageChange }: Pa
         <span className="text-sm text-[color:var(--color-muted)]">Página</span>
         <select
           value={currentPage}
-          onChange={(e) => onPageChange(Number.parseInt(e.target.value))}
+          onChange={(e) => onPageChange(Number.parseInt(e.target.value, 10))}
           className="px-2 py-1 text-sm bg-[color:var(--color-surface)] border border-[color:var(--color-border)] rounded focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-transparent"
         >
           {Array.from({ length: pagination.pages }, (_, i) => i + 1).map((page) => (

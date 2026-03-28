@@ -1,10 +1,8 @@
-import { authOptions } from "@/lib/auth";
-import { PrismaClient } from "@prisma/client";
-import { getServerSession } from "next-auth/next";
 import { type NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
 import { z } from "zod";
-
-const prisma = new PrismaClient();
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 // Validation schema for transport costs
 const transportCostSchema = z.object({
@@ -74,7 +72,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
 // DELETE - Eliminar costo de transporte
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
@@ -104,7 +102,7 @@ export async function DELETE(
 }
 
 // GET - Obtener costo de transporte específico
-export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) {

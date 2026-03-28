@@ -1,5 +1,5 @@
-import Typography from "@/components/ui/Typography";
 import { Sparkles } from "lucide-react";
+import Typography from "@/components/ui/Typography";
 
 interface DashboardHeaderProps {
   userName?: string;

@@ -1,6 +1,5 @@
 "use client";
 
-import Logo from "@/components/Logo";
 import {
   AlertTriangle,
   Calendar,
@@ -17,7 +16,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import Logo from "@/components/Logo";
 
 interface AdminSidebarProps {
   isOpen: boolean;

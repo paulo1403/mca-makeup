@@ -1,5 +1,5 @@
-import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
+import { withAuth } from "next-auth/middleware";
 
 // Timezone is configured in next.config.ts
 

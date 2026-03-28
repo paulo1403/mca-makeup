@@ -1,8 +1,8 @@
 "use client";
 
+import { Info, Plus } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Typography from "@/components/ui/Typography";
-import { Info, Plus } from "lucide-react";
 import type { Service } from "../types";
 
 interface ServicesHeaderProps {

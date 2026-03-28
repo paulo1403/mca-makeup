@@ -1,6 +1,5 @@
 "use client";
 
-import type { TimeSlot } from "@/hooks/useAvailability";
 import {
   Building,
   CheckCircle,
@@ -14,7 +13,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { useState } from "react";
-import React from "react";
+import type { TimeSlot } from "@/hooks/useAvailability";
 
 const DAYS_OF_WEEK = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 

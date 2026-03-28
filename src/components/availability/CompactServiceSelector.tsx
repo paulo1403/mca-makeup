@@ -1,10 +1,10 @@
 "use client";
 
-import type { Service, ServiceSelection } from "@/types";
-import { CATEGORY_COLORS, CATEGORY_LABELS } from "@/lib/serviceRules";
-import { Sparkles, Clock, Check, Search } from "lucide-react";
-import Typography from "@/components/ui/Typography";
+import { Check, Clock, Search, Sparkles } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import Typography from "@/components/ui/Typography";
+import { CATEGORY_COLORS, CATEGORY_LABELS } from "@/lib/serviceRules";
+import type { Service, ServiceSelection } from "@/types";
 
 interface CompactServiceSelectorProps {
   value: ServiceSelection;
@@ -52,13 +52,10 @@ export default function CompactServiceSelector({
 
   const filtered = useMemo(() => {
     return services.filter((s) => {
-      const matchesCategory = activeCategory
-        ? s.category === activeCategory
-        : true;
+      const matchesCategory = activeCategory ? s.category === activeCategory : true;
       const q = searchTerm.trim().toLowerCase();
       const matchesSearch = q
-        ? s.name.toLowerCase().includes(q) ||
-          s.description?.toLowerCase().includes(q)
+        ? s.name.toLowerCase().includes(q) || s.description?.toLowerCase().includes(q)
         : true;
       return matchesCategory && matchesSearch;
     });
@@ -155,11 +152,7 @@ export default function CompactServiceSelector({
                 tabIndex={0}
                 onClick={() => toggleService(svc)}
                 onKeyDown={(e) => {
-                  if (
-                    e.key === "Enter" ||
-                    e.key === " " ||
-                    e.key === "Spacebar"
-                  ) {
+                  if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
                     e.preventDefault();
                     toggleService(svc);
                   }
@@ -175,15 +168,13 @@ export default function CompactServiceSelector({
                     <div className="flex items-center gap-1.5">
                       <div
                         className={`w-2 h-2 rounded-full ${
-                          CATEGORY_COLORS[
-                            svc.category as keyof typeof CATEGORY_COLORS
-                          ] || "bg-gray-300"
+                          CATEGORY_COLORS[svc.category as keyof typeof CATEGORY_COLORS] ||
+                          "bg-gray-300"
                         }`}
                       />
                       <span className="text-[10px] sm:text-[11px] text-[color:var(--color-body)]">
-                        {CATEGORY_LABELS[
-                          svc.category as keyof typeof CATEGORY_LABELS
-                        ] || svc.category}
+                        {CATEGORY_LABELS[svc.category as keyof typeof CATEGORY_LABELS] ||
+                          svc.category}
                       </span>
                     </div>
                     <Typography

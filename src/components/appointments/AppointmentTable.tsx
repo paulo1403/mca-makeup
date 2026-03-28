@@ -1,4 +1,17 @@
 "use client";
+import {
+  Calendar,
+  CheckCircle,
+  Clock,
+  Eye,
+  Link,
+  MapPin,
+  RotateCcw,
+  Star,
+  Trash2,
+  User,
+  XCircle,
+} from "lucide-react";
 import StatusBadge from "@/components/appointments/StatusBadge";
 import {
   type Appointment,
@@ -14,20 +27,6 @@ import {
   getPriceBreakdown,
 } from "@/utils/appointmentHelpers";
 import { copyReviewLink } from "@/utils/reviewHelpers";
-import {
-  Calendar,
-  CheckCircle,
-  Clock,
-  Eye,
-  Link,
-  MapPin,
-  RotateCcw,
-  Star,
-  Trash2,
-  User,
-  XCircle,
-} from "lucide-react";
-import React from "react";
 
 interface AppointmentTableProps {
   appointments: Appointment[];
@@ -107,7 +106,12 @@ function MobileAppointmentCard({
               <div className="text-xs text-[color:var(--color-muted)] max-w-[70vw]">
                 <span
                   className="inline-block"
-                  style={{ display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical", overflow: "hidden" }}
+                  style={{
+                    display: "-webkit-box",
+                    WebkitLineClamp: 1,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                  }}
                 >
                   {servicesLabel}
                 </span>

@@ -1,19 +1,18 @@
 "use client";
-import DistrictSelector from "@/components/DistrictSelector";
+import { Check, FileText, Home, MapPin } from "lucide-react";
+import { useEffect } from "react";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import InputField from "@/components/booking/InputField";
+import DistrictSelector from "@/components/DistrictSelector";
 import Typography from "@/components/ui/Typography";
 import { useTransportCost } from "@/hooks/useTransportCost";
 import type { BookingData } from "@/lib/bookingSchema";
-import { Check, FileText, Home, MapPin } from "lucide-react";
-import React, { useEffect } from "react";
-import { Controller, useFormContext, useWatch } from "react-hook-form";
 
 export default function Step3_Location() {
   const { control, setValue } = useFormContext<BookingData>();
   const locationType = useWatch({ name: "locationType", control });
   const district = useWatch({ name: "district", control });
-  const { transportCost, loading, error, getTransportCost } =
-    useTransportCost();
+  const { transportCost, loading, error, getTransportCost } = useTransportCost();
 
   useEffect(() => {
     if (district) {
@@ -32,11 +31,7 @@ export default function Step3_Location() {
         >
           ¿Dónde te atiendo?
         </Typography>
-        <Typography
-          as="p"
-          variant="small"
-          className="text-[color:var(--color-body)]"
-        >
+        <Typography as="p" variant="small" className="text-[color:var(--color-body)]">
           Elige una opción
         </Typography>
       </div>
@@ -62,9 +57,7 @@ export default function Step3_Location() {
           >
             <MapPin
               className={`w-5 h-5 ${
-                locationType === "STUDIO"
-                  ? "text-white"
-                  : "text-[color:var(--color-primary)]"
+                locationType === "STUDIO" ? "text-white" : "text-[color:var(--color-primary)]"
               }`}
             />
           </div>
@@ -81,11 +74,7 @@ export default function Step3_Location() {
             >
               Room Studio
             </Typography>
-            <Typography
-              as="p"
-              variant="small"
-              className="text-[color:var(--color-body)]"
-            >
+            <Typography as="p" variant="small" className="text-[color:var(--color-body)]">
               Sin costo adicional
             </Typography>
           </div>
@@ -97,9 +86,7 @@ export default function Step3_Location() {
                 : "border-[color:var(--color-border)]"
             }`}
           >
-            {locationType === "STUDIO" && (
-              <Check className="w-3 h-3 text-white" />
-            )}
+            {locationType === "STUDIO" && <Check className="w-3 h-3 text-white" />}
           </div>
         </button>
 
@@ -122,9 +109,7 @@ export default function Step3_Location() {
           >
             <Home
               className={`w-5 h-5 ${
-                locationType === "HOME"
-                  ? "text-white"
-                  : "text-[color:var(--color-primary)]"
+                locationType === "HOME" ? "text-white" : "text-[color:var(--color-primary)]"
               }`}
             />
           </div>
@@ -141,11 +126,7 @@ export default function Step3_Location() {
             >
               A Domicilio
             </Typography>
-            <Typography
-              as="p"
-              variant="small"
-              className="text-[color:var(--color-body)]"
-            >
+            <Typography as="p" variant="small" className="text-[color:var(--color-body)]">
               Costo por distrito
             </Typography>
           </div>
@@ -157,9 +138,7 @@ export default function Step3_Location() {
                 : "border-[color:var(--color-border)]"
             }`}
           >
-            {locationType === "HOME" && (
-              <Check className="w-3 h-3 text-white" />
-            )}
+            {locationType === "HOME" && <Check className="w-3 h-3 text-white" />}
           </div>
         </button>
       </div>
@@ -205,11 +184,7 @@ export default function Step3_Location() {
                     </div>
                   )}
                   {!loading && error && (
-                    <Typography
-                      as="p"
-                      variant="small"
-                      className="mt-2 text-red-500"
-                    >
+                    <Typography as="p" variant="small" className="mt-2 text-red-500">
                       {error}
                     </Typography>
                   )}

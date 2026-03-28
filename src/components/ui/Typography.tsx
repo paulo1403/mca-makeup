@@ -3,17 +3,7 @@
 import clsx from "clsx";
 import React from "react";
 
-type Variant =
-  | "display"
-  | "h1"
-  | "h2"
-  | "h3"
-  | "h4"
-  | "h5"
-  | "h6"
-  | "p"
-  | "small"
-  | "caption";
+type Variant = "display" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "small" | "caption";
 
 interface TypographyProps<T extends React.ElementType = "p"> {
   as?: T;
@@ -38,6 +28,6 @@ export default function Typography<T extends React.ElementType = "p">({
   return React.createElement(
     Component,
     { className: clsx(variantClass, className), style: mergedStyle, ...props },
-    children
+    children,
   );
 }

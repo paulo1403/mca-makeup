@@ -1,10 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
 import useServiceGroups, { type ServiceGroup } from "@/hooks/useServiceGroups";
-import Button from "./ui/Button";
 import Typography from "./ui/Typography";
-import { ArrowRight } from "lucide-react";
 
 // UI type extends API type with optional UI-only props
 type UIServiceGroup = ServiceGroup & { icon?: React.ReactNode; badge?: string };
@@ -18,11 +15,7 @@ function ServiceItem({ service }: { service: UIServiceGroup }) {
       rel="noopener noreferrer"
       className="block w-full rounded-[12px] px-5 py-4 bg-[color:var(--color-surface)]/40 text-center hover:bg-[color:var(--color-surface)]/60 transition-colors cursor-pointer"
     >
-      <Typography
-        as="h3"
-        variant="h3"
-        className="font-normal text-[color:var(--color-heading)]"
-      >
+      <Typography as="h3" variant="h3" className="font-normal text-[color:var(--color-heading)]">
         {service.title}
       </Typography>
     </a>
@@ -62,11 +55,7 @@ export default function ServicesSection() {
         <div className="container mx-auto px-5 sm:px-6 max-w-lg sm:max-w-xl relative z-10">
           {/* Header */}
           <div className="text-center mb-10 sm:mb-12">
-            <Typography
-              as="h2"
-              variant="h2"
-              className="text-[color:var(--color-heading)]"
-            >
+            <Typography as="h2" variant="h2" className="text-[color:var(--color-heading)]">
               Nuestros Servicios
             </Typography>
           </div>

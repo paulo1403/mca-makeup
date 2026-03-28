@@ -1,13 +1,13 @@
 "use client";
 
-import Button from "@/components/ui/Button";
-import Modal, { ModalHeader, ModalBody } from "@/components/ui/Modal";
-import Typography from "@/components/ui/Typography";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Building, Home } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Button from "@/components/ui/Button";
+import Modal, { ModalBody, ModalHeader } from "@/components/ui/Modal";
+import Typography from "@/components/ui/Typography";
 
 const timeSlotSchema = z
   .object({

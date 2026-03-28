@@ -1,7 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
 import { Minus, Plus } from "lucide-react";
-import React from "react";
 
 interface Props {
   value: number;

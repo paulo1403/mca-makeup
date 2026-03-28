@@ -1,11 +1,11 @@
+import { type NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { type NextRequest, NextResponse } from "next/server";
 
 // DELETE /api/admin/reviews/[id] - Eliminar review específica
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {

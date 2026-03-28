@@ -60,7 +60,7 @@ export const getMostRestrictiveRateLimit = (rateLimitStatus: RateLimitStatus): R
 
 // Utilidades de tiempo para countdown
 export const calculateTimeLeft = (blockedUntil: string): number => {
-  const now = new Date().getTime();
+  const now = Date.now();
   const blockedTime = new Date(blockedUntil).getTime();
   return Math.max(0, Math.ceil((blockedTime - now) / 1000));
 };

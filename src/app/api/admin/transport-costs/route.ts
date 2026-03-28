@@ -1,10 +1,8 @@
-import { authOptions } from "@/lib/auth";
-import { PrismaClient } from "@prisma/client";
-import { getServerSession } from "next-auth/next";
 import { type NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
 import { z } from "zod";
-
-const prisma = new PrismaClient();
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 // Validation schema for transport costs
 const transportCostSchema = z.object({

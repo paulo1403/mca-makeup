@@ -1,11 +1,11 @@
-import {
-  type Appointment,
-  useAppointmentUrlParams,
-  useAppointments,
-} from "@/hooks/useAppointments";
-import { scrollToAppointment } from "@/utils/appointmentHelpers";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import {
+  type Appointment,
+  useAppointments,
+  useAppointmentUrlParams,
+} from "@/hooks/useAppointments";
+import { scrollToAppointment } from "@/utils/appointmentHelpers";
 
 export const useAppointmentsPage = () => {
   const router = useRouter();

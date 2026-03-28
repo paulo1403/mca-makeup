@@ -1,5 +1,5 @@
-import type { DashboardStats } from "@/hooks/useDashboardStats";
 import { Calendar, CheckCircle, Clock, TrendingUp } from "lucide-react";
+import type { DashboardStats } from "@/hooks/useDashboardStats";
 
 interface StatCardProps {
   title: string;
@@ -17,9 +17,7 @@ function StatCard({ title, value, icon, color, bgColor }: StatCardProps) {
           <p className="text-xs sm:text-sm font-medium text-[color:var(--color-muted)] mb-1 mobile-text">
             {title}
           </p>
-          <p className="text-xl sm:text-2xl font-bold text-[color:var(--color-heading)]">
-            {value}
-          </p>
+          <p className="text-xl sm:text-2xl font-bold text-[color:var(--color-heading)]">{value}</p>
         </div>
         <div
           className={`p-2 sm:p-3 ${bgColor} rounded-lg flex-shrink-0 smooth-transition hover:scale-105`}

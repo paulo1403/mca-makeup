@@ -1,35 +1,32 @@
 "use client";
 
-import Typography from "@/components/ui/Typography";
-import Button from "@/components/ui/Button";
-import CompactServiceSelector from "@/components/availability/CompactServiceSelector";
-import { useServicesList } from "@/hooks/useServices";
-import { useDistricts } from "@/hooks/useDistricts";
-import type { ServiceSelection, LocationType } from "@/types";
 import {
-  MapPin,
-  DollarSign,
   ArrowRight,
   Calculator,
-  Search,
   ChevronDown,
   ChevronUp,
+  DollarSign,
+  MapPin,
+  Search,
 } from "lucide-react";
 import { useMemo, useState } from "react";
+import CompactServiceSelector from "@/components/availability/CompactServiceSelector";
+import Button from "@/components/ui/Button";
+import Typography from "@/components/ui/Typography";
+import { useDistricts } from "@/hooks/useDistricts";
+import { useServicesList } from "@/hooks/useServices";
+import type { LocationType, ServiceSelection } from "@/types";
 
 export default function PriceQuoteSection() {
   const [locationType, setLocationType] = useState<LocationType>("HOME");
-  const [serviceSelection, setServiceSelection] = useState<ServiceSelection>(
-    {}
-  );
+  const [serviceSelection, setServiceSelection] = useState<ServiceSelection>({});
   const [selectedDistrict, setSelectedDistrict] = useState<string>("");
   const [districtSearch, setDistrictSearch] = useState<string>("");
   const [showDistrictDropdown, setShowDistrictDropdown] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const { data: allServices = [] } = useServicesList();
-  const { districts: transportCosts = [], loading: districtsLoading } =
-    useDistricts();
+  const { districts: transportCosts = [] } = useDistricts();
 
   const hasSelectedService = useMemo(() => {
     return Object.values(serviceSelection).some((q) => q > 0);
@@ -40,9 +37,7 @@ export default function PriceQuoteSection() {
     let total = 0;
     Object.entries(serviceSelection).forEach(([serviceId, quantity]) => {
       if (quantity > 0) {
-        const service = allServices.find(
-          (s: { id: string; price: number }) => s.id === serviceId
-        );
+        const service = allServices.find((s: { id: string; price: number }) => s.id === serviceId);
         if (service) {
           total += service.price * quantity;
         }
@@ -56,7 +51,7 @@ export default function PriceQuoteSection() {
     if (locationType === "STUDIO") return 0;
     if (!selectedDistrict) return 0;
     const district = transportCosts.find(
-      (d: { name: string; cost: number }) => d.name === selectedDistrict
+      (d: { name: string; cost: number }) => d.name === selectedDistrict,
     );
     return district?.cost || 0;
   }, [locationType, selectedDistrict, transportCosts]);
@@ -66,13 +61,10 @@ export default function PriceQuoteSection() {
 
   const filteredDistricts = useMemo(() => {
     const districts = transportCosts.map(
-      (d: { district?: string; name?: string; cost?: number }) =>
-        d.district ?? d.name ?? ""
+      (d: { district?: string; name?: string; cost?: number }) => d.district ?? d.name ?? "",
     );
     if (!districtSearch.trim()) return districts;
-    return districts.filter((d: string) =>
-      d.toLowerCase().includes(districtSearch.toLowerCase())
-    );
+    return districts.filter((d: string) => d.toLowerCase().includes(districtSearch.toLowerCase()));
   }, [transportCosts, districtSearch]);
 
   const handleDistrictSelect = (district: string) => {
@@ -96,7 +88,7 @@ export default function PriceQuoteSection() {
           services: servicesPairs.join(","),
           district: selectedDistrict || undefined,
         },
-      })
+      }),
     );
 
     // Scroll a la sección de disponibilidad
@@ -200,9 +192,7 @@ export default function PriceQuoteSection() {
               </Typography>
               <div
                 className="relative"
-                onBlur={() =>
-                  setTimeout(() => setShowDistrictDropdown(false), 150)
-                }
+                onBlur={() => setTimeout(() => setShowDistrictDropdown(false), 150)}
               >
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[color:var(--color-muted)] pointer-events-none z-10" />
                 <input
@@ -281,11 +271,7 @@ export default function PriceQuoteSection() {
           <div className="space-y-2 text-sm">
             {/* Servicios */}
             <div className="flex justify-between items-center">
-              <Typography
-                as="span"
-                variant="small"
-                className="text-[color:var(--color-body)]"
-              >
+              <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
                 Servicios
               </Typography>
               <Typography
@@ -300,11 +286,7 @@ export default function PriceQuoteSection() {
             {/* Transporte */}
             {locationType === "HOME" && (
               <div className="flex justify-between items-center">
-                <Typography
-                  as="span"
-                  variant="small"
-                  className="text-[color:var(--color-body)]"
-                >
+                <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
                   Transporte {selectedDistrict && `(${selectedDistrict})`}
                 </Typography>
                 <Typography
@@ -312,9 +294,7 @@ export default function PriceQuoteSection() {
                   variant="small"
                   className="text-[color:var(--color-heading)] font-medium"
                 >
-                  {selectedDistrict
-                    ? `S/ ${transportCost.toFixed(2)}`
-                    : "S/ 0.00"}
+                  {selectedDistrict ? `S/ ${transportCost.toFixed(2)}` : "S/ 0.00"}
                 </Typography>
               </div>
             )}
@@ -345,8 +325,7 @@ export default function PriceQuoteSection() {
               variant="small"
               className="text-[color:var(--color-muted)] text-center"
             >
-              * Si tu cita es después de las 8 PM, se aplica un cargo adicional
-              de S/ 20.00
+              * Si tu cita es después de las 8 PM, se aplica un cargo adicional de S/ 20.00
             </Typography>
           </div>
 

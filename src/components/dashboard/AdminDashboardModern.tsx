@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardHero from "@/components/dashboard/DashboardHero";
 import DashboardSection from "@/components/dashboard/DashboardSection";
@@ -13,7 +14,6 @@ import StatusSummary from "@/components/dashboard/StatusSummary";
 import Button from "@/components/ui/Button";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { useRecentAppointments } from "@/hooks/useRecentAppointments";
-import Link from "next/link";
 
 export default function AdminDashboardModern() {
   const {

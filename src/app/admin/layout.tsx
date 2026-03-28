@@ -1,19 +1,15 @@
 "use client";
 
-import AdminSidebar from "@/components/AdminSidebar";
-import NotificationCenter from "@/components/NotificationCenter";
 import { LogOut, Menu, User } from "lucide-react";
 import { SessionProvider, signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import AdminSidebar from "@/components/AdminSidebar";
+import NotificationCenter from "@/components/NotificationCenter";
 import "@/styles/admin.css";
 import Logo from "@/components/Logo";
 import ThemeToggle from "@/components/ThemeToggle";
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
       <AdminLayoutContent>{children}</AdminLayoutContent>

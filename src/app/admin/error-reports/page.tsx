@@ -1,8 +1,5 @@
 "use client";
 
-import Button from "@/components/ui/Button";
-import Modal, { ModalHeader, ModalBody, ModalFooter } from "@/components/ui/Modal";
-import Typography from "@/components/ui/Typography";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AlertCircle,
@@ -16,6 +13,9 @@ import {
   User,
 } from "lucide-react";
 import { useState } from "react";
+import Button from "@/components/ui/Button";
+import Modal, { ModalBody, ModalFooter, ModalHeader } from "@/components/ui/Modal";
+import Typography from "@/components/ui/Typography";
 
 interface ErrorReport {
   id: string;

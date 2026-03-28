@@ -1,7 +1,7 @@
 "use client";
 
-import Typography from "@/components/ui/Typography";
 import { motion } from "framer-motion";
+import Typography from "@/components/ui/Typography";
 
 interface DashboardSectionProps {
   title?: string;

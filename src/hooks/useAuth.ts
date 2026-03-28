@@ -1,8 +1,8 @@
 "use client";
 
-import type { LoginFormData, RateLimitStatus } from "@/lib/auth-utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { signIn } from "next-auth/react";
+import type { LoginFormData, RateLimitStatus } from "@/lib/auth-utils";
 
 // Servicios API
 const authService = {

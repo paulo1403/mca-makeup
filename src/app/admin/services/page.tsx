@@ -1,16 +1,16 @@
 "use client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import ServiceFormModal from "./components/ServiceFormModal";
 import ServiceInfoModal from "./components/ServiceInfoModal";
 import ServiceListMobile from "./components/ServiceListMobile";
-import ServiceTableDesktop from "./components/ServiceTableDesktop";
 import ServicesHeader from "./components/ServicesHeader";
+import ServiceTableDesktop from "./components/ServiceTableDesktop";
 import ViewServiceModal from "./components/ViewServiceModal";
 import type { Service, ServiceFormData } from "./types";
 
@@ -82,7 +82,7 @@ export default function ServicesPage() {
         body: JSON.stringify({
           ...formData,
           price: Number.parseFloat(formData.price),
-          duration: Number.parseInt(formData.duration),
+          duration: Number.parseInt(formData.duration, 10),
         }),
       });
 

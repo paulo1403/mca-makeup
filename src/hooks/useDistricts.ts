@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface District {
   name: string;
@@ -18,7 +18,7 @@ export function useDistricts(): UseDistrictsReturn {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const fetchDistricts = async () => {
+  const fetchDistricts = useCallback(async () => {
     try {
       setLoading(true);
       setError("");
@@ -41,7 +41,7 @@ export function useDistricts(): UseDistrictsReturn {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const refreshDistricts = async () => {
     await fetchDistricts();
@@ -49,7 +49,7 @@ export function useDistricts(): UseDistrictsReturn {
 
   useEffect(() => {
     fetchDistricts();
-  }, []);
+  }, [fetchDistricts]);
 
   return {
     districts,

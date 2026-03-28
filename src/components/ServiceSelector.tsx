@@ -1,9 +1,9 @@
 "use client";
 
-import { CATEGORY_COLORS, CATEGORY_LABELS, validateSelection } from "@/lib/serviceRules";
-import type { Service, ServiceSelection } from "@/types";
 import { AlertTriangle, ChevronDown, Clock, Minus, Plus, Sparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { CATEGORY_COLORS, CATEGORY_LABELS, validateSelection } from "@/lib/serviceRules";
+import type { Service, ServiceSelection } from "@/types";
 
 interface ServiceSelectorProps {
   value: ServiceSelection;

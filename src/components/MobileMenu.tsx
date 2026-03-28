@@ -3,7 +3,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Mail, MapPin, Phone, Sparkles, Star, Users, X } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 import Logo from "./Logo";
 import Typography from "./ui/Typography";
 
@@ -13,11 +12,7 @@ interface MobileMenuProps {
   handleNavClick: (href: string) => void;
 }
 
-export default function MobileMenu({
-  isOpen,
-  onClose,
-  handleNavClick,
-}: MobileMenuProps) {
+export default function MobileMenu({ isOpen, onClose, handleNavClick }: MobileMenuProps) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -28,10 +23,7 @@ export default function MobileMenu({
           transition={{ duration: 0.3, ease: "easeInOut" }}
           className="fixed inset-0 z-50"
         >
-          <div
-            className="absolute inset-0 bg-black/80 backdrop-blur-md"
-            onClick={onClose}
-          >
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={onClose}>
             <div
               className="absolute top-0 right-0 w-full sm:w-80 h-screen bg-[color:var(--color-surface)]/95 overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
@@ -60,11 +52,7 @@ export default function MobileMenu({
                   <div className="w-10 h-10 rounded-lg bg-[color:var(--color-accent)]/10 flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-[color:var(--color-accent)]" />
                   </div>
-                  <Typography
-                    as="span"
-                    variant="p"
-                    className="text-[color:var(--color-heading)]"
-                  >
+                  <Typography as="span" variant="p" className="text-[color:var(--color-heading)]">
                     Inicio
                   </Typography>
                 </Link>
@@ -80,11 +68,7 @@ export default function MobileMenu({
                   <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/10 flex items-center justify-center">
                     <MapPin className="w-5 h-5 text-[color:var(--color-primary)]" />
                   </div>
-                  <Typography
-                    as="span"
-                    variant="p"
-                    className="text-[color:var(--color-heading)]"
-                  >
+                  <Typography as="span" variant="p" className="text-[color:var(--color-heading)]">
                     Servicios
                   </Typography>
                 </Link>
@@ -100,11 +84,7 @@ export default function MobileMenu({
                   <div className="w-10 h-10 rounded-lg bg-[color:var(--color-accent)]/10 flex items-center justify-center">
                     <Star className="w-5 h-5 text-[color:var(--color-accent)]" />
                   </div>
-                  <Typography
-                    as="span"
-                    variant="p"
-                    className="text-[color:var(--color-heading)]"
-                  >
+                  <Typography as="span" variant="p" className="text-[color:var(--color-heading)]">
                     Testimonios
                   </Typography>
                 </Link>
@@ -120,11 +100,7 @@ export default function MobileMenu({
                   <div className="w-10 h-10 rounded-lg bg-[color:var(--color-accent)]/10 flex items-center justify-center">
                     <Users className="w-5 h-5 text-[color:var(--color-accent)]" />
                   </div>
-                  <Typography
-                    as="span"
-                    variant="p"
-                    className="text-[color:var(--color-heading)]"
-                  >
+                  <Typography as="span" variant="p" className="text-[color:var(--color-heading)]">
                     Nosotros
                   </Typography>
                 </Link>
@@ -137,11 +113,7 @@ export default function MobileMenu({
                   <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
                     <Phone className="w-5 h-5 text-white" />
                   </div>
-                  <Typography
-                    as="span"
-                    variant="p"
-                    className="text-white font-medium"
-                  >
+                  <Typography as="span" variant="p" className="text-white font-medium">
                     Reservar Cita
                   </Typography>
                 </Link>

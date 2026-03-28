@@ -1,7 +1,7 @@
 "use client";
 
 import { useCountdown } from "@/hooks/useCountdown";
-import { type RateLimitInfo, formatTime } from "@/lib/auth-utils";
+import { formatTime, type RateLimitInfo } from "@/lib/auth-utils";
 
 interface RateLimitAlertsProps {
   rateLimitInfo: RateLimitInfo | null;

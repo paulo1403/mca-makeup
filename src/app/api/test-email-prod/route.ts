@@ -1,5 +1,5 @@
-import { emailTemplates, sendEmail, sendEmailToAdmins } from "@/lib/serverEmail";
 import { NextResponse } from "next/server";
+import { emailTemplates, sendEmail, sendEmailToAdmins } from "@/lib/serverEmail";
 
 // 🔐 Middleware de seguridad para producción
 const isAuthorizedForTesting = (request: Request) => {

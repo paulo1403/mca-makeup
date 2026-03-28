@@ -1,3 +1,5 @@
+import { ArrowRight, Calendar, Clock, User } from "lucide-react";
+import Link from "next/link";
 import { useIsSmallMobile } from "@/hooks/useMediaQuery";
 import type { RecentAppointment } from "@/hooks/useRecentAppointments";
 import {
@@ -8,8 +10,6 @@ import {
   getStatusColor,
   getStatusText,
 } from "@/utils/dashboardUtils";
-import { ArrowRight, Calendar, Clock, User } from "lucide-react";
-import Link from "next/link";
 
 interface AppointmentItemProps {
   appointment: RecentAppointment;

@@ -1,6 +1,5 @@
 "use client";
 
-import LoadingSpinner from "@/components/LoadingSpinner";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   addMonths,
@@ -26,7 +25,8 @@ import {
   XCircle,
 } from "lucide-react";
 import type React from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 // Interfaces
 interface CalendarAppointment {
@@ -294,7 +294,7 @@ export default function AdminCalendar() {
   });
 
   // Función para parsear fecha y hora
-  const parseAppointmentDateTime = (dateStr: string, timeStr: string) => {
+  const parseAppointmentDateTime = useCallback((dateStr: string, timeStr: string) => {
     try {
       const baseDate = parseISO(dateStr);
       if (!isValid(baseDate)) return null;
@@ -322,7 +322,7 @@ export default function AdminCalendar() {
     } catch {
       return null;
     }
-  };
+  }, []);
 
   // Procesar citas
   const processedAppointments: ProcessedAppointment[] = useMemo(() => {
@@ -341,7 +341,7 @@ export default function AdminCalendar() {
         };
       })
       .filter((apt: ProcessedAppointment | null): apt is ProcessedAppointment => apt !== null);
-  }, [appointments]);
+  }, [appointments, parseAppointmentDateTime]);
 
   const monthDays = useMemo(() => {
     const start = startOfMonth(currentDate);

@@ -1,6 +1,6 @@
+import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { formatDateForCalendar, formatTimeRange } from "@/utils/dateUtils";
-import { type NextRequest, NextResponse } from "next/server";
 
 // GET /api/admin/appointments/calendar - Get appointments for calendar view with optional date filtering
 export async function GET(request: NextRequest) {

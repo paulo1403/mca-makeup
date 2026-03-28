@@ -138,13 +138,7 @@ export const useUpdateAppointmentStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      id,
-      status,
-    }: {
-      id: string;
-      status: Appointment["status"];
-    }) => {
+    mutationFn: async ({ id, status }: { id: string; status: Appointment["status"] }) => {
       const response = await fetch(`/api/admin/appointments/${id}`, {
         method: "PATCH",
         headers: {

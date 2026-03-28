@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/prisma";
 import { type NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 // GET /api/admin/notifications - Get notifications for admin
 export async function GET() {

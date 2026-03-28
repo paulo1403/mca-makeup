@@ -1,7 +1,7 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
 import { Banknote, Clock, Info } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import type { Service } from "../../hooks/useServicesQuery";
 import QuantityControl from "./QuantityControl";

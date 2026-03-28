@@ -34,8 +34,11 @@
   height: 4px;
   background: #6366f1;
   border-radius: 50%;
-  box-shadow: -20px 0 0 rgba(99, 102, 241, 0.6), -40px 0 0 rgba(99, 102, 241, 0.3), 20px 0 0
-    rgba(99, 102, 241, 0.6), 40px 0 0 rgba(99, 102, 241, 0.3);
+  box-shadow:
+    -20px 0 0 rgba(99, 102, 241, 0.6),
+    -40px 0 0 rgba(99, 102, 241, 0.3),
+    20px 0 0 rgba(99, 102, 241, 0.6),
+    40px 0 0 rgba(99, 102, 241, 0.3);
 }
 
 /* Divisor interno con línea y acento */

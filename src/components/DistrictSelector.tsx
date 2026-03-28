@@ -1,8 +1,8 @@
 "use client";
-import Typography from "@/components/ui/Typography";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, MapPin, Search, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import Typography from "@/components/ui/Typography";
 
 interface District {
   name: string;

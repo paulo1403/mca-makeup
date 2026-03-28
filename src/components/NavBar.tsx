@@ -1,13 +1,13 @@
 "use client";
 
+import { Menu } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import Logo from "@/components/Logo";
 import ThemeToggle from "@/components/ThemeToggle";
 import Button from "@/components/ui/Button";
 import Typography from "@/components/ui/Typography";
-import { Menu } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React, { useState, useEffect } from "react";
 import MobileMenu from "./MobileMenu";
 
 const NavBar = () => {
@@ -54,8 +54,7 @@ const NavBar = () => {
         // Margen más generoso en móviles para evitar superposición
         const extraMargin = isMobile ? 60 : 30;
 
-        const elementPosition =
-          element.getBoundingClientRect().top + window.scrollY;
+        const elementPosition = element.getBoundingClientRect().top + window.scrollY;
         const offsetPosition = elementPosition - headerHeight - extraMargin;
 
         window.scrollTo({

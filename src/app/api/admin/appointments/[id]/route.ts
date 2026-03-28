@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
+import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { emailTemplates, sendEmail } from "@/lib/serverEmail";
-import { type NextRequest, NextResponse } from "next/server";
 
 // PATCH /api/admin/appointments/[id] - Update appointment status
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {

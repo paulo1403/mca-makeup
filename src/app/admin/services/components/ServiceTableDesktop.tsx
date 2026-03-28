@@ -1,7 +1,7 @@
 "use client";
 
-import Button from "@/components/ui/Button";
 import { Eye, Pencil, Plus, Trash2 } from "lucide-react";
+import Button from "@/components/ui/Button";
 import type { Service } from "../types";
 
 interface ServiceTableDesktopProps {

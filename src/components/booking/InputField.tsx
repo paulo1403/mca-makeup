@@ -1,9 +1,9 @@
 "use client";
-import Typography from "@/components/ui/Typography";
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle, CheckCircle } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
+import Typography from "@/components/ui/Typography";
 
 interface InputFieldProps {
   type?: string;

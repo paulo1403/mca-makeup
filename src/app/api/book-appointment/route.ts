@@ -1,12 +1,11 @@
-import { emailTemplates, sendEmail, sendEmailToAdmins } from "@/lib/serverEmail";
-import { debugDate, parseDateFromString, formatDateForCalendar } from "@/utils/dateUtils";
-import { calculateNightShiftCost } from "@/utils/nightShift";
-import { parseAppointmentTime } from "@/utils/dateRange";
-import { type Prisma, PrismaClient } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
+import { emailTemplates, sendEmail, sendEmailToAdmins } from "@/lib/serverEmail";
+import { parseAppointmentTime } from "@/utils/dateRange";
+import { debugDate, formatDateForCalendar, parseDateFromString } from "@/utils/dateUtils";
+import { calculateNightShiftCost } from "@/utils/nightShift";
 
 // Validation schema
 const appointmentSchema = z
@@ -18,7 +17,7 @@ const appointmentSchema = z
       .min(8, "Teléfono inválido")
       .max(20, "Teléfono muy largo")
       .refine((phone) => {
-        const cleanPhone = phone.replace(/[\s\-\+\(\)]/g, "");
+        const cleanPhone = phone.replace(/[\s\-+()]/g, "");
         return cleanPhone.length >= 9 && cleanPhone.length <= 12 && /^\d+$/.test(cleanPhone);
       }, "Formato de teléfono inválido. Ej: +51 999 209 880 o 999209880"),
     services: z
@@ -201,9 +200,7 @@ export async function POST(request: NextRequest) {
       const existingEndBuffered = new Date(existing.end.getTime() + bufferAfter * 60 * 1000);
 
       // Solapamiento si [reqStart, reqEnd] intersecta [existingStartBuffered, existingEndBuffered]
-      return (
-        requested.start < existingEndBuffered && requested.end > existingStartBuffered
-      );
+      return requested.start < existingEndBuffered && requested.end > existingStartBuffered;
     });
 
     if (hasOverlap) {

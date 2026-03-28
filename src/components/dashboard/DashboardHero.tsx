@@ -1,9 +1,9 @@
 "use client";
 
-import Typography from "@/components/ui/Typography";
-import type { DashboardStats } from "@/hooks/useDashboardStats";
 import { motion } from "framer-motion";
 import { Calendar, Clock, Sparkles, Star } from "lucide-react";
+import Typography from "@/components/ui/Typography";
+import type { DashboardStats } from "@/hooks/useDashboardStats";
 
 interface DashboardHeroProps {
   userName?: string;

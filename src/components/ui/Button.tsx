@@ -1,7 +1,7 @@
 "use client";
 
 import { cva, type VariantProps } from "class-variance-authority";
-import * as React from "react";
+import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -10,11 +10,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-[color:var(--color-primary)] text-white hover:bg-[color:var(--color-primary-hover)]",
-        primary: "bg-[color:var(--color-primary)] text-white hover:bg-[color:var(--color-primary-hover)]",
+        default:
+          "bg-[color:var(--color-primary)] text-white hover:bg-[color:var(--color-primary-hover)]",
+        primary:
+          "bg-[color:var(--color-primary)] text-white hover:bg-[color:var(--color-primary-hover)]",
         secondary:
           "bg-[color:var(--color-surface-elevated)] text-[color:var(--color-on-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface)]",
-        ghost: "bg-transparent text-[color:var(--color-muted)] hover:text-[color:var(--color-on-surface)] hover:bg-[color:var(--color-surface-elevated)]",
+        ghost:
+          "bg-transparent text-[color:var(--color-muted)] hover:text-[color:var(--color-on-surface)] hover:bg-[color:var(--color-surface-elevated)]",
         outline:
           "bg-[color:var(--color-surface)] text-[color:var(--color-on-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-elevated)]",
         destructive: "bg-danger text-on-danger hover:opacity-90",
@@ -41,7 +44,7 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
 type PolymorphicProps<T extends React.ElementType> = {

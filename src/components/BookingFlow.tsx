@@ -1,13 +1,13 @@
 "use client";
-import { useServicesList } from "@/hooks/useServices";
-import BookingSchema, { type BookingData } from "@/lib/bookingSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Calendar, CreditCard, MapPin, Send, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
 import type { FieldPath } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useServicesList } from "@/hooks/useServices";
+import BookingSchema, { type BookingData } from "@/lib/bookingSchema";
 import BookingSummary from "./booking/BookingSummary";
 import StepIndicator from "./booking/StepIndicator";
 import SuccessModal from "./booking/SuccessModal";
@@ -73,12 +73,8 @@ export default function BookingFlow() {
   const total = 5;
   const canSubmit = methods.watch("agreedToTerms") === true;
   const [showSuccess, setShowSuccess] = useState(false);
-  const [successPricing, setSuccessPricing] = useState<Pricing | undefined>(
-    undefined
-  );
-  const [successClientName, setSuccessClientName] = useState<
-    string | undefined
-  >(undefined);
+  const [successPricing, setSuccessPricing] = useState<Pricing | undefined>(undefined);
+  const [successClientName, setSuccessClientName] = useState<string | undefined>(undefined);
   const [successServiceNames, setSuccessServiceNames] = useState<string[]>([]);
   const [isVisible, setIsVisible] = useState(false); // Oculto inicialmente
   const { t } = useTranslations();
@@ -139,7 +135,7 @@ export default function BookingFlow() {
 
     if (!currentDate && qpDate) {
       const parsed = new Date(`${qpDate}T00:00:00`);
-      if (!isNaN(parsed.getTime())) {
+      if (!Number.isNaN(parsed.getTime())) {
         methods.setValue("date", parsed, {
           shouldDirty: true,
           shouldValidate: true,
@@ -167,9 +163,7 @@ export default function BookingFlow() {
         const items = qpServices
           .split(",")
           .map((pair) => pair.split(":"))
-          .filter(
-            (parts) => parts.length === 2 && parts[0] && Number(parts[1]) > 0
-          )
+          .filter((parts) => parts.length === 2 && parts[0] && Number(parts[1]) > 0)
           .map(([id, qty]) => ({ id, quantity: Number(qty) }));
         if (items.length) {
           methods.setValue("selectedServices", items as any, {
@@ -198,7 +192,7 @@ export default function BookingFlow() {
 
       if (detail.date) {
         const parsed = new Date(`${detail.date}T00:00:00`);
-        if (!isNaN(parsed.getTime())) {
+        if (!Number.isNaN(parsed.getTime())) {
           methods.setValue("date", parsed, {
             shouldDirty: true,
             shouldValidate: true,
@@ -221,9 +215,7 @@ export default function BookingFlow() {
         const items = detail.services
           .split(",")
           .map((pair) => pair.split(":"))
-          .filter(
-            (parts) => parts.length === 2 && parts[0] && Number(parts[1]) > 0
-          )
+          .filter((parts) => parts.length === 2 && parts[0] && Number(parts[1]) > 0)
           .map(([id, qty]) => ({ id, quantity: Number(qty) }));
         if (items.length) {
           methods.setValue("selectedServices", items as any, {
@@ -234,11 +226,7 @@ export default function BookingFlow() {
       }
     };
     window.addEventListener("availability:prefill", handler as EventListener);
-    return () =>
-      window.removeEventListener(
-        "availability:prefill",
-        handler as EventListener
-      );
+    return () => window.removeEventListener("availability:prefill", handler as EventListener);
   }, [methods]);
 
   // Iconos para cada paso
@@ -257,9 +245,7 @@ export default function BookingFlow() {
         clientPhone: payload.phone,
         services: servicesRecord,
         servicePrice: 0,
-        appointmentDate: payload.date
-          ? new Date(payload.date).toISOString()
-          : "",
+        appointmentDate: payload.date ? new Date(payload.date).toISOString() : "",
         appointmentTimeRange: payload.timeSlot,
         locationType: payload.locationType,
         district: payload.district || undefined,
@@ -297,9 +283,7 @@ export default function BookingFlow() {
       const names = selected
         .filter((s: { id: string; quantity: number }) => s.quantity > 0)
         .map((s: { id: string }) => {
-          const svc = allServices.find(
-            (x: { id: string; name: string }) => x.id === s.id
-          );
+          const svc = allServices.find((x: { id: string; name: string }) => x.id === s.id);
           return svc?.name;
         })
         .filter(Boolean) as string[];
@@ -314,9 +298,7 @@ export default function BookingFlow() {
 
       try {
         const url = new URL(window.location.href);
-        ["date", "timeSlot", "locationType", "services"].forEach((k) =>
-          url.searchParams.delete(k)
-        );
+        ["date", "timeSlot", "locationType", "services"].forEach((k) => url.searchParams.delete(k));
         window.history.replaceState({}, "", url.toString());
         window.dispatchEvent(new CustomEvent("availability:reset"));
       } catch {}
@@ -439,8 +421,7 @@ export default function BookingFlow() {
                       variant="p"
                       className="text-[color:var(--color-body)] text-sm"
                     >
-                      Paso {visibleSteps.indexOf(currentStep) + 1} de{" "}
-                      {visibleSteps.length}
+                      Paso {visibleSteps.indexOf(currentStep) + 1} de {visibleSteps.length}
                     </Typography>
                   </div>
                 </div>
@@ -497,17 +478,13 @@ export default function BookingFlow() {
                       variant="primary"
                       size="lg"
                       disabled={!canSubmit || sendBooking.isPending}
-                      onClick={methods.handleSubmit((data) =>
-                        sendBooking.mutate(data)
-                      )}
+                      onClick={methods.handleSubmit((data) => sendBooking.mutate(data))}
                       aria-busy={sendBooking.isPending}
                       className="w-full sm:w-auto min-h-[52px]"
                     >
                       <span className="inline-flex items-center gap-2">
                         <Send className="w-5 h-5" />
-                        {sendBooking.isPending
-                          ? t("submitting")
-                          : t("submitButton")}
+                        {sendBooking.isPending ? t("submitting") : t("submitButton")}
                       </span>
                     </Button>
                   )}

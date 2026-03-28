@@ -1,7 +1,12 @@
 "use client";
-import React from "react";
 import type { Appointment } from "@/hooks/useAppointments";
-import { formatPrice, getPriceBreakdown, formatServices, formatDate, formatTime } from "@/utils/appointmentHelpers";
+import {
+  formatDate,
+  formatPrice,
+  formatServices,
+  formatTime,
+  getPriceBreakdown,
+} from "@/utils/appointmentHelpers";
 
 export interface QuoteShareData {
   appointment: Appointment;
@@ -9,7 +14,9 @@ export interface QuoteShareData {
 }
 
 function getHomeAddress(appointment: Appointment) {
-  const parts = [appointment.address, appointment.addressReference, appointment.district].filter(Boolean);
+  const parts = [appointment.address, appointment.addressReference, appointment.district].filter(
+    Boolean,
+  );
   if (parts.length > 0) return parts.join(" ");
   const notes = appointment.additionalNotes || "";
   const candidates: string[] = [];
@@ -18,7 +25,11 @@ function getHomeAddress(appointment: Appointment) {
     .map((l) => l.trim())
     .forEach((line) => {
       const low = line.toLowerCase();
-      const hasKeyword = low.includes("dirección") || low.includes("ubicación") || low.includes("local") || low.includes("hotel");
+      const hasKeyword =
+        low.includes("dirección") ||
+        low.includes("ubicación") ||
+        low.includes("local") ||
+        low.includes("hotel");
       if (hasKeyword) {
         const idx = line.indexOf(":");
         candidates.push(idx >= 0 ? line.slice(idx + 1).trim() : line.trim());
@@ -48,7 +59,11 @@ export function buildQuoteText({ appointment, deposit = 150 }: QuoteShareData) {
   const locationStr = (appointment.location || "").toLowerCase();
   const homeTextRaw = getHomeAddress(appointment);
   const studioFromNotes = looksLikeStudio(homeTextRaw);
-  const isStudio = locationStr.includes("studio") || locationStr === "studio" || studioFromNotes || (!homeTextRaw && (getPriceBreakdown(appointment).transportCost || 0) === 0);
+  const isStudio =
+    locationStr.includes("studio") ||
+    locationStr === "studio" ||
+    studioFromNotes ||
+    (!homeTextRaw && (getPriceBreakdown(appointment).transportCost || 0) === 0);
   const studioAddr = normalizeStudioAddress(homeTextRaw);
   const homeText = studioFromNotes ? studioAddr : homeTextRaw;
   const ubicacion = isStudio
@@ -65,10 +80,14 @@ export function buildQuoteText({ appointment, deposit = 150 }: QuoteShareData) {
   services.forEach((s) => {
     const unit = appointment.services?.find((it) => it.name === s.name)?.price ?? 0;
     const totalLinePrice = unit * (s.quantity || 1);
-    lines.push(`${s.displayText}: ${new Intl.NumberFormat("es-PE", { style: "currency", currency: "PEN" }).format(totalLinePrice)}`);
+    lines.push(
+      `${s.displayText}: ${new Intl.NumberFormat("es-PE", { style: "currency", currency: "PEN" }).format(totalLinePrice)}`,
+    );
   });
   if (price.transportCost > 0) {
-    lines.push(`Movilidad: ${new Intl.NumberFormat("es-PE", { style: "currency", currency: "PEN" }).format(price.transportCost)}`);
+    lines.push(
+      `Movilidad: ${new Intl.NumberFormat("es-PE", { style: "currency", currency: "PEN" }).format(price.transportCost)}`,
+    );
   }
   lines.push(`Total ${formatPrice(price.totalPrice)}`);
   lines.push(`Adelanto ${formatPrice(deposit)}`);
@@ -76,7 +95,10 @@ export function buildQuoteText({ appointment, deposit = 150 }: QuoteShareData) {
   return lines.join("\n");
 }
 
-export async function generateQuotePng({ appointment, deposit = 150 }: QuoteShareData): Promise<Blob | null> {
+export async function generateQuotePng({
+  appointment,
+  deposit = 150,
+}: QuoteShareData): Promise<Blob | null> {
   const services = formatServices(appointment);
   const price = getPriceBreakdown(appointment);
 
@@ -108,7 +130,9 @@ export async function generateQuotePng({ appointment, deposit = 150 }: QuoteShar
   const measureCanvas = document.createElement("canvas");
   const measureCtx = measureCanvas.getContext("2d")!;
   const baseLines = 3;
-  const priceRight = new Intl.NumberFormat("es-PE", { style: "currency", currency: "PEN" }).format(1000);
+  const priceRight = new Intl.NumberFormat("es-PE", { style: "currency", currency: "PEN" }).format(
+    1000,
+  );
   measureCtx.font = boldFont;
   const rightColMin = Math.ceil(measureCtx.measureText(priceRight).width) + 24;
   const cardWMeasure = width - (padding - 4) * 2;
@@ -117,13 +141,18 @@ export async function generateQuotePng({ appointment, deposit = 150 }: QuoteShar
   measureCtx.font = smallFont;
   const fecha = formatDate(appointment.appointmentDate);
   const timeRangeHeader = formatTime(appointment.appointmentTime);
-  const horaStartHeader = timeRangeHeader.includes("-") ? timeRangeHeader.split("-")
-    [0].trim() : timeRangeHeader;
+  const horaStartHeader = timeRangeHeader.includes("-")
+    ? timeRangeHeader.split("-")[0].trim()
+    : timeRangeHeader;
   const horaHeader = horaStartHeader.replace(" AM", "am").replace(" PM", "pm");
   const locationStr2 = (appointment.location || "").toLowerCase();
   const homeTextRaw2 = getHomeAddress(appointment);
   const studioFromNotes2 = looksLikeStudio(homeTextRaw2);
-  const isStudio2 = locationStr2.includes("studio") || locationStr2 === "studio" || studioFromNotes2 || (!homeTextRaw2 && (price.transportCost || 0) === 0);
+  const isStudio2 =
+    locationStr2.includes("studio") ||
+    locationStr2 === "studio" ||
+    studioFromNotes2 ||
+    (!homeTextRaw2 && (price.transportCost || 0) === 0);
   const studioAddr2 = normalizeStudioAddress(homeTextRaw2);
   const homeText2 = studioFromNotes2 ? studioAddr2 : homeTextRaw2;
   const ubicacion = isStudio2
@@ -144,19 +173,33 @@ export async function generateQuotePng({ appointment, deposit = 150 }: QuoteShar
     console.log("HeaderString", `Cita programada para el ${fecha} a la ${horaHeader} ${ubicacion}`);
     console.groupEnd();
   } catch {}
-  const headerWrapped = wrapLines(measureCtx, `Cita programada para el ${fecha} a la ${horaHeader} ${ubicacion}`, contentWMeasure, smallFont);
+  const headerWrapped = wrapLines(
+    measureCtx,
+    `Cita programada para el ${fecha} a la ${horaHeader} ${ubicacion}`,
+    contentWMeasure,
+    smallFont,
+  );
   measureCtx.font = lineFont;
   let dynamicLines = baseLines + headerWrapped.length;
   // Always include a Dirección line (Studio uses fixed address)
   measureCtx.font = smallFont;
   const dirTextMeasure = isStudio2
     ? "Av Bolívar 1075 Pueblo Libre"
-    : [appointment.address, appointment.addressReference, appointment.district].filter(Boolean).join(" ");
+    : [appointment.address, appointment.addressReference, appointment.district]
+        .filter(Boolean)
+        .join(" ");
   const headerIncludesDir = isStudio2
     ? ubicacion.includes("Av Bolívar 1075 Pueblo Libre")
-    : dirTextMeasure ? ubicacion.includes(dirTextMeasure) : false;
+    : dirTextMeasure
+      ? ubicacion.includes(dirTextMeasure)
+      : false;
   if (dirTextMeasure && !headerIncludesDir) {
-    const dirLinesMeasure = wrapLines(measureCtx, `Dirección: ${dirTextMeasure}`, contentWMeasure, smallFont);
+    const dirLinesMeasure = wrapLines(
+      measureCtx,
+      `Dirección: ${dirTextMeasure}`,
+      contentWMeasure,
+      smallFont,
+    );
     dynamicLines += dirLinesMeasure.length;
   }
   measureCtx.font = lineFont;
@@ -205,7 +248,12 @@ export async function generateQuotePng({ appointment, deposit = 150 }: QuoteShar
   y += 40 + lineGap;
   ctx.font = smallFont;
   ctx.fillStyle = colors.muted;
-  const headerLines = wrapLines(ctx, `Cita programada para el ${fecha} a la ${horaHeader} ${ubicacion}`, contentWidth, smallFont);
+  const headerLines = wrapLines(
+    ctx,
+    `Cita programada para el ${fecha} a la ${horaHeader} ${ubicacion}`,
+    contentWidth,
+    smallFont,
+  );
   headerLines.forEach((line) => {
     ctx.fillText(line, contentX, y);
     y += 28 + Math.max(0, lineGap - 6);
@@ -213,10 +261,14 @@ export async function generateQuotePng({ appointment, deposit = 150 }: QuoteShar
   {
     const dirText = isStudio2
       ? "Av Bolívar 1075 Pueblo Libre"
-      : [appointment.address, appointment.addressReference, appointment.district].filter(Boolean).join(" ");
+      : [appointment.address, appointment.addressReference, appointment.district]
+          .filter(Boolean)
+          .join(" ");
     const headerHasDir = isStudio2
       ? ubicacion.includes("Av Bolívar 1075 Pueblo Libre")
-      : dirText ? ubicacion.includes(dirText) : false;
+      : dirText
+        ? ubicacion.includes(dirText)
+        : false;
     if (dirText && !headerHasDir) {
       const dirLines = wrapLines(ctx, `Dirección: ${dirText}`, contentWidth, smallFont);
       dirLines.forEach((line) => {
@@ -238,14 +290,38 @@ export async function generateQuotePng({ appointment, deposit = 150 }: QuoteShar
     const unit = appointment.services?.find((it) => it.name === s.name)?.price ?? 0;
     const totalLinePrice = unit * (s.quantity || 1);
     const left = `${s.displayText}`;
-    const right = new Intl.NumberFormat("es-PE", { style: "currency", currency: "PEN" }).format(totalLinePrice);
-    y = drawTwoColumnWrapped(ctx, left, right, contentX, y, contentWidth, lineFont, colors.body, boldFont, leftColMax);
+    const right = new Intl.NumberFormat("es-PE", { style: "currency", currency: "PEN" }).format(
+      totalLinePrice,
+    );
+    y = drawTwoColumnWrapped(
+      ctx,
+      left,
+      right,
+      contentX,
+      y,
+      contentWidth,
+      lineFont,
+      colors.body,
+      boldFont,
+      leftColMax,
+    );
     y += Math.max(10, lineGap - 4);
   });
   if (price.transportCost > 0) {
     const left = "Movilidad";
     const right = formatPrice(price.transportCost);
-    y = drawTwoColumnWrapped(ctx, left, right, contentX, y, contentWidth, lineFont, colors.body, boldFont, leftColMax);
+    y = drawTwoColumnWrapped(
+      ctx,
+      left,
+      right,
+      contentX,
+      y,
+      contentWidth,
+      lineFont,
+      colors.body,
+      boldFont,
+      leftColMax,
+    );
     y += Math.max(10, lineGap - 4);
   }
 
@@ -260,12 +336,34 @@ export async function generateQuotePng({ appointment, deposit = 150 }: QuoteShar
 
   // Total destacado
   ctx.font = boldFont;
-  y = drawTwoColumnWrapped(ctx, "Total", formatPrice(price.totalPrice), contentX, y, contentWidth, boldFont, colors.primary, boldFont, leftColMax);
+  y = drawTwoColumnWrapped(
+    ctx,
+    "Total",
+    formatPrice(price.totalPrice),
+    contentX,
+    y,
+    contentWidth,
+    boldFont,
+    colors.primary,
+    boldFont,
+    leftColMax,
+  );
   y += 32;
 
   // Adelanto
   ctx.font = lineFont;
-  y = drawTwoColumnWrapped(ctx, "Adelanto", formatPrice(deposit), contentX, y, contentWidth, lineFont, colors.body, boldFont, leftColMax);
+  y = drawTwoColumnWrapped(
+    ctx,
+    "Adelanto",
+    formatPrice(deposit),
+    contentX,
+    y,
+    contentWidth,
+    lineFont,
+    colors.body,
+    boldFont,
+    leftColMax,
+  );
   y += 30 + 8;
 
   // Restante con "pill" de acento suave, valor a la derecha
@@ -312,7 +410,7 @@ function wrapLines(ctx: CanvasRenderingContext2D, text: string, maxWidth: number
   const lines: string[] = [];
   let current = "";
   for (const w of words) {
-    const test = current ? current + " " + w : w;
+    const test = current ? `${current} ${w}` : w;
     if (ctx.measureText(test).width <= maxWidth) {
       current = test;
     } else {

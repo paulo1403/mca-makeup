@@ -1,9 +1,9 @@
 "use client";
 
-import Modal, { ModalBody, ModalFooter } from "@/components/ui/Modal";
 import { Calendar, Check, X } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import Modal, { ModalBody, ModalFooter } from "@/components/ui/Modal";
 import Button from "../ui/Button";
 import Typography from "../ui/Typography";
 
@@ -78,19 +78,14 @@ const Confetti = () => {
 export default function SuccessModal({
   open,
   onClose,
-  clientName,
+  clientName: _clientName,
   pricing,
   serviceNames,
 }: SuccessModalProps) {
   return (
     <>
       {open && <Confetti />}
-      <Modal
-        open={open}
-        onClose={onClose}
-        size="md"
-        ariaLabelledBy="success-modal-title"
-      >
+      <Modal open={open} onClose={onClose} size="md" ariaLabelledBy="success-modal-title">
         {/* Header personalizado para centrado perfecto */}
         <div className="relative p-6 border-b border-[color:var(--color-border)]">
           <div className="text-center">
@@ -116,11 +111,7 @@ export default function SuccessModal({
 
         <ModalBody>
           <div className="space-y-4 text-center">
-            <Typography
-              as="p"
-              variant="p"
-              className="text-[color:var(--color-body)]"
-            >
+            <Typography as="p" variant="p" className="text-[color:var(--color-body)]">
               ¡Gracias por confiar en mi trabajo!
             </Typography>
 
@@ -181,12 +172,7 @@ export default function SuccessModal({
         </ModalBody>
 
         <ModalFooter>
-          <Button
-            variant="primary"
-            size="md"
-            onClick={onClose}
-            className="w-full"
-          >
+          <Button variant="primary" size="md" onClick={onClose} className="w-full">
             Cerrar
           </Button>
         </ModalFooter>

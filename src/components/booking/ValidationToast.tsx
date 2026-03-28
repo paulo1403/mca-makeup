@@ -1,7 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
 import { AlertTriangle, Info, X } from "lucide-react";
-import React from "react";
 
 interface ValidationToastProps {
   message: string;

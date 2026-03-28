@@ -13,8 +13,7 @@ interface TransportCost {
 export default function TransportCostCalculator() {
   const [transportCosts, setTransportCosts] = useState<TransportCost[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedDistrict, setSelectedDistrict] =
-    useState<TransportCost | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<TransportCost | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -34,7 +33,7 @@ export default function TransportCostCalculator() {
   }, []);
 
   const filteredDistricts = transportCosts.filter((tc) =>
-    tc.district.toLowerCase().includes(searchTerm.toLowerCase())
+    tc.district.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const handleDistrictSelect = (district: TransportCost) => {
@@ -77,11 +76,7 @@ export default function TransportCostCalculator() {
       {/* Results */}
       {isLoading ? (
         <div className="text-center py-4">
-          <Typography
-            as="p"
-            variant="small"
-            className="text-[color:var(--color-body)]"
-          >
+          <Typography as="p" variant="small" className="text-[color:var(--color-body)]">
             Cargando distritos...
           </Typography>
         </div>
@@ -100,11 +95,7 @@ export default function TransportCostCalculator() {
                   {selectedDistrict.district}
                 </Typography>
               </div>
-              <Typography
-                as="p"
-                variant="small"
-                className="text-[color:var(--color-body)]"
-              >
+              <Typography as="p" variant="small" className="text-[color:var(--color-body)]">
                 Costo:{" "}
                 <span className="font-bold text-[color:var(--color-primary)]">
                   {selectedDistrict.cost === 0
@@ -113,11 +104,7 @@ export default function TransportCostCalculator() {
                 </span>
               </Typography>
               {selectedDistrict.notes && (
-                <Typography
-                  as="p"
-                  variant="small"
-                  className="text-[color:var(--color-muted)] mt-1"
-                >
+                <Typography as="p" variant="small" className="text-[color:var(--color-muted)] mt-1">
                   {selectedDistrict.notes}
                 </Typography>
               )}
@@ -151,9 +138,7 @@ export default function TransportCostCalculator() {
                         variant="small"
                         className="font-medium text-[color:var(--color-primary)]"
                       >
-                        {district.cost === 0
-                          ? "Gratis"
-                          : `S/ ${district.cost.toFixed(2)}`}
+                        {district.cost === 0 ? "Gratis" : `S/ ${district.cost.toFixed(2)}`}
                       </Typography>
                     </button>
                   ))}
@@ -169,11 +154,7 @@ export default function TransportCostCalculator() {
                 </>
               ) : (
                 <div className="text-center py-4">
-                  <Typography
-                    as="p"
-                    variant="small"
-                    className="text-[color:var(--color-body)]"
-                  >
+                  <Typography as="p" variant="small" className="text-[color:var(--color-body)]">
                     No se encontraron distritos
                   </Typography>
                 </div>

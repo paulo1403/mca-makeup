@@ -1,9 +1,7 @@
-import { authOptions } from "@/lib/auth";
-import { PrismaClient } from "@prisma/client";
-import { getServerSession } from "next-auth/next";
 import { type NextRequest, NextResponse } from "next/server";
-
-const prisma = new PrismaClient();
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 // GET - Obtener todos los servicios
 export async function GET() {
@@ -70,7 +68,7 @@ export async function POST(request: NextRequest) {
         name,
         description,
         price: Number.parseFloat(price),
-        duration: Number.parseInt(duration),
+        duration: Number.parseInt(duration, 10),
         category,
         isActive: isActive !== undefined ? isActive : true,
       },

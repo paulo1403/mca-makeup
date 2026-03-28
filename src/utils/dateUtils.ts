@@ -1,6 +1,6 @@
 import { isValid, parseISO } from "date-fns";
-import { format, fromZonedTime, toZonedTime } from "date-fns-tz";
 import { es } from "date-fns/locale";
+import { format, fromZonedTime, toZonedTime } from "date-fns-tz";
 
 // Zona horaria de Perú - usar variable personalizada para Vercel
 export const PERU_TIMEZONE = process.env.APP_TIMEZONE || "America/Lima";

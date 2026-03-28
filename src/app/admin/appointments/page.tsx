@@ -1,5 +1,7 @@
 "use client";
 
+import { ChevronDown } from "lucide-react";
+import { Suspense, useState } from "react";
 import AppointmentModal from "@/components/appointments/AppointmentModal";
 import AppointmentTable from "@/components/appointments/AppointmentTable";
 import LoadingSpinner from "@/components/appointments/LoadingSpinner";
@@ -7,8 +9,6 @@ import ManualAppointmentModal from "@/components/appointments/ManualAppointmentM
 import Pagination from "@/components/appointments/Pagination";
 import { useAppointmentsPage } from "@/hooks/useAppointmentsPage";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
-import { ChevronDown } from "lucide-react";
-import { Suspense, useState } from "react";
 
 function AppointmentsContent() {
   const [showManualModal, setShowManualModal] = useState(false);
@@ -94,9 +94,7 @@ function AppointmentsContent() {
       <div className="bg-[color:var(--color-surface)] shadow-sm border-b border-[color:var(--color-border)] sticky top-0 z-10">
         <div className="mx-auto max-w-6xl px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between mb-3">
-            <h1 className="text-2xl sm:text-3xl font-bold text-heading font-playfair">
-              Citas
-            </h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-heading font-playfair">Citas</h1>
             <button
               type="button"
               onClick={() => setShowManualModal(true)}
@@ -108,24 +106,51 @@ function AppointmentsContent() {
 
           {/* KPIs - Compact */}
           <div className="grid grid-cols-3 gap-2 mb-3">
-            <div className="rounded-lg px-2.5 py-2 border" style={{ backgroundColor: "var(--status-confirmed-bg)", borderColor: "var(--status-confirmed-border)" }}>
-              <div className="text-sm font-semibold" style={{ color: "var(--status-confirmed-text)" }}>
+            <div
+              className="rounded-lg px-2.5 py-2 border"
+              style={{
+                backgroundColor: "var(--status-confirmed-bg)",
+                borderColor: "var(--status-confirmed-border)",
+              }}
+            >
+              <div
+                className="text-sm font-semibold"
+                style={{ color: "var(--status-confirmed-text)" }}
+              >
                 {confirmedCount}
               </div>
               <div className="text-xs" style={{ color: "var(--status-confirmed-text)" }}>
                 Confirmadas
               </div>
             </div>
-            <div className="rounded-lg px-2.5 py-2 border" style={{ backgroundColor: "var(--status-pending-bg)", borderColor: "var(--status-pending-border)" }}>
-              <div className="text-sm font-semibold" style={{ color: "var(--status-pending-text)" }}>
+            <div
+              className="rounded-lg px-2.5 py-2 border"
+              style={{
+                backgroundColor: "var(--status-pending-bg)",
+                borderColor: "var(--status-pending-border)",
+              }}
+            >
+              <div
+                className="text-sm font-semibold"
+                style={{ color: "var(--status-pending-text)" }}
+              >
                 {pendingCount}
               </div>
               <div className="text-xs" style={{ color: "var(--status-pending-text)" }}>
                 Pendientes
               </div>
             </div>
-            <div className="rounded-lg px-2.5 py-2 border" style={{ backgroundColor: "var(--status-completed-bg)", borderColor: "var(--status-completed-border)" }}>
-              <div className="text-sm font-semibold" style={{ color: "var(--status-completed-text)" }}>
+            <div
+              className="rounded-lg px-2.5 py-2 border"
+              style={{
+                backgroundColor: "var(--status-completed-bg)",
+                borderColor: "var(--status-completed-border)",
+              }}
+            >
+              <div
+                className="text-sm font-semibold"
+                style={{ color: "var(--status-completed-text)" }}
+              >
                 {completedCount}
               </div>
               <div className="text-xs" style={{ color: "var(--status-completed-text)" }}>
@@ -141,7 +166,9 @@ function AppointmentsContent() {
             className="w-full flex items-center justify-between px-2.5 py-1.5 text-xs text-[color:var(--color-muted)] hover:text-heading transition-colors"
           >
             <span className="font-medium">Ver estadísticas</span>
-            <ChevronDown className={`w-4 h-4 transition-transform ${showStats ? "rotate-180" : ""}`} />
+            <ChevronDown
+              className={`w-4 h-4 transition-transform ${showStats ? "rotate-180" : ""}`}
+            />
           </button>
 
           {showStats && (
@@ -152,12 +179,17 @@ function AppointmentsContent() {
               </div>
               <div className="flex justify-between">
                 <span className="text-[color:var(--color-muted)]">Ingresos este mes:</span>
-                <span className="font-semibold text-[color:var(--color-success)]">{currencyFormatter.format(monthlyRevenue)}</span>
+                <span className="font-semibold text-[color:var(--color-success)]">
+                  {currencyFormatter.format(monthlyRevenue)}
+                </span>
               </div>
               {topRevenueMonth && (
                 <div className="flex justify-between">
                   <span className="text-[color:var(--color-muted)]">Mes con más ingresos:</span>
-                  <span className="font-semibold text-heading capitalize">{topRevenueMonth.monthLabel} ({currencyFormatter.format(topRevenueMonth.income || 0)})</span>
+                  <span className="font-semibold text-heading capitalize">
+                    {topRevenueMonth.monthLabel} (
+                    {currencyFormatter.format(topRevenueMonth.income || 0)})
+                  </span>
                 </div>
               )}
               {appointments.length > 0 && (
@@ -291,10 +323,7 @@ function AppointmentsContent() {
         onClose={handleCloseModal}
       />
 
-      <ManualAppointmentModal
-        isOpen={showManualModal}
-        onClose={() => setShowManualModal(false)}
-      />
+      <ManualAppointmentModal isOpen={showManualModal} onClose={() => setShowManualModal(false)} />
     </div>
   );
 }

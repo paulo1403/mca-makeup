@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/prisma";
 import { type NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 // PATCH /api/admin/availability/[id] - Update time slot (toggle active/inactive)
 export async function PATCH(request: NextRequest, context: { params: Promise<{ id: string }> }) {
@@ -49,7 +49,7 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
 }
 
 // DELETE /api/admin/availability/[id] - Delete time slot
-export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
+export async function DELETE(_request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params;
 

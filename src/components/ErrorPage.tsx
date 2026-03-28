@@ -1,10 +1,10 @@
 "use client";
 
-import { type ErrorReport, useErrorReport } from "@/hooks/useErrorReport";
 import { AlertTriangle, ArrowLeft, CheckCircle, Send } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { type ErrorReport, useErrorReport } from "@/hooks/useErrorReport";
 
 interface ErrorPageProps {
   error?: Error & { digest?: string };

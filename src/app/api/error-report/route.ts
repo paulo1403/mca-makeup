@@ -1,6 +1,6 @@
+import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { rateLimiter } from "@/lib/rateLimiter";
-import { NextResponse } from "next/server";
 
 // POST /api/error-report - Enviar reporte de error
 export async function POST(request: Request) {

@@ -1,11 +1,11 @@
 "use client";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, Clock, Minus, Package, Plus, Star, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import Button from "@/components/ui/Button";
 import Typography from "@/components/ui/Typography";
 import { CATEGORY_LABELS } from "@/lib/serviceRules";
-import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Clock, Minus, Package, Plus, Star, X } from "lucide-react";
-import React, { useState, useEffect, useRef } from "react";
-import { useFormContext } from "react-hook-form";
 import type { Service } from "../../hooks/useServicesQuery";
 
 type Props = {
@@ -42,7 +42,7 @@ const ServiceCard = ({
     checkClamped();
     window.addEventListener("resize", checkClamped);
     return () => window.removeEventListener("resize", checkClamped);
-  }, [service.description, showFull]);
+  }, [showFull]);
 
   const needsToggle = isClamped || showFull || (service.description?.length ?? 0) > 60;
 

@@ -127,7 +127,9 @@
 
 /* Decorative dots bounce (desktop only) */
 .logo-dot {
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
   transform-origin: center;
 }
 
@@ -163,7 +165,7 @@
 }
 
 .brand-logo:hover .logo-subtitle {
-  opacity: 1 !important;
+  opacity: 1;
 }
 
 /* ============================================
@@ -226,7 +228,7 @@
   /* Keep only essential animations on mobile */
   .logo-brush-stroke,
   .logo-dot {
-    animation: none !important;
+    animation: none;
   }
 
   .brand-logo:hover .logo-circle {
@@ -262,8 +264,8 @@
   .logo-name-secondary,
   .logo-dot,
   .logo-subtitle {
-    animation: none !important;
-    transition: none !important;
+    animation: none;
+    transition: none;
   }
 
   .brand-logo:hover {

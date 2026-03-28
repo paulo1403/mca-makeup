@@ -1,12 +1,10 @@
-import { authOptions } from "@/lib/auth";
-import { PrismaClient } from "@prisma/client";
-import { getServerSession } from "next-auth/next";
 import { type NextRequest, NextResponse } from "next/server";
-
-const prisma = new PrismaClient();
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 // GET - Obtener un servicio específico
-export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const service = await prisma.service.findUnique({
@@ -92,7 +90,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         name,
         description,
         price: Number.parseFloat(price),
-        duration: Number.parseInt(duration),
+        duration: Number.parseInt(duration, 10),
         category,
         isActive: isActive !== undefined ? isActive : true,
       },
@@ -110,7 +108,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
 // DELETE - Eliminar un servicio
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {

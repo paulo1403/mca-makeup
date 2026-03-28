@@ -1,47 +1,37 @@
 "use client";
 
-import Typography from "@/components/ui/Typography";
-import Button from "@/components/ui/Button";
-import CompactServiceSelector from "@/components/availability/CompactServiceSelector";
-import { useAvailableRanges } from "@/hooks/useAvailableRanges";
-import { useServicesList } from "@/hooks/useServices";
-import type { ServiceSelection, LocationType } from "@/types";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import {
   Calendar,
-  Clock,
-  MapPin,
-  Check,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
-  ChevronDown,
   ChevronUp,
+  Clock,
+  MapPin,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import DatePicker from "react-datepicker";
-import { es } from "date-fns/locale";
-import { format } from "date-fns";
+import CompactServiceSelector from "@/components/availability/CompactServiceSelector";
+import Button from "@/components/ui/Button";
+import Typography from "@/components/ui/Typography";
+import { useAvailableRanges } from "@/hooks/useAvailableRanges";
+import { useServicesList } from "@/hooks/useServices";
+import type { LocationType, ServiceSelection } from "@/types";
 
 export default function AvailabilityCheckSection() {
   const [date, setDate] = useState<Date | null>(null);
   const [locationType, setLocationType] = useState<LocationType>("HOME");
-  const [serviceSelection, setServiceSelection] = useState<ServiceSelection>(
-    {}
-  );
+  const [serviceSelection, setServiceSelection] = useState<ServiceSelection>({});
   const [selectedRange, setSelectedRange] = useState<string>("");
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const { data, isLoading } = useAvailableRanges(
-    date,
-    serviceSelection,
-    locationType
-  );
+  const { data, isLoading } = useAvailableRanges(date, serviceSelection, locationType);
 
   const { data: allServices = [] } = useServicesList();
 
-  const availableRanges: string[] = useMemo(
-    () => data?.availableRanges || [],
-    [data]
-  );
+  const availableRanges: string[] = useMemo(() => data?.availableRanges || [], [data]);
   const hasSelectedService = useMemo(() => {
     return Object.values(serviceSelection).some((q) => q > 0);
   }, [serviceSelection]);
@@ -51,9 +41,7 @@ export default function AvailabilityCheckSection() {
     let total = 0;
     Object.entries(serviceSelection).forEach(([serviceId, quantity]) => {
       if (quantity > 0) {
-        const service = allServices.find(
-          (s: { id: string; price: number }) => s.id === serviceId
-        );
+        const service = allServices.find((s: { id: string; price: number }) => s.id === serviceId);
         if (service) {
           total += service.price * quantity;
         }
@@ -64,7 +52,7 @@ export default function AvailabilityCheckSection() {
 
   useEffect(() => {
     setSelectedRange("");
-  }, [date]);
+  }, []);
 
   useEffect(() => {
     const handler = () => {
@@ -96,9 +84,7 @@ export default function AvailabilityCheckSection() {
         const items = detail.services
           .split(",")
           .map((pair) => pair.split(":"))
-          .filter(
-            (parts) => parts.length === 2 && parts[0] && Number(parts[1]) > 0
-          )
+          .filter((parts) => parts.length === 2 && parts[0] && Number(parts[1]) > 0)
           .reduce((acc, [id, qty]) => {
             acc[id] = Number(qty);
             return acc;
@@ -110,8 +96,7 @@ export default function AvailabilityCheckSection() {
       setIsExpanded(true);
     };
     window.addEventListener("quote:continue", handler as EventListener);
-    return () =>
-      window.removeEventListener("quote:continue", handler as EventListener);
+    return () => window.removeEventListener("quote:continue", handler as EventListener);
   }, []);
 
   const setQueryParamsAndScroll = () => {
@@ -139,9 +124,7 @@ export default function AvailabilityCheckSection() {
         locationType,
         services: servicesPairs.join(","),
       };
-      window.dispatchEvent(
-        new CustomEvent("availability:prefill", { detail: payload })
-      );
+      window.dispatchEvent(new CustomEvent("availability:prefill", { detail: payload }));
     } catch {}
 
     // Esperar a que el DOM se actualice antes de hacer scroll
@@ -261,13 +244,11 @@ export default function AvailabilityCheckSection() {
                     </button>
                   </div>
                   <div className="custom-weekday-header" aria-hidden>
-                    {["lun", "mar", "mié", "jue", "vie", "sáb", "dom"].map(
-                      (d) => (
-                        <span key={d} className="custom-weekday-cell">
-                          {d}
-                        </span>
-                      )
-                    )}
+                    {["lun", "mar", "mié", "jue", "vie", "sáb", "dom"].map((d) => (
+                      <span key={d} className="custom-weekday-cell">
+                        {d}
+                      </span>
+                    ))}
                   </div>
                 </div>
               )}
@@ -314,10 +295,7 @@ export default function AvailabilityCheckSection() {
             >
               Servicio
             </Typography>
-            <CompactServiceSelector
-              value={serviceSelection}
-              onChangeAction={setServiceSelection}
-            />
+            <CompactServiceSelector value={serviceSelection} onChangeAction={setServiceSelection} />
             {!hasSelectedService && (
               <Typography
                 as="p"
@@ -341,11 +319,7 @@ export default function AvailabilityCheckSection() {
 
             {!hasSelectedService ? (
               <div className="text-center py-4">
-                <Typography
-                  as="p"
-                  variant="small"
-                  className="text-[color:var(--color-body)] mb-2"
-                >
+                <Typography as="p" variant="small" className="text-[color:var(--color-body)] mb-2">
                   Selecciona un servicio primero
                 </Typography>
               </div>
@@ -360,11 +334,7 @@ export default function AvailabilityCheckSection() {
               </div>
             ) : date && availableRanges.length === 0 ? (
               <div className="text-center py-4">
-                <Typography
-                  as="p"
-                  variant="small"
-                  className="text-[color:var(--color-body)]"
-                >
+                <Typography as="p" variant="small" className="text-[color:var(--color-body)]">
                   No hay horarios disponibles
                 </Typography>
               </div>
@@ -394,11 +364,7 @@ export default function AvailabilityCheckSection() {
             {/* Confirmación */}
             {date && selectedRange && (
               <div className="mt-4 p-3 bg-[color:var(--color-primary)]/10 rounded-[12px] text-center space-y-2">
-                <Typography
-                  as="p"
-                  variant="small"
-                  className="text-[color:var(--color-body)]"
-                >
+                <Typography as="p" variant="small" className="text-[color:var(--color-body)]">
                   {format(date, "dd MMM", { locale: es })} • {selectedRange}
                 </Typography>
 

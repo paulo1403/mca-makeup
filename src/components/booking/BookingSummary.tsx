@@ -1,16 +1,16 @@
 "use client";
+import { format } from "date-fns";
+import { useEffect } from "react";
+import { useFormContext } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { generateQuotePng } from "@/components/share/QuoteShareCard";
+import type { Appointment } from "@/hooks/useAppointments";
 import { useTransportCost } from "@/hooks/useTransportCost";
 import type { BookingData } from "@/lib/bookingSchema";
 import type { Service } from "@/types";
 import { calculateNightShiftCost } from "@/utils/nightShift";
-import { format } from "date-fns";
-import React, { useEffect } from "react";
-import { useFormContext } from "react-hook-form";
 import { useBookingSummary } from "../../hooks/useBookingSummary";
 import useServicesQuery from "../../hooks/useServicesQuery";
-import { generateQuotePng } from "@/components/share/QuoteShareCard";
-import type { Appointment } from "@/hooks/useAppointments";
-import { toast } from "react-hot-toast";
 
 export default function BookingSummary() {
   const { watch } = useFormContext<BookingData>();
@@ -164,13 +164,15 @@ export default function BookingSummary() {
             onClick={async (event) => {
               const btn = event.currentTarget;
               const original = btn.textContent;
-              const servicesForAppointment: Appointment["services"] = selectedServiceDetails.map((s) => ({
-                id: s.id,
-                name: s.name,
-                quantity: s.quantity,
-                price: s.price,
-                duration: s.duration,
-              }));
+              const servicesForAppointment: Appointment["services"] = selectedServiceDetails.map(
+                (s) => ({
+                  id: s.id,
+                  name: s.name,
+                  quantity: s.quantity,
+                  price: s.price,
+                  duration: s.duration,
+                }),
+              );
               const mockAppointment: Appointment = {
                 id: "preview",
                 clientName: name || "",
@@ -227,13 +229,18 @@ export default function BookingSummary() {
               const textLines: string[] = [];
               const fecha = date ? format(date, "dd/MM/yyyy") : format(new Date(), "dd/MM/yyyy");
               const hora = timeSlot || "";
-              const ubicacion = locationType === "HOME" ? `a domicilio${district ? ` en ${district}:` : ":"}` : "en Room Studio Pueblo Libre:";
+              const ubicacion =
+                locationType === "HOME"
+                  ? `a domicilio${district ? ` en ${district}:` : ":"}`
+                  : "en Room Studio Pueblo Libre:";
               textLines.push("Este sería el detalle del servicio:");
               textLines.push(`Cita programada para el ${fecha} a la ${hora} ${ubicacion}`);
               textLines.push("");
               selectedServiceDetails.forEach((s) => {
                 const priceLine = s.price * (s.quantity || 1);
-                textLines.push(`${s.name}${s.quantity > 1 ? ` ×${s.quantity}` : ""}: S/ ${priceLine}`);
+                textLines.push(
+                  `${s.name}${s.quantity > 1 ? ` ×${s.quantity}` : ""}: S/ ${priceLine}`,
+                );
               });
               textLines.push(`Total S/ ${total}`);
               textLines.push(`Adelanto S/ ${deposit}`);
