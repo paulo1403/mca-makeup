@@ -2,19 +2,11 @@
 
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import {
-  Calendar,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronUp,
-  Clock,
-  MapPin,
-} from "lucide-react";
+import { Calendar as CalendarIcon, ChevronDown, ChevronUp, Clock, MapPin } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import DatePicker from "react-datepicker";
 import CompactServiceSelector from "@/components/availability/CompactServiceSelector";
 import Button from "@/components/ui/Button";
+import { Calendar } from "@/components/ui/calendar";
 import Typography from "@/components/ui/Typography";
 import { useAvailableRanges } from "@/hooks/useAvailableRanges";
 import { useServicesList } from "@/hooks/useServices";
@@ -153,7 +145,7 @@ export default function AvailabilityCheckSection() {
         <div className="flex items-center gap-4 flex-1">
           <div className="relative">
             <div className="w-12 h-12 rounded-full bg-[color:var(--color-primary)]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[color:var(--color-primary)]/20 transition-colors">
-              <Calendar className="w-6 h-6 text-[color:var(--color-primary)]" />
+              <CalendarIcon className="w-6 h-6 text-[color:var(--color-primary)]" />
             </div>
             <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[color:var(--color-primary)] text-white flex items-center justify-center text-xs font-bold shadow-md">
               2
@@ -197,61 +189,23 @@ export default function AvailabilityCheckSection() {
             >
               Fecha
             </Typography>
-            <DatePicker
-              selected={date}
-              onChange={(d: Date | null) => setDate(d)}
-              inline
+            <Calendar
+              mode="single"
               locale={es}
-              formatWeekDay={(nameOfDay) => {
-                const key = nameOfDay.toLowerCase();
-                if (key.startsWith("lun")) return "lun";
-                if (key.startsWith("mar")) return "mar";
-                if (key.startsWith("miér")) return "mié";
-                if (key.startsWith("mie")) return "mié";
-                if (key.startsWith("jue")) return "jue";
-                if (key.startsWith("vie")) return "vie";
-                if (key.startsWith("sáb")) return "sáb";
-                if (key.startsWith("sab")) return "sáb";
-                if (key.startsWith("dom")) return "dom";
-                return nameOfDay.slice(0, 3).toLowerCase();
+              selected={date ?? undefined}
+              onSelect={(d) => setDate(d ?? null)}
+              className="mx-auto w-full max-w-[360px] rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-card)] p-3"
+              classNames={{
+                caption_label:
+                  "text-sm font-semibold capitalize text-[color:var(--color-heading)]",
+                head_cell:
+                  "text-[0.78rem] font-semibold text-[color:var(--calendar-label)] w-9",
+                day: "h-9 w-9 text-sm font-medium text-[color:var(--color-heading)]",
+                day_disabled:
+                  "h-9 w-9 text-sm font-medium text-[color:var(--calendar-inactive)] opacity-50",
+                day_outside:
+                  "h-9 w-9 text-sm font-medium text-[color:var(--calendar-inactive)] opacity-60",
               }}
-              calendarClassName="w-full no-daynames"
-              renderCustomHeader={({ date, decreaseMonth, increaseMonth }) => (
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <button
-                      type="button"
-                      onClick={decreaseMonth}
-                      className="p-2 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-secondary)] transition-colors"
-                      aria-label="Mes anterior"
-                    >
-                      <ChevronLeft className="w-4 h-4 text-[color:var(--color-heading)]" />
-                    </button>
-                    <Typography
-                      as="span"
-                      variant="small"
-                      className="font-medium text-[color:var(--color-heading)]"
-                    >
-                      {format(date, "MMMM yyyy", { locale: es })}
-                    </Typography>
-                    <button
-                      type="button"
-                      onClick={increaseMonth}
-                      className="p-2 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-secondary)] transition-colors"
-                      aria-label="Mes siguiente"
-                    >
-                      <ChevronRight className="w-4 h-4 text-[color:var(--color-heading)]" />
-                    </button>
-                  </div>
-                  <div className="custom-weekday-header" aria-hidden>
-                    {["lun", "mar", "mié", "jue", "vie", "sáb", "dom"].map((d) => (
-                      <span key={d} className="custom-weekday-cell">
-                        {d}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
             />
           </div>
 

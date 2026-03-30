@@ -1,5 +1,6 @@
 "use client";
 
+import Logo from "@/components/Logo";
 import {
   AlertTriangle,
   Calendar,
@@ -16,8 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import Logo from "@/components/Logo";
+import React, { useState, useEffect } from "react";
 
 interface AdminSidebarProps {
   isOpen: boolean;
@@ -87,9 +87,8 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
     <>
       {/* Sidebar */}
       <aside
-        className={`${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } fixed inset-y-0 left-0 z-50 w-64 ${sidebarWidthClass} bg-[color:var(--color-surface)] shadow-lg border-r border-[color:var(--color-border)] transform transition-all duration-300 ease-in-out md:relative md:translate-x-0 admin-sidebar`}
+        className={`${isOpen ? "translate-x-0" : "-translate-x-full"
+          } fixed inset-y-0 left-0 z-50 w-64 ${sidebarWidthClass} bg-[color:var(--color-surface)] shadow-lg border-r border-[color:var(--color-border)] transform transition-all duration-300 ease-in-out md:relative md:translate-x-0 admin-sidebar`}
         aria-label="Barra lateral de administración"
       >
         <div className="flex flex-col h-full">
@@ -160,11 +159,10 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
                   className={`${baseClasses} ${isActive ? `active ${activeClasses}` : inactiveClasses}`}
                 >
                   <Icon
-                    className={`h-5 w-5 flex-shrink-0 transition-colors ${
-                      isActive
+                    className={`h-5 w-5 flex-shrink-0 transition-colors ${isActive
                         ? "text-white"
                         : "text-[color:var(--color-muted)] group-hover:text-[color:var(--color-heading)]"
-                    }`}
+                      }`}
                   />
                   {!collapsed && <span className="truncate">{item.label}</span>}
                   {isActive && !collapsed && (

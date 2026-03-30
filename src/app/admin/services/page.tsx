@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 import ConfirmModal from "@/components/ui/ConfirmModal";
+import { Skeleton } from "@/components/ui/skeleton";
 import ServiceFormModal from "./components/ServiceFormModal";
 import ServiceInfoModal from "./components/ServiceInfoModal";
 import ServiceListMobile from "./components/ServiceListMobile";
@@ -170,8 +171,16 @@ export default function ServicesPage() {
 
   if (status === "loading" || isServicesLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[color:var(--color-primary)]" />
+      <div className="space-y-4 sm:space-y-6">
+        <Skeleton className="h-28 w-full rounded-xl" />
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <Skeleton className="h-24 rounded-xl" />
+          <Skeleton className="h-24 rounded-xl" />
+          <Skeleton className="h-24 rounded-xl" />
+          <Skeleton className="h-24 rounded-xl" />
+        </div>
+        <Skeleton className="h-10 w-full rounded-xl" />
+        <Skeleton className="h-72 w-full rounded-xl" />
       </div>
     );
   }
@@ -185,7 +194,7 @@ export default function ServicesPage() {
       />
 
       {error && (
-        <div className="bg-[color:var(--status-cancelled-bg)] border border-[color:var(--status-cancelled-border)] text-[color:var(--status-cancelled-text)] px-4 py-3 rounded">
+        <div className="rounded-xl border border-[color:var(--status-cancelled-border)] bg-[color:var(--status-cancelled-bg)] px-4 py-3 text-sm text-[color:var(--status-cancelled-text)]">
           {error}
         </div>
       )}

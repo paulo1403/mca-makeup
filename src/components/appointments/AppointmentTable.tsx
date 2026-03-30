@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import StatusBadge from "@/components/appointments/StatusBadge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/Button";
 import {
   Table,
   TableBody,
@@ -96,6 +97,9 @@ function MobileAppointmentCard({
   isUpdating,
   isDeleting,
 }: MobileAppointmentCardProps) {
+  const mobilePrimaryActionClass =
+    "flex-1 bg-[color:var(--color-surface)] text-[color:var(--color-on-surface)] border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-elevated)]";
+
   const priceInfo = getPriceBreakdown(appointment);
   const servicesLabel = formatServices(appointment)
     .map((s) => s.displayText)
@@ -131,9 +135,11 @@ function MobileAppointmentCard({
       >
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-start space-x-2 min-w-0">
-            <div className="w-9 h-9 rounded-full bg-[color:var(--color-primary)]/15 ring-1 ring-[color:var(--color-border)] flex items-center justify-center">
-              <User className="w-4 h-4 text-[color:var(--color-primary)]" />
-            </div>
+            <Avatar className="w-9 h-9">
+              <AvatarFallback className="bg-[color:var(--color-primary)]/15 text-[color:var(--color-primary)] text-xs font-semibold ring-1 ring-[color:var(--color-border)]">
+                <User className="w-4 h-4" />
+              </AvatarFallback>
+            </Avatar>
             <div className="min-w-0">
               <h3 className="font-semibold text-[color:var(--color-heading)] text-sm leading-tight">
                 <span className="block truncate text-base font-semibold max-w-[58vw] sm:max-w-[66vw]">
@@ -200,70 +206,73 @@ function MobileAppointmentCard({
       <div className="px-4 py-2.5 border-t border-[color:var(--color-border)]/40 bg-[color:var(--color-surface-elevated)]/40 rounded-b-xl flex gap-2">
         {/* Primary Action - Status based */}
         {appointment.status === "PENDING" && (
-          <button
+          <Button
             onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
             disabled={isUpdating}
-            className="flex-1 bg-[color:var(--color-surface)] text-[color:var(--color-on-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-elevated)] px-2 py-1.5 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
+            variant="outline"
+            size="sm"
+            className={mobilePrimaryActionClass}
             type="button"
           >
             <CheckCircle className="w-3.5 h-3.5 mr-1 text-[color:var(--color-success)]" />
             Confirmar
-          </button>
+          </Button>
         )}
 
         {appointment.status === "CONFIRMED" && (
-          <button
+          <Button
             onClick={() => onStatusUpdate(appointment.id, "COMPLETED")}
             disabled={isUpdating}
-            className="flex-1 bg-[color:var(--color-surface)] text-[color:var(--color-on-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-elevated)] px-2 py-1.5 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
+            variant="outline"
+            size="sm"
+            className={mobilePrimaryActionClass}
             type="button"
           >
             <CheckCircle className="w-3.5 h-3.5 mr-1 text-[color:var(--color-success)]" />
             Completada
-          </button>
+          </Button>
         )}
 
         {appointment.status === "COMPLETED" && (
-          <button
+          <Button
             onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
             disabled={isUpdating}
             type="button"
-            className="flex-1 bg-[color:var(--color-surface)] text-[color:var(--color-on-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-elevated)] px-2 py-1.5 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
+            variant="outline"
+            size="sm"
+            className={mobilePrimaryActionClass}
           >
             <RotateCcw className="w-3.5 h-3.5 mr-1 text-[color:var(--color-info)]" />
             Reabrir
-          </button>
+          </Button>
         )}
 
         {appointment.status === "CANCELLED" && (
-          <button
+          <Button
             onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
             disabled={isUpdating}
             type="button"
-            className="flex-1 bg-[color:var(--color-surface)] text-[color:var(--color-on-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-elevated)] px-2 py-1.5 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
+            variant="outline"
+            size="sm"
+            className={mobilePrimaryActionClass}
           >
             <RotateCcw className="w-3.5 h-3.5 mr-1 text-[color:var(--color-info)]" />
             Reabrir
-          </button>
+          </Button>
         )}
 
         {/* Secondary Actions */}
-        <button
-          onClick={() => onViewDetails(appointment)}
-          type="button"
-          className="bg-[color:var(--color-surface)] text-[color:var(--color-muted)] border border-[color:var(--color-border)] hover:text-[color:var(--color-on-surface)] hover:bg-[color:var(--color-surface-elevated)] px-2 py-1.5 rounded-lg text-xs font-medium transition-colors inline-flex items-center justify-center"
-        >
+        <ActionButton tooltip="Ver detalles" onClick={() => onViewDetails(appointment)}>
           <Eye className="w-3.5 h-3.5" />
-        </button>
+        </ActionButton>
 
-        <button
+        <ActionButton
+          tooltip="Eliminar"
           onClick={() => onDelete(appointment.id)}
           disabled={isDeleting}
-          type="button"
-          className="bg-[color:var(--color-surface)] text-[color:var(--color-muted)] border border-[color:var(--color-border)] hover:text-danger hover:bg-danger/5 px-2 py-1.5 rounded-lg text-xs disabled:opacity-50 font-medium transition-colors inline-flex items-center justify-center"
         >
-          <Trash2 className="w-3.5 h-3.5" />
-        </button>
+          <Trash2 className="w-3.5 h-3.5 text-[color:var(--color-danger)]" />
+        </ActionButton>
       </div>
     </div>
   );
@@ -284,12 +293,6 @@ function AppointmentRow({
     .map((s) => s.displayText)
     .join(", ");
 
-  const initials = appointment.clientName
-    .split(" ")
-    .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase() ?? "")
-    .join("");
-
   return (
     <TableRow
       id={`appointment-${appointment.id}`}
@@ -303,7 +306,7 @@ function AppointmentRow({
         <div className="flex items-center gap-3">
           <Avatar>
             <AvatarFallback className="bg-[color:var(--color-primary)]/15 text-[color:var(--color-primary)] font-semibold text-xs">
-              {initials}
+              <User className="w-4 h-4" />
             </AvatarFallback>
           </Avatar>
           <div>

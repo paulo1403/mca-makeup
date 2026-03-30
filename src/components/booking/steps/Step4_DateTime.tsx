@@ -1,26 +1,13 @@
 "use client";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { Check, ChevronLeft, ChevronRight, Clock } from "lucide-react";
-import type React from "react";
-import DatePicker from "react-datepicker";
+import { Check, Clock } from "lucide-react";
 import { Controller, useFormContext } from "react-hook-form";
+import { Calendar } from "@/components/ui/calendar";
+import { Card, CardContent } from "@/components/ui/card";
 import Typography from "@/components/ui/Typography";
 import { useAvailableRanges } from "@/hooks/useAvailableRanges";
 import type { BookingData } from "@/lib/bookingSchema";
-
-const CustomWeekdayHeader: React.FC = () => {
-  const days = ["lun", "mar", "mié", "jue", "vie", "sáb", "dom"];
-  return (
-    <div className="custom-weekday-header" aria-hidden>
-      {days.map((d) => (
-        <span key={d} className="custom-weekday-cell">
-          {d}
-        </span>
-      ))}
-    </div>
-  );
-};
 
 export default function Step4_DateTime() {
   const { control, watch, setValue } = useFormContext<BookingData>();
@@ -58,75 +45,41 @@ export default function Step4_DateTime() {
 
       <div className="space-y-6">
         {/* Calendario */}
-        <div className="p-4 rounded-[12px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)]/60">
+        <Card className="border border-[color:var(--color-border)] bg-[color:var(--color-card)] text-[color:var(--color-card-foreground)]">
+          <CardContent className="p-4">
           <Controller
             control={control}
             name="date"
             render={({ field }) => (
-              <DatePicker
-                selected={field.value}
-                onChange={(d: Date | null) => field.onChange(d)}
-                inline
+              <Calendar
+                mode="single"
                 locale={es}
-                formatWeekDay={(nameOfDay) => {
-                  const key = nameOfDay.toLowerCase();
-                  if (key.startsWith("lun")) return "lun";
-                  if (key.startsWith("mar")) return "mar";
-                  if (key.startsWith("miér")) return "mié";
-                  if (key.startsWith("mie")) return "mié";
-                  if (key.startsWith("jue")) return "jue";
-                  if (key.startsWith("vie")) return "vie";
-                  if (key.startsWith("sáb")) return "sáb";
-                  if (key.startsWith("sab")) return "sáb";
-                  if (key.startsWith("dom")) return "dom";
-                  return nameOfDay.slice(0, 3).toLowerCase();
+                selected={field.value ?? undefined}
+                onSelect={(d) => {
+                  if (d) field.onChange(d);
                 }}
-                calendarClassName="w-full no-daynames"
-                renderCustomHeader={({ date, decreaseMonth, increaseMonth }) => (
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <button
-                        type="button"
-                        onClick={decreaseMonth}
-                        className="p-2 rounded-[12px] bg-[color:var(--color-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface)] transition-colors"
-                        aria-label="Mes anterior"
-                      >
-                        <ChevronLeft
-                          aria-hidden="true"
-                          focusable="false"
-                          className="w-4 h-4 text-[color:var(--color-heading)]"
-                        />
-                      </button>
-                      <Typography
-                        as="span"
-                        variant="small"
-                        className="font-medium text-[color:var(--color-heading)]"
-                      >
-                        {format(date, "MMMM yyyy", { locale: es })}
-                      </Typography>
-                      <button
-                        type="button"
-                        onClick={increaseMonth}
-                        className="p-2 rounded-[12px] bg-[color:var(--color-surface)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface)] transition-colors"
-                        aria-label="Mes siguiente"
-                      >
-                        <ChevronRight
-                          aria-hidden="true"
-                          focusable="false"
-                          className="w-4 h-4 text-[color:var(--color-heading)]"
-                        />
-                      </button>
-                    </div>
-                    <CustomWeekdayHeader />
-                  </div>
-                )}
+                required
+                className="mx-auto w-full max-w-[360px] rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-card)] p-3"
+                classNames={{
+                  caption_label:
+                    "text-sm font-semibold capitalize text-[color:var(--color-heading)]",
+                  head_cell:
+                    "text-[0.78rem] font-semibold text-[color:var(--calendar-label)] w-9",
+                  day: "h-9 w-9 text-sm font-medium text-[color:var(--color-heading)]",
+                  day_disabled:
+                    "h-9 w-9 text-sm font-medium text-[color:var(--calendar-inactive)] opacity-50",
+                  day_outside:
+                    "h-9 w-9 text-sm font-medium text-[color:var(--calendar-inactive)] opacity-60",
+                }}
               />
             )}
           />
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Horarios disponibles */}
-        <div className="p-4 rounded-[12px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)]/60">
+        <Card className="border border-[color:var(--color-border)] bg-[color:var(--color-card)] text-[color:var(--color-card-foreground)]">
+          <CardContent className="p-4">
           <div className="flex items-center justify-between mb-4">
             <Typography as="h5" variant="h5" className="font-medium">
               Horarios disponibles
@@ -220,7 +173,8 @@ export default function Step4_DateTime() {
               </div>
             </div>
           )}
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

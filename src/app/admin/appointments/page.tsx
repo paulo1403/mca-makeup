@@ -226,31 +226,33 @@ function AppointmentsContent() {
           />
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {[
-            { value: "all", label: "Todas" },
-            { value: "PENDING", label: "Pendientes" },
-            { value: "CONFIRMED", label: "Confirmadas" },
-            { value: "COMPLETED", label: "Completadas" },
-            { value: "CANCELLED", label: "Canceladas" },
-          ].map((item) => {
-            const isActive = filter === item.value;
-            return (
-              <button
-                key={item.value}
-                type="button"
-                onClick={() => handleFilterChange(item.value)}
-                className={[
-                  "px-3 py-1.5 text-xs rounded-full border transition-colors",
-                  isActive
-                    ? "bg-[color:var(--color-primary)] text-white border-[color:var(--color-primary)]"
-                    : "bg-[color:var(--color-surface)] text-[color:var(--color-muted)] border-[color:var(--color-border)] hover:text-heading",
-                ].join(" ")}
-              >
-                {item.label}
-              </button>
-            );
-          })}
+        <div className="-mx-1 overflow-x-auto px-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex flex-nowrap gap-2 md:flex-wrap">
+            {[
+              { value: "all", label: "Todas" },
+              { value: "PENDING", label: "Pendientes" },
+              { value: "CONFIRMED", label: "Confirmadas" },
+              { value: "COMPLETED", label: "Completadas" },
+              { value: "CANCELLED", label: "Canceladas" },
+            ].map((item) => {
+              const isActive = filter === item.value;
+              return (
+                <button
+                  key={item.value}
+                  type="button"
+                  onClick={() => handleFilterChange(item.value)}
+                  className={[
+                    "shrink-0 whitespace-nowrap px-3 py-1.5 text-xs rounded-full border transition-colors",
+                    isActive
+                      ? "bg-[color:var(--color-primary)] text-white border-[color:var(--color-primary)]"
+                      : "bg-[color:var(--color-surface)] text-[color:var(--color-muted)] border-[color:var(--color-border)] hover:text-heading",
+                  ].join(" ")}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Appointments Content */}

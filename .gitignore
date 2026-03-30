@@ -133,6 +133,15 @@ tmp/
 .temp/
 .tmp/
 
+# Playwright local artifacts
+.playwright-mcp/
+playwright-report/
+test-results/
+logo-mobile-updated.png
+logo-*.png
+playwright-*.png
+*playwright*.png
+
 # Database files
 *.db
 *.sqlite

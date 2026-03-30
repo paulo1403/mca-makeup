@@ -1,9 +1,13 @@
 "use client";
 
-import { Clock, DollarSign, Eye, Pencil, Plus, Sparkles, Tag, Trash2 } from "lucide-react";
+import { CheckCircle2, Clock, Eye, Pencil, Plus, Sparkles, Tag, Trash2, XCircle } from "lucide-react";
 import Button from "@/components/ui/Button";
-import Typography from "@/components/ui/Typography";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import type { Service } from "../types";
+
+const surfaceCardClass =
+  "border border-[color:var(--color-border)]/60 bg-[color:var(--color-surface)] text-[color:var(--color-body)] shadow-none";
 
 interface ServiceListMobileProps {
   services: Service[];
@@ -27,128 +31,120 @@ export default function ServiceListMobile({
   return (
     <div className="block lg:hidden">
       {services.length === 0 ? (
-        <div className="bg-[var(--color-surface)] rounded-xl border border-[var(--color-border)] shadow-sm p-8 text-center">
-          <div className="w-16 h-16 bg-[var(--color-primary)] bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Sparkles className="w-8 h-8 text-[var(--color-primary)]" />
-          </div>
-          <Typography
-            as="h3"
-            variant="h4"
-            className="text-[var(--color-heading)] mb-2 font-semibold"
-          >
-            No tienes servicios aún
-          </Typography>
-          <Typography as="p" variant="small" className="text-[var(--color-body)] mb-6">
-            Crea tu primer servicio para empezar a recibir reservas de tus clientes.
-          </Typography>
-          <Button
-            onClick={openNewModal}
-            variant="primary"
-            size="md"
-            className="flex items-center space-x-2 mx-auto shadow-md hover:shadow-lg"
-          >
-            <Plus className="w-5 h-5" />
-            <span>Crear Primer Servicio</span>
-          </Button>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {services.map((service) => (
-            <div
-              key={service.id}
-              className="bg-[var(--color-surface)] rounded-xl border border-[var(--color-border)] shadow-sm p-4 transition-all hover:shadow-md"
-            >
-              {/* Header */}
-              <div className="flex items-start justify-between gap-2 mb-3">
-                <div className="flex-1 mr-2 min-w-0">
-                  <Typography
-                    as="h3"
-                    variant="h4"
-                    className="text-[var(--color-heading)] font-semibold text-base leading-tight truncate"
-                  >
-                    {service.name}
-                  </Typography>
-                  {service.description && (
-                    <Typography as="p" variant="small" className="text-[var(--color-body)] mt-1">
-                      {service.description}
-                    </Typography>
-                  )}
-                </div>
-                <Button
-                  onClick={() => toggleActive(service)}
-                  variant="ghost"
-                  size="xs"
-                  aria-pressed={service.isActive}
-                  aria-label="Cambiar estado del servicio"
-                  className={`rounded-full px-3 py-1 text-xs focus-ring transition-colors ${
-                    service.isActive
-                      ? "bg-[var(--status-confirmed-bg)] text-[var(--status-confirmed-text)] border border-[var(--status-confirmed-border)] hover:opacity-90"
-                      : "bg-[var(--status-cancelled-bg)] text-[var(--status-cancelled-text)] border border-[var(--status-cancelled-border)] hover:opacity-90"
-                  }`}
-                >
-                  {service.isActive ? "Activo" : "Inactivo"}
-                </Button>
-              </div>
-
-              {/* Details */}
-              <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
-                <div className="flex items-center space-x-2">
-                  <Tag className="w-4 h-4 text-[var(--color-muted)]" />
-                  <div>
-                    <p className="text-[var(--color-muted)] text-xs">Categoría</p>
-                    <p className="font-medium text-[var(--color-heading)]">
-                      {serviceCategories[service.category as keyof typeof serviceCategories]}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <DollarSign className="w-4 h-4 text-[var(--color-muted)]" />
-                  <div>
-                    <p className="text-[var(--color-muted)] text-xs">Precio</p>
-                    <p className="font-medium text-[var(--color-heading)]">S/ {service.price}</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-[var(--color-muted)]" />
-                  <div>
-                    <p className="text-[var(--color-muted)] text-xs">Duración</p>
-                    <p className="font-medium text-[var(--color-heading)]">
-                      {service.duration} min
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Actions */}
-              <div className="border-t border-[var(--color-border)] pt-3">
-                <div className="flex gap-2">
-                  <Button
-                    onClick={() => handleEdit(service)}
-                    variant="ghost"
-                    size="sm"
-                    className="flex-1 focus-ring"
-                  >
-                    <Pencil className="inline-block w-4 h-4 mr-1" /> Editar
-                  </Button>
-                  <Button
-                    onClick={() => handleView(service)}
-                    variant="primary"
-                    size="sm"
-                    className="flex-1"
-                  >
-                    <Eye className="inline-block w-4 h-4 mr-1" /> Ver
-                  </Button>
-                  <Button
-                    onClick={() => handleDelete(service.id)}
-                    variant="danger"
-                    size="sm"
-                    className="flex-1"
-                  >
-                    <Trash2 className="inline-block w-4 h-4 mr-1" /> Eliminar
-                  </Button>
-                </div>
-              </div>
+        <Card className={surfaceCardClass}>
+          <CardContent className="py-12 text-center">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--color-primary)]/10">
+              <Sparkles className="h-8 w-8 text-[color:var(--color-primary)]" />
             </div>
+            <h3 className="mb-2 text-lg font-semibold text-[color:var(--color-heading)]">
+              No tienes servicios aún
+            </h3>
+            <p className="mb-6 text-sm text-[color:var(--color-body)]">
+              Crea tu primer servicio para empezar a recibir reservas de tus clientes.
+            </p>
+            <Button
+              onClick={openNewModal}
+              variant="primary"
+              size="md"
+              className="flex items-center gap-2 mx-auto shadow-md hover:shadow-lg"
+            >
+              <Plus className="h-5 w-5" />
+              Crear Primer Servicio
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="space-y-3">
+          {services.map((service) => (
+            <Card
+              key={service.id}
+              className={surfaceCardClass}
+            >
+              <CardContent className="p-4">
+                {/* Header row */}
+                <div className="mb-3 flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-[color:var(--color-heading)]">
+                      {service.name}
+                    </p>
+                    {service.description && (
+                      <p className="mt-0.5 line-clamp-2 text-xs text-[color:var(--color-muted)]">
+                        {service.description}
+                      </p>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => toggleActive(service)}
+                    className="shrink-0 focus-ring rounded"
+                    aria-pressed={service.isActive}
+                    aria-label="Cambiar estado del servicio"
+                    title={service.isActive ? "Desactivar servicio" : "Activar servicio"}
+                  >
+                    <Badge
+                      variant="outline"
+                      className={
+                        service.isActive
+                          ? "cursor-pointer border-[color:var(--status-confirmed-border)] bg-[color:var(--status-confirmed-bg)] text-[color:var(--status-confirmed-text)] transition-opacity hover:opacity-75"
+                          : "cursor-pointer border-[color:var(--status-cancelled-border)] bg-[color:var(--status-cancelled-bg)] text-[color:var(--status-cancelled-text)] transition-opacity hover:opacity-75"
+                      }
+                    >
+                      {service.isActive ? (
+                        <CheckCircle2 className="mr-1 h-3 w-3" />
+                      ) : (
+                        <XCircle className="mr-1 h-3 w-3" />
+                      )}
+                      {service.isActive ? "Activo" : "Inactivo"}
+                    </Badge>
+                  </button>
+                </div>
+
+                {/* Detail chips */}
+                <div className="mb-4 flex flex-wrap gap-2">
+                  <div className="flex items-center gap-1.5 rounded-lg border border-[color:var(--color-border)]/60 bg-[color:var(--color-surface-elevated)] px-2.5 py-1.5">
+                    <Tag className="h-3.5 w-3.5 text-[color:var(--color-muted)]" />
+                    <span className="text-xs text-[color:var(--color-body)]">
+                      {serviceCategories[service.category as keyof typeof serviceCategories]}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 rounded-lg border border-[color:var(--color-border)]/60 bg-[color:var(--color-surface-elevated)] px-2.5 py-1.5">
+                    <span className="text-xs font-medium tabular-nums text-[color:var(--color-heading)]">
+                      S/ {service.price}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 rounded-lg border border-[color:var(--color-border)]/60 bg-[color:var(--color-surface-elevated)] px-2.5 py-1.5">
+                    <Clock className="h-3.5 w-3.5 text-[color:var(--color-muted)]" />
+                    <span className="text-xs text-[color:var(--color-body)]">
+                      {service.duration} min
+                    </span>
+                  </div>
+                </div>
+
+                {/* Action row */}
+                <div className="flex gap-2 border-t border-[color:var(--color-border)]/60 pt-3">
+                  <button
+                    onClick={() => handleView(service)}
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-[color:var(--color-border)]/60 px-3 py-2 text-xs font-medium text-[color:var(--color-body)] transition-colors hover:bg-[color:var(--color-surface-elevated)] focus-ring"
+                  >
+                    <Eye className="h-3.5 w-3.5" />
+                    Ver
+                  </button>
+                  <button
+                    onClick={() => handleEdit(service)}
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-[color:var(--color-primary)]/40 bg-[color:var(--color-primary)]/8 px-3 py-2 text-xs font-medium text-[color:var(--color-primary)] transition-colors hover:bg-[color:var(--color-primary)]/15 focus-ring"
+                  >
+                    <Pencil className="h-3.5 w-3.5" />
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => handleDelete(service.id)}
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-[color:var(--status-cancelled-border)] bg-[color:var(--status-cancelled-bg)] px-3 py-2 text-xs font-medium text-[color:var(--status-cancelled-text)] transition-colors hover:opacity-80 focus-ring"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    Eliminar
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       )}
