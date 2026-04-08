@@ -63,7 +63,7 @@ export default function Step1_PersonalInfo() {
           render={({ field, fieldState }) => (
             <InputField
               type="tel"
-              placeholder="+51 989 164 990"
+              placeholder="+51 953 879 106"
               icon={<Phone className="w-5 h-5" />}
               field={field}
               label="Número de teléfono"

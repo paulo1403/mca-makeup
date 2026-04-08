@@ -7,9 +7,19 @@ if (fs.existsSync(".env.development")) {
   dotenv.config();
 }
 
+import { PrismaPg } from "@prisma/adapter-pg";
 import { LocationType, NotificationType, PrismaClient, ServiceCategory } from "@prisma/client";
+import { Pool } from "pg";
 
-const prisma = new PrismaClient();
+const databaseUrl = process.env.DATABASE_URL;
+
+if (!databaseUrl) {
+  throw new Error("DATABASE_URL is required to run prisma seed");
+}
+
+const pool = new Pool({ connectionString: databaseUrl });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("🌱 Iniciando seed de la base de datos...");
@@ -574,4 +584,5 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
+    await pool.end();
   });

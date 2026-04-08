@@ -107,7 +107,7 @@ export default function AboutSection() {
         {/* Contacto */}
         <div className="space-y-3 mb-6">
           <a
-            href="https://wa.me/51989164990"
+            href="https://wa.me/51953879106"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 px-4 py-3 rounded-[12px] bg-[color:var(--color-surface)]/40 hover:bg-[color:var(--color-surface)]/60 transition-colors"

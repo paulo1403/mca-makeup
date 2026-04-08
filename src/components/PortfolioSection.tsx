@@ -211,7 +211,7 @@ export default function PortfolioSection() {
               </Button>
               <Button
                 as="a"
-                href="https://wa.me/51989164990"
+                href="https://wa.me/51953879106"
                 target="_blank"
                 rel="noreferrer"
                 variant="whatsapp"

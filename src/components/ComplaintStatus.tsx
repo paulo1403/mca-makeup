@@ -250,7 +250,7 @@ export default function ComplaintStatus() {
               </p>
               <p>• Si no está conforme con nuestra respuesta, puede acudir a INDECOPI</p>
               <p>
-                • Para más información, contáctenos al +51 989 164 990 o
+                • Para más información, contáctenos al +51 953 879 106 o
                 marcelacordero.bookings@gmail.com
               </p>
             </div>

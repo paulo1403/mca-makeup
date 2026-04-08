@@ -427,7 +427,7 @@ export default function ComplaintBook() {
               </div>
               <div>
                 <p>
-                  <strong>WhatsApp:</strong> +51 989 164 990
+                  <strong>WhatsApp:</strong> +51 953 879 106
                 </p>
                 <p>
                   <strong>Ubicación:</strong> Lima, Perú

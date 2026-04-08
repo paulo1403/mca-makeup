@@ -163,7 +163,7 @@ export default function CompactServiceSelector({
                     : "bg-[color:var(--color-surface)] border-[color:var(--color-border)] hover:border-[color:var(--color-primary)]/50"
                 }`}
               >
-                <div className="flex items-start justify-between gap-2 sm:gap-3 lg:items-center">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3 lg:items-center">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
                       <div
@@ -180,12 +180,18 @@ export default function CompactServiceSelector({
                     <Typography
                       as="h6"
                       variant="h6"
-                      className="mt-1 font-medium text-[color:var(--color-heading)] text-[11px] sm:text-sm leading-snug truncate"
+                      className="mt-1 font-semibold text-[color:var(--color-heading)] text-[13px] sm:text-sm leading-snug whitespace-normal break-words"
+                      title={svc.name}
                     >
                       {svc.name}
                     </Typography>
+                    {svc.description && (
+                      <p className="mt-1 text-[11px] sm:text-xs leading-relaxed text-[color:var(--color-body)] whitespace-normal break-words">
+                        {svc.description}
+                      </p>
+                    )}
                   </div>
-                  <div className="text-right flex-shrink-0">
+                  <div className="flex items-center justify-between gap-2 sm:block sm:min-w-[76px] sm:text-right flex-shrink-0">
                     {showPrice && (
                       <span
                         className={`font-bold block ${
@@ -197,7 +203,7 @@ export default function CompactServiceSelector({
                         S/ {svc.price}
                       </span>
                     )}
-                    <div className="mt-0.5 text-[11px] sm:text-xs text-[color:var(--color-body)] inline-flex items-center gap-1">
+                    <div className="mt-0 sm:mt-0.5 text-[11px] sm:text-xs text-[color:var(--color-body)] inline-flex items-center gap-1">
                       <Clock
                         className={`w-3 h-3 ${
                           selected

@@ -45,12 +45,15 @@ export default function ServiceCard({ service }: Props) {
         {/* Header */}
         <div className="flex items-start justify-between gap-4 mb-4">
           <div className="flex-1 min-w-0">
-            <h4 className="text-service-title font-bold text-lg leading-tight mb-2 line-clamp-2">
+            <h4
+              className="text-service-title font-bold text-lg leading-tight mb-2 whitespace-normal break-words"
+              title={service.name}
+            >
               {service.name}
             </h4>
 
             {/* Service Info */}
-            <div className="flex items-center gap-4 text-sm">
+            <div className="flex flex-wrap items-center gap-3 text-sm">
               <div className="flex items-center gap-1.5 text-service-duration">
                 <Clock className="w-4 h-4" />
                 <span className="font-medium">{service.duration} min</span>
