@@ -25,7 +25,10 @@ const montserrat = Montserrat({
   weight: ["300", "400", "500", "600", "700"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://mca-makeup.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: "Marcela Cordero - Makeup Artist | Maquillaje Profesional",
     template: "%s | Marcela Cordero - Makeup Artist",
@@ -44,7 +47,7 @@ export const metadata: Metadata = {
     "servicios de belleza",
     "maquillaje nupcial",
   ],
-  authors: [{ name: "Marcela Cordero", url: "https://marcelacordero.com" }],
+  authors: [{ name: "Marcela Cordero", url: siteUrl }],
   creator: "Marcela Cordero",
   publisher: "Marcela Cordero Makeup Studio",
   robots: {
@@ -59,12 +62,12 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://marcelacordero.com",
+    canonical: siteUrl,
   },
   openGraph: {
     type: "website",
     locale: "es_ES",
-    url: "https://marcelacordero.com",
+    url: siteUrl,
     siteName: "Marcela Cordero - Makeup Artist",
     title: "Marcela Cordero - Makeup Artist | Maquillaje Profesional",
     description:
@@ -135,37 +138,23 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "@id": "https://marcelacordero.com/#business",
+    "@id": `${siteUrl}/#business`,
     name: "Marcela Cordero - Makeup Artist",
     description:
-      "Servicios profesionales de maquillaje para bodas, eventos sociales y sesiones fotográficas.",
-    url: "https://marcelacordero.com",
+      "Servicios profesionales de maquillaje para bodas, eventos sociales y sesiones fotográficas en Lima.",
+    url: siteUrl,
     telephone: "+51 953 879 106",
     email: "marcelacordero.bookings@gmail.com",
-    image: "https://marcelacordero.com/images/og-image.jpg",
-    logo: "https://marcelacordero.com/images/logo.png",
+    image: `${siteUrl}/images/og-image.jpg`,
+    logo: `${siteUrl}/images/logo.png`,
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Av. Principal 123",
-      addressLocality: "Ciudad",
-      addressRegion: "Estado",
-      postalCode: "12345",
-      addressCountry: "MX",
+      streetAddress: "Av. Bolívar 1073",
+      addressLocality: "Pueblo Libre",
+      addressRegion: "Lima",
+      addressCountry: "PE",
     },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: "19.4326",
-      longitude: "-99.1332",
-    },
-    areaServed: {
-      "@type": "GeoCircle",
-      geoMidpoint: {
-        "@type": "GeoCoordinates",
-        latitude: "19.4326",
-        longitude: "-99.1332",
-      },
-      geoRadius: 50000,
-    },
+    areaServed: ["Pueblo Libre", "Lima Metropolitana", "Magdalena", "San Miguel", "Jesús María"],
     serviceType: [
       "Maquillaje de bodas",
       "Maquillaje para eventos",
@@ -183,7 +172,7 @@ export default function RootLayout({
       "@type": "Person",
       name: "Marcela Cordero",
       jobTitle: "Professional Makeup Artist",
-      url: "https://marcelacordero.com/about",
+      url: `${siteUrl}/#about`,
     },
     sameAs: [
       "https://www.instagram.com/marcelacorderobeauty/",
@@ -209,7 +198,7 @@ export default function RootLayout({
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
         />
-        <link rel="canonical" href="https://marcelacordero.com" />
+        <link rel="canonical" href={siteUrl} />
       </head>
       <body className="antialiased overflow-x-hidden max-w-full">
         <NavBar />

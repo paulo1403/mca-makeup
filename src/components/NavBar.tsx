@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu } from "lucide-react";
+import { BookOpen, Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -103,6 +103,12 @@ const NavBar = () => {
               }}
             >
               <Typography variant="p">Nosotros</Typography>
+            </Link>
+            <Link
+              href="/blog"
+              className="text-[color:var(--color-muted)] hover:text-[color:var(--color-primary)] transition-colors"
+            >
+              <Typography variant="p">Blog</Typography>
             </Link>
             <Link
               href="/booking"
