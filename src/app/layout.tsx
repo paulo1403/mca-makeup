@@ -68,23 +68,16 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_ES",
     url: siteUrl,
-    siteName: "Marcela Cordero - Makeup Artist",
-    title: "Marcela Cordero - Makeup Artist | Maquillaje Profesional",
+    siteName: "Marcela Cordero Makeup",
+    title: "Marcela Cordero Makeup | Maquillaje profesional en Lima",
     description:
-      "Servicios profesionales de maquillaje para bodas, eventos sociales y sesiones fotográficas. Reserva tu cita con Marcela Cordero, maquilladora certificada.",
+      "Maquillaje profesional para novias, eventos sociales y atención a domicilio en Lima. Reserva tu cita con Marcela Cordero.",
     images: [
       {
         url: "/images/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Marcela Cordero - Makeup Artist",
-        type: "image/jpeg",
-      },
-      {
-        url: "/images/og-image-square.jpg",
-        width: 400,
-        height: 400,
-        alt: "Marcela Cordero - Makeup Artist Logo",
+        alt: "Marcela Cordero Makeup - Maquillaje profesional en Lima",
         type: "image/jpeg",
       },
     ],
@@ -93,10 +86,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@marcelacordero_mua",
     creator: "@marcelacordero_mua",
-    title: "Marcela Cordero - Makeup Artist | Maquillaje Profesional",
+    title: "Marcela Cordero Makeup | Maquillaje profesional en Lima",
     description:
-      "Servicios profesionales de maquillaje para bodas, eventos y sesiones fotográficas. Reserva tu cita con Marcela Cordero.",
-    images: ["/images/twitter-image.jpg"],
+      "Maquillaje para novias, eventos y servicios a domicilio en Lima. Reserva tu cita con Marcela Cordero.",
+    images: ["/images/og-image.jpg"],
   },
   icons: {
     icon: [

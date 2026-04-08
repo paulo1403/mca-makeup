@@ -19,9 +19,12 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
   const currentPage = Number.isFinite(rawPage) && rawPage > 1 ? Math.floor(rawPage) : 1;
 
   return {
-    title: currentPage > 1 ? `Blog de maquillaje en Lima - Página ${currentPage}` : "Blog de maquillaje en Lima",
+    title:
+      currentPage > 1
+        ? `Blog de maquillaje en Lima - Página ${currentPage}`
+        : "Blog de maquillaje en Lima | Novias, eventos y belleza",
     description:
-      "Consejos, tendencias y guías de maquillaje profesional en Lima para novias, eventos sociales y piel madura.",
+      "Consejos de maquillaje para novias, eventos sociales y servicios a domicilio en Lima. Inspírate y reserva con Marcela Cordero.",
     alternates: {
       canonical: `${siteUrl}${currentPage > 1 ? `/blog?page=${currentPage}` : "/blog"}`,
     },
@@ -29,11 +32,29 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
       title:
         currentPage > 1
           ? `Blog de maquillaje en Lima - Página ${currentPage} | Marcela Cordero`
-          : "Blog de maquillaje en Lima | Marcela Cordero",
+          : "Blog de maquillaje en Lima | Novias, eventos y belleza | Marcela Cordero",
       description:
-        "Artículos para posicionar la marca de Marcela Cordero con contenido útil sobre novias, eventos y belleza en Lima.",
+        "Ideas, tendencias y consejos útiles para novias, invitadas y eventos en Lima. Descubre el estilo ideal y reserva tu cita.",
       url: `${siteUrl}${currentPage > 1 ? `/blog?page=${currentPage}` : "/blog"}`,
       type: "website",
+      images: [
+        {
+          url: `${siteUrl}/images/og-image.jpg`,
+          width: 1200,
+          height: 630,
+          alt: "Blog de maquillaje en Lima - Marcela Cordero",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title:
+        currentPage > 1
+          ? `Blog de maquillaje en Lima - Página ${currentPage}`
+          : "Blog de maquillaje en Lima | Novias, eventos y belleza",
+      description:
+        "Consejos de maquillaje para novias y eventos en Lima. Inspírate con el blog de Marcela Cordero.",
+      images: [`${siteUrl}/images/og-image.jpg`],
     },
   };
 }

@@ -29,19 +29,32 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     : undefined;
 
   return {
-    title: post.title,
+    title: `${post.title} | Marcela Cordero`,
     description: post.description,
     keywords: post.keywords,
     alternates: {
       canonical: `${siteUrl}/blog/${post.slug}`,
     },
     openGraph: {
-      title: post.title,
+      title: `${post.title} | Marcela Cordero`,
       description: post.description,
       url: `${siteUrl}/blog/${post.slug}`,
       type: "article",
       publishedTime: post.publishedAt,
-      images: articleImage ? [{ url: articleImage, alt: post.title }] : undefined,
+      images: articleImage
+        ? [{ url: articleImage, alt: post.title }]
+        : [
+            {
+              url: `${siteUrl}/images/og-image.jpg`,
+              alt: post.title,
+            },
+          ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${post.title} | Marcela Cordero`,
+      description: post.description,
+      images: articleImage ? [articleImage] : [`${siteUrl}/images/og-image.jpg`],
     },
   };
 }
