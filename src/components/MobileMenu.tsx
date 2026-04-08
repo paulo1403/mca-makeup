@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Mail, MapPin, Phone, Sparkles, Star, Users, X } from "lucide-react";
+import { BookOpen, Mail, MapPin, Phone, Sparkles, Star, Users, X } from "lucide-react";
 import Link from "next/link";
 import Logo from "./Logo";
 import Typography from "./ui/Typography";
@@ -102,6 +102,19 @@ export default function MobileMenu({ isOpen, onClose, handleNavClick }: MobileMe
                   </div>
                   <Typography as="span" variant="p" className="text-[color:var(--color-heading)]">
                     Nosotros
+                  </Typography>
+                </Link>
+
+                <Link
+                  href="/blog"
+                  className="flex items-center gap-3 p-4 rounded-lg hover:bg-[color:var(--color-surface)]/50 transition-colors mb-2"
+                  onClick={onClose}
+                >
+                  <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/10 flex items-center justify-center">
+                    <BookOpen className="w-5 h-5 text-[color:var(--color-primary)]" />
+                  </div>
+                  <Typography as="span" variant="p" className="text-[color:var(--color-heading)]">
+                    Blog
                   </Typography>
                 </Link>
 

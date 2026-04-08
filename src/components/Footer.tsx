@@ -24,6 +24,7 @@ export default function Footer() {
       { href: "/#about", label: "Sobre mí" },
       { href: "/#portfolio", label: "Portafolio" },
       { href: "/#testimonials", label: "Testimonios" },
+      { href: "/blog", label: "Blog y consejos" },
     ],
     legal: [
       { href: "/politicas-privacidad", label: "Políticas de Privacidad" },
