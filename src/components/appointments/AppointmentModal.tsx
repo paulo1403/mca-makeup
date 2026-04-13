@@ -111,6 +111,11 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                   <div className="text-xs text-[color:var(--color-muted)]">
                     {appointment.clientEmail}
                   </div>
+                  {appointment.clientPhone && (
+                    <div className="text-xs text-[color:var(--color-muted)]">
+                      {appointment.clientPhone}
+                    </div>
+                  )}
                   <div className="text-xs text-[color:var(--color-on-surface)]">
                     {formatDate(appointment.appointmentDate)} ·{" "}
                     {formatTime(appointment.appointmentTime)}

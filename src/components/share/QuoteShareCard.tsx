@@ -179,8 +179,12 @@ export async function generateQuotePng({
     contentWMeasure,
     smallFont,
   );
+  const clientContact = appointment.clientPhone?.trim()
+    ? `${appointment.clientName} · ${appointment.clientPhone.trim()}`
+    : appointment.clientName;
+  const clientWrapped = wrapLines(measureCtx, `Cliente: ${clientContact}`, contentWMeasure, smallFont);
   measureCtx.font = lineFont;
-  let dynamicLines = baseLines + headerWrapped.length;
+  let dynamicLines = baseLines + clientWrapped.length + headerWrapped.length;
   // Always include a Dirección line (Studio uses fixed address)
   measureCtx.font = smallFont;
   const dirTextMeasure = isStudio2
@@ -248,6 +252,11 @@ export async function generateQuotePng({
   y += 40 + lineGap;
   ctx.font = smallFont;
   ctx.fillStyle = colors.muted;
+  const clientLines = wrapLines(ctx, `Cliente: ${clientContact}`, contentWidth, smallFont);
+  clientLines.forEach((line) => {
+    ctx.fillText(line, contentX, y);
+    y += 28 + Math.max(0, lineGap - 6);
+  });
   const headerLines = wrapLines(
     ctx,
     `Cita programada para el ${fecha} a la ${horaHeader} ${ubicacion}`,
