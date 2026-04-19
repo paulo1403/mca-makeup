@@ -27,8 +27,8 @@ export default function LatestArticlesSection() {
             variant="p"
             className="mt-3 mx-auto max-w-2xl text-[color:var(--color-body)] leading-relaxed"
           >
-            Contenido pensado para responder búsquedas reales de clientas y ayudar a Marcela a ganar
-            visibilidad en Google.
+            Cada sección fue creada para ayudarte a decidir con confianza, con contenido claro y
+            práctico.
           </Typography>
         </div>
 
