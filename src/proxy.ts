@@ -4,7 +4,7 @@ import { withAuth } from "next-auth/middleware";
 // Timezone is configured in next.config.ts
 
 export default withAuth(
-  function middleware(req) {
+  function proxy(req) {
     // Si el usuario intenta acceder a /admin/login y ya tiene un token válido, redirigir server-side a /admin
     // runtime property injected by next-auth withAuth
     const nextauth = (req as unknown as { nextauth?: { token?: { sub?: string; role?: string } } })

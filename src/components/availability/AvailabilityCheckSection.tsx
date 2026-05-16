@@ -62,10 +62,10 @@ export default function AvailabilityCheckSection() {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent).detail as
         | {
-            locationType?: "HOME" | "STUDIO";
-            services?: string;
-            district?: string;
-          }
+          locationType?: "HOME" | "STUDIO";
+          services?: string;
+          district?: string;
+        }
         | undefined;
       if (!detail) return;
 
@@ -117,7 +117,7 @@ export default function AvailabilityCheckSection() {
         services: servicesPairs.join(","),
       };
       window.dispatchEvent(new CustomEvent("availability:prefill", { detail: payload }));
-    } catch {}
+    } catch { }
 
     // Esperar a que el DOM se actualice antes de hacer scroll
     setTimeout(() => {
@@ -198,12 +198,12 @@ export default function AvailabilityCheckSection() {
               classNames={{
                 caption_label:
                   "text-sm font-semibold capitalize text-[color:var(--color-heading)]",
-                head_cell:
+                weekday:
                   "text-[0.78rem] font-semibold text-[color:var(--calendar-label)] w-9",
-                day: "h-9 w-9 text-sm font-medium text-[color:var(--color-heading)]",
-                day_disabled:
+                day_button: "h-9 w-9 text-sm font-medium text-[color:var(--color-heading)]",
+                disabled:
                   "h-9 w-9 text-sm font-medium text-[color:var(--calendar-inactive)] opacity-50",
-                day_outside:
+                outside:
                   "h-9 w-9 text-sm font-medium text-[color:var(--calendar-inactive)] opacity-60",
               }}
             />
@@ -301,11 +301,10 @@ export default function AvailabilityCheckSection() {
                       key={r}
                       type="button"
                       onClick={() => setSelectedRange(r)}
-                      className={`flex items-center justify-center gap-2 px-3 py-2 rounded-[12px] transition-colors ${
-                        isSelected
+                      className={`flex items-center justify-center gap-2 px-3 py-2 rounded-[12px] transition-colors ${isSelected
                           ? "bg-[color:var(--color-primary)] text-white"
                           : "bg-[color:var(--color-surface)]/60 text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface)]"
-                      }`}
+                        }`}
                     >
                       <Clock className="w-4 h-4" />
                       <span className="font-medium text-sm">{r}</span>

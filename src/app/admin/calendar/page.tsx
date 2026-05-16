@@ -477,7 +477,6 @@ export default function AdminCalendarPage() {
                 classNames={{
                   months: "w-full",
                   month: "w-full space-y-4",
-                  caption: "hidden",
                   caption_label: "hidden",
                   month_grid: "w-full border-collapse",
                   weekdays: "grid w-full grid-cols-7",
