@@ -152,9 +152,8 @@ function TestimonialCard({
 }) {
   return (
     <article
-      className={`testimonial-slide rounded-[14px] bg-[color:var(--color-surface)]/50 px-5 py-4 sm:px-6 sm:py-5 ${
-        compact ? "w-[290px] sm:w-[340px]" : "w-full max-w-xl mx-auto"
-      }`}
+      className={`testimonial-slide rounded-[14px] bg-[color:var(--color-surface)]/50 px-5 py-4 sm:px-6 sm:py-5 ${compact ? "w-[290px] sm:w-[340px]" : "w-full max-w-xl mx-auto"
+        }`}
     >
       <div className="flex items-center gap-3 mb-3">
         <div className="w-10 h-10 rounded-full bg-[color:var(--color-primary)]/20 flex items-center justify-center">

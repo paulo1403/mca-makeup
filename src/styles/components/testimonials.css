@@ -7,11 +7,9 @@
 }
 
 .testimonials-section {
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--color-surface) 90%, transparent),
-    transparent
-  );
+  background: linear-gradient(180deg,
+      color-mix(in srgb, var(--color-surface) 90%, transparent),
+      transparent);
 }
 
 .testimonials-container {
@@ -61,6 +59,7 @@
   from {
     transform: translateX(0);
   }
+
   to {
     transform: translateX(calc(-50% - 0.5rem));
   }
@@ -108,6 +107,7 @@
   display: flex;
   gap: 0.5rem;
 }
+
 .testimonial-dots .dot {
   width: 10px;
   height: 10px;
@@ -115,6 +115,7 @@
   background: color-mix(in srgb, var(--color-body) 20%, transparent);
   border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
 }
+
 .testimonial-dots .dot.active {
   background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
 }
