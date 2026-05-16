@@ -1,6 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+const STUDIO_SLOT_INTERVAL_KEY = "studio_slot_interval_minutes";
+const HOME_SLOT_INTERVAL_KEY = "home_slot_interval_minutes";
+const ALLOWED_INTERVALS = [15, 30, 45, 60] as const;
+
 // GET /api/admin/availability - Get availability settings
 export async function GET() {
   try {
@@ -12,10 +16,36 @@ export async function GET() {
       orderBy: { date: "asc" },
     });
 
+    const studioIntervalSetting = await prisma.systemSettings.findUnique({
+      where: { key: STUDIO_SLOT_INTERVAL_KEY },
+      select: { value: true },
+    });
+    const homeIntervalSetting = await prisma.systemSettings.findUnique({
+      where: { key: HOME_SLOT_INTERVAL_KEY },
+      select: { value: true },
+    });
+
+    const parsedStudioInterval = Number.parseInt(studioIntervalSetting?.value || "30", 10);
+    const parsedHomeInterval = Number.parseInt(homeIntervalSetting?.value || "30", 10);
+    const studioSlotIntervalMinutes = ALLOWED_INTERVALS.includes(
+      parsedStudioInterval as (typeof ALLOWED_INTERVALS)[number],
+    )
+      ? parsedStudioInterval
+      : 30;
+    const homeSlotIntervalMinutes = ALLOWED_INTERVALS.includes(
+      parsedHomeInterval as (typeof ALLOWED_INTERVALS)[number],
+    )
+      ? parsedHomeInterval
+      : 30;
+
     return NextResponse.json({
       success: true,
       timeSlots,
       specialDates,
+      settings: {
+        studioSlotIntervalMinutes,
+        homeSlotIntervalMinutes,
+      },
     });
   } catch (error) {
     console.error("Error fetching availability:", error);
@@ -31,6 +61,65 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { type, ...data } = body;
+
+    if (type === "settings") {
+      const studioInterval = Number.parseInt(String(data.studioSlotIntervalMinutes), 10);
+      const homeInterval = Number.parseInt(String(data.homeSlotIntervalMinutes), 10);
+
+      if (!ALLOWED_INTERVALS.includes(studioInterval as (typeof ALLOWED_INTERVALS)[number])) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "El intervalo de estudio debe ser uno de: 15, 30, 45 o 60 minutos",
+          },
+          { status: 400 },
+        );
+      }
+
+      if (!ALLOWED_INTERVALS.includes(homeInterval as (typeof ALLOWED_INTERVALS)[number])) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "El intervalo de domicilio debe ser uno de: 15, 30, 45 o 60 minutos",
+          },
+          { status: 400 },
+        );
+      }
+
+      const studioSetting = await prisma.systemSettings.upsert({
+        where: { key: STUDIO_SLOT_INTERVAL_KEY },
+        update: {
+          value: String(studioInterval),
+          description: "Intervalo de inicio de horarios en estudio (minutos)",
+        },
+        create: {
+          key: STUDIO_SLOT_INTERVAL_KEY,
+          value: String(studioInterval),
+          description: "Intervalo de inicio de horarios en estudio (minutos)",
+        },
+      });
+
+      const homeSetting = await prisma.systemSettings.upsert({
+        where: { key: HOME_SLOT_INTERVAL_KEY },
+        update: {
+          value: String(homeInterval),
+          description: "Intervalo de inicio de horarios a domicilio (minutos)",
+        },
+        create: {
+          key: HOME_SLOT_INTERVAL_KEY,
+          value: String(homeInterval),
+          description: "Intervalo de inicio de horarios a domicilio (minutos)",
+        },
+      });
+
+      return NextResponse.json({
+        success: true,
+        settings: {
+          studioSlotIntervalMinutes: Number.parseInt(studioSetting.value, 10),
+          homeSlotIntervalMinutes: Number.parseInt(homeSetting.value, 10),
+        },
+      });
+    }
 
     if (type === "timeSlot") {
       const { dayOfWeek, startTime, endTime, locationType } = data;

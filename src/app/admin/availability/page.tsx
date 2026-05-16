@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertTriangle, Calendar, Clock, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddSpecialDateModal from "@/components/availability/AddSpecialDateModal";
 import AddTimeSlotModal from "@/components/availability/AddTimeSlotModal";
 import EditSpecialDateModal from "@/components/availability/EditSpecialDateModal";
@@ -23,6 +23,8 @@ export default function AvailabilityPage() {
   const [preselectedLocation, setPreselectedLocation] = useState<"STUDIO" | "HOME" | null>(null);
   const [deletingSlotId, setDeletingSlotId] = useState<string | null>(null);
   const [deletingSpecialId, setDeletingSpecialId] = useState<string | null>(null);
+  const [studioInterval, setStudioInterval] = useState<number>(30);
+  const [homeInterval, setHomeInterval] = useState<number>(30);
 
   const {
     timeSlots,
@@ -39,8 +41,17 @@ export default function AvailabilityPage() {
     createSpecialDate,
     editSpecialDate,
     deleteSpecialDate,
+    studioSlotIntervalMinutes,
+    homeSlotIntervalMinutes,
+    updateSettings,
+    isUpdatingSettings,
     message,
   } = useAvailability();
+
+  useEffect(() => {
+    setStudioInterval(studioSlotIntervalMinutes);
+    setHomeInterval(homeSlotIntervalMinutes);
+  }, [studioSlotIntervalMinutes, homeSlotIntervalMinutes]);
 
   const handleAddFromDay = (dayOfWeek: number, locationType: "STUDIO" | "HOME") => {
     setPreselectedDay(dayOfWeek);
@@ -151,6 +162,86 @@ export default function AvailabilityPage() {
           {message}
         </div>
       )}
+
+      {/* Horario Regular Semanal */}
+      <div className="bg-[color:var(--color-surface)] rounded-lg border border-[color:var(--color-border)]/30">
+        <div className="px-3 sm:px-6 py-3 sm:py-4 border-b border-[color:var(--color-border)]/30 bg-gradient-to-r from-[color:var(--color-primary)]/10 to-[color:var(--color-accent)]/10">
+          <div className="flex items-center space-x-2 mb-1">
+            <Clock className="h-5 w-5 text-[color:var(--color-primary)]" />
+            <Typography as="h2" variant="h3" className="text-[color:var(--color-heading)] font-semibold">
+              Configuración de intervalos
+            </Typography>
+          </div>
+          <Typography variant="p" className="text-[color:var(--color-muted)]">
+            Define cada cuántos minutos se ofrecerán inicios de cita para estudio y domicilio.
+          </Typography>
+        </div>
+
+        <div className="p-3 sm:p-6">
+          <div className="grid gap-3 sm:grid-cols-2 max-w-xl">
+            <div>
+              <label
+                htmlFor="studio-interval"
+                className="block mb-2 text-sm font-medium text-[color:var(--color-heading)]"
+              >
+                Intervalo de inicio en Estudio
+              </label>
+              <select
+                id="studio-interval"
+                value={studioInterval}
+                onChange={(e) => setStudioInterval(Number(e.target.value))}
+                className="w-full rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] px-3 py-2 text-[color:var(--color-heading)]"
+              >
+                <option value={15}>Cada 15 minutos</option>
+                <option value={30}>Cada 30 minutos</option>
+                <option value={45}>Cada 45 minutos</option>
+                <option value={60}>Cada 60 minutos</option>
+              </select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="home-interval"
+                className="block mb-2 text-sm font-medium text-[color:var(--color-heading)]"
+              >
+                Intervalo de inicio en Domicilio
+              </label>
+              <select
+                id="home-interval"
+                value={homeInterval}
+                onChange={(e) => setHomeInterval(Number(e.target.value))}
+                className="w-full rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] px-3 py-2 text-[color:var(--color-heading)]"
+              >
+                <option value={15}>Cada 15 minutos</option>
+                <option value={30}>Cada 30 minutos</option>
+                <option value={45}>Cada 45 minutos</option>
+                <option value={60}>Cada 60 minutos</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="mt-3">
+            <Button
+              variant="primary"
+              size="md"
+              disabled={
+                isUpdatingSettings ||
+                (studioInterval === studioSlotIntervalMinutes &&
+                  homeInterval === homeSlotIntervalMinutes)
+              }
+              onClick={() =>
+                updateSettings({
+                  studioSlotIntervalMinutes: studioInterval,
+                  homeSlotIntervalMinutes: homeInterval,
+                })
+              }
+              className="w-full sm:w-auto"
+            >
+              {isUpdatingSettings ? "Guardando..." : "Guardar intervalos"}
+            </Button>
+          </div>
+        </div>
+      </div>
 
       {/* Horario Regular Semanal */}
       <div className="bg-[color:var(--color-surface)] rounded-lg border border-[color:var(--color-border)]/30">

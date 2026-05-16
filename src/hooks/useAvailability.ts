@@ -28,6 +28,10 @@ export interface SpecialDate {
 interface AvailabilityData {
   timeSlots: TimeSlot[];
   specialDates: SpecialDate[];
+  settings?: {
+    studioSlotIntervalMinutes?: number;
+    homeSlotIntervalMinutes?: number;
+  };
 }
 
 // Funciones de API
@@ -171,6 +175,27 @@ const deleteSpecialDate = async (id: string): Promise<void> => {
   }
 };
 
+const updateAvailabilitySettings = async (data: {
+  studioSlotIntervalMinutes: number;
+  homeSlotIntervalMinutes: number;
+}): Promise<{ studioSlotIntervalMinutes: number; homeSlotIntervalMinutes: number }> => {
+  const response = await fetch("/api/admin/availability", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      type: "settings",
+      ...data,
+    }),
+  });
+
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload.message || "Error al guardar la configuración");
+  }
+
+  return payload.settings;
+};
+
 export const useAvailability = () => {
   const queryClient = useQueryClient();
   const [message, setMessage] = useState("");
@@ -294,10 +319,23 @@ export const useAvailability = () => {
     },
   });
 
+  const updateSettingsMutation = useMutation({
+    mutationFn: updateAvailabilitySettings,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["availability"] });
+      showMessage("Configuración guardada exitosamente");
+    },
+    onError: (error: Error) => {
+      showMessage(`❌ ${error.message}`);
+    },
+  });
+
   return {
     // Data
     timeSlots: data?.timeSlots ?? [],
     specialDates: data?.specialDates ?? [],
+    studioSlotIntervalMinutes: data?.settings?.studioSlotIntervalMinutes ?? 30,
+    homeSlotIntervalMinutes: data?.settings?.homeSlotIntervalMinutes ?? 30,
 
     // Loading states
     isLoading,
@@ -308,6 +346,7 @@ export const useAvailability = () => {
     isCreatingSpecialDate: createSpecialDateMutation.isPending,
     isEditingSpecialDate: editSpecialDateMutation.isPending,
     isDeletingSpecialDate: deleteSpecialDateMutation.isPending,
+    isUpdatingSettings: updateSettingsMutation.isPending,
 
     // Actions
     createTimeSlot: createTimeSlotMutation.mutate,
@@ -317,6 +356,7 @@ export const useAvailability = () => {
     createSpecialDate: createSpecialDateMutation.mutate,
     editSpecialDate: editSpecialDateMutation.mutate,
     deleteSpecialDate: deleteSpecialDateMutation.mutate,
+    updateSettings: updateSettingsMutation.mutate,
 
     // UI
     message,

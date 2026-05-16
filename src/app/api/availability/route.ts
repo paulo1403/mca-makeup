@@ -1,6 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+const STUDIO_SLOT_INTERVAL_KEY = "studio_slot_interval_minutes";
+const HOME_SLOT_INTERVAL_KEY = "home_slot_interval_minutes";
+const ALLOWED_INTERVALS = [15, 30, 45, 60] as const;
+
 function getCurrentTimeInPeru(): Date {
   const now = new Date();
   const peruTime = new Date(now.toLocaleString("en-US", { timeZone: "America/Lima" }));
@@ -134,6 +138,28 @@ export async function GET(request: NextRequest) {
       });
       selectedDuration = 120;
     }
+
+    const studioIntervalSetting = await prisma.systemSettings.findUnique({
+      where: { key: STUDIO_SLOT_INTERVAL_KEY },
+      select: { value: true },
+    });
+    const homeIntervalSetting = await prisma.systemSettings.findUnique({
+      where: { key: HOME_SLOT_INTERVAL_KEY },
+      select: { value: true },
+    });
+
+    const parsedStudioInterval = Number.parseInt(studioIntervalSetting?.value || "30", 10);
+    const parsedHomeInterval = Number.parseInt(homeIntervalSetting?.value || "30", 10);
+    const studioSlotIntervalMinutes = ALLOWED_INTERVALS.includes(
+      parsedStudioInterval as (typeof ALLOWED_INTERVALS)[number],
+    )
+      ? parsedStudioInterval
+      : 30;
+    const homeSlotIntervalMinutes = ALLOWED_INTERVALS.includes(
+      parsedHomeInterval as (typeof ALLOWED_INTERVALS)[number],
+    )
+      ? parsedHomeInterval
+      : 30;
 
     function addMinutes(time: string, mins: number) {
       const [h, m] = time.split(":").map(Number);
@@ -337,14 +363,14 @@ export async function GET(request: NextRequest) {
       })),
       specialDate: specialDate
         ? {
-            date: specialDate.date,
-            isAvailable: specialDate.isAvailable,
-            customHours:
-              specialDate.startTime && specialDate.endTime
-                ? `${specialDate.startTime} - ${specialDate.endTime}`
-                : null,
-            note: specialDate.note,
-          }
+          date: specialDate.date,
+          isAvailable: specialDate.isAvailable,
+          customHours:
+            specialDate.startTime && specialDate.endTime
+              ? `${specialDate.startTime} - ${specialDate.endTime}`
+              : null,
+          note: specialDate.note,
+        }
         : null,
     });
 
@@ -389,6 +415,11 @@ export async function GET(request: NextRequest) {
         if (locationType === "STUDIO" && gapDuration >= selectedDuration) {
           let currentSlotStart = gapStart;
 
+          const remainder = currentSlotStart % studioSlotIntervalMinutes;
+          if (remainder !== 0) {
+            currentSlotStart = currentSlotStart - remainder + studioSlotIntervalMinutes;
+          }
+
           while (currentSlotStart + selectedDuration <= gapEnd) {
             const slotEnd = currentSlotStart + selectedDuration;
 
@@ -407,15 +438,15 @@ export async function GET(request: NextRequest) {
               availableRanges.push(timeSlot);
             }
 
-            currentSlotStart = slotEnd;
+            currentSlotStart += studioSlotIntervalMinutes;
           }
         } else {
           let currentTime = gapStart;
 
           if (locationType === "HOME") {
-            const remainder = currentTime % 30;
+            const remainder = currentTime % homeSlotIntervalMinutes;
             if (remainder !== 0) {
-              currentTime = currentTime - remainder + 30;
+              currentTime = currentTime - remainder + homeSlotIntervalMinutes;
             }
           }
 
@@ -439,7 +470,7 @@ export async function GET(request: NextRequest) {
               availableRanges.push(timeSlot);
             }
 
-            currentTime += locationType === "HOME" ? 30 : step;
+            currentTime += locationType === "HOME" ? homeSlotIntervalMinutes : step;
           }
         }
       }
@@ -448,6 +479,8 @@ export async function GET(request: NextRequest) {
     console.log("Optimized scheduling algorithm:", {
       location: locationType,
       duration: selectedDuration,
+      studioSlotIntervalMinutes,
+      homeSlotIntervalMinutes,
       totalServices: matchedServices.length,
       workingPeriods: workingPeriods.length,
       blockedRanges: blockedRanges.length,
@@ -535,8 +568,8 @@ export async function GET(request: NextRequest) {
       ...(specialDate?.isAvailable &&
         specialDate.startTime &&
         specialDate.endTime && {
-          message: `Horario especial: ${specialDate.startTime} - ${specialDate.endTime}${specialDate.note ? ` (${specialDate.note})` : ""}`,
-        }),
+        message: `Horario especial: ${specialDate.startTime} - ${specialDate.endTime}${specialDate.note ? ` (${specialDate.note})` : ""}`,
+      }),
     });
   } catch (error) {
     console.error("Error fetching availability:", error);
