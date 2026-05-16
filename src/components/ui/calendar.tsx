@@ -22,14 +22,14 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
           "absolute left-1 inline-flex h-8 w-8 items-center justify-center rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-card)] text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface)] transition-colors",
         button_next:
           "absolute right-1 inline-flex h-8 w-8 items-center justify-center rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-card)] text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface)] transition-colors",
-        month_grid: "w-full border-collapse",
-        weekdays: "flex",
+        month_grid: "w-full border-collapse table-fixed",
+        weekdays: "grid w-full grid-cols-7",
         weekday:
-          "w-9 text-[0.8rem] font-semibold text-[color:var(--calendar-label)] text-center rounded-md",
-        week: "mt-2 flex w-full",
-        day: "h-9 w-9 rounded-md p-0 text-sm font-medium text-[color:var(--color-heading)] hover:bg-[color:var(--color-primary)]/10 transition-colors",
+          "h-9 w-full text-[0.8rem] font-semibold text-[color:var(--calendar-label)] text-center rounded-md",
+        week: "mt-2 grid w-full grid-cols-7",
+        day: "h-9 w-full rounded-md p-0 text-sm font-medium text-[color:var(--color-heading)] hover:bg-[color:var(--color-primary)]/10 transition-colors",
         day_button:
-          "h-9 w-9 rounded-md p-0 text-sm font-medium text-[color:var(--color-heading)] aria-selected:text-white",
+          "h-9 w-full rounded-md p-0 text-sm font-medium text-[color:var(--color-heading)] aria-selected:text-white",
         selected:
           "bg-[color:var(--color-primary)] text-white hover:bg-[color:var(--color-primary)] focus:bg-[color:var(--color-primary)]",
         today: "ring-1 ring-[color:var(--color-primary)]/40",
