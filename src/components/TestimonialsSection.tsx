@@ -37,13 +37,15 @@ export default function TestimonialsSection() {
     };
   }, []);
 
+  const sliderItems = items.length > 1 ? [...items, ...items] : items;
+
   return (
     <section
       id="testimonials"
-      className="py-16 sm:py-20 lg:py-24 bg-[color:var(--color-surface)]/20"
+      className="testimonials-section py-16 sm:py-20 lg:py-24 bg-[color:var(--color-surface)]/20"
       style={{ scrollMarginTop: "120px" }}
     >
-      <div className="container mx-auto px-5 sm:px-6 max-w-lg sm:max-w-xl">
+      <div className="container mx-auto px-5 sm:px-6 max-w-6xl">
         <div className="text-center mb-10 sm:mb-12">
           <Typography as="h2" variant="h2" className="text-[color:var(--color-heading)]">
             Testimonios
@@ -51,19 +53,27 @@ export default function TestimonialsSection() {
         </div>
 
         {loading ? (
-          <div className="space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[...Array(3)].map((_, i) => (
               <div
                 key={i}
-                className="h-32 rounded-[12px] bg-[color:var(--color-surface)]/30 animate-pulse"
+                className="h-44 rounded-[14px] bg-[color:var(--color-surface)]/30 animate-pulse"
               />
             ))}
           </div>
         ) : (
-          <div className="space-y-4">
-            {items.map((testimonial) => (
-              <TestimonialCard key={testimonial.id} testimonial={testimonial} />
-            ))}
+          <div className="testimonial-marquee" aria-label="Carrusel de testimonios">
+            <div
+              className={`testimonial-track ${items.length <= 1 ? "testimonial-track-static" : ""}`}
+            >
+              {sliderItems.map((testimonial, index) => (
+                <TestimonialCard
+                  key={`${testimonial.id}-${index}`}
+                  testimonial={testimonial}
+                  compact={items.length > 1}
+                />
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -133,9 +143,19 @@ function formatService(services?: { name?: string; serviceName?: string }[], ser
   return services.map((s) => s.name || s.serviceName).join(", ");
 }
 
-function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
+function TestimonialCard({
+  testimonial,
+  compact,
+}: {
+  testimonial: Testimonial;
+  compact: boolean;
+}) {
   return (
-    <div className="w-full rounded-[12px] px-6 py-5 bg-[color:var(--color-surface)]/40">
+    <article
+      className={`testimonial-slide rounded-[14px] bg-[color:var(--color-surface)]/50 px-5 py-4 sm:px-6 sm:py-5 ${
+        compact ? "w-[290px] sm:w-[340px]" : "w-full max-w-xl mx-auto"
+      }`}
+    >
       <div className="flex items-center gap-3 mb-3">
         <div className="w-10 h-10 rounded-full bg-[color:var(--color-primary)]/20 flex items-center justify-center">
           <Typography
@@ -161,9 +181,16 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
           </div>
         </div>
       </div>
-      <Typography as="p" variant="small" className="text-[color:var(--color-body)] leading-relaxed">
+      <Typography
+        as="p"
+        variant="small"
+        className="testimonial-text text-[color:var(--color-body)] leading-relaxed"
+      >
         {testimonial.text}
       </Typography>
-    </div>
+      <Typography as="p" variant="small" className="mt-2 text-[color:var(--color-muted)]">
+        {testimonial.service}
+      </Typography>
+    </article>
   );
 }
