@@ -153,11 +153,10 @@ export default function AvailabilityPage() {
       {/* Mensajes de confirmación */}
       {message && (
         <div
-          className={`p-3 sm:p-4 rounded-lg border text-sm sm:text-base ${
-            message.includes("Error")
+          className={`p-3 sm:p-4 rounded-lg border text-sm sm:text-base ${message.includes("Error")
               ? "bg-[color:var(--status-cancelled-bg)] text-[color:var(--status-cancelled-text)] border-[color:var(--status-cancelled-border)]"
               : "bg-[color:var(--status-confirmed-bg)] text-[color:var(--status-confirmed-text)] border-[color:var(--status-confirmed-border)]"
-          }`}
+            }`}
         >
           {message}
         </div>
