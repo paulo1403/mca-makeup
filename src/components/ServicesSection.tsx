@@ -13,9 +13,9 @@ function ServiceItem({ service }: { service: UIServiceGroup }) {
       href={service.portfolioUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="block w-full rounded-[12px] px-5 py-4 bg-[color:var(--color-surface)]/40 text-center hover:bg-[color:var(--color-surface)]/60 transition-colors cursor-pointer"
+      className="block w-full rounded-[12px] px-5 py-4 bg-(--color-surface)/40 text-center hover:bg-(--color-surface)/60 transition-colors cursor-pointer"
     >
-      <Typography as="h3" variant="h3" className="font-normal text-[color:var(--color-heading)]">
+      <Typography as="h3" variant="h3" className="font-normal text-(--color-heading)">
         {service.title}
       </Typography>
     </a>
@@ -24,20 +24,6 @@ function ServiceItem({ service }: { service: UIServiceGroup }) {
 
 // ServiceDetails intentionally removed for simplified layout
 
-// Keyframes for fade animation
-const fadeInKeyframes = `
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-`;
-
 export default function ServicesSection() {
   const { data: serviceGroups = [], isLoading } = useServiceGroups();
   const visibleServices: UIServiceGroup[] = serviceGroups.map((s) => ({
@@ -45,17 +31,15 @@ export default function ServicesSection() {
   }));
 
   return (
-    <>
-      <style>{fadeInKeyframes}</style>
-      <section
-        id="servicios"
-        className="relative py-16 sm:py-20 lg:py-24"
-        style={{ scrollMarginTop: "120px" }}
-      >
+    <section
+      id="servicios"
+      className="relative py-16 sm:py-20 lg:py-24"
+      style={{ scrollMarginTop: "120px" }}
+    >
         <div className="container mx-auto px-5 sm:px-6 max-w-lg sm:max-w-xl relative z-10">
           {/* Header */}
           <div className="text-center mb-10 sm:mb-12">
-            <Typography as="h2" variant="h2" className="text-[color:var(--color-heading)]">
+            <Typography as="h2" variant="h2" className="text-(--color-heading)">
               Nuestros Servicios
             </Typography>
           </div>
@@ -66,7 +50,7 @@ export default function ServicesSection() {
               {Array.from({ length: 3 }).map((_, i) => (
                 <div
                   key={i}
-                  className="h-[64px] rounded-[12px] bg-[color:var(--color-surface)]/30 animate-pulse"
+                  className="h-16 rounded-[12px] bg-(--color-surface)/30 animate-pulse"
                 />
               ))}
             </div>
@@ -78,7 +62,6 @@ export default function ServicesSection() {
             </div>
           )}
         </div>
-      </section>
-    </>
+    </section>
   );
 }

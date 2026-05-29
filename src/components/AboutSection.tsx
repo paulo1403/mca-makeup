@@ -20,6 +20,7 @@ export default function AboutSection() {
                 src="/mca-about-me.jpg"
                 alt="Marcela Cordero"
                 fill
+                sizes="160px"
                 style={{
                   objectFit: "cover",
                   objectPosition: "center",

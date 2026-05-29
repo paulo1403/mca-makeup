@@ -178,6 +178,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
+      suppressHydrationWarning
       className={cn(playfair.variable, montserrat.variable, "font-sans", geist.variable)}
     >
       <head>

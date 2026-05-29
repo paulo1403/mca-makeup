@@ -8,7 +8,14 @@ if (fs.existsSync(".env.development")) {
 }
 
 import { PrismaPg } from "@prisma/adapter-pg";
-import { LocationType, NotificationType, PrismaClient, ServiceCategory } from "@prisma/client";
+import {
+  AppointmentStatus,
+  LocationType,
+  NotificationType,
+  PrismaClient,
+  ReviewStatus,
+  ServiceCategory,
+} from "@prisma/client";
 import { Pool } from "pg";
 
 const databaseUrl = process.env.DATABASE_URL;
@@ -30,58 +37,72 @@ async function main() {
     {
       name: "Maquillaje de Novia",
       description:
-        "Maquillaje profesional para el día más importante de tu vida. Incluye prueba previa y retoque.",
-      price: 350.0,
+        "Maquillaje profesional para el día más importante de tu vida. Incluye prueba previa y fijación de larga duración.",
+      price: 380.0,
       duration: 180,
       category: ServiceCategory.BRIDAL,
     },
     {
       name: "Maquillaje Social",
-      description: "Perfecto para eventos sociales, fiestas y ocasiones especiales.",
-      price: 180.0,
+      description: "Ideal para eventos, cumpleaños y celebraciones con acabado natural o glam.",
+      price: 190.0,
       duration: 120,
       category: ServiceCategory.SOCIAL,
     },
     {
       name: "Maquillaje para Piel Madura",
-      description: "Técnicas especializadas para resaltar la belleza natural en pieles maduras.",
+      description: "Técnicas especializadas para piel madura, enfoque en hidratación y luminosidad.",
       price: 200.0,
       duration: 135,
       category: ServiceCategory.MATURE_SKIN,
     },
     {
       name: "Peinado Simple",
-      description: "Peinado elegante y duradero para complementar tu look.",
-      price: 100.0,
+      description: "Peinado elegante y duradero para complementar tu look social.",
+      price: 110.0,
       duration: 60,
       category: ServiceCategory.HAIRSTYLE,
     },
     {
       name: "Peinado de Novia",
       description: "Peinado sofisticado para novias, incluye accesorios y prueba previa.",
-      price: 180.0,
+      price: 190.0,
       duration: 120,
       category: ServiceCategory.BRIDAL,
     },
     {
       name: "Maquillaje + Peinado Novia",
       description: "Paquete completo para novias: maquillaje profesional + peinado elegante.",
-      price: 480.0,
+      price: 520.0,
       duration: 240,
       category: ServiceCategory.BRIDAL,
     },
     {
       name: "Maquillaje + Peinado Social",
       description: "Combo perfecto para eventos: maquillaje y peinado coordinados.",
-      price: 250.0,
+      price: 280.0,
       duration: 180,
       category: ServiceCategory.SOCIAL,
     },
     {
       name: "Maquillaje Express",
       description: "Maquillaje rápido y natural para el día a día o eventos casuales.",
-      price: 120.0,
+      price: 130.0,
       duration: 75,
+      category: ServiceCategory.OTHER,
+    },
+    {
+      name: "Maquillaje para Graduación",
+      description: "Look fotogénico y de larga duración para ceremonia y fiesta.",
+      price: 170.0,
+      duration: 110,
+      category: ServiceCategory.SOCIAL,
+    },
+    {
+      name: "Maquillaje Editorial",
+      description: "Propuesta creativa para sesiones de foto, video y contenido de marca.",
+      price: 260.0,
+      duration: 140,
       category: ServiceCategory.OTHER,
     },
   ];
@@ -428,7 +449,7 @@ async function main() {
     },
     {
       key: "instagram_url",
-      value: "https://instagram.com/marcelacorderomakeup",
+      value: "https://instagram.com/marcelacorderobeauty",
       description: "URL de Instagram",
     },
     {
@@ -438,7 +459,7 @@ async function main() {
     },
     {
       key: "whatsapp_number",
-      value: "+51999123456",
+      value: "+51953879106",
       description: "Número de WhatsApp",
     },
     {
@@ -533,7 +554,128 @@ async function main() {
     }
   }
 
-  // 7. Notificaciones del sistema
+  // 7. Citas y reseñas demo para frontend público
+  console.log("⭐ Creando citas/reseñas demo...");
+  const demoClients = [
+    {
+      clientName: "Valeria Rojas",
+      clientEmail: "demo.valeria@mca.test",
+      clientPhone: "+51 922 111 001",
+      serviceType: "Maquillaje de Novia",
+      appointmentDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 21),
+      appointmentTime: "10:00",
+      duration: 180,
+      status: AppointmentStatus.COMPLETED,
+      locationType: LocationType.HOME,
+      district: "Pueblo Libre",
+      address: "Av. Bolívar 1073",
+      servicePrice: 380,
+      totalPrice: 380,
+      transportCost: 0,
+      reviewToken: "seed-review-01",
+      rating: 5,
+      reviewText:
+        "Marcela me maquilló para mi boda y el resultado fue hermoso. Duró toda la ceremonia y fiesta.",
+      reviewerName: "Valeria Rojas",
+      reviewerEmail: "demo.valeria@mca.test",
+    },
+    {
+      clientName: "Camila Núñez",
+      clientEmail: "demo.camila@mca.test",
+      clientPhone: "+51 922 111 002",
+      serviceType: "Maquillaje Social",
+      appointmentDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 14),
+      appointmentTime: "16:30",
+      duration: 120,
+      status: AppointmentStatus.COMPLETED,
+      locationType: LocationType.STUDIO,
+      district: "Pueblo Libre",
+      address: "Av. Bolívar 1073",
+      servicePrice: 190,
+      totalPrice: 190,
+      transportCost: 0,
+      reviewToken: "seed-review-02",
+      rating: 5,
+      reviewText:
+        "Super puntual y muy profesional. Entendió exactamente el look que quería para mi evento.",
+      reviewerName: "Camila Núñez",
+      reviewerEmail: "demo.camila@mca.test",
+    },
+    {
+      clientName: "Daniela Paredes",
+      clientEmail: "demo.daniela@mca.test",
+      clientPhone: "+51 922 111 003",
+      serviceType: "Maquillaje para Piel Madura",
+      appointmentDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 8),
+      appointmentTime: "11:30",
+      duration: 135,
+      status: AppointmentStatus.COMPLETED,
+      locationType: LocationType.HOME,
+      district: "San Isidro",
+      address: "Calle Los Laureles 245",
+      servicePrice: 200,
+      totalPrice: 230,
+      transportCost: 30,
+      reviewToken: "seed-review-03",
+      rating: 4,
+      reviewText:
+        "Quedé encantada con el acabado. Muy buen trato y productos de excelente calidad.",
+      reviewerName: "Daniela Paredes",
+      reviewerEmail: "demo.daniela@mca.test",
+    },
+  ];
+
+  await prisma.review.deleteMany({
+    where: {
+      reviewToken: {
+        startsWith: "seed-review-",
+      },
+    },
+  });
+
+  await prisma.appointment.deleteMany({
+    where: {
+      clientEmail: {
+        in: demoClients.map((client) => client.clientEmail),
+      },
+    },
+  });
+
+  for (const demo of demoClients) {
+    const appointment = await prisma.appointment.create({
+      data: {
+        clientName: demo.clientName,
+        clientEmail: demo.clientEmail,
+        clientPhone: demo.clientPhone,
+        serviceType: demo.serviceType,
+        appointmentDate: demo.appointmentDate,
+        appointmentTime: demo.appointmentTime,
+        duration: demo.duration,
+        status: demo.status,
+        locationType: demo.locationType,
+        district: demo.district,
+        address: demo.address,
+        servicePrice: demo.servicePrice,
+        totalPrice: demo.totalPrice,
+        transportCost: demo.transportCost,
+      },
+    });
+
+    await prisma.review.create({
+      data: {
+        appointmentId: appointment.id,
+        reviewToken: demo.reviewToken,
+        rating: demo.rating,
+        reviewText: demo.reviewText,
+        reviewerName: demo.reviewerName,
+        reviewerEmail: demo.reviewerEmail,
+        isPublic: true,
+        status: ReviewStatus.APPROVED,
+      },
+    });
+  }
+
+  // 8. Notificaciones del sistema
   console.log("🔔 Creando notificaciones del sistema...");
   const systemNotifications = [
     {
@@ -573,6 +715,8 @@ async function main() {
   console.log(`   • ${specialDates.length} fechas especiales`);
   console.log(`   • ${systemSettings.length} configuraciones`);
   console.log("   • ~120 slots de disponibilidad (30 días)");
+  console.log(`   • ${demoClients.length} citas demo completadas`);
+  console.log(`   • ${demoClients.length} reseñas demo públicas aprobadas`);
   console.log(`   • ${systemNotifications.length} notificaciones`);
   console.log("\n🎉 La base de datos está lista para usar!");
 }
