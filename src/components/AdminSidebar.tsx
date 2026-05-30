@@ -1,6 +1,5 @@
 "use client";
 
-import Logo from "@/components/Logo";
 import {
   AlertTriangle,
   Calendar,
@@ -10,6 +9,7 @@ import {
   Eye,
   Home,
   LayoutDashboard,
+  Wallet,
   Settings,
   Star,
   Truck,
@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface AdminSidebarProps {
   isOpen: boolean;
@@ -29,6 +29,7 @@ interface AdminSidebarProps {
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/finance", label: "Finanzas", icon: Wallet },
   { href: "/admin/income", label: "Ingresos", icon: ChartColumn },
   { href: "/admin/calendar", label: "Calendario", icon: Calendar },
   { href: "/admin/appointments", label: "Citas", icon: Clock },
@@ -93,30 +94,24 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
       >
         <div className="flex flex-col h-full">
           {/* Sidebar Header */}
-          <div className="flex items-center justify-between p-4 border-b border-[color:var(--color-border)] flex-shrink-0">
-            <div className="flex items-center gap-3 min-w-0">
-              {collapsed ? (
-                <div className="w-9 h-9 bg-[color:var(--color-primary)]/15 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-[color:var(--color-primary)] font-semibold text-sm">
-                    MC
-                  </span>
-                </div>
-              ) : (
-                <Logo />
-              )}
+          <div className={`relative p-4 border-b border-[color:var(--color-border)] flex-shrink-0 ${collapsed ? "flex justify-center" : "flex items-center"}`}>
+            <div className={`min-w-0 ${collapsed ? "flex items-center justify-center" : "flex items-center gap-3"}`}>
+              <div className="w-9 h-9 bg-[color:var(--color-primary)]/15 rounded-full flex items-center justify-center flex-shrink-0">
+                <span className="text-[color:var(--color-primary)] font-semibold text-sm">MC</span>
+              </div>
               {!collapsed && (
                 <div className="min-w-0">
-                  <h2 className="text-base font-semibold text-[color:var(--color-heading)] font-montserrat truncate">
-                    Panel Admin
+                  <h2 className="text-base font-semibold text-[color:var(--color-heading)] font-montserrat truncate tracking-tight">
+                    Marcela Cordero
                   </h2>
                   <p className="text-xs text-[color:var(--color-muted)] font-montserrat truncate">
-                    Marcela Cordero
+                    Panel Admin
                   </p>
                 </div>
               )}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className={`flex items-center gap-2 ${collapsed ? "absolute right-2 top-2" : "ml-auto"}`}>
               {/* Collapse toggle (desktop) */}
               <button
                 onClick={() => setCollapsed((c) => !c)}
@@ -176,7 +171,7 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
           {/* Footer */}
           <div className="mt-auto border-t border-[color:var(--color-border)] p-4 flex-shrink-0">
             <div className="text-xs text-[color:var(--color-muted)] text-center font-montserrat">
-              v1.0.0
+              v1.9.3
             </div>
           </div>
         </div>

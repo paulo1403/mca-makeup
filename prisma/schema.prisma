@@ -219,6 +219,26 @@ model TransportCost {
   @@map("transport_costs")
 }
 
+model FinanceEntry {
+  id            String           @id @default(cuid())
+  entryDate     DateTime         @db.Date
+  type          FinanceEntryType
+  amount        Float
+  category      String
+  serviceLine   ServiceLine      @default(GENERAL)
+  paymentMethod PaymentMethod    @default(OTHER)
+  note          String?
+  source        EntrySource      @default(PASTE)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@index([entryDate])
+  @@index([type])
+  @@index([serviceLine])
+  @@index([category])
+  @@map("finance_entries")
+}
+
 model SystemSettings {
   id          String   @id @default(cuid())
   key         String   @unique
@@ -319,4 +339,31 @@ enum ReviewStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+enum FinanceEntryType {
+  INCOME
+  EXPENSE
+}
+
+enum ServiceLine {
+  MAKEUP
+  NAILS
+  HAIR
+  GENERAL
+}
+
+enum PaymentMethod {
+  YAPE
+  PLIN
+  TRANSFER
+  CASH
+  CARD
+  OTHER
+}
+
+enum EntrySource {
+  PASTE
+  MANUAL
+  AI
 }

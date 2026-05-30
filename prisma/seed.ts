@@ -10,11 +10,15 @@ if (fs.existsSync(".env.development")) {
 import { PrismaPg } from "@prisma/adapter-pg";
 import {
   AppointmentStatus,
+  EntrySource,
+  FinanceEntryType,
   LocationType,
   NotificationType,
+  PaymentMethod,
   PrismaClient,
   ReviewStatus,
   ServiceCategory,
+  ServiceLine,
 } from "@prisma/client";
 import { Pool } from "pg";
 
@@ -675,7 +679,84 @@ async function main() {
     });
   }
 
-  // 8. Notificaciones del sistema
+  // 8. Movimientos financieros demo
+  console.log("💸 Creando movimientos financieros demo...");
+  const financeEntries = [
+    {
+      entryDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
+      type: FinanceEntryType.INCOME,
+      amount: 380,
+      category: "maquillaje_novia",
+      serviceLine: ServiceLine.MAKEUP,
+      paymentMethod: PaymentMethod.YAPE,
+      note: "[SEED_FINANCE] Boda Valeria",
+      source: EntrySource.PASTE,
+    },
+    {
+      entryDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
+      type: FinanceEntryType.EXPENSE,
+      amount: 45,
+      category: "transporte",
+      serviceLine: ServiceLine.GENERAL,
+      paymentMethod: PaymentMethod.CASH,
+      note: "[SEED_FINANCE] Taxi ida/vuelta",
+      source: EntrySource.PASTE,
+    },
+    {
+      entryDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
+      type: FinanceEntryType.INCOME,
+      amount: 190,
+      category: "maquillaje_social",
+      serviceLine: ServiceLine.MAKEUP,
+      paymentMethod: PaymentMethod.PLIN,
+      note: "[SEED_FINANCE] Evento Camila",
+      source: EntrySource.PASTE,
+    },
+    {
+      entryDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 4),
+      type: FinanceEntryType.EXPENSE,
+      amount: 120,
+      category: "productos",
+      serviceLine: ServiceLine.GENERAL,
+      paymentMethod: PaymentMethod.CARD,
+      note: "[SEED_FINANCE] Reposición kit base",
+      source: EntrySource.PASTE,
+    },
+    {
+      entryDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3),
+      type: FinanceEntryType.INCOME,
+      amount: 90,
+      category: "manicure_softgel",
+      serviceLine: ServiceLine.NAILS,
+      paymentMethod: PaymentMethod.YAPE,
+      note: "[SEED_FINANCE] Servicio uñas",
+      source: EntrySource.PASTE,
+    },
+    {
+      entryDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
+      type: FinanceEntryType.EXPENSE,
+      amount: 35,
+      category: "insumos_unas",
+      serviceLine: ServiceLine.NAILS,
+      paymentMethod: PaymentMethod.CASH,
+      note: "[SEED_FINANCE] Insumos para uñas",
+      source: EntrySource.PASTE,
+    },
+  ];
+
+  await prisma.financeEntry.deleteMany({
+    where: {
+      note: {
+        contains: "[SEED_FINANCE]",
+      },
+    },
+  });
+
+  for (const entry of financeEntries) {
+    await prisma.financeEntry.create({ data: entry });
+  }
+
+  // 9. Notificaciones del sistema
   console.log("🔔 Creando notificaciones del sistema...");
   const systemNotifications = [
     {
@@ -717,6 +798,7 @@ async function main() {
   console.log("   • ~120 slots de disponibilidad (30 días)");
   console.log(`   • ${demoClients.length} citas demo completadas`);
   console.log(`   • ${demoClients.length} reseñas demo públicas aprobadas`);
+  console.log(`   • ${financeEntries.length} movimientos financieros demo`);
   console.log(`   • ${systemNotifications.length} notificaciones`);
   console.log("\n🎉 La base de datos está lista para usar!");
 }

@@ -18,7 +18,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 }
 
 function AdminLayoutContent({ children }: { children: React.ReactNode }) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -50,6 +50,10 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   const handleSignOut = async () => {
     await signOut({ callbackUrl: "/admin/login" });
   };
+
+  if (status === "loading") {
+    return <AdminLayoutSkeleton />;
+  }
 
   if (!session) {
     return <>{children}</>;
@@ -151,6 +155,41 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
           tabIndex={0}
         />
       )}
+    </div>
+  );
+}
+
+function AdminLayoutSkeleton() {
+  return (
+    <div className="h-screen bg-[color:var(--color-background)] flex overflow-hidden">
+      <aside className="hidden md:block md:w-64 border-r border-[color:var(--color-border)] bg-[color:var(--color-surface)]" />
+
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <header className="sticky top-0 z-40 bg-[color:var(--color-surface)]/95 backdrop-blur border-b border-[color:var(--color-border)] shrink-0">
+          <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-2 md:py-3">
+            <div className="flex items-center gap-2">
+              <div className="h-9 w-9 rounded-md bg-(--color-surface-elevated) animate-pulse md:hidden" />
+              <div className="h-8 w-28 rounded-md bg-(--color-surface-elevated) animate-pulse md:w-56" />
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-md bg-(--color-surface-elevated) animate-pulse" />
+              <div className="h-8 w-8 rounded-md bg-(--color-surface-elevated) animate-pulse" />
+              <div className="h-8 w-16 rounded-md bg-(--color-surface-elevated) animate-pulse" />
+            </div>
+          </div>
+        </header>
+
+        <main className="flex-1 overflow-y-auto">
+          <div className="p-4 md:p-6 lg:p-8">
+            <div className="max-w-7xl mx-auto space-y-4">
+              <div className="h-24 rounded-xl bg-(--color-surface-elevated) animate-pulse" />
+              <div className="h-40 rounded-xl bg-(--color-surface-elevated) animate-pulse" />
+              <div className="h-64 rounded-xl bg-(--color-surface-elevated) animate-pulse" />
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
