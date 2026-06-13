@@ -116,6 +116,11 @@ export default function AppointmentModal({ appointment, isOpen, onClose }: Appoi
                       {appointment.clientPhone}
                     </div>
                   )}
+                  {appointment.clientDocument && (
+                    <div className="text-xs text-[color:var(--color-muted)]">
+                      {appointment.documentType === "PE" ? "DNI" : "Doc"}: {appointment.clientDocument}
+                    </div>
+                  )}
                   <div className="text-xs text-[color:var(--color-on-surface)]">
                     {formatDate(appointment.appointmentDate)} ·{" "}
                     {formatTime(appointment.appointmentTime)}

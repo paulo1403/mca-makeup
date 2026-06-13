@@ -6,6 +6,8 @@ export interface Appointment {
   clientName: string;
   clientEmail: string;
   clientPhone: string;
+  clientDocument?: string;
+  documentType?: string;
   serviceType: string;
   services?: Array<{
     id: string;
@@ -54,6 +56,8 @@ export interface CreateAppointmentPayload {
   clientName: string;
   clientEmail: string;
   clientPhone: string;
+  clientDocument?: string;
+  documentType?: string;
   serviceType: string;
   appointmentDate: string;
   appointmentTime: string;

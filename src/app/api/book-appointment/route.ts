@@ -12,14 +12,10 @@ const appointmentSchema = z
   .object({
     clientName: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
     clientEmail: z.string().email("Email inválido"),
-    clientPhone: z
-      .string()
-      .min(8, "Teléfono inválido")
-      .max(20, "Teléfono muy largo")
-      .refine((phone) => {
-        const cleanPhone = phone.replace(/[\s\-+()]/g, "");
-        return cleanPhone.length >= 9 && cleanPhone.length <= 12 && /^\d+$/.test(cleanPhone);
-      }, "Formato de teléfono inválido. Ej: +51 999 209 880 o 999209880"),
+    phoneType: z.enum(["PE", "OTHER"]).optional(),
+    clientPhone: z.string().min(6, "Teléfono inválido").max(20, "Teléfono muy largo"),
+    clientDocument: z.string().optional(),
+    documentType: z.enum(["PE", "OTHER"]).optional(),
     services: z
       .record(z.string(), z.number().min(1))
       .refine((obj) => Object.keys(obj).length > 0, {
@@ -37,6 +33,19 @@ const appointmentSchema = z
     addressReference: z.string().optional(),
     additionalNotes: z.string().optional(),
   })
+  .refine(
+    (data) => {
+      if (data.phoneType === "PE" || !data.phoneType) {
+        const cleanPhone = data.clientPhone.replace(/[\s\-+()]/g, "");
+        return cleanPhone.length >= 9 && cleanPhone.length <= 12 && /^\d+$/.test(cleanPhone);
+      }
+      return true;
+    },
+    {
+      message: "Formato de teléfono inválido. Ej: +51 999 209 880 o 999209880",
+      path: ["clientPhone"],
+    },
+  )
   .refine(
     (data) => {
       if (data.locationType === "HOME") {
@@ -280,6 +289,8 @@ export async function POST(request: NextRequest) {
         clientName: validatedData.clientName,
         clientEmail: validatedData.clientEmail,
         clientPhone: validatedData.clientPhone,
+        clientDocument: validatedData.clientDocument || null,
+        documentType: validatedData.documentType || "PE",
         serviceType: serviceTypeString,
         services: servicesJson as Prisma.InputJsonValue,
         servicePrice: calculatedServicePrice,

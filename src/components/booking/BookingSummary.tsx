@@ -54,106 +54,101 @@ export default function BookingSummary() {
     }));
 
   return (
-    <div className="bg-card p-6 rounded-lg border border-border space-y-8">
-      {/* Cliente */}
+    <div className="bg-[color:var(--color-card)] p-6 rounded-lg border border-[color:var(--color-border)] space-y-8">
       <div className="space-y-3">
-        <h5 className="font-serif text-heading">Cliente</h5>
+        <h5 className="font-serif text-[color:var(--color-heading)]">Cliente</h5>
         <div className="grid grid-cols-2 gap-3 text-sm">
-          <div className="text-muted">Nombre</div>
-          <div className="text-neutral">{name || "—"}</div>
-          <div className="text-muted">Email</div>
-          <div className="text-neutral break-words">{email || "—"}</div>
-          <div className="text-muted">Teléfono</div>
-          <div className="text-neutral">{phone || "—"}</div>
+          <div className="text-[color:var(--color-muted)]">Nombre</div>
+          <div className="text-[color:var(--color-body)]">{name || "—"}</div>
+          <div className="text-[color:var(--color-muted)]">Email</div>
+          <div className="text-[color:var(--color-body)] break-words">{email || "—"}</div>
+          <div className="text-[color:var(--color-muted)]">Teléfono</div>
+          <div className="text-[color:var(--color-body)]">{phone || "—"}</div>
         </div>
       </div>
 
-      {/* Servicios seleccionados */}
       <div className="space-y-3">
-        <h5 className="font-serif text-heading">Servicios seleccionados</h5>
+        <h5 className="font-serif text-[color:var(--color-heading)]">Servicios seleccionados</h5>
         {selectedServiceDetails.length > 0 ? (
           <ul className="space-y-2">
             {selectedServiceDetails.map((s: Service & { quantity: number }) => (
               <li key={s.id} className="grid grid-cols-2 text-sm">
-                <span className="text-neutral">
+                <span className="text-[color:var(--color-body)]">
                   {s.name}
                   {s.quantity > 1 ? ` ×${s.quantity}` : ""}
                 </span>
-                <span className="text-neutral text-right">
+                <span className="text-[color:var(--color-body)] text-right">
                   S/ {s.price} · {s.duration} min
                 </span>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-muted">No hay servicios seleccionados.</p>
+          <p className="text-sm text-[color:var(--color-muted)]">No hay servicios seleccionados.</p>
         )}
       </div>
 
-      {/* Detalles de la cita */}
       <div className="space-y-3">
-        <h5 className="font-serif text-heading">Detalles de la cita</h5>
+        <h5 className="font-serif text-[color:var(--color-heading)]">Detalles de la cita</h5>
         <div className="grid grid-cols-2 gap-3 text-sm">
-          <div className="text-muted">Fecha</div>
-          <div className="text-neutral">{date ? format(date, "dd/MM/yyyy") : "—"}</div>
-          <div className="text-muted">Horario</div>
-          <div className="text-neutral">{timeSlot || "—"}</div>
-          <div className="text-muted">Duración</div>
-          <div className="text-neutral">{duration} min</div>
+          <div className="text-[color:var(--color-muted)]">Fecha</div>
+          <div className="text-[color:var(--color-body)]">{date ? format(date, "dd/MM/yyyy") : "—"}</div>
+          <div className="text-[color:var(--color-muted)]">Horario</div>
+          <div className="text-[color:var(--color-body)]">{timeSlot || "—"}</div>
+          <div className="text-[color:var(--color-muted)]">Duración</div>
+          <div className="text-[color:var(--color-body)]">{duration} min</div>
         </div>
       </div>
 
-      {/* Ubicación */}
       <div className="space-y-3">
-        <h5 className="font-serif text-heading">Ubicación</h5>
+        <h5 className="font-serif text-[color:var(--color-heading)]">Ubicación</h5>
         {locationType === "HOME" ? (
           <div className="grid grid-cols-2 gap-3 text-sm">
-            <div className="text-muted">Tipo</div>
-            <div className="text-neutral">A domicilio</div>
-            <div className="text-muted">Distrito</div>
-            <div className="text-neutral">{district || "—"}</div>
-            <div className="text-muted">Dirección</div>
-            <div className="text-neutral">{address || "—"}</div>
-            <div className="text-muted">Transporte</div>
-            <div className="text-neutral">S/ {transport}</div>
+            <div className="text-[color:var(--color-muted)]">Tipo</div>
+            <div className="text-[color:var(--color-body)]">A domicilio</div>
+            <div className="text-[color:var(--color-muted)]">Distrito</div>
+            <div className="text-[color:var(--color-body)]">{district || "—"}</div>
+            <div className="text-[color:var(--color-muted)]">Dirección</div>
+            <div className="text-[color:var(--color-body)]">{address || "—"}</div>
+            <div className="text-[color:var(--color-muted)]">Transporte</div>
+            <div className="text-[color:var(--color-body)]">S/ {transport}</div>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-3 text-sm">
-            <div className="text-muted">Tipo</div>
-            <div className="text-neutral">En estudio</div>
-            <div className="text-muted">Transporte</div>
-            <div className="text-neutral">S/ 0</div>
+            <div className="text-[color:var(--color-muted)]">Tipo</div>
+            <div className="text-[color:var(--color-body)]">En estudio</div>
+            <div className="text-[color:var(--color-muted)]">Transporte</div>
+            <div className="text-[color:var(--color-body)]">S/ 0</div>
           </div>
         )}
       </div>
 
-      {/* Totales y depósito */}
-      <div className="space-y-2 pt-4 border-t border-border">
+      <div className="space-y-2 pt-4 border-t border-[color:var(--color-border)]">
         <div className="grid grid-cols-2 text-sm">
-          <span className="text-muted">Servicios</span>
-          <span className="text-neutral text-right">S/ {subtotal}</span>
+          <span className="text-[color:var(--color-muted)]">Servicios</span>
+          <span className="text-[color:var(--color-body)] text-right">S/ {subtotal}</span>
         </div>
         <div className="grid grid-cols-2 text-sm">
-          <span className="text-muted">Transporte</span>
-          <span className="text-neutral text-right">S/ {transport}</span>
+          <span className="text-[color:var(--color-muted)]">Transporte</span>
+          <span className="text-[color:var(--color-body)] text-right">S/ {transport}</span>
         </div>
         {nightShift > 0 && (
           <div className="grid grid-cols-2 text-sm">
-            <span className="text-muted">Horario nocturno</span>
-            <span className="text-neutral text-right">S/ {nightShift}</span>
+            <span className="text-[color:var(--color-muted)]">Horario nocturno</span>
+            <span className="text-[color:var(--color-body)] text-right">S/ {nightShift}</span>
           </div>
         )}
         <div className="grid grid-cols-2 font-serif text-lg mt-2">
-          <span className="text-heading">Total</span>
-          <span className="text-accent-primary text-right">S/ {total}</span>
+          <span className="text-[color:var(--color-heading)]">Total</span>
+          <span className="text-[color:var(--color-primary)] text-right">S/ {total}</span>
         </div>
         <div className="grid grid-cols-2 text-sm">
-          <span className="text-muted">Depósito requerido</span>
-          <span className="text-neutral text-right">S/ {deposit}</span>
+          <span className="text-[color:var(--color-muted)]">Depósito requerido</span>
+          <span className="text-[color:var(--color-body)] text-right">S/ {deposit}</span>
         </div>
         <div className="grid grid-cols-2 text-sm">
-          <span className="text-muted">Restante a pagar</span>
-          <span className="text-neutral text-right">
+          <span className="text-[color:var(--color-muted)]">Restante a pagar</span>
+          <span className="text-[color:var(--color-body)] text-right">
             S/ {Math.max(0, (total || 0) - (deposit || 0))}
           </span>
         </div>

@@ -1,67 +1,48 @@
 "use client";
 
-import useServiceGroups, { type ServiceGroup } from "@/hooks/useServiceGroups";
 import Typography from "./ui/Typography";
 
-// UI type extends API type with optional UI-only props
-type UIServiceGroup = ServiceGroup & { icon?: React.ReactNode; badge?: string };
-
-// Simplified static service item - non-selectable, no price shown
-function ServiceItem({ service }: { service: UIServiceGroup }) {
-  return (
-    <a
-      href={service.portfolioUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="block w-full rounded-[12px] px-5 py-4 bg-(--color-surface)/40 text-center hover:bg-(--color-surface)/60 transition-colors cursor-pointer"
-    >
-      <Typography as="h3" variant="h3" className="font-normal text-(--color-heading)">
-        {service.title}
-      </Typography>
-    </a>
-  );
-}
-
-// ServiceDetails intentionally removed for simplified layout
+const services = [
+  {
+    title: "Novias",
+    portfolioUrl: "https://marcelacorderobeauty.my.canva.site/n",
+  },
+  {
+    title: "Sociales",
+    portfolioUrl: "https://marcelacorderobeauty.my.canva.site",
+  },
+];
 
 export default function ServicesSection() {
-  const { data: serviceGroups = [], isLoading } = useServiceGroups();
-  const visibleServices: UIServiceGroup[] = serviceGroups.map((s) => ({
-    ...s,
-  }));
-
   return (
     <section
       id="servicios"
       className="relative py-16 sm:py-20 lg:py-24"
       style={{ scrollMarginTop: "120px" }}
     >
-        <div className="container mx-auto px-5 sm:px-6 max-w-lg sm:max-w-xl relative z-10">
-          {/* Header */}
-          <div className="text-center mb-10 sm:mb-12">
-            <Typography as="h2" variant="h2" className="text-(--color-heading)">
-              Nuestros Servicios
-            </Typography>
-          </div>
-
-          {/* Services List - static simple layout */}
-          {isLoading ? (
-            <div className="space-y-3 sm:space-y-4">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-16 rounded-[12px] bg-(--color-surface)/30 animate-pulse"
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="space-y-3 sm:space-y-4">
-              {visibleServices.map((service) => (
-                <ServiceItem key={service.title} service={service} />
-              ))}
-            </div>
-          )}
+      <div className="container mx-auto px-5 sm:px-6 max-w-lg sm:max-w-xl relative z-10">
+        <div className="text-center mb-10 sm:mb-12">
+          <Typography as="h2" variant="h2" className="text-(--color-heading)">
+            Nuestros Servicios
+          </Typography>
         </div>
+
+        <div className="space-y-3 sm:space-y-4">
+          {services.map((service) => (
+            <a
+              key={service.title}
+              href={service.portfolioUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full rounded-[12px] px-5 py-4 bg-(--color-surface)/40 text-center hover:bg-(--color-surface)/60 transition-colors cursor-pointer"
+            >
+              <Typography as="h3" variant="h3" className="font-normal text-(--color-heading)">
+                {service.title}
+              </Typography>
+            </a>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }

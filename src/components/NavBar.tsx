@@ -110,15 +110,19 @@ const NavBar = () => {
             >
               <Typography variant="p">Reservar</Typography>
             </Link>
+            <Link
+              href="/consultas"
+              className="text-[color:var(--color-muted)] hover:text-[color:var(--color-primary)] transition-colors"
+            >
+              <Typography variant="p">Consultas</Typography>
+            </Link>
           </div>
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
             <Button variant="primary" size="sm" as="a" href="/booking">
-              <Typography variant="p" className="text-white">
-                Reservar Cita
-              </Typography>
+              Reservar Cita
             </Button>
           </div>
 

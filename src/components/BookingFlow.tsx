@@ -57,8 +57,10 @@ export default function BookingFlow() {
     resolver: zodResolver(BookingSchema),
     defaultValues: {
       name: "",
+      country: "PE",
       phone: "",
       email: "",
+      documentNumber: "",
       selectedServices: [],
       locationType: "HOME",
       date: undefined as unknown as Date,
@@ -85,6 +87,18 @@ export default function BookingFlow() {
   const selectedServices = methods.watch("selectedServices");
   const dateValue = methods.watch("date");
   const timeSlot = methods.watch("timeSlot");
+
+  // Scroll al formulario cuando se carga con parámetros de URL
+  useEffect(() => {
+    if (isVisible) {
+      setTimeout(() => {
+        const el = document.querySelector("#booking-flow");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 300);
+    }
+  }, [isVisible]);
 
   // Determinar qué pasos se deben mostrar
   const shouldShowStep = (step: number): boolean => {
@@ -129,6 +143,10 @@ export default function BookingFlow() {
     const qpTime = params.get("timeSlot");
     const qpLocation = params.get("locationType");
     const qpServices = params.get("services");
+
+    if (qpDate && qpTime) {
+      setIsVisible(true);
+    }
 
     const currentDate = methods.getValues("date");
     const currentTime = methods.getValues("timeSlot");
@@ -243,6 +261,9 @@ export default function BookingFlow() {
         clientName: payload.name,
         clientEmail: payload.email,
         clientPhone: payload.phone,
+        phoneType: payload.country,
+        clientDocument: payload.documentNumber,
+        documentType: payload.country,
         services: servicesRecord,
         servicePrice: 0,
         appointmentDate: payload.date ? new Date(payload.date).toISOString() : "",
@@ -268,8 +289,10 @@ export default function BookingFlow() {
     onSuccess: (data: { pricing?: Pricing }) => {
       const defaults = {
         name: "",
+        country: "PE" as const,
         phone: "",
         email: "",
+        documentNumber: "",
         selectedServices: [],
         locationType: "HOME" as const,
         date: undefined as unknown as Date,
@@ -311,7 +334,7 @@ export default function BookingFlow() {
 
   const handleNext = async () => {
     const stepFields: Record<number, FieldPath<BookingData>[]> = {
-      1: ["name", "phone", "email"],
+      1: ["name", "country", "documentNumber", "phone", "email"],
       2: ["selectedServices"],
       3: ["locationType", "district", "address"],
       4: ["date", "timeSlot"],

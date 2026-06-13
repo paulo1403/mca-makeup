@@ -24,6 +24,8 @@ export default function ManualAppointmentModal({ isOpen, onClose }: ManualAppoin
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [clientPhone, setClientPhone] = useState("");
+  const [documentType, setDocumentType] = useState<"PE" | "OTHER">("PE");
+  const [clientDocument, setClientDocument] = useState("");
   const [serviceType, setServiceType] = useState("Servicio privado (novia)");
   const [appointmentDate, setAppointmentDate] = useState(getTodayDate());
   const [appointmentTime, setAppointmentTime] = useState("10:00 - 12:00");
@@ -50,6 +52,8 @@ export default function ManualAppointmentModal({ isOpen, onClose }: ManualAppoin
     setClientName("");
     setClientEmail("");
     setClientPhone("");
+    setDocumentType("PE");
+    setClientDocument("");
     setServiceType("Servicio privado (novia)");
     setAppointmentDate(getTodayDate());
     setAppointmentTime("10:00 - 12:00");
@@ -90,6 +94,8 @@ export default function ManualAppointmentModal({ isOpen, onClose }: ManualAppoin
         clientName: clientName.trim(),
         clientEmail: clientEmail.trim(),
         clientPhone: clientPhone.trim(),
+        clientDocument: clientDocument.trim() || undefined,
+        documentType,
         serviceType: serviceType.trim(),
         appointmentDate,
         appointmentTime: appointmentTime.trim() || "10:00 - 12:00",
@@ -173,6 +179,34 @@ export default function ManualAppointmentModal({ isOpen, onClose }: ManualAppoin
                   className="w-full rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-3 py-2.5 text-sm"
                   placeholder="cliente@email.com"
                   required
+                />
+              </label>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label className="space-y-1">
+                <span className="text-sm font-medium text-[color:var(--color-heading)]">
+                  Tipo doc
+                </span>
+                <select
+                  value={documentType}
+                  onChange={(e) => setDocumentType(e.target.value as "PE" | "OTHER")}
+                  className="w-full rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-3 py-2.5 text-sm"
+                >
+                  <option value="PE">Perú (DNI)</option>
+                  <option value="OTHER">Otro</option>
+                </select>
+              </label>
+
+              <label className="space-y-1">
+                <span className="text-sm font-medium text-[color:var(--color-heading)]">
+                  Documento
+                </span>
+                <input
+                  value={clientDocument}
+                  onChange={(e) => setClientDocument(e.target.value)}
+                  className="w-full rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-3 py-2.5 text-sm"
+                  placeholder={documentType === "PE" ? "12345678" : "Número de documento"}
                 />
               </label>
             </div>

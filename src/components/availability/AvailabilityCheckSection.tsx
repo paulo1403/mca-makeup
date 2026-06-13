@@ -4,11 +4,11 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Calendar as CalendarIcon, ChevronDown, ChevronUp, Clock, MapPin } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import CompactServiceSelector from "@/components/availability/CompactServiceSelector";
 import Button from "@/components/ui/Button";
 import { Calendar } from "@/components/ui/calendar";
 import Typography from "@/components/ui/Typography";
 import { useAvailableRanges } from "@/hooks/useAvailableRanges";
+import { useDistricts } from "@/hooks/useDistricts";
 import { useServicesList } from "@/hooks/useServices";
 import type { LocationType, ServiceSelection } from "@/types";
 
@@ -18,18 +18,32 @@ export default function AvailabilityCheckSection() {
   const [serviceSelection, setServiceSelection] = useState<ServiceSelection>({});
   const [selectedRange, setSelectedRange] = useState<string>("");
   const [isExpanded, setIsExpanded] = useState(false);
+  const [district, setDistrict] = useState<string>("");
 
   const { data, isLoading } = useAvailableRanges(date, serviceSelection, locationType);
 
   const { data: allServices = [] } = useServicesList();
+  const { districts: transportCosts = [] } = useDistricts();
 
   const availableRanges: string[] = useMemo(() => data?.availableRanges || [], [data]);
   const hasSelectedService = useMemo(() => {
     return Object.values(serviceSelection).some((q) => q > 0);
   }, [serviceSelection]);
 
-  // Calcular el total de los servicios seleccionados
-  const totalPrice = useMemo(() => {
+  const selectedServiceNames = useMemo(() => {
+    const names: string[] = [];
+    Object.entries(serviceSelection).forEach(([serviceId, quantity]) => {
+      if (quantity > 0) {
+        const service = allServices.find((s: { id: string; name: string }) => s.id === serviceId);
+        if (service) {
+          names.push(quantity > 1 ? `${service.name} ×${quantity}` : service.name);
+        }
+      }
+    });
+    return names;
+  }, [serviceSelection, allServices]);
+
+  const servicesPrice = useMemo(() => {
     let total = 0;
     Object.entries(serviceSelection).forEach(([serviceId, quantity]) => {
       if (quantity > 0) {
@@ -42,6 +56,16 @@ export default function AvailabilityCheckSection() {
     return total;
   }, [serviceSelection, allServices]);
 
+  const transportCost = useMemo(() => {
+    if (locationType !== "HOME" || !district) return 0;
+    const d = transportCosts.find(
+      (t: { name: string; cost: number }) => t.name === district,
+    );
+    return d?.cost || 0;
+  }, [locationType, district, transportCosts]);
+
+  const totalPrice = servicesPrice + transportCost;
+
   useEffect(() => {
     setSelectedRange("");
   }, []);
@@ -52,12 +76,12 @@ export default function AvailabilityCheckSection() {
       setSelectedRange("");
       setServiceSelection({});
       setLocationType("HOME");
+      setDistrict("");
     };
     window.addEventListener("availability:reset", handler);
     return () => window.removeEventListener("availability:reset", handler);
   }, []);
 
-  // Escuchar evento de cotización para pre-llenar datos
   useEffect(() => {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent).detail as
@@ -83,8 +107,8 @@ export default function AvailabilityCheckSection() {
           }, {} as ServiceSelection);
         setServiceSelection(items);
       }
+      setDistrict(detail.district || "");
 
-      // Expandir la sección cuando se continúa desde la cotización
       setIsExpanded(true);
     };
     window.addEventListener("quote:continue", handler as EventListener);
@@ -119,7 +143,6 @@ export default function AvailabilityCheckSection() {
       window.dispatchEvent(new CustomEvent("availability:prefill", { detail: payload }));
     } catch { }
 
-    // Esperar a que el DOM se actualice antes de hacer scroll
     setTimeout(() => {
       const el = document.querySelector("#booking-flow");
       if (el) {
@@ -133,10 +156,8 @@ export default function AvailabilityCheckSection() {
 
   return (
     <div
-      id="availability-section"
-      className="mb-8 rounded-[16px] bg-[color:var(--color-surface)]/40 border border-[color:var(--color-border)]/30 w-full max-w-full overflow-hidden transition-all duration-200 hover:border-[color:var(--color-primary)]/30"
+      className={`mb-8 rounded-[16px] bg-[color:var(--color-surface)]/40 border border-[color:var(--color-border)]/30 w-full max-w-full overflow-hidden transition-all duration-200 hover:border-[color:var(--color-primary)]/30 ${!hasSelectedService ? "hidden" : ""}`}
     >
-      {/* Header colapsable */}
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
@@ -177,9 +198,44 @@ export default function AvailabilityCheckSection() {
         </div>
       </button>
 
-      {/* Contenido colapsable */}
-      {isExpanded && (
-        <div className="px-5 pb-5 space-y-4">
+      <div className={`px-5 pb-5 space-y-4 ${isExpanded ? "block" : "hidden"}`}>
+          {/* Mini resumen de selección anterior */}
+          <div className="flex flex-wrap items-center gap-2 p-3 rounded-[12px] bg-[color:var(--color-surface)]/60 border border-[color:var(--color-border)]/20">
+            <div className="flex items-center gap-1.5 text-xs text-[color:var(--color-muted)]">
+              <MapPin className="w-3.5 h-3.5" />
+              <span>{locationType === "STUDIO" ? "Estudio" : `Domicilio${district ? ` - ${district}` : ""}`}</span>
+            </div>
+            <span className="text-[color:var(--color-border)]">•</span>
+            <div className="flex flex-wrap gap-1">
+              {selectedServiceNames.map((name, i) => (
+                <span
+                  key={`svc-${i}-${name}`}
+                  className="text-xs px-2 py-0.5 rounded-full bg-[color:var(--color-primary)]/10 text-[color:var(--color-primary)]"
+                >
+                  {name}
+                </span>
+              ))}
+            </div>
+            <span className="text-[color:var(--color-border)]">•</span>
+            <div className="flex items-center gap-1 text-xs">
+              <span className="text-[color:var(--color-muted)]">Servicios:</span>
+              <span className="font-medium text-[color:var(--color-heading)]">S/ {servicesPrice.toFixed(2)}</span>
+            </div>
+            {locationType === "HOME" && transportCost > 0 && (
+              <>
+                <span className="text-[color:var(--color-border)]">•</span>
+                <div className="flex items-center gap-1 text-xs">
+                  <span className="text-[color:var(--color-muted)]">Transporte:</span>
+                  <span className="font-medium text-[color:var(--color-heading)]">S/ {transportCost.toFixed(2)}</span>
+                </div>
+              </>
+            )}
+            <span className="text-[color:var(--color-border)]">•</span>
+            <span className="text-xs font-bold text-[color:var(--color-primary)]">
+              Total: S/ {totalPrice.toFixed(2)}
+            </span>
+          </div>
+
           {/* Fecha */}
           <div>
             <Typography
@@ -209,58 +265,6 @@ export default function AvailabilityCheckSection() {
             />
           </div>
 
-          {/* Ubicación */}
-          <div>
-            <Typography
-              as="h4"
-              variant="h4"
-              className="font-semibold text-[color:var(--color-heading)] mb-2 text-center"
-            >
-              Ubicación
-            </Typography>
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                variant={locationType === "HOME" ? "primary" : "ghost"}
-                size="sm"
-                onClick={() => setLocationType("HOME")}
-                className="flex-1 rounded-[12px]"
-              >
-                <MapPin className="w-4 h-4 mr-1" /> A domicilio
-              </Button>
-              <Button
-                type="button"
-                variant={locationType === "STUDIO" ? "primary" : "ghost"}
-                size="sm"
-                onClick={() => setLocationType("STUDIO")}
-                className="flex-1 rounded-[12px]"
-              >
-                <MapPin className="w-4 h-4 mr-1" /> Estudio
-              </Button>
-            </div>
-          </div>
-
-          {/* Servicio */}
-          <div id="availability-service">
-            <Typography
-              as="h4"
-              variant="h4"
-              className="font-semibold text-[color:var(--color-heading)] mb-2 text-center"
-            >
-              Servicio
-            </Typography>
-            <CompactServiceSelector value={serviceSelection} onChangeAction={setServiceSelection} />
-            {!hasSelectedService && (
-              <Typography
-                as="p"
-                variant="small"
-                className="text-[color:var(--color-muted)] mt-2 text-center"
-              >
-                Obligatorio para ver horarios
-              </Typography>
-            )}
-          </div>
-
           {/* Horarios disponibles */}
           <div className="pt-2">
             <Typography
@@ -271,13 +275,7 @@ export default function AvailabilityCheckSection() {
               Horarios disponibles
             </Typography>
 
-            {!hasSelectedService ? (
-              <div className="text-center py-4">
-                <Typography as="p" variant="small" className="text-[color:var(--color-body)] mb-2">
-                  Selecciona un servicio primero
-                </Typography>
-              </div>
-            ) : isLoading ? (
+            {isLoading ? (
               <div className="space-y-2">
                 {["sk-1", "sk-2", "sk-3"].map((key) => (
                   <div
@@ -314,15 +312,13 @@ export default function AvailabilityCheckSection() {
               </div>
             )}
 
-            {/* Confirmación */}
             {date && selectedRange && (
               <div className="mt-4 p-3 bg-[color:var(--color-primary)]/10 rounded-[12px] text-center space-y-2">
                 <Typography as="p" variant="small" className="text-[color:var(--color-body)]">
                   {format(date, "dd MMM", { locale: es })} • {selectedRange}
                 </Typography>
 
-                {/* Total de servicios */}
-                {hasSelectedService && totalPrice > 0 && (
+                {totalPrice > 0 && (
                   <div className="pt-2 border-t border-[color:var(--color-border)]/30">
                     <Typography
                       as="p"
@@ -354,7 +350,6 @@ export default function AvailabilityCheckSection() {
             )}
           </div>
         </div>
-      )}
     </div>
   );
 }

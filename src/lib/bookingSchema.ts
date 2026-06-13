@@ -7,11 +7,11 @@ const ServiceItemSchema = z.object({
 
 export const BookingSchema = z.object({
   name: z.string().min(2, "Nombre requerido.").max(100),
-  phone: z
-    .string()
-    .regex(/^(\+51)?\s?(\d{3})\s?(\d{3})\s?(\d{3})$/, "Formato de teléfono no válido.")
-    .min(9, "Teléfono requerido."),
+  country: z.enum(["PE", "OTHER"]),
+  phone: z.string().min(1, "Teléfono requerido."),
   email: z.string().email("Email inválido."),
+
+  documentNumber: z.string().optional(),
 
   selectedServices: z.array(ServiceItemSchema).min(1, "Selecciona al menos un servicio."),
 
@@ -26,7 +26,30 @@ export const BookingSchema = z.object({
   message: z.string().max(500).optional(),
   additionalNotes: z.string().max(500).optional(),
   agreedToTerms: z.boolean().refine((val) => val === true, "Debes aceptar los términos."),
-});
+}).refine(
+  (data) => {
+    if (data.country === "PE") {
+      return data.documentNumber && /^\d{8}$/.test(data.documentNumber);
+    }
+    return true;
+  },
+  {
+    message: "DNI debe tener exactamente 8 dígitos.",
+    path: ["documentNumber"],
+  },
+).refine(
+  (data) => {
+    if (data.country === "PE") {
+      const clean = data.phone.replace(/[\s\-+()]/g, "");
+      return clean.length >= 9 && clean.length <= 12 && /^\d+$/.test(clean);
+    }
+    return data.phone.length >= 6;
+  },
+  {
+    message: "Formato de teléfono inválido.",
+    path: ["phone"],
+  },
+);
 
 export type BookingData = z.infer<typeof BookingSchema>;
 

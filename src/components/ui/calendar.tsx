@@ -11,39 +11,38 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn("p-2", className)}
+      className={cn("p-3", className)}
       classNames={{
-        months: "flex flex-col sm:flex-row gap-4",
-        month: "space-y-4",
-        month_caption: "flex justify-center pt-1 relative items-center",
-        caption_label: "text-sm font-medium",
-        nav: "flex items-center gap-1",
+        months: "flex flex-col gap-2 relative",
+        month: "relative",
+        month_caption: "flex justify-center items-center h-8",
+        caption_label: "text-sm font-medium text-[color:var(--color-heading)]",
+        nav: "absolute inset-x-0 top-0 h-8 flex items-center justify-between z-10",
         button_previous:
-          "absolute left-1 inline-flex h-8 w-8 items-center justify-center rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-card)] text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface)] transition-colors",
+          "h-7 w-7 inline-flex items-center justify-center rounded-md text-[color:var(--color-heading)] hover:bg-[color:var(--color-primary)]/10 cursor-pointer transition-colors",
         button_next:
-          "absolute right-1 inline-flex h-8 w-8 items-center justify-center rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-card)] text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface)] transition-colors",
-        month_grid: "w-full border-collapse table-fixed",
-        weekdays: "grid w-full grid-cols-7",
-        weekday:
-          "h-9 w-full text-[0.8rem] font-semibold text-[color:var(--calendar-label)] text-center rounded-md",
-        week: "mt-2 grid w-full grid-cols-7",
-        day: "h-9 w-full rounded-md p-0 text-sm font-medium text-[color:var(--color-heading)] hover:bg-[color:var(--color-primary)]/10 transition-colors",
+          "h-7 w-7 inline-flex items-center justify-center rounded-md text-[color:var(--color-heading)] hover:bg-[color:var(--color-primary)]/10 cursor-pointer transition-colors",
+        month_grid: "w-full mt-2",
+        weekdays: "grid grid-cols-7",
+        weekday: "h-7 text-xs font-medium text-[color:var(--color-muted)] text-center",
+        week: "grid grid-cols-7 mt-1",
+        day: "h-8 w-full text-sm text-center",
         day_button:
-          "h-9 w-full rounded-md p-0 text-sm font-medium text-[color:var(--color-heading)] aria-selected:text-white",
+          "h-8 w-full rounded-lg text-sm font-medium hover:bg-[color:var(--color-primary)]/10 text-[color:var(--color-heading)] cursor-pointer transition-colors",
         selected:
-          "bg-[color:var(--color-primary)] text-white hover:bg-[color:var(--color-primary)] focus:bg-[color:var(--color-primary)]",
-        today: "ring-1 ring-[color:var(--color-primary)]/40",
-        outside: "text-[color:var(--calendar-inactive)] opacity-60",
-        disabled: "text-[color:var(--calendar-inactive)] opacity-45",
+          "bg-[color:var(--color-primary)] text-white hover:bg-[color:var(--color-primary)]",
+        today: "ring-1 ring-[color:var(--color-primary)]",
+        outside: "text-[color:var(--color-muted)] opacity-50",
+        disabled: "opacity-30 cursor-not-allowed",
         hidden: "invisible",
         ...classNames,
       }}
       components={{
-        Chevron: ({ orientation, className, ...iconProps }) =>
+        Chevron: ({ orientation, className: chevronClassName, ...iconProps }) =>
           orientation === "left" ? (
-            <ChevronLeft className={cn("h-4 w-4", className)} {...iconProps} />
+            <ChevronLeft className={cn("h-4 w-4", chevronClassName)} {...iconProps} />
           ) : (
-            <ChevronRight className={cn("h-4 w-4", className)} {...iconProps} />
+            <ChevronRight className={cn("h-4 w-4", chevronClassName)} {...iconProps} />
           ),
       }}
       {...props}

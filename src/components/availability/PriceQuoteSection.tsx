@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
   Calculator,
@@ -9,7 +10,7 @@ import {
   MapPin,
   Search,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import CompactServiceSelector from "@/components/availability/CompactServiceSelector";
 import Button from "@/components/ui/Button";
 import Typography from "@/components/ui/Typography";
@@ -18,7 +19,7 @@ import { useServicesList } from "@/hooks/useServices";
 import type { LocationType, ServiceSelection } from "@/types";
 
 export default function PriceQuoteSection() {
-  const [locationType, setLocationType] = useState<LocationType>("HOME");
+  const [locationType, setLocationType] = useState<LocationType | null>(null);
   const [serviceSelection, setServiceSelection] = useState<ServiceSelection>({});
   const [selectedDistrict, setSelectedDistrict] = useState<string>("");
   const [districtSearch, setDistrictSearch] = useState<string>("");
@@ -32,7 +33,6 @@ export default function PriceQuoteSection() {
     return Object.values(serviceSelection).some((q) => q > 0);
   }, [serviceSelection]);
 
-  // Calcular el precio base de los servicios
   const servicesPrice = useMemo(() => {
     let total = 0;
     Object.entries(serviceSelection).forEach(([serviceId, quantity]) => {
@@ -46,17 +46,14 @@ export default function PriceQuoteSection() {
     return total;
   }, [serviceSelection, allServices]);
 
-  // Calcular costo de transporte
   const transportCost = useMemo(() => {
-    if (locationType === "STUDIO") return 0;
-    if (!selectedDistrict) return 0;
+    if (locationType !== "HOME" || !selectedDistrict) return 0;
     const district = transportCosts.find(
       (d: { name: string; cost: number }) => d.name === selectedDistrict,
     );
     return district?.cost || 0;
   }, [locationType, selectedDistrict, transportCosts]);
 
-  // Total general
   const totalPrice = servicesPrice + transportCost;
 
   const filteredDistricts = useMemo(() => {
@@ -73,8 +70,33 @@ export default function PriceQuoteSection() {
     setShowDistrictDropdown(false);
   };
 
+  const showDistrict = locationType === "HOME";
+  const showServices =
+    locationType === "STUDIO" || (locationType === "HOME" && !!selectedDistrict);
+
+  // Sincronizar cambios con la sección de disponibilidad
+  useEffect(() => {
+    if (!locationType || !showServices) return;
+    if (locationType === "HOME" && !selectedDistrict) return;
+
+    const servicesPairs: string[] = [];
+    Object.keys(serviceSelection).forEach((id) => {
+      const qty = serviceSelection[id];
+      if (qty > 0) servicesPairs.push(`${id}:${qty}`);
+    });
+
+    window.dispatchEvent(
+      new CustomEvent("quote:continue", {
+        detail: {
+          locationType,
+          services: servicesPairs.join(","),
+          district: selectedDistrict || undefined,
+        },
+      }),
+    );
+  }, [serviceSelection, locationType, selectedDistrict, showServices]);
+
   const handleContinueToBooking = () => {
-    // Disparar evento para pre-llenar la sección de disponibilidad
     const servicesPairs: string[] = [];
     Object.keys(serviceSelection).forEach((id) => {
       const qty = serviceSelection[id];
@@ -91,7 +113,6 @@ export default function PriceQuoteSection() {
       }),
     );
 
-    // Scroll a la sección de disponibilidad
     setTimeout(() => {
       const el = document.querySelector("#availability-section");
       if (el) {
@@ -105,7 +126,6 @@ export default function PriceQuoteSection() {
 
   return (
     <div className="mb-8 rounded-[16px] bg-[color:var(--color-surface)]/40 border border-[color:var(--color-border)]/30 w-full max-w-full overflow-visible transition-all duration-200 hover:border-[color:var(--color-primary)]/30">
-      {/* Header colapsable */}
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
@@ -146,10 +166,9 @@ export default function PriceQuoteSection() {
         </div>
       </button>
 
-      {/* Contenido colapsable */}
       {isExpanded && (
         <div className="px-5 pb-5 space-y-4">
-          {/* Ubicación */}
+          {/* Ubicación - siempre visible */}
           <div>
             <Typography
               as="h4"
@@ -162,8 +181,12 @@ export default function PriceQuoteSection() {
               <Button
                 type="button"
                 variant={locationType === "HOME" ? "primary" : "ghost"}
-                size="sm"
-                onClick={() => setLocationType("HOME")}
+                size="lg"
+                onClick={() => {
+                  setLocationType("HOME");
+                  setSelectedDistrict("");
+                  setDistrictSearch("");
+                }}
                 className="flex-1 rounded-[12px]"
               >
                 <MapPin className="w-4 h-4 mr-1" /> A domicilio
@@ -171,8 +194,12 @@ export default function PriceQuoteSection() {
               <Button
                 type="button"
                 variant={locationType === "STUDIO" ? "primary" : "ghost"}
-                size="sm"
-                onClick={() => setLocationType("STUDIO")}
+                size="lg"
+                onClick={() => {
+                  setLocationType("STUDIO");
+                  setSelectedDistrict("");
+                  setDistrictSearch("");
+                }}
                 className="flex-1 rounded-[12px]"
               >
                 <MapPin className="w-4 h-4 mr-1" /> Estudio
@@ -180,79 +207,95 @@ export default function PriceQuoteSection() {
             </div>
           </div>
 
-          {/* Distrito (solo si es a domicilio) */}
-          {locationType === "HOME" && (
-            <div>
-              <Typography
-                as="h4"
-                variant="h4"
-                className="font-semibold text-[color:var(--color-heading)] mb-2 text-center"
+          {/* Distrito - solo si es domicilio */}
+          <AnimatePresence>
+            {showDistrict && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
               >
-                Distrito
-              </Typography>
-              <div
-                className="relative"
-                onBlur={() => setTimeout(() => setShowDistrictDropdown(false), 150)}
-              >
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[color:var(--color-muted)] pointer-events-none z-10" />
-                <input
-                  type="text"
-                  placeholder="Busca tu distrito..."
-                  value={districtSearch}
-                  onChange={(e) => {
-                    setDistrictSearch(e.target.value);
-                    setShowDistrictDropdown(true);
-                    if (!e.target.value.trim()) {
-                      setSelectedDistrict("");
-                    }
-                  }}
-                  onFocus={() => setShowDistrictDropdown(true)}
-                  className="w-full pl-10 pr-4 py-2 rounded-[12px] bg-[color:var(--color-surface)]/60 text-[color:var(--color-heading)] placeholder:text-[color:var(--color-muted)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)]/30 border border-[color:var(--color-border)]"
-                  aria-expanded={showDistrictDropdown}
-                  aria-haspopup="listbox"
-                />
-                {showDistrictDropdown && filteredDistricts.length > 0 && (
-                  <div className="absolute z-20 w-full mt-1 max-h-48 overflow-y-auto rounded-[12px] bg-[color:var(--color-surface)] border border-[color:var(--color-border)] shadow-lg">
-                    {filteredDistricts.map((district: string) => (
-                      <button
-                        key={district}
-                        type="button"
-                        onClick={() => handleDistrictSelect(district)}
-                        className="w-full px-4 py-2 text-left text-[color:var(--color-heading)] hover:bg-[color:var(--color-primary)]/10 transition-colors text-sm"
-                      >
-                        {district}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Servicio */}
-          <div>
-            <Typography
-              as="h4"
-              variant="h4"
-              className="font-semibold text-[color:var(--color-heading)] mb-2 text-center"
-            >
-              Servicios
-            </Typography>
-            <CompactServiceSelector
-              value={serviceSelection}
-              onChangeAction={setServiceSelection}
-              showPrice={true}
-            />
-            {!hasSelectedService && (
-              <Typography
-                as="p"
-                variant="small"
-                className="text-[color:var(--color-muted)] mt-2 text-center"
-              >
-                Selecciona al menos un servicio
-              </Typography>
+                <Typography
+                  as="h4"
+                  variant="h4"
+                  className="font-semibold text-[color:var(--color-heading)] mb-2 text-center"
+                >
+                  Distrito
+                </Typography>
+                <div
+                  className="relative"
+                  onBlur={() => setTimeout(() => setShowDistrictDropdown(false), 150)}
+                >
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[color:var(--color-muted)] pointer-events-none z-10" />
+                  <input
+                    type="text"
+                    placeholder="Busca tu distrito..."
+                    value={districtSearch}
+                    onChange={(e) => {
+                      setDistrictSearch(e.target.value);
+                      setShowDistrictDropdown(true);
+                      if (!e.target.value.trim()) {
+                        setSelectedDistrict("");
+                      }
+                    }}
+                    onFocus={() => setShowDistrictDropdown(true)}
+                    className="w-full pl-10 pr-4 py-2 rounded-[12px] bg-[color:var(--color-surface)]/60 text-[color:var(--color-heading)] placeholder:text-[color:var(--color-muted)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)]/30 border border-[color:var(--color-border)]"
+                    aria-expanded={showDistrictDropdown}
+                    aria-haspopup="listbox"
+                  />
+                  {showDistrictDropdown && filteredDistricts.length > 0 && (
+                    <div className="absolute z-20 w-full mt-1 max-h-48 overflow-y-auto rounded-[12px] bg-[color:var(--color-surface)] border border-[color:var(--color-border)] shadow-lg">
+                      {filteredDistricts.map((district: string) => (
+                        <button
+                          key={district}
+                          type="button"
+                          onClick={() => handleDistrictSelect(district)}
+                          className="w-full px-4 py-2 text-left text-[color:var(--color-heading)] hover:bg-[color:var(--color-primary)]/10 transition-colors text-sm"
+                        >
+                          {district}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </motion.div>
             )}
-          </div>
+          </AnimatePresence>
+
+          {/* Servicios - solo si ya eligió ubicación (y distrito si es domicilio) */}
+          <AnimatePresence>
+            {showServices && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Typography
+                  as="h4"
+                  variant="h4"
+                  className="font-semibold text-[color:var(--color-heading)] mb-2 text-center"
+                >
+                  Servicios
+                </Typography>
+                <CompactServiceSelector
+                  value={serviceSelection}
+                  onChangeAction={setServiceSelection}
+                  showPrice={true}
+                />
+                {!hasSelectedService && (
+                  <Typography
+                    as="p"
+                    variant="small"
+                    className="text-[color:var(--color-muted)] mt-2 text-center"
+                  >
+                    Selecciona al menos un servicio
+                  </Typography>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       )}
 
@@ -269,7 +312,6 @@ export default function PriceQuoteSection() {
           </Typography>
 
           <div className="space-y-2 text-sm">
-            {/* Servicios */}
             <div className="flex justify-between items-center">
               <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
                 Servicios
@@ -283,7 +325,6 @@ export default function PriceQuoteSection() {
               </Typography>
             </div>
 
-            {/* Transporte */}
             {locationType === "HOME" && (
               <div className="flex justify-between items-center">
                 <Typography as="span" variant="small" className="text-[color:var(--color-body)]">
@@ -299,7 +340,6 @@ export default function PriceQuoteSection() {
               </div>
             )}
 
-            {/* Total */}
             <div className="pt-3 border-t border-[color:var(--color-border)]/30 flex justify-between items-center">
               <Typography
                 as="span"
@@ -318,7 +358,6 @@ export default function PriceQuoteSection() {
             </div>
           </div>
 
-          {/* Nota sobre turno noche */}
           <div className="pt-2 border-t border-[color:var(--color-border)]/20">
             <Typography
               as="p"
@@ -329,11 +368,10 @@ export default function PriceQuoteSection() {
             </Typography>
           </div>
 
-          {/* Botón para continuar */}
           <Button
             type="button"
             variant="primary"
-            size="sm"
+            size="lg"
             className="w-full rounded-[12px] mt-3"
             onClick={handleContinueToBooking}
           >

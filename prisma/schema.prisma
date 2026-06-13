@@ -65,6 +65,8 @@ model Appointment {
   clientName       String
   clientEmail      String
   clientPhone      String
+  clientDocument   String?
+  documentType     String?           @default("PE")
   serviceType      String?
   appointmentDate  DateTime
   appointmentTime  String
