@@ -131,13 +131,6 @@ export default function Section2_Services() {
         ))}
       </div>
 
-      {selectedArr.length > 0 && (
-        <p className="text-xs text-center text-[color:var(--color-primary)] font-medium bg-[color:var(--color-primary)]/10 rounded-lg py-1.5">
-          {selectedArr.length} {selectedArr.length === 1 ? "servicio" : "servicios"} seleccionado
-          {selectedArr.length === 1 ? "" : "s"}
-        </p>
-      )}
-
       {Object.entries(filteredGrouped).length === 0 ? (
         <div className="text-center py-6">
           <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-sm mb-2">
