@@ -72,7 +72,7 @@ export const scrollToAppointment = (appointmentId: string) => {
 };
 
 export const formatPrice = (price?: number) => {
-  if (price === undefined || price === null) {
+  if (price === undefined || price === null || Number.isNaN(price)) {
     return "No definido";
   }
   return new Intl.NumberFormat("es-PE", {
@@ -85,10 +85,11 @@ export const getPriceBreakdown = (appointment: Appointment) => {
   const servicePrice = appointment.servicePrice || 0;
   const transportCost = appointment.transportCost || 0;
   const nightShiftCost = appointment.nightShiftCost || 0;
-  const totalPrice =
+  const rawTotal =
     appointment.totalPrice !== null && appointment.totalPrice !== undefined
       ? appointment.totalPrice
       : servicePrice + transportCost + nightShiftCost;
+  const totalPrice = Number.isNaN(rawTotal) ? 0 : rawTotal;
 
   return {
     servicePrice,

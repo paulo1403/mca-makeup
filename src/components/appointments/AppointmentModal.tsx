@@ -197,19 +197,22 @@ export default function AppointmentModal({ appointment, isOpen, onClose, onEdit 
 
           {priceInfo.totalPrice > 0 && (
             <div className="py-3 space-y-1.5">
-              {appointment.services?.map((s) => (
-                <div key={s.id} className="flex items-center justify-between text-sm">
-                  <span className="text-[color:var(--color-body)]">
-                    {s.name}
-                    {s.quantity > 1 && (
-                      <span className="text-[color:var(--color-muted)]"> ×{s.quantity}</span>
-                    )}
-                  </span>
-                  <span className="font-medium text-[color:var(--color-heading)]">
-                    {formatPrice(s.price * s.quantity)}
-                  </span>
-                </div>
-              ))}
+              {appointment.services?.map((s) => {
+                const svcPrice = s.price != null ? s.price : priceInfo.servicePrice / Math.max((appointment.services ?? []).length, 1);
+                return (
+                  <div key={s.id} className="flex items-center justify-between text-sm">
+                    <span className="text-[color:var(--color-body)]">
+                      {s.name || "Servicio"}
+                      {s.quantity > 1 && (
+                        <span className="text-[color:var(--color-muted)]"> ×{s.quantity}</span>
+                      )}
+                    </span>
+                    <span className="font-medium text-[color:var(--color-heading)]">
+                      {formatPrice((svcPrice || 0) * (s.quantity || 1))}
+                    </span>
+                  </div>
+                );
+              })}
               {appointment.services && appointment.services.length > 0 && (
                 <div className="border-t border-[color:var(--color-border)] my-1.5" />
               )}

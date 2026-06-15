@@ -297,7 +297,7 @@ export async function POST(request: NextRequest) {
         transportCost: normalizedTransportCost,
         nightShiftCost: normalizedNightShiftCost,
         totalPrice: calculatedTotalPrice,
-        services: services || undefined,
+        services: await enrichServices(services),
         totalDuration: totalDuration || undefined,
       },
     });
@@ -314,6 +314,26 @@ export async function POST(request: NextRequest) {
       { status: 500 },
     );
   }
+}
+
+async function enrichServices(services: { id: string; quantity: number }[]) {
+  if (!services || services.length === 0) return undefined;
+  const ids = services.map((s) => s.id);
+  const dbServices = await prisma.service.findMany({
+    where: { id: { in: ids } },
+    select: { id: true, name: true, price: true, duration: true },
+  });
+  const map = new Map(dbServices.map((s) => [s.id, s]));
+  return services.map((s) => {
+    const found = map.get(s.id);
+    return {
+      id: s.id,
+      quantity: s.quantity || 1,
+      name: found?.name || null,
+      price: found?.price ?? null,
+      duration: found?.duration ?? null,
+    };
+  });
 }
 
 // PATCH /api/admin/appointments - Update appointment status
@@ -494,7 +514,7 @@ export async function PUT(request: NextRequest) {
         transportCost: normalizedTransportCost,
         nightShiftCost: normalizedNightShiftCost,
         totalPrice: calculatedTotalPrice,
-        services: services || undefined,
+        services: await enrichServices(services),
         totalDuration: totalDuration || undefined,
       },
     });

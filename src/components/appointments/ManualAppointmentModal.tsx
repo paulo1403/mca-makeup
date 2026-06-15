@@ -246,6 +246,8 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
 
     const dateStr = format(data.date, "yyyy-MM-dd");
 
+    const sanitizePrice = (v: number) => (Number.isFinite(v) ? v : 0);
+
     const payload = {
       clientName: data.clientName.trim(),
       clientEmail: data.clientEmail.trim(),
@@ -264,10 +266,10 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
       additionalNotes: data.additionalNotes.trim(),
       services: data.selectedServices,
       totalDuration: calculated.duration,
-      servicePrice: effectiveServicePrice,
-      transportCost: effectiveTransport,
-      nightShiftCost: effectiveNightShift,
-      totalPrice: effectiveTotal,
+      servicePrice: sanitizePrice(effectiveServicePrice),
+      transportCost: sanitizePrice(effectiveTransport),
+      nightShiftCost: sanitizePrice(effectiveNightShift),
+      totalPrice: sanitizePrice(effectiveTotal),
     };
 
     const onSuccess = () => {
@@ -291,13 +293,20 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
 
   return (
     <Modal open={isOpen} onClose={() => !isPending && onClose()} size="lg" ariaLabelledBy="manual-appointment-title">
-      <ModalHeader title={isEditing ? "Editar cita" : "Nueva cita"} onClose={() => !isPending && onClose()} />
+      <ModalHeader
+        title={
+          <span className="text-base font-semibold text-[color:var(--color-heading)]">
+            {isEditing ? "Editar cita" : "Nueva cita"}
+          </span>
+        }
+        onClose={() => !isPending && onClose()}
+      />
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalBody>
             <div className="space-y-5">
               <div>
-                <h3 className="text-sm font-semibold text-[color:var(--color-heading)] mb-3">Datos de la clienta</h3>
+                <p className="text-[11px] font-semibold text-[color:var(--color-muted)] uppercase tracking-wider mb-2">Datos de la clienta</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <AdminFormField label="Nombre" required>
                     <AdminInput
@@ -354,7 +363,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
               <div className="border-t border-[color:var(--color-border)]" />
 
               <div>
-                <h3 className="text-sm font-semibold text-[color:var(--color-heading)] mb-3">Ubicación</h3>
+                <p className="text-[11px] font-semibold text-[color:var(--color-muted)] uppercase tracking-wider mb-2">Ubicación</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <AdminFormField label="Tipo">
                     <AdminSelect
@@ -402,7 +411,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
               <div className="border-t border-[color:var(--color-border)]" />
 
               <div>
-                <h3 className="text-sm font-semibold text-[color:var(--color-heading)] mb-3">Servicios</h3>
+                <p className="text-[11px] font-semibold text-[color:var(--color-muted)] uppercase tracking-wider mb-2">Servicios</p>
                 {groupedServices && Object.keys(groupedServices).length > 0 ? (
                   <div className="space-y-2">
                     {Object.entries(groupedServices).map(([category, services]) => (
@@ -422,7 +431,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
               <div className="border-t border-[color:var(--color-border)]" />
 
               <div>
-                <h3 className="text-sm font-semibold text-[color:var(--color-heading)] mb-3">Fecha y horario</h3>
+                <p className="text-[11px] font-semibold text-[color:var(--color-muted)] uppercase tracking-wider mb-2">Fecha y horario</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Calendar
                     mode="single"
@@ -497,7 +506,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
               <div className="border-t border-[color:var(--color-border)]" />
 
               <div>
-                <h3 className="text-sm font-semibold text-[color:var(--color-heading)] mb-3">Resumen y estado</h3>
+                <p className="text-[11px] font-semibold text-[color:var(--color-muted)] uppercase tracking-wider mb-2">Resumen y estado</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <AdminFormField label="Estado">
                     <AdminSelect
