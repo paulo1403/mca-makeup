@@ -1,9 +1,12 @@
+import { toast } from "react-hot-toast";
+
 export const copyReviewLink = (reviewToken: string, buttonElement?: HTMLButtonElement) => {
   const reviewUrl = `${typeof window !== "undefined" ? window.location.origin : "https://marcelacorderomakeup.com"}/review/${reviewToken}`;
 
   navigator.clipboard
     .writeText(reviewUrl)
     .then(() => {
+      toast.success("Link copiado al portapapeles");
       if (buttonElement) {
         const originalText = buttonElement.textContent;
         buttonElement.textContent = "✅ Copiado!";
@@ -21,7 +24,7 @@ export const copyReviewLink = (reviewToken: string, buttonElement?: HTMLButtonEl
       textArea.select();
       document.execCommand("copy");
       document.body.removeChild(textArea);
-
+      toast.success("Link copiado al portapapeles");
       if (buttonElement) {
         const originalText = buttonElement.textContent;
         buttonElement.textContent = "✅ Copiado!";

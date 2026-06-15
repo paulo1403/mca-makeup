@@ -485,7 +485,7 @@ export default function AdminCalendarPage() {
                   week: "mt-2 grid w-full grid-cols-7",
                   day: "h-10 w-full p-0 text-sm font-medium text-[color:var(--color-heading)]",
                   day_button:
-                    "h-10 w-full rounded-md text-sm font-medium text-[color:var(--color-heading)] aria-selected:text-white",
+                    "h-10 w-full rounded-md text-sm font-medium text-[color:var(--color-heading)] aria-selected:text-[color:var(--color-cta-text)]",
                 }}
                 modifiers={{
                   hasAppointments: appointmentDays,

@@ -1,8 +1,5 @@
-import AvailabilityCheckSection from "@/components/availability/AvailabilityCheckSection";
-import PriceQuoteSection from "@/components/availability/PriceQuoteSection";
-import BookingFlow from "@/components/BookingFlow";
+import BookingFlowAccordion from "@/components/booking-accordion/BookingFlowAccordion";
 import Typography from "@/components/ui/Typography";
-import "@/styles/components/contact.css";
 
 export const metadata = {
   title: "Reservar Cita - Marcela Cordero Makeup",
@@ -13,26 +10,25 @@ export const metadata = {
 export default function BookingPage() {
   return (
     <section
-      className="contact-section py-10 sm:py-20 relative min-h-screen pt-32"
+      className="py-10 sm:py-20 relative min-h-screen pt-32"
       style={{ scrollMarginTop: "120px" }}
     >
-      <div className="contact-container px-4 sm:px-6">
-        <div className="contact-header mb-8 sm:mb-12 text-center">
+      <div className="px-4 sm:px-6">
+        <div className="mb-6 text-center">
           <Typography
             as="h1"
             variant="h1"
-            className="contact-title text-3xl sm:text-4xl lg:text-5xl font-bold"
+            className="text-2xl sm:text-3xl font-bold text-[color:var(--color-heading)]"
           >
             Reservar Cita
           </Typography>
+          <Typography as="p" variant="p" className="text-[color:var(--color-body)] text-sm mt-1">
+            Completa cada paso para agendar tu cita
+          </Typography>
         </div>
 
-        <div className="max-w-3xl mx-auto space-y-6">
-          <PriceQuoteSection />
-          <div id="availability-section">
-            <AvailabilityCheckSection />
-          </div>
-          <BookingFlow />
+        <div className="max-w-2xl mx-auto">
+          <BookingFlowAccordion />
         </div>
       </div>
     </section>

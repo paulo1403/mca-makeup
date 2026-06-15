@@ -10,7 +10,9 @@ export default function ThemeToggle() {
     <button
       type="button"
       suppressHydrationWarning
-      aria-label={mounted ? (theme === "dark" ? "Activar modo claro" : "Activar modo oscuro") : "Cambiar tema"}
+      aria-label={
+        mounted ? (theme === "dark" ? "Activar modo claro" : "Activar modo oscuro") : "Cambiar tema"
+      }
       aria-pressed={mounted ? theme === "dark" : false}
       onClick={toggleTheme}
       className="p-2 rounded-full transition-colors duration-200 flex items-center justify-center theme-toggle"
@@ -19,9 +21,9 @@ export default function ThemeToggle() {
       {!mounted ? (
         <div className="w-5 h-5" />
       ) : theme === "dark" ? (
-        <Sun className="w-5 h-5 text-heading" />
+        <Sun className="w-5 h-5 text-[color:var(--color-heading)]" />
       ) : (
-        <Moon className="w-5 h-5 text-heading" />
+        <Moon className="w-5 h-5 text-[color:var(--color-heading)]" />
       )}
     </button>
   );

@@ -7,11 +7,16 @@ export const CATEGORY_LABELS: Record<string, string> = {
 };
 
 export const CATEGORY_COLORS: Record<string, string> = {
-  BRIDAL: "bg-pink-50 border-pink-200 text-pink-700",
-  SOCIAL: "bg-purple-50 border-purple-200 text-purple-700",
-  MATURE_SKIN: "bg-amber-50 border-amber-200 text-amber-700",
-  HAIRSTYLE: "bg-blue-50 border-blue-200 text-blue-700",
-  OTHER: "bg-gray-50 border-gray-200 text-gray-700",
+  BRIDAL:
+    "bg-[color:var(--color-primary)]/10 border-[color:var(--color-primary)]/30 text-[color:var(--color-primary)]",
+  SOCIAL:
+    "bg-[color:var(--color-accent)]/20 border-[color:var(--color-accent)]/40 text-[color:var(--color-body)]",
+  MATURE_SKIN:
+    "bg-[color:var(--color-accent-soft)] border-[color:var(--color-border)] text-[color:var(--color-heading)]",
+  HAIRSTYLE:
+    "bg-[color:var(--color-muted)]/10 border-[color:var(--color-muted)]/30 text-[color:var(--color-muted)]",
+  OTHER:
+    "bg-[color:var(--color-surface-elevated)] border-[color:var(--color-border)] text-[color:var(--color-body)]",
 };
 
 // selectedMap: Record<serviceId, quantity>

@@ -27,6 +27,9 @@
   --color-cta-bg: var(--color-primary);
   --color-cta-hover: var(--color-primary-hover);
   --color-cta-text: #ffffff;
+  --color-app-bg: var(--color-background);
+  --color-success: #6b8e6b;
+  --color-danger: #b85450;
 
   /* Status pills (light) */
   --status-pending-bg: #fef3c7; /* amber-50 */
@@ -162,6 +165,9 @@
   --color-cta-bg: var(--color-primary);
   --color-cta-hover: var(--color-primary-hover);
   --color-cta-text: #ffffff;
+  --color-app-bg: var(--color-background);
+  --color-success: #6b8e6b;
+  --color-danger: #b85450;
 
   /* Status pills (dark) */
   --status-pending-bg: color-mix(in srgb, #f59e0b 16%, var(--color-surface));

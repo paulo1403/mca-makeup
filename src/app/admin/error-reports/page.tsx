@@ -78,13 +78,13 @@ export default function ErrorReportsPage() {
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case "CRITICAL":
-        return "text-red-500 bg-red-500/10 border-red-400/30";
+        return "text-[color:var(--color-danger)] bg-[color:var(--color-danger)]/10 border-[color:var(--color-danger)]/30";
       case "HIGH":
-        return "text-orange-500 bg-orange-500/10 border-orange-400/30";
+        return "text-[color:var(--color-danger)] bg-[color:var(--color-danger)]/10 border-[color:var(--color-danger)]/30";
       case "MEDIUM":
-        return "text-yellow-600 bg-yellow-500/10 border-yellow-400/30";
+        return "text-[color:var(--color-primary)] bg-[color:var(--color-primary)]/10 border-[color:var(--color-primary)]/30";
       case "LOW":
-        return "text-green-500 bg-green-500/10 border-green-400/30";
+        return "text-[color:var(--color-success)] bg-[color:var(--color-success)]/10 border-[color:var(--color-success)]/30";
       default:
         return "text-[color:var(--color-muted)] bg-[color:var(--color-surface-elevated)] border-[color:var(--color-border)]";
     }
@@ -93,13 +93,13 @@ export default function ErrorReportsPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "PENDING":
-        return "text-yellow-600 bg-yellow-500/10 border-yellow-400/30";
+        return "text-[color:var(--color-primary)] bg-[color:var(--color-primary)]/10 border-[color:var(--color-primary)]/30";
       case "ACKNOWLEDGED":
-        return "text-blue-500 bg-blue-500/10 border-blue-400/30";
+        return "text-[color:var(--color-primary)] bg-[color:var(--color-primary)]/10 border-[color:var(--color-primary)]/30";
       case "IN_PROGRESS":
-        return "text-purple-500 bg-purple-500/10 border-purple-400/30";
+        return "text-[color:var(--color-primary)] bg-[color:var(--color-primary)]/10 border-[color:var(--color-primary)]/30";
       case "RESOLVED":
-        return "text-green-500 bg-green-500/10 border-green-400/30";
+        return "text-[color:var(--color-success)] bg-[color:var(--color-success)]/10 border-[color:var(--color-success)]/30";
       case "CLOSED":
         return "text-[color:var(--color-muted)] bg-[color:var(--color-surface-elevated)] border-[color:var(--color-border)]";
       default:
@@ -140,7 +140,7 @@ export default function ErrorReportsPage() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D4AF37]" />
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[color:var(--color-primary)]" />
       </div>
     );
   }
@@ -166,19 +166,19 @@ export default function ErrorReportsPage() {
           </Typography>
         </div>
         <div className="bg-[color:var(--color-surface-elevated)] rounded-lg p-4 border border-[color:var(--color-border)]">
-          <div className="text-2xl font-bold text-yellow-500">{stats.pending}</div>
+          <div className="text-2xl font-bold text-[color:var(--color-primary)]">{stats.pending}</div>
           <Typography variant="caption" className="text-[color:var(--color-muted)]">
             Pendientes
           </Typography>
         </div>
         <div className="bg-[color:var(--color-surface-elevated)] rounded-lg p-4 border border-[color:var(--color-border)]">
-          <div className="text-2xl font-bold text-red-500">{stats.critical}</div>
+          <div className="text-2xl font-bold text-[color:var(--color-danger)]">{stats.critical}</div>
           <Typography variant="caption" className="text-[color:var(--color-muted)]">
             Críticos
           </Typography>
         </div>
         <div className="bg-[color:var(--color-surface-elevated)] rounded-lg p-4 border border-[color:var(--color-border)]">
-          <div className="text-2xl font-bold text-green-500">{stats.resolved}</div>
+          <div className="text-2xl font-bold text-[color:var(--color-success)]">{stats.resolved}</div>
           <Typography variant="caption" className="text-[color:var(--color-muted)]">
             Resueltos
           </Typography>

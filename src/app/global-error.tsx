@@ -2,7 +2,9 @@
 
 import { useEffect } from "react";
 import ErrorPage from "@/components/ErrorPage";
+import NavBar from "@/components/NavBar";
 import QueryProvider from "@/providers/QueryProvider";
+import "./globals.css";
 
 export default function GlobalError({
   error,
@@ -18,7 +20,8 @@ export default function GlobalError({
 
   return (
     <html>
-      <body>
+      <body className="antialiased overflow-x-hidden max-w-full bg-[color:var(--color-background)]">
+        <NavBar />
         <QueryProvider>
           <ErrorPage
             error={error}

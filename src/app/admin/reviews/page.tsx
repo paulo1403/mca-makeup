@@ -10,9 +10,12 @@ import {
   Search,
   Star,
   Trash2,
+  X,
   XCircle,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import Button from "@/components/ui/Button";
+import Modal, { ModalBody, ModalHeader } from "@/components/ui/Modal";
 import { getReviewStatusColor, getReviewStatusText } from "@/utils/reviewHelpers";
 
 interface Review {
@@ -274,7 +277,9 @@ export default function AdminReviewsPage() {
                     </div>
                     <div className="flex items-center gap-2 mb-2">
                       {renderStars(review.rating)}
-                      <span className="text-sm text-gray-600">({review.rating}/5)</span>
+                      <span className="text-sm text-[color:var(--color-muted)]">
+                        ({review.rating}/5)
+                      </span>
                     </div>
                     <p className="text-sm text-[color:var(--color-muted)] mb-2">
                       Cliente: {review.appointment.clientName} •{" "}
@@ -394,137 +399,145 @@ export default function AdminReviewsPage() {
       </div>
 
       {/* Modal for Review Details and Response */}
-      {showModal && selectedReview && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)]/30 shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-6">
-                <h2 className="text-xl font-bold text-[color:var(--color-heading)]">
-                  Detalle de Reseña
-                </h2>
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)]"
-                >
-                  <XCircle className="h-6 w-6" />
-                </button>
+      <Modal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        size="lg"
+        ariaLabelledBy="review-modal-title"
+      >
+        <ModalHeader
+          title={
+            <span
+              id="review-modal-title"
+              className="text-xl font-bold text-[color:var(--color-heading)]"
+            >
+              Detalle de Reseña
+            </span>
+          }
+          onClose={() => setShowModal(false)}
+        />
+        <ModalBody>
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-semibold text-[color:var(--color-heading)] mb-2">
+                {selectedReview?.reviewerName}
+              </h3>
+              <div className="flex items-center gap-2 mb-2">
+                {selectedReview && renderStars(selectedReview.rating)}
+                <span className="text-sm text-[color:var(--color-muted)]">
+                  ({selectedReview?.rating}/5)
+                </span>
               </div>
+              <p className="text-sm text-[color:var(--color-muted)] mb-3">
+                {selectedReview?.reviewerEmail} •{" "}
+                {selectedReview && formatDate(selectedReview.createdAt)}
+              </p>
+            </div>
 
-              {/* Review Details */}
-              <div className="space-y-4 mb-6">
-                <div>
-                  <h3 className="font-semibold text-[color:var(--color-heading)] mb-2">
-                    {selectedReview.reviewerName}
-                  </h3>
-                  <div className="flex items-center gap-2 mb-2">
-                    {renderStars(selectedReview.rating)}
-                    <span className="text-sm text-[color:var(--color-muted)]">
-                      ({selectedReview.rating}/5)
-                    </span>
-                  </div>
-                  <p className="text-sm text-[color:var(--color-muted)] mb-3">
-                    {selectedReview.reviewerEmail} • {formatDate(selectedReview.createdAt)}
-                  </p>
-                </div>
+            <div>
+              <h4 className="font-medium text-[color:var(--color-heading)] mb-2">
+                Información de la cita:
+              </h4>
+              <p className="text-sm text-[color:var(--color-muted)]">
+                Cliente: {selectedReview?.appointment.clientName}
+                <br />
+                Fecha: {selectedReview && formatDate(selectedReview.appointment.appointmentDate)}
+                <br />
+                Servicio: {selectedReview?.appointment.serviceType}
+              </p>
+            </div>
 
-                <div>
-                  <h4 className="font-medium text-[color:var(--color-heading)] mb-2">
-                    Información de la cita:
-                  </h4>
-                  <p className="text-sm text-[color:var(--color-muted)]">
-                    Cliente: {selectedReview.appointment.clientName}
-                    <br />
-                    Fecha: {formatDate(selectedReview.appointment.appointmentDate)}
-                    <br />
-                    Servicio: {selectedReview.appointment.serviceType}
-                  </p>
-                </div>
-
-                {selectedReview.reviewText && (
-                  <div>
-                    <h4 className="font-medium text-[color:var(--color-heading)] mb-2">
-                      Comentarios:
-                    </h4>
-                    <p className="text-[color:var(--color-heading)] bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/30 p-3 rounded-lg">
-                      &ldquo;{selectedReview.reviewText}&rdquo;
-                    </p>
-                  </div>
-                )}
+            {selectedReview?.reviewText && (
+              <div>
+                <h4 className="font-medium text-[color:var(--color-heading)] mb-2">Comentarios:</h4>
+                <p className="text-[color:var(--color-heading)] bg-[color:var(--color-surface)] border border-[color:var(--color-border)] p-3 rounded-lg">
+                  &ldquo;{selectedReview.reviewText}&rdquo;
+                </p>
               </div>
+            )}
 
-              {/* Admin Response */}
-              <div className="mb-6">
-                <label
-                  htmlFor="adminResponse"
-                  className="block text-sm font-medium text-[color:var(--color-heading)] mb-2"
-                >
-                  Tu respuesta (opcional):
-                </label>
-                <textarea
-                  id="adminResponse"
-                  rows={3}
-                  value={adminResponse}
-                  onChange={(e) => setAdminResponse(e.target.value)}
-                  placeholder="Escribe una respuesta para el cliente..."
-                  className="w-full px-3 py-2 border border-[color:var(--color-border)]/30 rounded-lg focus:ring-2 focus:ring-[color:var(--color-primary)] focus:border-[color:var(--color-primary)] bg-[color:var(--color-surface)] text-[color:var(--color-heading)]"
-                />
-              </div>
+            <div>
+              <label
+                htmlFor="adminResponse"
+                className="block text-sm font-medium text-[color:var(--color-heading)] mb-2"
+              >
+                Tu respuesta (opcional):
+              </label>
+              <textarea
+                id="adminResponse"
+                rows={3}
+                value={adminResponse}
+                onChange={(e) => setAdminResponse(e.target.value)}
+                placeholder="Escribe una respuesta para el cliente..."
+                className="w-full rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[color:var(--color-heading)] placeholder:text-[color:var(--color-muted)] px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)]/40 focus:border-[color:var(--color-primary)]/50 transition-all"
+              />
+            </div>
 
-              {/* Action Buttons */}
-              <div className="flex gap-3">
-                {selectedReview.status === "PENDING" && (
-                  <>
-                    <button
-                      onClick={() => updateReviewStatus(selectedReview.id, "APPROVED", true)}
-                      disabled={submitting}
-                      className="flex-1 bg-[color:var(--status-confirmed-text)] text-white py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      {submitting ? "Procesando..." : "Aprobar y Publicar"}
-                    </button>
-                    <button
-                      onClick={() => updateReviewStatus(selectedReview.id, "APPROVED", false)}
-                      disabled={submitting}
-                      className="flex-1 bg-[color:var(--color-primary)] text-white py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      {submitting ? "Procesando..." : "Aprobar (Privada)"}
-                    </button>
-                    <button
-                      onClick={() => updateReviewStatus(selectedReview.id, "REJECTED")}
-                      disabled={submitting}
-                      className="flex-1 bg-[color:var(--status-cancelled-text)] text-white py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      {submitting ? "Procesando..." : "Rechazar"}
-                    </button>
-                  </>
-                )}
-
-                {selectedReview.status === "APPROVED" && (
-                  <button
+            <div className="flex flex-wrap gap-3 pt-2">
+              {selectedReview?.status === "PENDING" && (
+                <>
+                  <Button
+                    variant="primary"
+                    size="md"
                     onClick={() =>
-                      updateReviewStatus(selectedReview.id, "APPROVED", !selectedReview.isPublic)
+                      selectedReview && updateReviewStatus(selectedReview.id, "APPROVED", true)
                     }
                     disabled={submitting}
-                    className="flex-1 bg-[color:var(--color-primary)] text-white py-2 px-4 rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="flex-1 min-w-[140px]"
                   >
-                    {submitting
-                      ? "Procesando..."
-                      : selectedReview.isPublic
-                        ? "Hacer Privada"
-                        : "Hacer Pública"}
-                  </button>
-                )}
+                    {submitting ? "Procesando..." : "Aprobar y Publicar"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="md"
+                    onClick={() =>
+                      selectedReview && updateReviewStatus(selectedReview.id, "APPROVED", false)
+                    }
+                    disabled={submitting}
+                    className="flex-1 min-w-[140px]"
+                  >
+                    {submitting ? "Procesando..." : "Aprobar (Privada)"}
+                  </Button>
+                  <Button
+                    variant="danger"
+                    size="md"
+                    onClick={() =>
+                      selectedReview && updateReviewStatus(selectedReview.id, "REJECTED")
+                    }
+                    disabled={submitting}
+                    className="flex-1 min-w-[120px]"
+                  >
+                    {submitting ? "Procesando..." : "Rechazar"}
+                  </Button>
+                </>
+              )}
 
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="px-4 py-2 border border-[color:var(--color-border)]/30 text-[color:var(--color-heading)] rounded-lg hover:bg-[color:var(--color-surface)] transition-colors"
+              {selectedReview?.status === "APPROVED" && (
+                <Button
+                  variant="outline"
+                  size="md"
+                  onClick={() =>
+                    selectedReview &&
+                    updateReviewStatus(selectedReview.id, "APPROVED", !selectedReview.isPublic)
+                  }
+                  disabled={submitting}
+                  className="flex-1"
                 >
-                  Cancelar
-                </button>
-              </div>
+                  {submitting
+                    ? "Procesando..."
+                    : selectedReview.isPublic
+                      ? "Hacer Privada"
+                      : "Hacer Pública"}
+                </Button>
+              )}
+
+              <Button variant="ghost" size="md" onClick={() => setShowModal(false)}>
+                Cancelar
+              </Button>
             </div>
           </div>
-        </div>
-      )}
+        </ModalBody>
+      </Modal>
     </div>
   );
 }

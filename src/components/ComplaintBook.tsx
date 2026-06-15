@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Button from "@/components/ui/Button";
 
 export default function ComplaintBook() {
   const router = useRouter();
@@ -94,7 +95,7 @@ export default function ComplaintBook() {
   };
 
   return (
-    <div className="min-h-screen bg-[color:var(--color-background)] py-12">
+    <div className="min-h-screen bg-[color:var(--color-background)] pt-32 pb-12">
       <div className="container mx-auto px-6 lg:px-12 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -170,16 +171,23 @@ export default function ComplaintBook() {
           <div className="bg-[color:var(--color-surface)] rounded-2xl border border-[color:var(--color-border)]/20 p-8 lg:p-12">
             {submitMessage ? (
               <div className="text-center py-8">
-                <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
-                  <h3 className="text-lg font-medium text-green-800 mb-2">¡Reclamo Registrado!</h3>
-                  <p className="text-green-700 mb-4">{submitMessage}</p>
+                <div className="bg-[color:var(--color-accent-soft)] border border-[color:var(--color-border)] rounded-lg p-6 mb-6">
+                  <h3 className="text-lg font-medium text-[color:var(--color-heading)] mb-2">
+                    ¡Reclamo Registrado!
+                  </h3>
+                  <p className="text-[color:var(--color-body)] mb-4">{submitMessage}</p>
                   {complaintNumber && (
-                    <p className="text-sm text-green-600">
-                      <strong>Número de reclamo:</strong> {complaintNumber}
+                    <p className="text-sm text-[color:var(--color-muted)]">
+                      <strong className="text-[color:var(--color-heading)]">
+                        Número de reclamo:
+                      </strong>{" "}
+                      {complaintNumber}
                     </p>
                   )}
                 </div>
-                <button
+                <Button
+                  variant="primary"
+                  size="md"
                   onClick={() => {
                     setSubmitMessage("");
                     setComplaintNumber("");
@@ -200,10 +208,9 @@ export default function ComplaintBook() {
                       evidenceDescription: "",
                     });
                   }}
-                  className="bg-[color:var(--color-primary)] text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity"
                 >
                   Nuevo Reclamo
-                </button>
+                </Button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-8">
@@ -399,13 +406,9 @@ export default function ComplaintBook() {
 
                 {/* Botón de envío */}
                 <div className="flex justify-center pt-6">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="bg-[color:var(--color-primary)] hover:bg-[color:var(--color-primary-hover)] text-white font-medium px-8 py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
+                  <Button type="submit" variant="primary" size="lg" disabled={isSubmitting}>
                     {isSubmitting ? "Enviando..." : "Registrar Reclamo"}
-                  </button>
+                  </Button>
                 </div>
               </form>
             )}

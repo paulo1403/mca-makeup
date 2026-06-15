@@ -138,11 +138,13 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
           <nav className="admin-sidebar-nav px-3 py-6 space-y-1 scrollbar-thin">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = pathname === item.href;
+              const isActive = item.href === "/admin/finance"
+                ? pathname.startsWith("/admin/finance")
+                : pathname === item.href;
 
               const baseClasses = `flex items-center ${collapsed ? "justify-center" : "space-x-3"} ${itemPaddingClass} rounded-lg text-sm font-medium font-montserrat transition-all duration-200 group nav-item focus-ring relative border`;
               const activeClasses =
-                "bg-[color:var(--color-primary)] text-white shadow-sm border-[color:var(--color-primary-light)]/40";
+                "bg-[color:var(--color-primary)] text-[color:var(--color-cta-text)] shadow-sm border-[color:var(--color-primary-light)]/40";
               const inactiveClasses =
                 "text-[color:var(--color-body)] hover:text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface-elevated)] border-transparent hover:border-[color:var(--color-border)]/50";
 
@@ -155,7 +157,7 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
                 >
                   <Icon
                     className={`h-5 w-5 flex-shrink-0 transition-colors ${isActive
-                        ? "text-white"
+                        ? "text-[color:var(--color-cta-text)]"
                         : "text-[color:var(--color-muted)] group-hover:text-[color:var(--color-heading)]"
                       }`}
                   />
@@ -180,7 +182,7 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
       {/* Mobile Overlay */}
       {isOpen && isMobile && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          className="fixed inset-0 bg-[color:var(--color-heading)]/50 z-40 md:hidden"
           onClick={onClose}
           role="button"
           aria-label="Cerrar overlay"

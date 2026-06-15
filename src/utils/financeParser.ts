@@ -8,10 +8,14 @@ import type {
 
 const TYPE_MAP: Record<string, FinanceEntryType> = {
   INGRESO: "INCOME",
+  INGRESOS: "INCOME",
   INCOME: "INCOME",
   EGRESO: "EXPENSE",
+  EGRESOS: "EXPENSE",
   GASTO: "EXPENSE",
+  GASTOS: "EXPENSE",
   EXPENSE: "EXPENSE",
+  EXPENSES: "EXPENSE",
 };
 
 const SERVICE_LINE_MAP: Record<string, ServiceLine> = {
@@ -24,6 +28,21 @@ const SERVICE_LINE_MAP: Record<string, ServiceLine> = {
   PEINADOS: "HAIR",
   HAIR: "HAIR",
   GENERAL: "GENERAL",
+  SERVICIO: "GENERAL",
+  TRANSPORTE: "GENERAL",
+  PAGO_PERSONAL: "GENERAL",
+  PERSONAL: "GENERAL",
+  PRODUCTOS: "GENERAL",
+  COMIDA: "GENERAL",
+  ALQUILER: "GENERAL",
+  LUZ: "GENERAL",
+  AGUA: "GENERAL",
+  TELEFONO: "GENERAL",
+  INTERNET: "GENERAL",
+  MANTENIMIENTO: "GENERAL",
+  PUBLICIDAD: "GENERAL",
+  OTROS: "GENERAL",
+  OTRO: "GENERAL",
 };
 
 const PAYMENT_MAP: Record<string, PaymentMethod> = {
@@ -56,13 +75,15 @@ function parseDateOrNull(raw: string): string | null {
 
   const isoMatch = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (isoMatch) {
-    const date = new Date(`${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}T00:00:00.000Z`);
+    const [y, m, d] = [isoMatch[1], isoMatch[2], isoMatch[3]].map(Number);
+    const date = new Date(y, m - 1, d);
     return Number.isNaN(date.getTime()) ? null : date.toISOString();
   }
 
   const latamMatch = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
   if (latamMatch) {
-    const date = new Date(`${latamMatch[3]}-${latamMatch[2]}-${latamMatch[1]}T00:00:00.000Z`);
+    const [d, m, y] = [latamMatch[1], latamMatch[2], latamMatch[3]].map(Number);
+    const date = new Date(y, m - 1, d);
     return Number.isNaN(date.getTime()) ? null : date.toISOString();
   }
 
@@ -71,7 +92,7 @@ function parseDateOrNull(raw: string): string | null {
 
 function todayISO() {
   const now = new Date();
-  return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())).toISOString();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
 }
 
 export function parseFinanceText(text: string, source: EntrySource = "PASTE") {
@@ -140,7 +161,7 @@ export function parseFinanceText(text: string, source: EntrySource = "PASTE") {
 
     const serviceLine = SERVICE_LINE_MAP[rawServiceLine.toUpperCase()];
     if (!serviceLine) {
-      errors.push("SERVICIO inválido. Usa MAQUILLAJE, UÑAS, PEINADO o GENERAL.");
+      errors.push("SERVICIO inválido. Usa MAQUILLAJE, UÑAS, PEINADO, GENERAL u otros (TRANSPORTE, PRODUCTOS, COMIDA, ALQUILER...).");
     }
 
     const paymentMethod = PAYMENT_MAP[rawPayment.toUpperCase()];

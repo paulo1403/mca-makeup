@@ -1,4 +1,5 @@
 "use client";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -31,21 +32,15 @@ export default function AppointmentsPagination({
       return Array.from({ length: pagination.pages }, (_, i) => i + 1);
     }
     const delta = 2;
-    const middle: number[] = [];
-    for (
-      let i = Math.max(2, currentPage - delta);
-      i <= Math.min(pagination.pages - 1, currentPage + delta);
-      i++
-    ) {
-      middle.push(i);
-    }
+    const start = Math.max(2, currentPage - delta);
+    const end = Math.min(pagination.pages - 1, currentPage + delta);
     const result: (number | "...")[] = [];
     if (currentPage - delta > 2) {
       result.push(1, "...");
     } else {
       result.push(1);
     }
-    result.push(...middle);
+    for (let i = start; i <= end; i++) result.push(i);
     if (currentPage + delta < pagination.pages - 1) {
       result.push("...", pagination.pages);
     } else {
@@ -57,12 +52,11 @@ export default function AppointmentsPagination({
   const pageNumbers = getPageNumbers();
 
   return (
-    <div className="space-y-3 py-2">
-      <p className="text-center text-sm text-[color:var(--color-muted)]">
-        Mostrando{" "}
-        <span className="font-medium text-[color:var(--color-on-surface)]">{startItem}</span> a{" "}
-        <span className="font-medium text-[color:var(--color-on-surface)]">{endItem}</span> de{" "}
-        <span className="font-medium text-[color:var(--color-on-surface)]">{pagination.total}</span>{" "}
+    <div className="bg-[color:var(--color-surface)] rounded-xl border border-[color:var(--color-border)] shadow-sm p-4 space-y-3">
+      <p className="text-center text-xs text-[color:var(--color-muted)]">
+        Mostrando <span className="font-medium text-[color:var(--color-heading)]">{startItem}</span>{" "}
+        a <span className="font-medium text-[color:var(--color-heading)]">{endItem}</span> de{" "}
+        <span className="font-medium text-[color:var(--color-heading)]">{pagination.total}</span>{" "}
         citas
       </p>
       <Pagination>
@@ -76,7 +70,7 @@ export default function AppointmentsPagination({
                 if (currentPage > 1) onPageChange(currentPage - 1);
               }}
               aria-disabled={currentPage === 1}
-              className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+              className={currentPage === 1 ? "pointer-events-none opacity-40" : ""}
             />
           </PaginationItem>
 
@@ -110,7 +104,7 @@ export default function AppointmentsPagination({
                 if (currentPage < pagination.pages) onPageChange(currentPage + 1);
               }}
               aria-disabled={currentPage === pagination.pages}
-              className={currentPage === pagination.pages ? "pointer-events-none opacity-50" : ""}
+              className={currentPage === pagination.pages ? "pointer-events-none opacity-40" : ""}
             />
           </PaginationItem>
         </PaginationContent>

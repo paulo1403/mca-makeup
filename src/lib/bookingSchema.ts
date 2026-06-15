@@ -49,6 +49,28 @@ export const BookingSchema = z.object({
     message: "Formato de teléfono inválido.",
     path: ["phone"],
   },
+).refine(
+  (data) => {
+    if (data.locationType === "HOME") {
+      return !!data.district && data.district.trim().length > 0;
+    }
+    return true;
+  },
+  {
+    message: "Selecciona un distrito.",
+    path: ["district"],
+  },
+).refine(
+  (data) => {
+    if (data.locationType === "HOME") {
+      return !!data.address && data.address.trim().length > 0;
+    }
+    return true;
+  },
+  {
+    message: "Ingresa tu dirección.",
+    path: ["address"],
+  },
 );
 
 export type BookingData = z.infer<typeof BookingSchema>;

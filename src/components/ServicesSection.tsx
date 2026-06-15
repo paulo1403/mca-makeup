@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "./ui/Button";
 import Typography from "./ui/Typography";
 
 const services = [
@@ -29,17 +30,20 @@ export default function ServicesSection() {
 
         <div className="space-y-3 sm:space-y-4">
           {services.map((service) => (
-            <a
+            <Button
               key={service.title}
+              as="a"
+              variant="outline"
+              size="lg"
               href={service.portfolioUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="block w-full rounded-[12px] px-5 py-4 bg-(--color-surface)/40 text-center hover:bg-(--color-surface)/60 transition-colors cursor-pointer"
+              className="w-full justify-center py-5 text-lg bg-(--color-surface)/40 hover:bg-[color:var(--color-primary)]"
             >
-              <Typography as="h3" variant="h3" className="font-normal text-(--color-heading)">
+              <Typography as="span" variant="h3" className="font-normal">
                 {service.title}
               </Typography>
-            </a>
+            </Button>
           ))}
         </div>
       </div>

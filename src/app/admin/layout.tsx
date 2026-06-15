@@ -114,13 +114,13 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
               <div className="flex items-center gap-2 border-l border-[color:var(--color-border)] pl-3">
                 <div className="hidden sm:flex items-center gap-2">
                   <div className="w-8 h-8 bg-[color:var(--color-primary)] rounded-full flex items-center justify-center ring-1 ring-[color:var(--color-border)]">
-                    <User className="h-4 w-4 text-white" />
+                    <User className="h-4 w-4 text-[color:var(--color-cta-text)]" />
                   </div>
                   {/* Texto de usuario ocultado según solicitud; mantenemos solo el ícono */}
                 </div>
                 <button
                   onClick={handleSignOut}
-                  className="flex items-center gap-1 text-[color:var(--color-body)] hover:text-red-600 px-2 py-1 rounded-md text-xs font-medium font-montserrat transition-colors focus-ring"
+                  className="flex items-center gap-1 text-[color:var(--color-body)] hover:text-[color:var(--color-danger)] px-2 py-1 rounded-md text-xs font-medium font-montserrat transition-colors focus-ring"
                   type="button"
                   title="Cerrar sesión"
                   aria-label="Cerrar sesión"
@@ -144,7 +144,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
       {/* Mobile Overlay */}
       {isSidebarOpen && isMobile && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          className="fixed inset-0 bg-[color:var(--color-heading)]/50 z-40 md:hidden"
           onClick={() => setIsSidebarOpen(false)}
           onKeyUp={(e) => {
             if (e.key === "Enter" || e.key === " ") {

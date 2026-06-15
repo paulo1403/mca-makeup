@@ -214,7 +214,7 @@ export default function PricingBreakdown({
 
         {/* Costo de transporte */}
         {locationType === "HOME" && (
-          <div className="border-t border-gray-200 pt-2">
+          <div className="border-t border-[color:var(--color-border)]/30 pt-2">
             <div className="flex justify-between items-start sm:items-center gap-2">
               <div className="flex items-center gap-2 flex-1 min-w-0">
                 <Truck className="h-3 w-3 sm:h-4 sm:w-4 text-[color:var(--color-accent)] flex-shrink-0" />
@@ -268,16 +268,16 @@ export default function PricingBreakdown({
 
         {/* Costo por atención fuera del horario laboral */}
         {currentNightShiftCost > 0 && (
-          <div className="border-t border-gray-200 pt-2">
+          <div className="border-t border-[color:var(--color-border)]/30 pt-2">
             <div className="flex justify-between items-start sm:items-center gap-2">
               <div className="flex items-center gap-2 flex-1 min-w-0">
-                <Moon className="h-3 w-3 sm:h-4 sm:w-4 text-indigo-600 flex-shrink-0" />
-                <span className="text-xs sm:text-sm text-black break-words">
+                <Moon className="h-3 w-3 sm:h-4 sm:w-4 text-[color:var(--color-primary)] flex-shrink-0" />
+                <span className="text-xs sm:text-sm text-[color:var(--color-heading)] break-words">
                   Por atención fuera del horario laboral
                 </span>
               </div>
               <div className="text-right flex-shrink-0">
-                <span className="font-medium text-black text-sm sm:text-base">
+                <span className="font-medium text-[color:var(--color-heading)] text-sm sm:text-base">
                   S/ {currentNightShiftCost.toFixed(2)}
                 </span>
               </div>
@@ -306,7 +306,9 @@ export default function PricingBreakdown({
         {/* Total */}
         <div className="border-t border-[color:var(--color-border)]/20 pt-3">
           <div className="flex justify-between items-center">
-            <span className="font-bold text-black text-sm sm:text-base">Total:</span>
+            <span className="font-bold text-[color:var(--color-heading)] text-sm sm:text-base">
+              Total:
+            </span>
             <span className="font-bold text-base sm:text-lg text-[color:var(--color-primary)]">
               S/ {totalPrice.toFixed(2)}
             </span>
@@ -318,7 +320,7 @@ export default function PricingBreakdown({
           <div className="flex items-start gap-2">
             <AlertCircle className="h-4 w-4 text-[color:var(--color-accent)] mt-0.5 flex-shrink-0" />
             <div className="text-xs text-[color:var(--color-muted)]">
-              <p className="font-medium mb-2">💡 Información importante:</p>
+              <p className="font-medium mb-2">Información importante:</p>
               <ul className="space-y-1.5 text-xs leading-relaxed">
                 <li>• Los precios pueden variar según requerimientos específicos</li>
                 <li>• El costo final se confirmará durante la consulta</li>

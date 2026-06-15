@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { emailTemplates, sendEmailToAdmins } from "@/lib/serverEmail";
 import { debugDate, parseDateFromString } from "@/utils/dateUtils";
+import { parseAppointmentTime } from "@/utils/dateRange";
 
 // GET /api/admin/appointments - Get all appointments
 export async function GET(request: NextRequest) {
@@ -192,6 +193,8 @@ export async function POST(request: NextRequest) {
       transportCost,
       nightShiftCost,
       totalPrice,
+      services,
+      totalDuration,
     } = body;
 
     // Validate required fields
@@ -236,6 +239,42 @@ export async function POST(request: NextRequest) {
     const normalizedDuration =
       typeof duration === "number" && Number.isFinite(duration) && duration > 0 ? duration : 120;
 
+    // Check for schedule conflicts with existing appointments on the same date
+    const newRange = parseAppointmentTime(appointmentDate, appointmentTime, normalizedDuration);
+
+    if (!Number.isNaN(newRange.start.getTime()) && !Number.isNaN(newRange.end.getTime())) {
+      const existingAppointments = await prisma.appointment.findMany({
+        where: {
+          appointmentDate: parsedAppointmentDate,
+          status: { not: "CANCELLED" },
+        },
+        select: { id: true, clientName: true, appointmentTime: true, duration: true },
+      });
+
+      for (const existing of existingAppointments) {
+        const existingRange = parseAppointmentTime(
+          appointmentDate,
+          existing.appointmentTime,
+          existing.duration || 120,
+        );
+
+        if (
+          !Number.isNaN(existingRange.start.getTime()) &&
+          !Number.isNaN(existingRange.end.getTime()) &&
+          newRange.start < existingRange.end &&
+          newRange.end > existingRange.start
+        ) {
+          return NextResponse.json(
+            {
+              success: false,
+              message: `Conflicto de horario: ${existing.clientName} ya tiene una cita de ${existing.appointmentTime} en esta fecha`,
+            },
+            { status: 409 },
+          );
+        }
+      }
+    }
+
     // Create appointment (supports manual/private bookings with custom pricing)
     const appointment = await prisma.appointment.create({
       data: {
@@ -258,6 +297,8 @@ export async function POST(request: NextRequest) {
         transportCost: normalizedTransportCost,
         nightShiftCost: normalizedNightShiftCost,
         totalPrice: calculatedTotalPrice,
+        services: services || undefined,
+        totalDuration: totalDuration || undefined,
       },
     });
 
@@ -314,11 +355,34 @@ export async function PATCH(request: NextRequest) {
   }
 }
 
-// PUT /api/admin/appointments - Update appointment
+// PUT /api/admin/appointments - Update appointment (full edit)
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { id, ...updateData } = body;
+    const {
+      id,
+      clientName,
+      clientEmail,
+      clientPhone,
+      clientDocument,
+      documentType,
+      serviceType,
+      appointmentDate,
+      appointmentTime,
+      additionalNotes,
+      status = "PENDING",
+      duration,
+      locationType,
+      address,
+      addressReference,
+      district,
+      servicePrice,
+      transportCost,
+      nightShiftCost,
+      totalPrice,
+      services,
+      totalDuration,
+    } = body;
 
     if (!id) {
       return NextResponse.json(
@@ -327,7 +391,6 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Get current appointment data for email notifications
     const currentAppointment = await prisma.appointment.findUnique({
       where: { id },
     });
@@ -339,17 +402,107 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    if (!clientName || !clientEmail || !clientPhone || !serviceType || !appointmentDate || !appointmentTime) {
+      return NextResponse.json(
+        { success: false, message: "Missing required fields" },
+        { status: 400 },
+      );
+    }
+
+    let parsedAppointmentDate: Date;
+    try {
+      parsedAppointmentDate = parseDateFromString(appointmentDate);
+    } catch {
+      return NextResponse.json({ success: false, message: "Invalid date format" }, { status: 400 });
+    }
+
+    const validStatuses = ["PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"];
+    const normalizedStatus = validStatuses.includes(status) ? status : "PENDING";
+
+    const normalizedServicePrice =
+      typeof servicePrice === "number" && Number.isFinite(servicePrice) ? servicePrice : null;
+    const normalizedTransportCost =
+      typeof transportCost === "number" && Number.isFinite(transportCost) ? transportCost : 0;
+    const normalizedNightShiftCost =
+      typeof nightShiftCost === "number" && Number.isFinite(nightShiftCost) ? nightShiftCost : 0;
+
+    const calculatedTotalPrice =
+      typeof totalPrice === "number" && Number.isFinite(totalPrice)
+        ? totalPrice
+        : (normalizedServicePrice || 0) + normalizedTransportCost + normalizedNightShiftCost;
+
+    const normalizedDuration =
+      typeof duration === "number" && Number.isFinite(duration) && duration > 0 ? duration : 120;
+
+    // Check schedule conflicts excluding current appointment
+    const newRange = parseAppointmentTime(appointmentDate, appointmentTime, normalizedDuration);
+
+    if (!Number.isNaN(newRange.start.getTime()) && !Number.isNaN(newRange.end.getTime())) {
+      const existingAppointments = await prisma.appointment.findMany({
+        where: {
+          appointmentDate: parsedAppointmentDate,
+          status: { not: "CANCELLED" },
+          id: { not: id },
+        },
+        select: { id: true, clientName: true, appointmentTime: true, duration: true },
+      });
+
+      for (const existing of existingAppointments) {
+        const existingRange = parseAppointmentTime(
+          appointmentDate,
+          existing.appointmentTime,
+          existing.duration || 120,
+        );
+
+        if (
+          !Number.isNaN(existingRange.start.getTime()) &&
+          !Number.isNaN(existingRange.end.getTime()) &&
+          newRange.start < existingRange.end &&
+          newRange.end > existingRange.start
+        ) {
+          return NextResponse.json(
+            {
+              success: false,
+              message: `Conflicto de horario: ${existing.clientName} ya tiene una cita de ${existing.appointmentTime} en esta fecha`,
+            },
+            { status: 409 },
+          );
+        }
+      }
+    }
+
     // Update appointment
     const appointment = await prisma.appointment.update({
       where: { id },
-      data: updateData,
+      data: {
+        clientName,
+        clientEmail,
+        clientPhone,
+        clientDocument: clientDocument || null,
+        documentType: documentType || "PE",
+        serviceType,
+        appointmentDate: parsedAppointmentDate,
+        appointmentTime,
+        additionalNotes,
+        status: normalizedStatus,
+        duration: normalizedDuration,
+        locationType: locationType === "STUDIO" ? "STUDIO" : "HOME",
+        address: address || null,
+        addressReference: addressReference || null,
+        district: district || null,
+        servicePrice: normalizedServicePrice,
+        transportCost: normalizedTransportCost,
+        nightShiftCost: normalizedNightShiftCost,
+        totalPrice: calculatedTotalPrice,
+        services: services || undefined,
+        totalDuration: totalDuration || undefined,
+      },
     });
 
     // Send push notifications only (emails disabled)
-    if (updateData.status && updateData.status !== currentAppointment.status) {
+    if (normalizedStatus !== currentAppointment.status) {
       try {
-        if (updateData.status === "CONFIRMED") {
-          // Send email notification to all admins about confirmation
+        if (normalizedStatus === "CONFIRMED") {
           const confirmedTemplate = emailTemplates.appointmentConfirmed(
             appointment.clientName,
             appointment.serviceType || "Servicio",
@@ -359,7 +512,7 @@ export async function PUT(request: NextRequest) {
             appointment.district || undefined,
             appointment.address || undefined,
             appointment.addressReference || undefined,
-            `CITA CONFIRMADA - ${appointment.additionalNotes || "Sin notas adicionales"}`,
+            appointment.additionalNotes || "Sin notas adicionales",
           );
 
           await sendEmailToAdmins({
@@ -367,8 +520,7 @@ export async function PUT(request: NextRequest) {
             html: confirmedTemplate.html,
             text: confirmedTemplate.text,
           });
-        } else if (updateData.status === "CANCELLED") {
-          // Send email notification to all admins about cancellation
+        } else if (normalizedStatus === "CANCELLED") {
           const cancelledTemplate = emailTemplates.appointmentCancelled(
             appointment.clientName,
             appointment.serviceType || "Servicio",
@@ -382,10 +534,8 @@ export async function PUT(request: NextRequest) {
             text: cancelledTemplate.text,
           });
         }
-        console.log("Push notification sent successfully");
       } catch (notificationError) {
         console.error("Error sending push notification:", notificationError);
-        // No fallar la operación si la notificación falla
       }
     }
 

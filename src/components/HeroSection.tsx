@@ -49,7 +49,7 @@ export default function HeroSection() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 variant="primary"
-                size="lg"
+                size="xl"
                 onClick={() => {
                   const el = document.getElementById("contacto");
                   el?.scrollIntoView({ behavior: "smooth" });
@@ -59,8 +59,8 @@ export default function HeroSection() {
               </Button>
 
               <Button
-                variant="secondary"
-                size="lg"
+                variant="outline"
+                size="xl"
                 onClick={() => {
                   const el = document.getElementById("servicios");
                   el?.scrollIntoView({ behavior: "smooth" });

@@ -141,7 +141,8 @@ export default function Footer() {
             <div className="footer-cta">
               <Button
                 variant="primary"
-                size="md"
+                size="lg"
+                className="w-full text-center"
                 onClick={() => {
                   const element = document.querySelector("#contacto");
                   if (element) {
@@ -159,7 +160,6 @@ export default function Footer() {
                     });
                   }
                 }}
-                className="w-full text-center"
                 aria-label="Reservar Ahora - Ir al Formulario"
               >
                 Reservar Ahora
@@ -192,7 +192,7 @@ export default function Footer() {
             © {currentYear} Marcela Cordero. Todos los derechos reservados.
           </Typography>
           <Typography as="p" variant="p" className="footer-made-with">
-            Hecho con ❤️ por {" "}
+            Hecho con ❤️ por{" "}
             <a
               href="https://paulo-llanos.vercel.app/"
               target="_blank"

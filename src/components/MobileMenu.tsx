@@ -1,9 +1,10 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Mail, MapPin, Phone, Sparkles, Star, Users, X } from "lucide-react";
+import { Mail, MapPin, Phone, Search, Sparkles, Star, Users, X } from "lucide-react";
 import Link from "next/link";
 import Logo from "./Logo";
+import Button from "./ui/Button";
 import Typography from "./ui/Typography";
 
 interface MobileMenuProps {
@@ -106,17 +107,33 @@ export default function MobileMenu({ isOpen, onClose, handleNavClick }: MobileMe
                 </Link>
 
                 <Link
-                  href="/booking"
-                  className="flex items-center gap-3 p-4 rounded-lg bg-[color:var(--color-primary)] hover:bg-[color:var(--color-primary)]/90 transition-colors mb-2"
+                  href="/consultas"
+                  className="flex items-center gap-3 p-4 rounded-lg hover:bg-[color:var(--color-surface)]/50 transition-colors mb-2"
                   onClick={onClose}
                 >
-                  <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-lg bg-[color:var(--color-primary)]/10 flex items-center justify-center">
+                    <Search className="w-5 h-5 text-[color:var(--color-primary)]" />
+                  </div>
+                  <Typography as="span" variant="p" className="text-[color:var(--color-heading)]">
+                    Consultas
+                  </Typography>
+                </Link>
+
+                <Button
+                  as="a"
+                  href="/booking"
+                  variant="primary"
+                  size="lg"
+                  className="w-full justify-start gap-3 px-4 py-4 h-auto mb-2"
+                  onClick={onClose}
+                >
+                  <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
                     <Phone className="w-5 h-5 text-white" />
                   </div>
                   <Typography as="span" variant="p" className="text-white font-medium">
                     Reservar Cita
                   </Typography>
-                </Link>
+                </Button>
               </nav>
 
               {/* Información de contacto (oculta en móvil) */}

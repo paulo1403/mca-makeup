@@ -1,4 +1,5 @@
 import { AlertTriangle, RefreshCw } from "lucide-react";
+import Button from "@/components/ui/Button";
 
 interface ErrorStateProps {
   title?: string;
@@ -23,21 +24,23 @@ export default function ErrorState({
 
   return (
     <div className={`text-center py-8 sm:py-12 ${className}`}>
-      <div className="bg-red-50 border border-red-200 rounded-xl p-6 sm:p-8 max-w-md mx-auto">
+      <div className="bg-[color:var(--color-danger)]/10 border border-[color:var(--color-danger)]/20 rounded-xl p-6 sm:p-8 max-w-md mx-auto">
         <div className="flex justify-center mb-4">
-          <div className="p-3 bg-red-100 rounded-full">
-            <AlertTriangle className="w-8 h-8 text-red-600" />
+          <div className="p-3 bg-[color:var(--color-danger)]/20 rounded-full">
+            <AlertTriangle className="w-8 h-8 text-[color:var(--color-danger)]" />
           </div>
         </div>
-        <h3 className="text-lg font-semibold text-red-800 mb-2">{title}</h3>
-        <p className="text-red-600 text-sm mb-6 leading-relaxed">{message}</p>
-        <button
+        <h3 className="text-lg font-semibold text-[color:var(--color-danger)] mb-2">{title}</h3>
+        <p className="text-[color:var(--color-danger)] text-sm mb-6 leading-relaxed">{message}</p>
+        <Button
           onClick={handleRetry}
-          className="inline-flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors duration-200 focus-ring touch-target"
+          variant="danger"
+          size="md"
+          className="inline-flex items-center space-x-2"
         >
           <RefreshCw className="w-4 h-4" />
           <span>Reintentar</span>
-        </button>
+        </Button>
       </div>
     </div>
   );

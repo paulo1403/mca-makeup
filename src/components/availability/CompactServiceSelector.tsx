@@ -102,7 +102,7 @@ export default function CompactServiceSelector({
               onClick={() => setActiveCategory((c) => (c === cat ? null : cat))}
               className={`px-2.5 py-1 rounded-full border text-[11px] transition-colors whitespace-nowrap ${
                 activeCategory === cat
-                  ? "bg-[color:var(--color-primary)] text-white border-[color:var(--color-primary)]"
+                  ? "bg-[color:var(--color-primary)] text-[color:var(--color-cta-text)] border-[color:var(--color-primary)]"
                   : "bg-[color:var(--color-surface)] text-[color:var(--color-heading)] border-[color:var(--color-border)] hover:border-[color:var(--color-primary)]/50"
               }`}
               aria-pressed={activeCategory === cat}
@@ -169,7 +169,7 @@ export default function CompactServiceSelector({
                       <div
                         className={`w-2 h-2 rounded-full ${
                           CATEGORY_COLORS[svc.category as keyof typeof CATEGORY_COLORS] ||
-                          "bg-gray-300"
+                          "bg-[color:var(--color-muted)]"
                         }`}
                       />
                       <span className="text-[10px] sm:text-[11px] text-[color:var(--color-body)]">
@@ -219,8 +219,8 @@ export default function CompactServiceSelector({
                   <div
                     className={`inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs ${
                       selected
-                        ? "bg-[color:var(--color-primary)] text-white"
-                        : "bg-[color:var(--color-surface-secondary)] text-[color:var(--color-body)] border border-[color:var(--color-border)]"
+                        ? "bg-[color:var(--color-primary)] text-[color:var(--color-cta-text)]"
+                        : "bg-[color:var(--color-surface-elevated)] text-[color:var(--color-body)] border border-[color:var(--color-border)]"
                     }`}
                   >
                     <Check className="w-3 h-3" />
@@ -239,7 +239,7 @@ export default function CompactServiceSelector({
                             e.stopPropagation();
                             dec(svc);
                           }}
-                          className="w-7 h-7 rounded-full bg-[color:var(--color-surface-secondary)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface)] text-[color:var(--color-heading)] flex items-center justify-center"
+                          className="w-7 h-7 rounded-full bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] hover:bg-[color:var(--color-surface)] text-[color:var(--color-heading)] flex items-center justify-center"
                         >
                           −
                         </button>
@@ -252,7 +252,7 @@ export default function CompactServiceSelector({
                             e.stopPropagation();
                             inc(svc);
                           }}
-                          className="w-7 h-7 rounded-full bg-[color:var(--color-primary)] hover:bg-[color:var(--color-primary)]/80 text-white flex items-center justify-center"
+                          className="w-7 h-7 rounded-full bg-[color:var(--color-primary)] hover:bg-[color:var(--color-primary)]/80 text-[color:var(--color-cta-text)] flex items-center justify-center"
                         >
                           +
                         </button>

@@ -3,6 +3,8 @@
 import { Eye, EyeOff, Lock, Save } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import Button from "@/components/ui/Button";
+import Typography from "@/components/ui/Typography";
 
 export default function ChangePassword() {
   const { data: session } = useSession();
@@ -65,38 +67,41 @@ export default function ChangePassword() {
     }
   };
 
+  const inputClassName =
+    "block w-full px-4 py-3 border border-[color:var(--color-border)] rounded-xl bg-[color:var(--color-surface)] text-[color:var(--color-heading)] placeholder:text-[color:var(--color-muted)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)]/30 focus:border-[color:var(--color-primary)] transition-colors";
+
   return (
     <div className="max-w-md mx-auto">
-      <div className="bg-white shadow-sm rounded-lg p-6">
-        <div className="text-center mb-6">
-          <div className="mx-auto h-12 w-12 bg-[#D4AF37] rounded-full flex items-center justify-center">
-            <Lock className="h-6 w-6 text-[#1C1C1C]" />
+      <div className="bg-[color:var(--color-surface)] rounded-2xl border border-[color:var(--color-border)]/30 p-6 sm:p-8 shadow-sm">
+        <div className="text-center mb-8">
+          <div className="mx-auto h-14 w-14 rounded-full bg-gradient-to-br from-[color:var(--color-primary)] to-[color:var(--color-primary-hover)] flex items-center justify-center shadow-lg shadow-[color:var(--color-primary)]/20">
+            <Lock className="h-6 w-6 text-[color:var(--color-cta-text)]" />
           </div>
-          <h2 className="mt-4 text-2xl font-bold text-gray-900 font-playfair">
+          <Typography as="h2" variant="h2" className="mt-4 text-[color:var(--color-heading)]">
             Cambiar Contraseña
-          </h2>
-          <p className="mt-2 text-sm text-gray-600 font-montserrat">
+          </Typography>
+          <Typography as="p" variant="small" className="mt-2 text-[color:var(--color-muted)]">
             Usuario: {session?.user?.email}
-          </p>
+          </Typography>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {/* Current Password */}
           <div>
             <label
               htmlFor="currentPassword"
-              className="block text-sm font-medium text-gray-700 font-montserrat"
+              className="block text-sm font-medium text-[color:var(--color-body)] mb-2"
             >
               Contraseña Actual
             </label>
-            <div className="relative mt-1">
+            <div className="relative">
               <input
                 id="currentPassword"
                 type={showPasswords.current ? "text" : "password"}
                 required
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#D4AF37] focus:border-[#D4AF37] font-montserrat"
+                className={inputClassName}
               />
               <button
                 type="button"
@@ -106,12 +111,12 @@ export default function ChangePassword() {
                     current: !prev.current,
                   }))
                 }
-                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)] transition-colors"
               >
                 {showPasswords.current ? (
-                  <EyeOff className="h-5 w-5 text-gray-400" />
+                  <EyeOff className="h-5 w-5" />
                 ) : (
-                  <Eye className="h-5 w-5 text-gray-400" />
+                  <Eye className="h-5 w-5" />
                 )}
               </button>
             </div>
@@ -121,29 +126,25 @@ export default function ChangePassword() {
           <div>
             <label
               htmlFor="newPassword"
-              className="block text-sm font-medium text-gray-700 font-montserrat"
+              className="block text-sm font-medium text-[color:var(--color-body)] mb-2"
             >
               Nueva Contraseña
             </label>
-            <div className="relative mt-1">
+            <div className="relative">
               <input
                 id="newPassword"
                 type={showPasswords.new ? "text" : "password"}
                 required
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#D4AF37] focus:border-[#D4AF37] font-montserrat"
+                className={inputClassName}
               />
               <button
                 type="button"
                 onClick={() => setShowPasswords((prev) => ({ ...prev, new: !prev.new }))}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)] transition-colors"
               >
-                {showPasswords.new ? (
-                  <EyeOff className="h-5 w-5 text-gray-400" />
-                ) : (
-                  <Eye className="h-5 w-5 text-gray-400" />
-                )}
+                {showPasswords.new ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
             </div>
           </div>
@@ -152,18 +153,18 @@ export default function ChangePassword() {
           <div>
             <label
               htmlFor="confirmPassword"
-              className="block text-sm font-medium text-gray-700 font-montserrat"
+              className="block text-sm font-medium text-[color:var(--color-body)] mb-2"
             >
               Confirmar Nueva Contraseña
             </label>
-            <div className="relative mt-1">
+            <div className="relative">
               <input
                 id="confirmPassword"
                 type={showPasswords.confirm ? "text" : "password"}
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#D4AF37] focus:border-[#D4AF37] font-montserrat"
+                className={inputClassName}
               />
               <button
                 type="button"
@@ -173,12 +174,12 @@ export default function ChangePassword() {
                     confirm: !prev.confirm,
                   }))
                 }
-                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)] transition-colors"
               >
                 {showPasswords.confirm ? (
-                  <EyeOff className="h-5 w-5 text-gray-400" />
+                  <EyeOff className="h-5 w-5" />
                 ) : (
-                  <Eye className="h-5 w-5 text-gray-400" />
+                  <Eye className="h-5 w-5" />
                 )}
               </button>
             </div>
@@ -186,36 +187,32 @@ export default function ChangePassword() {
 
           {/* Error Message */}
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+            <div className="bg-[color:var(--color-danger)]/10 border border-[color:var(--color-danger)]/30 text-[color:var(--color-danger)] px-4 py-3 rounded-lg text-sm">
               {error}
             </div>
           )}
 
           {/* Success Message */}
           {message && (
-            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md">
+            <div className="bg-[color:var(--color-success)]/10 border border-[color:var(--color-success)]/30 text-[color:var(--color-success)] px-4 py-3 rounded-lg text-sm">
               {message}
             </div>
           )}
 
           {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-[#1C1C1C] bg-[#D4AF37] hover:bg-[#B8941F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D4AF37] disabled:opacity-50 disabled:cursor-not-allowed font-montserrat transition-colors"
-          >
+          <Button type="submit" variant="primary" size="lg" className="w-full" disabled={isLoading}>
             {isLoading ? (
-              <div className="flex items-center">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#1C1C1C] mr-2" />
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2" />
                 Cambiando...
-              </div>
+              </>
             ) : (
-              <div className="flex items-center">
+              <>
                 <Save className="h-4 w-4 mr-2" />
                 Cambiar Contraseña
-              </div>
+              </>
             )}
-          </button>
+          </Button>
         </form>
       </div>
     </div>

@@ -85,6 +85,13 @@
 }
 
 /* Estados hover mejorados */
+.focus-ring:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-background),
+    0 0 0 4px color-mix(in srgb, var(--color-primary) 50%, transparent);
+}
+
 .nav-item {
   position: relative;
   transition: all 0.2s ease-in-out;

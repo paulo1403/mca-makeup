@@ -4,6 +4,7 @@ import { Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
+import Button from "@/components/ui/Button";
 import { ErrorAlert } from "@/components/auth/ErrorAlert";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { RateLimitAlerts } from "@/components/auth/RateLimitAlerts";
@@ -128,7 +129,7 @@ export default function AdminLogin() {
                 reintentar la redirección o cerrar sesión para volver a iniciar sesión manualmente.
               </p>
               <div className="flex gap-3">
-                <button
+                <Button
                   onClick={() => {
                     const search = new URLSearchParams(window.location.search);
                     const callbackUrl = search.get("callbackUrl");
@@ -137,19 +138,19 @@ export default function AdminLogin() {
                     router.replace(target as string);
                     setShowStuckBanner(false);
                   }}
-                  className="px-4 py-2 bg-[var(--color-primary)] text-[var(--on-accent-contrast)] rounded"
+                  variant="primary"
                 >
                   Reintentar redirección
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={async () => {
                     const { signOut } = await import("next-auth/react");
                     signOut({ callbackUrl: "/admin/login" });
                   }}
-                  className="px-4 py-2 bg-red-600 text-white rounded"
+                  variant="danger"
                 >
                   Cerrar sesión y reingresar
-                </button>
+                </Button>
               </div>
             </div>
           )}
@@ -198,7 +199,7 @@ export default function AdminLogin() {
         {/* Security Notice */}
         <div className="mt-2 text-center">
           <p className="text-xs text-[var(--color-muted)]">
-            🔐 Este panel está protegido contra ataques de fuerza bruta.
+            Este panel está protegido contra ataques de fuerza bruta.
             <br />
             Máximo 5 intentos cada 15 minutos.
           </p>

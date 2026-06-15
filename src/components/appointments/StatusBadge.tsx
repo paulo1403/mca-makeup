@@ -15,17 +15,8 @@ export default function StatusBadge({
   status: Appointment["status"];
   className?: string;
 }) {
-  const key = status.toLowerCase();
   return (
-    <Badge
-      variant="outline"
-      className={className}
-      style={{
-        backgroundColor: `var(--status-${key}-bg)`,
-        color: `var(--status-${key}-text)`,
-        borderColor: `var(--status-${key}-border)`,
-      }}
-    >
+    <Badge variant="outline" className={className}>
       {STATUS_LABELS[status]}
     </Badge>
   );

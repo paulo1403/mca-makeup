@@ -1,7 +1,7 @@
 "use client";
 
 import { Calendar } from "lucide-react";
-import Link from "next/link";
+import Button from "./ui/Button";
 import Typography from "./ui/Typography";
 
 export default function ContactSection() {
@@ -17,15 +17,10 @@ export default function ContactSection() {
             Agenda tu cita de maquillaje profesional en pocos pasos
           </Typography>
 
-          <Link
-            href="/booking"
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-[12px] bg-[color:var(--color-primary)] text-white hover:bg-[color:var(--color-primary)]/90 transition-colors"
-          >
+          <Button as="a" href="/booking" variant="primary" size="lg">
             <Calendar className="w-5 h-5" />
-            <Typography as="span" variant="p" className="font-medium">
-              Ir a Reservas
-            </Typography>
-          </Link>
+            Ir a Reservas
+          </Button>
         </div>
       </div>
     </section>

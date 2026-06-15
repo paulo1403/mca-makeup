@@ -42,13 +42,9 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       );
     }
 
-    const isManualAppointment =
-      (appointmentData.additionalNotes || "").includes("[REGISTRO MANUAL]") ||
-      (appointmentData.additionalNotes || "").includes("[MANUAL]");
-
     // If marking as completed, generate review token
     let reviewToken = null;
-    if (!isManualAppointment && status === "COMPLETED" && appointmentData.status !== "COMPLETED") {
+    if (status === "COMPLETED" && appointmentData.status !== "COMPLETED") {
       // Check if review token already exists
       const existingReview = await prisma.review.findUnique({
         where: { appointmentId },
@@ -99,7 +95,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     });
 
     // Send email to client based on status change
-    if (appointmentData.status !== status && !isManualAppointment) {
+    if (appointmentData.status !== status) {
       try {
         let emailTemplate = null;
         const serviceType = appointmentData.serviceType || "Servicio de maquillaje";

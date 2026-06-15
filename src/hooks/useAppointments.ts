@@ -72,6 +72,8 @@ export interface CreateAppointmentPayload {
   transportCost?: number;
   nightShiftCost?: number;
   totalPrice?: number;
+  services?: { id: string; quantity: number }[];
+  totalDuration?: number;
 }
 
 interface UseAppointmentsParams {
@@ -215,6 +217,49 @@ export const useCreateAppointment = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["appointments"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+    },
+  });
+};
+
+// Hook para actualizar cita completa
+export const useUpdateAppointment = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, ...payload }: CreateAppointmentPayload & { id: string }) => {
+      const response = await fetch(`/api/admin/appointments`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, ...payload }),
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.message || "Error updating appointment");
+      }
+
+      return result.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["appointments"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+    },
+  });
+};
+
+// Hook para enviar email de cita al cliente
+export const useSendAppointmentEmail = () => {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const response = await fetch(`/api/admin/appointments/send-email`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      const result = await response.json();
+      if (!result.success) throw new Error(result.message || "Error al enviar email");
+      return result;
     },
   });
 };

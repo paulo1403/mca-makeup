@@ -4,6 +4,7 @@ import { CheckCircle, DollarSign, MapPin, Pencil, Trash2, XCircle } from "lucide
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
+import Button from "@/components/ui/Button";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import Modal, { ModalBody, ModalFooter, ModalHeader } from "@/components/ui/Modal";
 
@@ -185,12 +186,9 @@ export default function TransportCostsPage() {
 
         {/* Add Button */}
         <div className="mb-6">
-          <button
-            onClick={() => setShowModal(true)}
-            className="bg-[color:var(--color-accent-secondary)] text-[color:var(--color-on-accent-contrast)] hover:opacity-90 px-6 py-3 rounded-lg font-medium transition-colors duration-200"
-          >
+          <Button onClick={() => setShowModal(true)} variant="primary" size="md">
             + Agregar Costo de Transporte
-          </button>
+          </Button>
         </div>
 
         {/* Transport Costs Table */}
@@ -219,7 +217,7 @@ export default function TransportCostsPage() {
               <tbody className="bg-[color:var(--color-surface)] divide-y divide-[color:var(--color-border)]">
                 {transportCosts.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                    <td colSpan={5} className="px-6 py-12 text-center text-[color:var(--color-muted)]">
                       No hay costos de transporte configurados
                     </td>
                   </tr>
@@ -250,7 +248,7 @@ export default function TransportCostsPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-[color:var(--color-on-surface)] max-w-xs truncate">
+                        <div className="text-sm text-[color:var(--color-body)] max-w-xs truncate">
                           {cost.notes || "-"}
                         </div>
                       </td>
@@ -265,7 +263,7 @@ export default function TransportCostsPage() {
                               <Pencil className="w-5 h-5 text-[color:var(--color-accent-secondary)]" />
                               <span className="sr-only">Editar</span>
                             </button>
-                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-xs bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] shadow-sm opacity-0 group-hover:opacity-100">
+                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-xs bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] text-[color:var(--color-body)] shadow-sm opacity-0 group-hover:opacity-100">
                               Editar
                             </div>
                           </div>
@@ -278,7 +276,7 @@ export default function TransportCostsPage() {
                               <Trash2 className="w-5 h-5 text-[color:var(--color-danger)]" />
                               <span className="sr-only">Eliminar</span>
                             </button>
-                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-xs bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] shadow-sm opacity-0 group-hover:opacity-100">
+                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-xs bg-[color:var(--color-surface-elevated)] border border-[color:var(--color-border)] text-[color:var(--color-body)] shadow-sm opacity-0 group-hover:opacity-100">
                               Eliminar
                             </div>
                           </div>
@@ -319,7 +317,7 @@ export default function TransportCostsPage() {
                   type="text"
                   value={formData.district}
                   onChange={(e) => setFormData({ ...formData, district: e.target.value })}
-                  className="w-full px-3 py-2 border border-[color:var(--color-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)] bg-[color:var(--color-surface)] text-[color:var(--color-on-surface)] placeholder-[color:var(--color-muted)]"
+                  className="w-full px-3 py-2 border border-[color:var(--color-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)] bg-[color:var(--color-surface)] text-[color:var(--color-body)] placeholder-[color:var(--color-muted)]"
                   required
                   placeholder="Ej: San Miguel, La Molina, Miraflores"
                 />
@@ -335,7 +333,7 @@ export default function TransportCostsPage() {
                   min="0"
                   value={formData.cost}
                   onChange={(e) => setFormData({ ...formData, cost: e.target.value })}
-                  className="w-full px-3 py-2 border border-[color:var(--color-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)] bg-[color:var(--color-surface)] text-[color:var(--color-on-surface)] placeholder-[color:var(--color-muted)]"
+                  className="w-full px-3 py-2 border border-[color:var(--color-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)] bg-[color:var(--color-surface)] text-[color:var(--color-body)] placeholder-[color:var(--color-muted)]"
                   required
                   placeholder="25.00"
                 />
@@ -348,7 +346,7 @@ export default function TransportCostsPage() {
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  className="w-full px-3 py-2 border border-[color:var(--color-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)] bg-[color:var(--color-surface)] text-[color:var(--color-on-surface)] placeholder-[color:var(--color-muted)]"
+                  className="w-full px-3 py-2 border border-[color:var(--color-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)] bg-[color:var(--color-surface)] text-[color:var(--color-body)] placeholder-[color:var(--color-muted)]"
                   rows={3}
                   placeholder="Ej: Incluye peaje, zona de difícil acceso, etc."
                 />
@@ -364,7 +362,7 @@ export default function TransportCostsPage() {
                 />
                 <label
                   htmlFor="isActive"
-                  className="ml-2 text-sm text-[color:var(--color-on-surface)]"
+                  className="ml-2 text-sm text-[color:var(--color-body)]"
                 >
                   Activo
                 </label>
@@ -373,20 +371,12 @@ export default function TransportCostsPage() {
           </ModalBody>
           <ModalFooter>
             <div className="flex gap-3 pt-2 w-full justify-end">
-              <button
-                type="button"
-                onClick={handleCloseModal}
-                className="px-4 py-2 border border-[color:var(--color-border)] text-[color:var(--color-on-surface)] rounded-md hover:bg-[color:var(--color-surface-elevated)]"
-              >
+              <Button type="button" variant="outline" size="md" onClick={handleCloseModal}>
                 Cancelar
-              </button>
-              <button
-                form="transport-costs-form"
-                type="submit"
-                className="px-4 py-2 bg-[color:var(--color-accent-secondary)] text-[color:var(--color-on-accent-contrast)] rounded-md hover:opacity-90"
-              >
+              </Button>
+              <Button form="transport-costs-form" type="submit" variant="primary" size="md">
                 {editingCost ? "Actualizar" : "Crear"}
-              </button>
+              </Button>
             </div>
           </ModalFooter>
         </Modal>

@@ -1,20 +1,24 @@
 "use client";
+import { useState } from "react";
 import {
   Calendar,
   CheckCircle,
   Clock,
   Eye,
   Link,
+  Mail,
   MapPin,
+  Pencil,
   RotateCcw,
-  Star,
   Trash2,
   User,
   XCircle,
 } from "lucide-react";
+import { toast } from "react-hot-toast";
 import StatusBadge from "@/components/appointments/StatusBadge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/Button";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 import {
   Table,
   TableBody,
@@ -27,6 +31,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import {
   type Appointment,
   useDeleteAppointment,
+  useSendAppointmentEmail,
   useUpdateAppointmentStatus,
 } from "@/hooks/useAppointments";
 import { useIsSmallMobile } from "@/hooks/useMediaQuery";
@@ -43,9 +48,9 @@ interface AppointmentTableProps {
   appointments: Appointment[];
   highlightedId?: string;
   onViewDetails: (appointment: Appointment) => void;
+  onEdit: (appointment: Appointment) => void;
 }
 
-// Reusable icon button with tooltip
 function ActionButton({
   tooltip,
   onClick,
@@ -61,12 +66,13 @@ function ActionButton({
     <Tooltip>
       <TooltipTrigger
         render={
-          <button
+          <Button
             type="button"
             aria-label={tooltip}
             disabled={disabled}
             onClick={onClick}
-            className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] hover:bg-[color:var(--color-surface)] transition-colors focus-visible:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            variant="ghost"
+            size="icon-sm"
           />
         }
       >
@@ -77,29 +83,29 @@ function ActionButton({
   );
 }
 
-// Mobile Card Component
-interface MobileAppointmentCardProps {
-  appointment: Appointment;
-  isHighlighted: boolean;
-  onStatusUpdate: (id: string, status: Appointment["status"]) => void;
-  onDelete: (id: string) => void;
-  onViewDetails: (appointment: Appointment) => void;
-  isUpdating: boolean;
-  isDeleting: boolean;
-}
-
 function MobileAppointmentCard({
   appointment,
   isHighlighted,
   onStatusUpdate,
   onDelete,
   onViewDetails,
+  onEdit,
+  onSendEmail,
   isUpdating,
   isDeleting,
-}: MobileAppointmentCardProps) {
-  const mobilePrimaryActionClass =
-    "flex-1 bg-[color:var(--color-surface)] text-[color:var(--color-on-surface)] border-[color:var(--color-border)] hover:bg-[color:var(--color-surface-elevated)]";
-
+  isSendingEmail,
+}: {
+  appointment: Appointment;
+  isHighlighted: boolean;
+  onStatusUpdate: (id: string, status: Appointment["status"]) => void;
+  onDelete: (id: string) => void;
+  onViewDetails: (appointment: Appointment) => void;
+  onEdit: (appointment: Appointment) => void;
+  onSendEmail: (id: string) => void;
+  isUpdating: boolean;
+  isDeleting: boolean;
+  isSendingEmail: boolean;
+}) {
   const priceInfo = getPriceBreakdown(appointment);
   const servicesLabel = formatServices(appointment)
     .map((s) => s.displayText)
@@ -109,169 +115,161 @@ function MobileAppointmentCard({
   return (
     <div
       id={`appointment-${appointment.id}`}
-      className={[
-        "bg-[color:var(--color-surface)]",
-        "rounded-xl",
-        "border",
-        "shadow-sm",
-        "hover:shadow-md",
-        "transition-all",
-        "duration-200",
-        "overflow-hidden",
-        "mb-5",
-        "last:mb-0",
+      className={`bg-[color:var(--color-surface)] rounded-xl border shadow-sm transition-all duration-200 overflow-hidden mb-4 last:mb-0 ${
         isHighlighted
-          ? "border-[color:var(--color-primary)]/60 bg-[color:var(--color-primary)]/10 ring-2 ring-[color:var(--color-primary)]/40"
-          : "border-transparent sm:border-[color:var(--color-border)]/40",
-      ].join(" ")}
+          ? "border-[color:var(--color-primary)]/60 ring-2 ring-[color:var(--color-primary)]/30"
+          : "border-[color:var(--color-border)]"
+      }`}
     >
-      {/* Header */}
       <div
-        className={`px-4 py-3 border-b bg-[color:var(--color-surface-elevated)] rounded-t-xl ${
+        className={`px-4 py-3 border-b ${
           isHighlighted
-            ? "border-[color:var(--color-primary)]/40"
-            : "border-transparent sm:border-[color:var(--color-border)]/40"
+            ? "border-[color:var(--color-primary)]/30 bg-[color:var(--color-primary)]/5"
+            : "border-[color:var(--color-border)]/60 bg-[color:var(--color-surface-elevated)]/50"
         }`}
       >
         <div className="flex items-start justify-between gap-2">
-          <div className="flex items-start space-x-2 min-w-0">
-            <Avatar className="w-9 h-9">
-              <AvatarFallback className="bg-[color:var(--color-primary)]/15 text-[color:var(--color-primary)] text-xs font-semibold ring-1 ring-[color:var(--color-border)]">
+          <div className="flex items-center gap-2.5 min-w-0">
+              <Avatar className="w-9 h-9">
+              <AvatarFallback className="bg-[color:var(--color-accent-soft)] text-[color:var(--color-muted)] text-xs">
                 <User className="w-4 h-4" />
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0">
-              <h3 className="font-semibold text-[color:var(--color-heading)] text-sm leading-tight">
-                <span className="block truncate text-base font-semibold max-w-[58vw] sm:max-w-[66vw]">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-[color:var(--color-heading)] text-sm truncate max-w-[50vw]">
                   {appointment.clientName}
                 </span>
                 {isHighlighted && (
-                  <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium bg-[color:var(--color-primary)]/25 text-[color:var(--color-primary)]">
-                    Destacada
-                  </span>
+                  <span className="text-[10px] text-[color:var(--color-muted)]">Destacada</span>
                 )}
-              </h3>
-              <div className="text-xs text-[color:var(--color-muted)] max-w-[70vw]">
-                <span
-                  className="inline-block"
-                  style={{
-                    display: "-webkit-box",
-                    WebkitLineClamp: 1,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
-                  {servicesLabel}
-                </span>
               </div>
+              <span className="text-xs text-[color:var(--color-muted)] line-clamp-1">
+                {servicesLabel}
+              </span>
             </div>
           </div>
-          <div className="shrink-0">
-            <StatusBadge status={appointment.status} className="px-2 py-1 text-[11px]" />
-          </div>
+          <StatusBadge status={appointment.status} className="shrink-0" />
         </div>
       </div>
 
-      {/* Details */}
-      <div className="px-4 py-2.5 space-y-2">
-        <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs">
-          <div className="flex items-center space-x-1">
-            <Calendar className="w-3.5 h-3.5 text-[color:var(--color-primary)]/70 flex-shrink-0" />
-            <span className="text-[color:var(--color-muted)] truncate">
+      <div className="px-4 py-3 space-y-2">
+        <div className="grid grid-cols-2 gap-y-2 text-xs">
+          <div className="flex items-center gap-1.5">
+            <Calendar className="w-3.5 h-3.5 text-[color:var(--color-muted)]" />
+            <span className="text-[color:var(--color-body)]">
               {formatDate(appointment.appointmentDate)}
             </span>
           </div>
-          <div className="flex items-center space-x-1">
-            <Clock className="w-3.5 h-3.5 text-[color:var(--color-primary)]/70 flex-shrink-0" />
-            <span className="text-[color:var(--color-muted)] truncate">
+          <div className="flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5 text-[color:var(--color-muted)]" />
+            <span className="text-[color:var(--color-body)]">
               {formatTime(appointment.appointmentTime)}
             </span>
           </div>
-          <div className="flex items-center space-x-1">
-            <MapPin className="w-3.5 h-3.5 text-[color:var(--color-primary)]/70 flex-shrink-0" />
-            <span className="text-[color:var(--color-muted)] truncate">
+          <div className="flex items-center gap-1.5">
+            <MapPin className="w-3.5 h-3.5 text-[color:var(--color-muted)]" />
+            <span className="text-[color:var(--color-body)]">
               {isStudio ? "Studio" : "A domicilio"}
             </span>
           </div>
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center gap-1.5">
             <span className="text-[color:var(--color-muted)]">Total</span>
-            <span className="text-[color:var(--color-primary)] font-semibold">
+            <span className="font-medium text-[color:var(--color-heading)]">
               {priceInfo.totalPrice > 0 ? formatPrice(priceInfo.totalPrice) : "-"}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Actions */}
-      <div className="px-4 py-2.5 border-t border-[color:var(--color-border)]/40 bg-[color:var(--color-surface-elevated)]/40 rounded-b-xl flex gap-2">
-        {/* Primary Action - Status based */}
+      <div className="px-4 py-2.5 border-t border-[color:var(--color-border)]/50 bg-[color:var(--color-surface-elevated)]/30 flex gap-2">
         {appointment.status === "PENDING" && (
-          <Button
-            onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
-            disabled={isUpdating}
-            variant="outline"
-            size="sm"
-            className={mobilePrimaryActionClass}
-            type="button"
-          >
-            <CheckCircle className="w-3.5 h-3.5 mr-1 text-[color:var(--color-success)]" />
-            Confirmar
-          </Button>
+          <>
+            <Button
+              onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
+              disabled={isUpdating}
+              variant="outline"
+              size="sm"
+              type="button"
+            >
+              <CheckCircle className="w-3.5 h-3.5" />
+              Confirmar
+            </Button>
+            <ActionButton
+              tooltip="Cancelar"
+              onClick={() => onStatusUpdate(appointment.id, "CANCELLED")}
+              disabled={isUpdating}
+            >
+              <XCircle className="w-3.5 h-3.5" />
+            </ActionButton>
+          </>
         )}
-
         {appointment.status === "CONFIRMED" && (
-          <Button
-            onClick={() => onStatusUpdate(appointment.id, "COMPLETED")}
-            disabled={isUpdating}
-            variant="outline"
-            size="sm"
-            className={mobilePrimaryActionClass}
-            type="button"
-          >
-            <CheckCircle className="w-3.5 h-3.5 mr-1 text-[color:var(--color-success)]" />
-            Completada
-          </Button>
+          <>
+            <Button
+              onClick={() => onStatusUpdate(appointment.id, "COMPLETED")}
+              disabled={isUpdating}
+              variant="outline"
+              size="sm"
+              type="button"
+            >
+              <CheckCircle className="w-3.5 h-3.5" />
+              Completada
+            </Button>
+            <ActionButton
+              tooltip="Copiar link de reseña"
+              onClick={() =>
+                appointment.review?.reviewToken && copyReviewLink(appointment.review.reviewToken)
+              }
+            >
+              <Link className="w-3.5 h-3.5" />
+            </ActionButton>
+          </>
+        )}
+        {(appointment.status === "COMPLETED" || appointment.status === "CANCELLED") && (
+          <>
+            <Button
+              onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
+              disabled={isUpdating}
+              variant="outline"
+              size="sm"
+              type="button"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              Reabrir
+            </Button>
+            {appointment.status === "COMPLETED" && (
+              <ActionButton
+                tooltip="Copiar link de reseña"
+                onClick={() =>
+                  appointment.review?.reviewToken && copyReviewLink(appointment.review.reviewToken)
+                }
+              >
+                <Link className="w-3.5 h-3.5" />
+              </ActionButton>
+            )}
+          </>
         )}
 
-        {appointment.status === "COMPLETED" && (
-          <Button
-            onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
-            disabled={isUpdating}
-            type="button"
-            variant="outline"
-            size="sm"
-            className={mobilePrimaryActionClass}
-          >
-            <RotateCcw className="w-3.5 h-3.5 mr-1 text-[color:var(--color-info)]" />
-            Reabrir
-          </Button>
-        )}
-
-        {appointment.status === "CANCELLED" && (
-          <Button
-            onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
-            disabled={isUpdating}
-            type="button"
-            variant="outline"
-            size="sm"
-            className={mobilePrimaryActionClass}
-          >
-            <RotateCcw className="w-3.5 h-3.5 mr-1 text-[color:var(--color-info)]" />
-            Reabrir
-          </Button>
-        )}
-
-        {/* Secondary Actions */}
         <ActionButton tooltip="Ver detalles" onClick={() => onViewDetails(appointment)}>
           <Eye className="w-3.5 h-3.5" />
         </ActionButton>
-
+        <ActionButton tooltip="Editar" onClick={() => onEdit(appointment)}>
+          <Pencil className="w-3.5 h-3.5" />
+        </ActionButton>
+        <ActionButton
+          tooltip="Enviar email"
+          onClick={() => onSendEmail(appointment.id)}
+          disabled={isSendingEmail}
+        >
+          <Mail className="w-3.5 h-3.5" />
+        </ActionButton>
         <ActionButton
           tooltip="Eliminar"
           onClick={() => onDelete(appointment.id)}
           disabled={isDeleting}
         >
-          <Trash2 className="w-3.5 h-3.5 text-[color:var(--color-danger)]" />
+          <Trash2 className="w-3.5 h-3.5" />
         </ActionButton>
       </div>
     </div>
@@ -284,11 +282,24 @@ function AppointmentRow({
   onStatusUpdate,
   onDelete,
   onViewDetails,
+  onEdit,
+  onSendEmail,
   isUpdating,
   isDeleting,
-}: MobileAppointmentCardProps) {
+  isSendingEmail,
+}: {
+  appointment: Appointment;
+  isHighlighted: boolean;
+  onStatusUpdate: (id: string, status: Appointment["status"]) => void;
+  onDelete: (id: string) => void;
+  onViewDetails: (appointment: Appointment) => void;
+  onEdit: (appointment: Appointment) => void;
+  onSendEmail: (id: string) => void;
+  isUpdating: boolean;
+  isDeleting: boolean;
+  isSendingEmail: boolean;
+}) {
   const priceInfo = getPriceBreakdown(appointment);
-
   const serviceLabel = formatServices(appointment)
     .map((s) => s.displayText)
     .join(", ");
@@ -298,66 +309,58 @@ function AppointmentRow({
       id={`appointment-${appointment.id}`}
       className={
         isHighlighted
-          ? "bg-[color:var(--color-primary)]/12 ring-2 ring-inset ring-[color:var(--color-primary)]/40"
-          : ""
+          ? "bg-[color:var(--color-primary)]/8 ring-2 ring-inset ring-[color:var(--color-primary)]/30"
+          : "hover:bg-[color:var(--color-accent-soft)]/50 transition-colors"
       }
     >
-      <TableCell className="px-6 py-4 whitespace-nowrap">
-        <div className="flex items-center gap-3">
-          <Avatar>
-            <AvatarFallback className="bg-[color:var(--color-primary)]/15 text-[color:var(--color-primary)] font-semibold text-xs">
-              <User className="w-4 h-4" />
+      <TableCell className="px-3 py-3">
+        <div className="flex items-center gap-2.5">
+          <Avatar className="w-8 h-8">
+            <AvatarFallback className="bg-[color:var(--color-accent-soft)] text-[color:var(--color-muted)] text-xs">
+              <User className="w-3.5 h-3.5" />
             </AvatarFallback>
           </Avatar>
-          <div>
-            <div className="text-sm font-medium text-[color:var(--color-on-surface)]">
+          <div className="min-w-0">
+            <div className="text-sm font-medium text-[color:var(--color-heading)] truncate max-w-[24vw]">
               {appointment.clientName}
             </div>
             {isHighlighted && (
-              <span className="text-[10px] font-medium text-[color:var(--color-primary)] bg-[color:var(--color-primary)]/10 px-1.5 py-0.5 rounded">
-                Destacada
-              </span>
+              <span className="text-[10px] text-[color:var(--color-muted)]">Destacada</span>
             )}
           </div>
         </div>
       </TableCell>
-      <TableCell className="px-6 py-4 whitespace-nowrap">
-        <div className="text-sm text-[color:var(--color-on-surface)]">{serviceLabel}</div>
+      <TableCell className="px-3 py-3">
+        <div className="text-sm text-[color:var(--color-body)] truncate max-w-[20vw]">
+          {serviceLabel}
+        </div>
         {appointment.district && (
-          <div className="text-xs text-[color:var(--color-muted)] mt-1 inline-flex items-center">
-            <MapPin className="w-3.5 h-3.5 mr-1" /> {appointment.district}
+          <div className="text-xs text-[color:var(--color-muted)] mt-0.5 flex items-center gap-1">
+            <MapPin className="w-3 h-3" /> {appointment.district}
           </div>
         )}
       </TableCell>
-      <TableCell className="px-6 py-4 whitespace-nowrap">
-        <div className="text-sm text-[color:var(--color-on-surface)]">
+      <TableCell className="px-3 py-3 whitespace-normal">
+        <div className="flex items-center gap-1.5 text-sm text-[color:var(--color-body)]">
+          <Calendar className="w-3.5 h-3.5 text-[color:var(--color-muted)]" />
           {formatDate(appointment.appointmentDate)}
         </div>
-        <div className="text-xs text-[color:var(--color-muted)] mt-1">
+        <div className="flex items-center gap-1.5 text-xs text-[color:var(--color-muted)] mt-0.5">
+          <Clock className="w-3 h-3" />
           {formatTime(appointment.appointmentTime)}
         </div>
       </TableCell>
-      <TableCell className="px-6 py-4 whitespace-nowrap">
+      <TableCell className="px-3 py-3 whitespace-normal">
         {priceInfo.totalPrice > 0 ? (
           <div>
-            <div className="text-sm font-semibold text-[color:var(--color-primary)]">
+            <div className="text-sm font-medium text-[color:var(--color-heading)]">
               {formatPrice(priceInfo.totalPrice)}
             </div>
             {(priceInfo.hasTransport || priceInfo.hasNightShift) && (
-              <div className="text-xs text-[color:var(--color-muted)]">
-                Servicio: {formatPrice(priceInfo.servicePrice)}
-                {priceInfo.hasTransport && (
-                  <>
-                    <br />
-                    Movilidad: {formatPrice(priceInfo.transportCost)}
-                  </>
-                )}
-                {priceInfo.hasNightShift && (
-                  <>
-                    <br />
-                    Nocturno: {formatPrice(priceInfo.nightShiftCost)}
-                  </>
-                )}
+              <div className="text-xs text-[color:var(--color-muted)] mt-0.5">
+                +{priceInfo.hasTransport && `movilidad ${formatPrice(priceInfo.transportCost)}`}
+                {priceInfo.hasTransport && priceInfo.hasNightShift && " · "}
+                {priceInfo.hasNightShift && `nocturno ${formatPrice(priceInfo.nightShiftCost)}`}
               </div>
             )}
           </div>
@@ -365,18 +368,13 @@ function AppointmentRow({
           <span className="text-sm text-[color:var(--color-muted)]">—</span>
         )}
       </TableCell>
-      <TableCell className="px-6 py-4 whitespace-nowrap">
-        <div className="flex items-center gap-2">
+      <TableCell className="px-3 py-3">
+        <div className="flex items-center gap-1.5">
           <StatusBadge status={appointment.status} />
-          {appointment.status === "COMPLETED" && appointment.review && (
-            <span className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-[color:var(--color-accent-secondary)]/15 text-[color:var(--color-accent-secondary)]">
-              <Star className="w-3.5 h-3.5 mr-1" /> Review
-            </span>
-          )}
         </div>
       </TableCell>
-      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-        <div className="flex flex-wrap gap-1.5">
+      <TableCell className="px-3 py-3">
+        <div className="flex items-center gap-1">
           {appointment.status === "PENDING" && (
             <>
               <ActionButton
@@ -384,25 +382,25 @@ function AppointmentRow({
                 onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
                 disabled={isUpdating}
               >
-                <CheckCircle className="w-4 h-4 text-[color:var(--color-success)]" />
+                <CheckCircle className="w-4 h-4 text-[color:var(--color-muted)]" />
               </ActionButton>
               <ActionButton
                 tooltip="Cancelar"
                 onClick={() => onStatusUpdate(appointment.id, "CANCELLED")}
                 disabled={isUpdating}
               >
-                <XCircle className="w-4 h-4 text-[color:var(--color-danger)]" />
+                <XCircle className="w-4 h-4 text-[color:var(--color-muted)]" />
               </ActionButton>
             </>
           )}
           {appointment.status === "CONFIRMED" && (
             <>
               <ActionButton
-                tooltip="Marcar completada"
+                tooltip="Completada"
                 onClick={() => onStatusUpdate(appointment.id, "COMPLETED")}
                 disabled={isUpdating}
               >
-                <CheckCircle className="w-4 h-4 text-[color:var(--color-success)]" />
+                <CheckCircle className="w-4 h-4 text-[color:var(--color-muted)]" />
               </ActionButton>
               <ActionButton
                 tooltip="Copiar link de reseña"
@@ -410,7 +408,7 @@ function AppointmentRow({
                   appointment.review?.reviewToken && copyReviewLink(appointment.review.reviewToken)
                 }
               >
-                <Link className="w-4 h-4 text-[color:var(--color-accent-secondary)]" />
+                <Link className="w-4 h-4 text-[color:var(--color-muted)]" />
               </ActionButton>
             </>
           )}
@@ -421,7 +419,7 @@ function AppointmentRow({
                 onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
                 disabled={isUpdating}
               >
-                <RotateCcw className="w-4 h-4 text-[color:var(--color-info)]" />
+                <RotateCcw className="w-4 h-4 text-[color:var(--color-muted)]" />
               </ActionButton>
               <ActionButton
                 tooltip="Copiar link de reseña"
@@ -429,7 +427,7 @@ function AppointmentRow({
                   appointment.review?.reviewToken && copyReviewLink(appointment.review.reviewToken)
                 }
               >
-                <Link className="w-4 h-4 text-[color:var(--color-accent-secondary)]" />
+                <Link className="w-4 h-4 text-[color:var(--color-muted)]" />
               </ActionButton>
             </>
           )}
@@ -439,18 +437,28 @@ function AppointmentRow({
               onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
               disabled={isUpdating}
             >
-              <RotateCcw className="w-4 h-4 text-[color:var(--color-info)]" />
+              <RotateCcw className="w-4 h-4 text-[color:var(--color-muted)]" />
             </ActionButton>
           )}
           <ActionButton tooltip="Ver detalles" onClick={() => onViewDetails(appointment)}>
-            <Eye className="w-4 h-4 text-[color:var(--color-accent-secondary)]" />
+            <Eye className="w-4 h-4 text-[color:var(--color-muted)]" />
+          </ActionButton>
+          <ActionButton tooltip="Editar" onClick={() => onEdit(appointment)}>
+            <Pencil className="w-4 h-4 text-[color:var(--color-muted)]" />
+          </ActionButton>
+          <ActionButton
+            tooltip="Enviar email"
+            onClick={() => onSendEmail(appointment.id)}
+            disabled={isSendingEmail}
+          >
+            <Mail className="w-4 h-4 text-[color:var(--color-muted)]" />
           </ActionButton>
           <ActionButton
             tooltip="Eliminar"
             onClick={() => onDelete(appointment.id)}
             disabled={isDeleting}
           >
-            <Trash2 className="w-4 h-4 text-[color:var(--color-danger)]" />
+            <Trash2 className="w-4 h-4 text-[color:var(--color-muted)]" />
           </ActionButton>
         </div>
       </TableCell>
@@ -462,86 +470,145 @@ export default function AppointmentTable({
   appointments,
   highlightedId,
   onViewDetails,
+  onEdit,
 }: AppointmentTableProps) {
   const updateStatusMutation = useUpdateAppointmentStatus();
   const deleteMutation = useDeleteAppointment();
+  const sendEmailMutation = useSendAppointmentEmail();
   const isMobile = useIsSmallMobile();
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [emailConfirmId, setEmailConfirmId] = useState<string | null>(null);
 
   const handleStatusUpdate = (id: string, status: Appointment["status"]) => {
     updateStatusMutation.mutate({ id, status });
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("¿Estás segura de que quieres eliminar esta cita?")) {
-      deleteMutation.mutate(id);
-    }
+    setDeleteConfirmId(id);
   };
 
-  if (!appointments || appointments.length === 0) {
-    return null;
-  }
+  const handleSendEmail = (id: string) => {
+    setEmailConfirmId(id);
+  };
 
-  // Mobile View
-  if (isMobile) {
-    return (
-      <>
-        {appointments.map((appointment) => (
-          <MobileAppointmentCard
-            key={appointment.id}
-            appointment={appointment}
-            isHighlighted={appointment.id === highlightedId}
-            onStatusUpdate={handleStatusUpdate}
-            onDelete={handleDelete}
-            onViewDetails={onViewDetails}
-            isUpdating={updateStatusMutation.isPending}
-            isDeleting={deleteMutation.isPending}
-          />
-        ))}
-      </>
-    );
-  }
+  let content: React.ReactNode = null;
 
-  // Desktop View
-  return (
-    <div className="rounded-lg border border-[color:var(--color-border)] overflow-hidden bg-[color:var(--color-surface)]">
-      <Table>
-        <TableHeader className="bg-[color:var(--color-surface-elevated)]">
-          <TableRow className="border-b border-[color:var(--color-border)] hover:bg-transparent">
-            <TableHead className="px-6 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs">
-              Cliente
-            </TableHead>
-            <TableHead className="px-6 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs">
-              Servicio
-            </TableHead>
-            <TableHead className="px-6 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs">
-              Fecha & Hora
-            </TableHead>
-            <TableHead className="px-6 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs">
-              Precio
-            </TableHead>
-            <TableHead className="px-6 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs">
-              Estado
-            </TableHead>
-            <TableHead className="px-6 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs">
-              Acciones
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+  if (appointments && appointments.length > 0) {
+    if (isMobile) {
+      content = (
+        <div>
           {appointments.map((appointment) => (
-            <AppointmentRow
+            <MobileAppointmentCard
               key={appointment.id}
               appointment={appointment}
               isHighlighted={appointment.id === highlightedId}
               onStatusUpdate={handleStatusUpdate}
               onDelete={handleDelete}
               onViewDetails={onViewDetails}
+              onEdit={onEdit}
+              onSendEmail={handleSendEmail}
               isUpdating={updateStatusMutation.isPending}
               isDeleting={deleteMutation.isPending}
+              isSendingEmail={sendEmailMutation.isPending}
             />
           ))}
-        </TableBody>
-      </Table>
-    </div>
+        </div>
+      );
+    } else {
+      content = (
+        <div className="rounded-xl border border-[color:var(--color-border)] overflow-hidden bg-[color:var(--color-surface)] shadow-sm">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-b border-[color:var(--color-border)] hover:bg-transparent">
+                <TableHead className="px-3 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs font-semibold">
+                  Cliente
+                </TableHead>
+                <TableHead className="px-3 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs font-semibold">
+                  Servicio
+                </TableHead>
+                <TableHead className="px-3 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs font-semibold">
+                  Fecha & Hora
+                </TableHead>
+                <TableHead className="px-3 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs font-semibold">
+                  Precio
+                </TableHead>
+                <TableHead className="px-3 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs font-semibold">
+                  Estado
+                </TableHead>
+                <TableHead className="px-3 py-3 text-[color:var(--color-muted)] uppercase tracking-wider text-xs font-semibold">
+                  Acciones
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {appointments.map((appointment) => (
+                <AppointmentRow
+                  key={appointment.id}
+                  appointment={appointment}
+                  isHighlighted={appointment.id === highlightedId}
+                  onStatusUpdate={handleStatusUpdate}
+                  onDelete={handleDelete}
+                  onViewDetails={onViewDetails}
+                  onEdit={onEdit}
+                  onSendEmail={handleSendEmail}
+                  isUpdating={updateStatusMutation.isPending}
+                  isDeleting={deleteMutation.isPending}
+                  isSendingEmail={sendEmailMutation.isPending}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      );
+    }
+  }
+
+  return (
+    <>
+      {content}
+      <ConfirmModal
+        open={!!deleteConfirmId}
+        title="Eliminar cita"
+        description="¿Estás segura de que quieres eliminar esta cita? Esta acción no se puede deshacer."
+        confirmText={deleteMutation.isPending ? "Eliminando..." : "Confirmar eliminación"}
+        cancelText="Cancelar"
+        destructive
+        onConfirm={() => {
+          if (deleteConfirmId) {
+            deleteMutation.mutate(deleteConfirmId, {
+              onSuccess: () => {
+                toast.success("Cita eliminada");
+                setDeleteConfirmId(null);
+              },
+              onError: (err) => {
+                toast.error(err instanceof Error ? err.message : "No se pudo eliminar la cita");
+              },
+            });
+          }
+        }}
+        onCancel={() => setDeleteConfirmId(null)}
+      />
+      <ConfirmModal
+        open={!!emailConfirmId}
+        title="Enviar email a la clienta"
+        description="Se enviará un correo con los detalles de la cita según su estado actual. ¿Deseas continuar?"
+        confirmText={sendEmailMutation.isPending ? "Enviando..." : "Enviar email"}
+        cancelText="Cancelar"
+        onConfirm={() => {
+          if (emailConfirmId) {
+            sendEmailMutation.mutate(emailConfirmId, {
+              onSuccess: () => {
+                toast.success("Email enviado correctamente");
+                setEmailConfirmId(null);
+              },
+              onError: (err) => {
+                toast.error(err instanceof Error ? err.message : "No se pudo enviar el email");
+              },
+            });
+          }
+        }}
+        onCancel={() => setEmailConfirmId(null)}
+      />
+    </>
   );
 }
