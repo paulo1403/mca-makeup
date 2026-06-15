@@ -157,7 +157,7 @@ export default function Section4_PersonalSummary() {
           </button>
         </div>
         <ol className="space-y-1 text-xs text-[color:var(--color-body)] list-decimal list-inside">
-          <li>Enviar captura del adelanto al WhatsApp indicado</li>
+          <li>Enviar captura del adelanto al WhatsApp</li>
           <li>Esperar confirmación de tu reserva</li>
           <li>El restante se paga el día de la cita</li>
         </ol>

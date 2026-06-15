@@ -164,6 +164,7 @@ export default function SuccessModal({
 
               <ol className="space-y-2 text-sm text-[color:var(--color-body)] list-decimal list-inside">
                 <li>Enviar la captura del adelanto al WhatsApp por el que te brindé la información</li>
+                <li>Enviar la foto de tu cabello de espaldas (en caso desees peinado)</li>
                 <li>Espera la confirmación de tu reserva</li>
                 <li>El restante lo cancelas el día de la cita</li>
               </ol>

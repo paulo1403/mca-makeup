@@ -231,13 +231,22 @@ export default function AppointmentModal({ appointment, isOpen, onClose, onEdit 
             </div>
           )}
 
-          {appointment.additionalNotes && (
-            <div className="py-3">
-              <p className="text-sm text-[color:var(--color-body)] whitespace-pre-wrap break-words">
-                {appointment.additionalNotes}
-              </p>
-            </div>
-          )}
+          {(() => {
+            const notes = appointment.additionalNotes || "";
+            const clientNotes = notes.includes("\n\nNotas adicionales:")
+              ? notes.split("\n\nNotas adicionales:")[1]?.trim()
+              : notes.startsWith("Servicios:")
+                ? ""
+                : notes;
+            if (!clientNotes) return null;
+            return (
+              <div className="py-3">
+                <p className="text-sm text-[color:var(--color-body)] whitespace-pre-wrap break-words">
+                  {clientNotes}
+                </p>
+              </div>
+            );
+          })()}
 
           {appointment.status === "COMPLETED" && appointment.review && (
             <div className="py-3 space-y-2">
