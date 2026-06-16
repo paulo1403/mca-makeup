@@ -171,23 +171,6 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
     [selectedServices],
   );
 
-  const { data: rangesData, isLoading: slotsLoading } = useAvailableRanges(
-    date || null,
-    serviceSelection,
-    locationType,
-    calculated.duration || undefined,
-  );
-
-  useEffect(() => {
-    if (date) setSelectedMonth(date);
-  }, [date]);
-
-  useEffect(() => {
-    if (locationType === "HOME" && district) {
-      getTransportCost(district);
-    }
-  }, [locationType, district, getTransportCost]);
-
   const calculated = useMemo(() => {
     const items: ({ price: number; duration: number; quantity: number; name: string })[] = selectedServices
       .map((s) => {
@@ -206,6 +189,13 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
     const nightShift = timeSlot ? calculateNightShiftCost(timeSlot) : 0;
     return { subtotal, total: subtotal + transport + nightShift, duration, transport, nightShift };
   }, [selectedServices, servicesList, locationType, transportCost, timeSlot]);
+
+  const { data: rangesData, isLoading: slotsLoading } = useAvailableRanges(
+    date || null,
+    serviceSelection,
+    locationType,
+    calculated.duration || undefined,
+  );
 
   const [customServiceName, setCustomServiceName] = useState("");
   const [customServiceUnitPrice, setCustomServiceUnitPrice] = useState("");
