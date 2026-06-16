@@ -86,7 +86,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
   const updateAppointment = useUpdateAppointment();
   const { data: groupedServices } = useGroupedServicesQuery();
   const { data: servicesList } = useServicesList();
-  const { transportCost, getTransportCost } = useTransportCost();
+  const { transportCost, getTransportCost, loading: transportLoading } = useTransportCost();
   const [selectedMonth, setSelectedMonth] = useState(new Date());
 
   const isEditing = !!editingAppointment;
@@ -701,10 +701,16 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                             <span className="text-[color:var(--color-muted)]">Servicios</span>
                             <span className="text-[color:var(--color-heading)]">S/ {calculated.subtotal.toFixed(2)}</span>
                           </div>
-                          {calculated.transport > 0 && (
+                          {locationType === "HOME" && (
                             <div className="flex justify-between">
                               <span className="text-[color:var(--color-muted)]">Movilidad</span>
-                              <span className="text-[color:var(--color-heading)]">S/ {calculated.transport.toFixed(2)}</span>
+                              <span className="text-[color:var(--color-heading)]">
+                                {transportLoading ? (
+                                  <span className="text-[color:var(--color-muted)] text-[10px]">Calculando...</span>
+                                ) : (
+                                  <>S/ {calculated.transport.toFixed(2)}</>
+                                )}
+                              </span>
                             </div>
                           )}
                           {calculated.nightShift > 0 && (
