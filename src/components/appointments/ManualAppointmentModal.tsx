@@ -2,7 +2,7 @@
 
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { Check } from "lucide-react";
+import { Check, Plus, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
@@ -37,7 +37,12 @@ type FormData = {
   district: string;
   address: string;
   addressReference: string;
-  selectedServices: { id: string; quantity: number }[];
+  selectedServices: {
+    id: string;
+    quantity: number;
+    _customName?: string;
+    _customPrice?: number;
+  }[];
   date: Date;
   timeSlot: string;
   status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
@@ -104,6 +109,8 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
         selectedServices: (editingAppointment.services || []).map((s) => ({
           id: s.id,
           quantity: s.quantity || 1,
+          ...((s as Record<string, unknown>)._customName ? { _customName: (s as Record<string, unknown>)._customName as string } : {}),
+          ...((s as Record<string, unknown>)._customPrice != null ? { _customPrice: (s as Record<string, unknown>)._customPrice as number } : {}),
         })),
         date: new Date(editingAppointment.appointmentDate),
         timeSlot: editingAppointment.appointmentTime || "",
@@ -156,7 +163,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
   const serviceSelection = useMemo(
     () =>
       selectedServices.reduce<Record<string, number>>((acc, cur) => {
-        if (cur.id) acc[cur.id] = cur.quantity;
+        if (cur.id && !cur.id.startsWith("_custom_")) acc[cur.id] = cur.quantity;
         return acc;
       }, {}),
     [selectedServices],
@@ -179,12 +186,14 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
   }, [locationType, district, getTransportCost]);
 
   const calculated = useMemo(() => {
-    if (!servicesList) return { subtotal: 0, total: 0, duration: 0, transport: 0, nightShift: 0 };
-    const items: (ServiceData & { quantity: number })[] = selectedServices
+    const items: ({ price: number; duration: number; quantity: number; name: string })[] = selectedServices
       .map((s) => {
-        const svc = servicesList.find((x: ServiceData) => x.id === s.id);
+        if ("_customPrice" in s && s._customPrice != null) {
+          return { price: s._customPrice, duration: 0, quantity: s.quantity || 1, name: s._customName || "Servicio" };
+        }
+        const svc = servicesList?.find((x: ServiceData) => x.id === s.id);
         if (!svc) return null;
-        return { ...svc, quantity: s.quantity };
+        return { price: svc.price, duration: svc.duration, quantity: s.quantity || 1, name: svc.name };
       })
       .filter((x): x is NonNullable<typeof x> => x != null);
     const subtotal = items.reduce((sum, it) => sum + (it.price || 0) * (it.quantity || 1), 0);
@@ -194,6 +203,45 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
     const nightShift = timeSlot ? calculateNightShiftCost(timeSlot) : 0;
     return { subtotal, total: subtotal + transport + nightShift, duration, transport, nightShift };
   }, [selectedServices, servicesList, locationType, transportCost, timeSlot]);
+
+  const [customServiceName, setCustomServiceName] = useState("");
+  const [customServiceUnitPrice, setCustomServiceUnitPrice] = useState("");
+
+  const addCustomService = () => {
+    if (!customServiceName.trim()) {
+      toast.error("Ingresa un nombre para el servicio");
+      return;
+    }
+    const price = Number.parseFloat(customServiceUnitPrice);
+    if (Number.isNaN(price) || price <= 0) {
+      toast.error("Ingresa un precio válido");
+      return;
+    }
+    if (!selectedServices.some((s) => s.id === `_custom_${customServiceName.trim()}`)) {
+      setValue("selectedServices", [
+        ...selectedServices,
+        {
+          id: `_custom_${customServiceName.trim()}`,
+          quantity: 1,
+          _customName: customServiceName.trim(),
+          _customPrice: price,
+        },
+      ], { shouldValidate: true });
+    } else {
+      // increment quantity if already exists
+      setValue("selectedServices", selectedServices.map((s) =>
+        s.id === `_custom_${customServiceName.trim()}`
+          ? { ...s, quantity: (s.quantity || 1) + 1, _customPrice: price }
+          : s
+      ), { shouldValidate: true });
+    }
+    setCustomServiceName("");
+    setCustomServiceUnitPrice("");
+  };
+
+  const removeCustomService = (id: string) => {
+    setValue("selectedServices", selectedServices.filter((s) => s.id !== id), { shouldValidate: true });
+  };
 
   const [customServicePrice, setCustomServicePrice] = useState<string>("");
   const [customTransportCost, setCustomTransportCost] = useState<string>("");
@@ -213,7 +261,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
 
   const onSubmit = (data: FormData) => {
     const selectionMap = (data.selectedServices || []).reduce<Record<string, number>>((acc, s) => {
-      if (s.id) acc[s.id] = s.quantity;
+      if (s.id && !s.id.startsWith("_custom_")) acc[s.id] = s.quantity;
       return acc;
     }, {});
     const validation = validateSelection(selectionMap, servicesList || []);
@@ -238,6 +286,9 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
 
     const serviceNames = (data.selectedServices || [])
       .map((s) => {
+        if ("_customName" in s && s._customName) {
+          return `${s._customName}${s.quantity > 1 ? ` x${s.quantity}` : ""}`;
+        }
         const svc = servicesList?.find((x: ServiceData) => x.id === s.id);
         return svc ? `${svc.name}${s.quantity > 1 ? ` x${s.quantity}` : ""}` : "";
       })
@@ -413,15 +464,72 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
               <div>
                 <p className="text-[11px] font-semibold text-[color:var(--color-muted)] uppercase tracking-wider mb-2">Servicios</p>
                 {groupedServices && Object.keys(groupedServices).length > 0 ? (
-                  <div className="space-y-2">
-                    {Object.entries(groupedServices).map(([category, services]) => (
-                      <ToggleServiceCategoryGroup
-                        key={category}
-                        category={category}
-                        services={services}
-                        fieldName="selectedServices"
-                      />
-                    ))}
+                  <div className="space-y-3">
+                    <div className="space-y-2">
+                      {Object.entries(groupedServices).map(([category, services]) => (
+                        <ToggleServiceCategoryGroup
+                          key={category}
+                          category={category}
+                          services={services}
+                          fieldName="selectedServices"
+                        />
+                      ))}
+                    </div>
+
+                    {/* Custom services */}
+                    {(selectedServices.filter((s) => "_customName" in s && s._customName).length > 0) && (
+                      <div className="rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-3 space-y-2">
+                        <p className="text-xs font-medium text-[color:var(--color-muted)]">Servicios personalizados</p>
+                        {selectedServices.filter((s) => "_customName" in s && s._customName).map((s) => (
+                          <div key={s.id} className="flex items-center justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <span className="text-sm text-[color:var(--color-heading)]">{s._customName}</span>
+                              {s.quantity > 1 && (
+                                <span className="text-xs text-[color:var(--color-muted)] ml-1">×{s.quantity}</span>
+                              )}
+                            </div>
+                            <span className="text-sm font-medium text-[color:var(--color-heading)] shrink-0">
+                              S/ {((s._customPrice || 0) * (s.quantity || 1)).toFixed(2)}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => removeCustomService(s.id)}
+                              className="p-1 rounded-md hover:bg-[color:var(--color-danger)]/10 text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] transition-colors"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="flex items-end gap-2">
+                      <AdminFormField label="Servicio nuevo" className="flex-1">
+                        <AdminInput
+                          value={customServiceName}
+                          onChange={(e) => setCustomServiceName(e.target.value)}
+                          placeholder="Nombre del servicio"
+                        />
+                      </AdminFormField>
+                      <AdminFormField label="Precio S/" className="w-28">
+                        <AdminInput
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value={customServiceUnitPrice}
+                          onChange={(e) => setCustomServiceUnitPrice(e.target.value)}
+                          placeholder="0.00"
+                        />
+                      </AdminFormField>
+                      <button
+                        type="button"
+                        onClick={addCustomService}
+                        className="flex items-center gap-1 px-3 py-2 rounded-lg bg-[color:var(--color-primary)] text-white text-xs font-medium hover:opacity-90 transition-opacity"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        Agregar
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <p className="text-sm text-[color:var(--color-muted)]">Cargando servicios...</p>

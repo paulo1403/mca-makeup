@@ -316,19 +316,36 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function enrichServices(services: { id: string; quantity: number }[]) {
+async function enrichServices(services: Record<string, unknown>[]) {
   if (!services || services.length === 0) return undefined;
-  const ids = services.map((s) => s.id);
-  const dbServices = await prisma.service.findMany({
-    where: { id: { in: ids } },
-    select: { id: true, name: true, price: true, duration: true },
-  });
+  const catalogIds = services
+    .filter((s) => typeof s.id === "string" && !(s.id as string).startsWith("_custom_"))
+    .map((s) => s.id as string);
+  const dbServices = catalogIds.length > 0
+    ? await prisma.service.findMany({
+        where: { id: { in: catalogIds } },
+        select: { id: true, name: true, price: true, duration: true },
+      })
+    : [];
   const map = new Map(dbServices.map((s) => [s.id, s]));
   return services.map((s) => {
-    const found = map.get(s.id);
+    const id = s.id as string;
+    const quantity = (s.quantity as number) || 1;
+    if (id.startsWith("_custom_")) {
+      return {
+        id,
+        quantity,
+        name: (s._customName as string) || null,
+        price: (s._customPrice as number) ?? null,
+        duration: null,
+        _customName: (s._customName as string) || null,
+        _customPrice: (s._customPrice as number) ?? null,
+      };
+    }
+    const found = map.get(id);
     return {
-      id: s.id,
-      quantity: s.quantity || 1,
+      id,
+      quantity,
       name: found?.name || null,
       price: found?.price ?? null,
       duration: found?.duration ?? null,
