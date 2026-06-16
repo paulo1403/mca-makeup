@@ -6,6 +6,7 @@ export function useAvailableRanges(
   date: Date | null,
   serviceSelection: ServiceSelection,
   locationType: "STUDIO" | "HOME",
+  totalDuration?: number,
 ) {
   const formattedDate = date ? format(date, "yyyy-MM-dd") : "";
 
@@ -22,7 +23,7 @@ export function useAvailableRanges(
   const serviceTypesString = expandedServiceIds.join(",");
 
   return useQuery({
-    queryKey: ["availableRanges", formattedDate, serviceTypesString, locationType],
+    queryKey: ["availableRanges", formattedDate, serviceTypesString, locationType, totalDuration],
     queryFn: async () => {
       if (!formattedDate || !expandedServiceIds.length || !locationType)
         return { availableRanges: [] };
@@ -31,6 +32,9 @@ export function useAvailableRanges(
         serviceTypes: serviceTypesString,
         locationType,
       });
+      if (totalDuration && totalDuration > 0) {
+        params.set("duration", String(totalDuration));
+      }
 
       const res = await fetch(`/api/availability?${params.toString()}`);
       if (!res.ok) throw new Error("Error al obtener horarios");

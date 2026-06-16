@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
     const date = searchParams.get("date");
     const serviceTypes = searchParams.get("serviceTypes");
     const locationType = searchParams.get("locationType");
+    const durationOverride = searchParams.get("duration");
 
     if (!date || !serviceTypes || !locationType) {
       return NextResponse.json(
@@ -120,6 +121,12 @@ export async function GET(request: NextRequest) {
     }
 
     let selectedDuration = totalDuration;
+    if (durationOverride) {
+      const parsed = Number.parseInt(durationOverride, 10);
+      if (Number.isFinite(parsed) && parsed > 0) {
+        selectedDuration = parsed;
+      }
+    }
     if (!Number.isFinite(selectedDuration) || selectedDuration <= 0) {
       selectedDuration = 120;
     }

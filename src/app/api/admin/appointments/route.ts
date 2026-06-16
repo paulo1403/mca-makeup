@@ -337,9 +337,10 @@ async function enrichServices(services: Record<string, unknown>[]) {
         quantity,
         name: (s._customName as string) || null,
         price: (s._customPrice as number) ?? null,
-        duration: null,
+        duration: (s._customDuration as number) ?? null,
         _customName: (s._customName as string) || null,
         _customPrice: (s._customPrice as number) ?? null,
+        _customDuration: (s._customDuration as number) ?? null,
       };
     }
     const found = map.get(id);

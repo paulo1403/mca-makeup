@@ -42,6 +42,7 @@ type FormData = {
     quantity: number;
     _customName?: string;
     _customPrice?: number;
+    _customDuration?: number;
   }[];
   date: Date;
   timeSlot: string;
@@ -111,6 +112,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
           quantity: s.quantity || 1,
           ...((s as Record<string, unknown>)._customName ? { _customName: (s as Record<string, unknown>)._customName as string } : {}),
           ...((s as Record<string, unknown>)._customPrice != null ? { _customPrice: (s as Record<string, unknown>)._customPrice as number } : {}),
+          ...((s as Record<string, unknown>)._customDuration != null ? { _customDuration: (s as Record<string, unknown>)._customDuration as number } : {}),
         })),
         date: new Date(editingAppointment.appointmentDate),
         timeSlot: editingAppointment.appointmentTime || "",
@@ -173,6 +175,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
     date || null,
     serviceSelection,
     locationType,
+    calculated.duration || undefined,
   );
 
   useEffect(() => {
@@ -189,7 +192,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
     const items: ({ price: number; duration: number; quantity: number; name: string })[] = selectedServices
       .map((s) => {
         if ("_customPrice" in s && s._customPrice != null) {
-          return { price: s._customPrice, duration: 0, quantity: s.quantity || 1, name: s._customName || "Servicio" };
+          return { price: s._customPrice, duration: s._customDuration || 0, quantity: s.quantity || 1, name: s._customName || "Servicio" };
         }
         const svc = servicesList?.find((x: ServiceData) => x.id === s.id);
         if (!svc) return null;
@@ -206,6 +209,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
 
   const [customServiceName, setCustomServiceName] = useState("");
   const [customServiceUnitPrice, setCustomServiceUnitPrice] = useState("");
+  const [customServiceDuration, setCustomServiceDuration] = useState("");
 
   const addCustomService = () => {
     if (!customServiceName.trim()) {
@@ -217,6 +221,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
       toast.error("Ingresa un precio válido");
       return;
     }
+    const dur = Number.parseInt(customServiceDuration, 10) || 0;
     if (!selectedServices.some((s) => s.id === `_custom_${customServiceName.trim()}`)) {
       setValue("selectedServices", [
         ...selectedServices,
@@ -225,18 +230,20 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
           quantity: 1,
           _customName: customServiceName.trim(),
           _customPrice: price,
+          _customDuration: dur,
         },
       ], { shouldValidate: true });
     } else {
       // increment quantity if already exists
       setValue("selectedServices", selectedServices.map((s) =>
         s.id === `_custom_${customServiceName.trim()}`
-          ? { ...s, quantity: (s.quantity || 1) + 1, _customPrice: price }
+          ? { ...s, quantity: (s.quantity || 1) + 1, _customPrice: price, _customDuration: dur }
           : s
       ), { shouldValidate: true });
     }
     setCustomServiceName("");
     setCustomServiceUnitPrice("");
+    setCustomServiceDuration("");
   };
 
   const removeCustomService = (id: string) => {
@@ -487,6 +494,9 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                               {s.quantity > 1 && (
                                 <span className="text-xs text-[color:var(--color-muted)] ml-1">×{s.quantity}</span>
                               )}
+                              {s._customDuration ? (
+                                <span className="text-xs text-[color:var(--color-muted)] ml-2">{s._customDuration}min</span>
+                              ) : null}
                             </div>
                             <span className="text-sm font-medium text-[color:var(--color-heading)] shrink-0">
                               S/ {((s._customPrice || 0) * (s.quantity || 1)).toFixed(2)}
@@ -511,7 +521,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                           placeholder="Nombre del servicio"
                         />
                       </AdminFormField>
-                      <AdminFormField label="Precio S/" className="w-28">
+                      <AdminFormField label="Precio S/" className="w-24">
                         <AdminInput
                           type="number"
                           min="0"
@@ -519,6 +529,16 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                           value={customServiceUnitPrice}
                           onChange={(e) => setCustomServiceUnitPrice(e.target.value)}
                           placeholder="0.00"
+                        />
+                      </AdminFormField>
+                      <AdminFormField label="Duración" className="w-24">
+                        <AdminInput
+                          type="number"
+                          min="0"
+                          step="5"
+                          value={customServiceDuration}
+                          onChange={(e) => setCustomServiceDuration(e.target.value)}
+                          placeholder="min"
                         />
                       </AdminFormField>
                       <button
