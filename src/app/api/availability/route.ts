@@ -111,19 +111,8 @@ export async function GET(request: NextRequest) {
       }
 
       if (!matchedService) {
-        console.error("No service found:", {
-          serviceTypeOrId,
-          availableServices: allServices.map((s) => ({ id: s.id, name: s.name })),
-        });
-        return NextResponse.json(
-          {
-            error: "Tipo de servicio no encontrado o inactivo",
-            details: `Servicio buscado: "${serviceTypeOrId}"`,
-            originalServiceType: serviceTypeOrId,
-            availableServices: allServices.map((s) => s.name),
-          },
-          { status: 400 },
-        );
+        console.warn("Service not found in catalog, skipping:", { serviceTypeOrId });
+        continue;
       }
 
       matchedServices.push(matchedService);
@@ -132,10 +121,6 @@ export async function GET(request: NextRequest) {
 
     let selectedDuration = totalDuration;
     if (!Number.isFinite(selectedDuration) || selectedDuration <= 0) {
-      console.warn("Selected duration invalid, applying fallback", {
-        totalDuration,
-        serviceTypeArray,
-      });
       selectedDuration = 120;
     }
 

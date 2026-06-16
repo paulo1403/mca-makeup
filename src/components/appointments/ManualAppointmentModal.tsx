@@ -163,7 +163,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
   const serviceSelection = useMemo(
     () =>
       selectedServices.reduce<Record<string, number>>((acc, cur) => {
-        if (cur.id && !cur.id.startsWith("_custom_")) acc[cur.id] = cur.quantity;
+        if (cur.id) acc[cur.id] = cur.quantity;
         return acc;
       }, {}),
     [selectedServices],
