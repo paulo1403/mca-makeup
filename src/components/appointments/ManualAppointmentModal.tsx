@@ -197,6 +197,16 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
     calculated.duration || undefined,
   );
 
+  useEffect(() => {
+    if (date) setSelectedMonth(date);
+  }, [date]);
+
+  useEffect(() => {
+    if (locationType === "HOME" && district) {
+      getTransportCost(district);
+    }
+  }, [locationType, district, getTransportCost]);
+
   const [customServiceName, setCustomServiceName] = useState("");
   const [customServiceUnitPrice, setCustomServiceUnitPrice] = useState("");
   const [customServiceDuration, setCustomServiceDuration] = useState("");
