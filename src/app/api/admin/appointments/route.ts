@@ -114,7 +114,7 @@ export async function GET(request: NextRequest) {
         where,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: { appointmentDate: "desc" },
+        orderBy: { appointmentDate: "asc" },
         select: {
           id: true,
           clientName: true,

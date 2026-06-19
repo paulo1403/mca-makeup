@@ -60,7 +60,7 @@ function groupByDate(apps: Appointment[]) {
     g.push(a);
     map.set(key, g);
   }
-  return [...map.entries()].sort(([a], [b]) => b.localeCompare(a));
+  return [...map.entries()].sort(([a], [b]) => a.localeCompare(b));
 }
 
 function buildWaLink(a: Appointment) {
