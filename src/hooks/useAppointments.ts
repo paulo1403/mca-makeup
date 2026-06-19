@@ -21,6 +21,7 @@ export interface Appointment {
   status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
   additionalNotes?: string;
   location?: string;
+  locationType?: "HOME" | "STUDIO";
   duration: number;
   servicePrice?: number;
   transportCost?: number;

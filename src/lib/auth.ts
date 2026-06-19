@@ -116,6 +116,6 @@ export const authOptions: NextAuthOptions = {
     signOut: "/admin/login",
     error: "/admin/login",
   },
-  debug: process.env.NODE_ENV === "development",
+  debug: false, // ponytail: true en dev solo cuando se debuggea auth
   secret: process.env.NEXTAUTH_SECRET,
 };

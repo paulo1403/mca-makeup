@@ -254,11 +254,39 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
   const [customTransportCost, setCustomTransportCost] = useState<string>("");
   const [customNightShiftCost, setCustomNightShiftCost] = useState<string>("");
   const [priceOverridden, setPriceOverridden] = useState(false);
+  const [transportManuallyEdited, setTransportManuallyEdited] = useState(false);
+
+  // ponytail: auto-fill transport cost from API when district selected, user can override
+  useEffect(() => {
+    if (transportCost && locationType === "HOME" && district) {
+      if (!transportManuallyEdited || district !== transportCost.district) {
+        setCustomTransportCost(String(transportCost.cost));
+        setTransportManuallyEdited(false);
+      }
+    }
+  }, [transportCost, locationType, district, transportManuallyEdited]);
+
+  useEffect(() => {
+    setTransportManuallyEdited(false);
+  }, [district]);
+
+  // ponytail: pre-fill transport cost when editing
+  useEffect(() => {
+    if (isEditing && editingAppointment) {
+      setCustomTransportCost(
+        editingAppointment.transportCost != null && editingAppointment.transportCost > 0
+          ? String(editingAppointment.transportCost)
+          : ""
+      );
+    } else if (!isOpen) {
+      setCustomTransportCost("");
+    }
+  }, [isEditing, editingAppointment, isOpen]);
 
   const effectiveServicePrice = priceOverridden && customServicePrice
     ? Number.parseFloat(customServicePrice) || 0
     : calculated.subtotal;
-  const effectiveTransport = priceOverridden && customTransportCost
+  const effectiveTransport = customTransportCost
     ? Number.parseFloat(customTransportCost) || 0
     : calculated.transport;
   const effectiveNightShift = priceOverridden && customNightShiftCost
@@ -461,6 +489,27 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                           placeholder="Frente al parque"
                         />
                       </AdminFormField>
+                      {district && (
+                        <AdminFormField label="Costo de movilidad (S/)" className="sm:col-span-2">
+                          <AdminInput
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={customTransportCost}
+                            onChange={(e) => {
+                              setCustomTransportCost(e.target.value);
+                              setTransportManuallyEdited(true);
+                            }}
+                            inputMode="decimal"
+                            placeholder={transportLoading ? "Calculando..." : calculated.transport > 0 ? calculated.transport.toFixed(2) : "0.00"}
+                          />
+                          {transportCost?.notes && (
+                            <p className="text-[10px] text-[color:var(--color-muted)] mt-1">
+                              {transportCost.notes}
+                            </p>
+                          )}
+                        </AdminFormField>
+                      )}
                     </>
                   )}
                 </div>
@@ -658,7 +707,6 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                           onClick={() => {
                             if (!priceOverridden) {
                               setCustomServicePrice(calculated.subtotal > 0 ? String(calculated.subtotal) : "");
-                              setCustomTransportCost(calculated.transport > 0 ? String(calculated.transport) : "");
                               setCustomNightShiftCost(calculated.nightShift > 0 ? String(calculated.nightShift) : "");
                             }
                             setPriceOverridden(!priceOverridden);
@@ -670,7 +718,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                       </div>
 
                       {priceOverridden ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           <AdminFormField label="Servicios (S/)">
                             <AdminInput
                               type="number"
@@ -680,17 +728,6 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                               onChange={(e) => setCustomServicePrice(e.target.value)}
                               inputMode="decimal"
                               placeholder={calculated.subtotal.toFixed(2)}
-                            />
-                          </AdminFormField>
-                          <AdminFormField label="Movilidad (S/)">
-                            <AdminInput
-                              type="number"
-                              min="0"
-                              step="0.01"
-                              value={customTransportCost}
-                              onChange={(e) => setCustomTransportCost(e.target.value)}
-                              inputMode="decimal"
-                              placeholder={calculated.transport.toFixed(2)}
                             />
                           </AdminFormField>
                           <AdminFormField label="Nocturno (S/)">
@@ -715,11 +752,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                             <div className="flex justify-between">
                               <span className="text-[color:var(--color-muted)]">Movilidad</span>
                               <span className="text-[color:var(--color-heading)]">
-                                {transportLoading ? (
-                                  <span className="text-[color:var(--color-muted)] text-[10px]">Calculando...</span>
-                                ) : (
-                                  <>S/ {calculated.transport.toFixed(2)}</>
-                                )}
+                                S/ {effectiveTransport.toFixed(2)}
                               </span>
                             </div>
                           )}

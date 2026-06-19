@@ -13,6 +13,8 @@ export async function GET(request: NextRequest) {
     const limit = Number.parseInt(searchParams.get("limit") || "10", 10);
     const search = searchParams.get("search");
     const idParam = searchParams.get("id");
+    const dateStart = searchParams.get("dateStart");
+    const dateEnd = searchParams.get("dateEnd");
 
     // If an id is provided, return that single appointment formatted
     if (idParam) {
@@ -95,13 +97,24 @@ export async function GET(request: NextRequest) {
       ];
     }
 
+    if (dateStart && dateEnd) {
+      try {
+        where.appointmentDate = {
+          gte: parseDateFromString(dateStart),
+          lte: parseDateFromString(dateEnd),
+        };
+      } catch {
+        // ignore invalid dates
+      }
+    }
+
     // Get appointments with pagination
     const [rawAppointments, total] = await Promise.all([
       prisma.appointment.findMany({
         where,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: { createdAt: "desc" },
+        orderBy: { appointmentDate: "desc" },
         select: {
           id: true,
           clientName: true,
