@@ -95,8 +95,11 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
       >
         <div className="flex flex-col h-full">
           {/* Sidebar Header */}
-          <div className={`relative p-4 border-b border-[color:var(--color-border)] flex-shrink-0 ${collapsed ? "flex justify-center" : "flex items-center"}`}>
-            <div className={`min-w-0 ${collapsed ? "flex items-center justify-center" : "flex items-center gap-3"}`}>
+          <div className={`p-4 border-b border-[color:var(--color-border)] flex-shrink-0 ${
+            collapsed ? "flex flex-col items-center gap-3" : "flex items-center justify-between"
+          }`}>
+            {/* Logo + Brand */}
+            <div className={`flex items-center gap-3 ${collapsed ? "flex-col" : "min-w-0"}`}>
               <div className="w-9 h-9 bg-[color:var(--color-primary)]/15 rounded-full flex items-center justify-center flex-shrink-0">
                 <span className="text-[color:var(--color-primary)] font-semibold text-sm">MC</span>
               </div>
@@ -112,22 +115,22 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
               )}
             </div>
 
-            <div className={`flex items-center gap-2 ${collapsed ? "absolute right-2 top-2" : "ml-auto"}`}>
+            {/* Toggle + close */}
+            <div className={`flex items-center gap-1 ${collapsed ? "flex-col" : ""}`}>
               {/* Collapse toggle (desktop) */}
               <button
                 onClick={() => setCollapsed((c) => !c)}
-                className="hidden md:inline-flex p-1.5 rounded-md text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface-elevated)] transition-colors focus-ring"
+                className="hidden md:inline-flex p-1.5 rounded-md text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface-elevated)] transition-colors"
                 aria-label={collapsed ? "Expandir barra" : "Colapsar barra"}
-                aria-pressed={collapsed}
               >
                 <ChevronLeft
-                  className={`h-5 w-5 transition-transform duration-300 ${collapsed ? "rotate-180" : "rotate-0"}`}
+                  className={`h-4 w-4 transition-transform duration-300 ${collapsed ? "rotate-180" : ""}`}
                 />
               </button>
               {/* Close button (mobile) */}
               <button
                 onClick={onClose}
-                className="md:hidden p-1 rounded-md text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface-elevated)] transition-colors focus-ring"
+                className="md:hidden p-1 rounded-md text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface-elevated)] transition-colors"
                 aria-label="Cerrar menú"
               >
                 <X className="h-5 w-5" />

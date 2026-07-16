@@ -771,7 +771,7 @@ async function main() {
       type: NotificationType.SYSTEM,
       title: "Sistema Inicializado",
       message: "El sistema de reservas ha sido configurado correctamente con datos iniciales.",
-      link: "/admin/dashboard",
+      link: "/admin/appointments",
       read: false,
     },
     {
@@ -785,7 +785,7 @@ async function main() {
       type: NotificationType.SYSTEM,
       title: "Costos de Transporte",
       message: "Se han configurado los costos de transporte para todos los distritos de Lima.",
-      link: "/admin/transport",
+      link: "/admin/transport-costs",
       read: false,
     },
   ];
