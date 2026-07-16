@@ -1,13 +1,12 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { addDays, endOfMonth, format as dfFormat, isSameDay } from "date-fns";
+import { addDays, endOfMonth, format as dfFormat } from "date-fns";
 import { es } from "date-fns/locale";
 import {
   Calendar,
   CheckCircle2,
   ChevronDown,
-  Clock,
   Mail,
   MapPin,
   MessageCircle,
@@ -152,45 +151,31 @@ function CitasContent() {
 
   const pen = apps.filter((a) => a.status === "PENDING").length;
   const conf = apps.filter((a) => a.status === "CONFIRMED").length;
-  const todayN = apps.filter((a) => isSameDay(new Date(a.appointmentDate), new Date())).length;
-  const rev = apps.filter((a) => a.status === "COMPLETED").reduce((s, a) => s + (a.totalPrice || 0), 0);
 
   return (
     <div className="flex flex-col h-full">
       {/* Toolbar */}
-      <div className="shrink-0 space-y-2 pb-3">
+      <div className="shrink-0 space-y-2 pb-2">
         <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-1.5">
-            {DATE_TABS.map((t) => (
-              <button key={t.k} onClick={() => { setPeriod(t.k); setPage(1); }}
-                className={`px-2.5 py-1 text-xs font-medium rounded-full transition-colors ${period === t.k ? "bg-[color:var(--color-primary)] text-white" : "text-[color:var(--color-muted)] hover:bg-[color:var(--color-surface-elevated)]"}`}>
-                {t.l}
-              </button>
-            ))}
+          <div className="flex items-center gap-2 min-w-0">
+            <h1 className="text-sm font-bold text-[color:var(--color-heading)] shrink-0">Citas</h1>
+            {pag && <span className="text-[11px] text-[color:var(--color-muted)] tabular-nums">{pag.total} total</span>}
+            {conf > 0 && <><span className="text-[color:var(--color-border)]">·</span><span className="text-[11px] text-[color:var(--color-success)]">{conf} conf.</span></>}
           </div>
           <Button variant="primary" size="sm" onClick={onNew}>
             <Plus className="w-3.5 h-3.5" /> Nueva
           </Button>
         </div>
 
-        {/* Stats pills */}
-        <div className="flex items-center gap-2 flex-wrap text-[11px]">
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[color:var(--color-surface-elevated)] text-[color:var(--color-muted)]">
-            <Calendar className="w-3 h-3" /> <strong className="text-[color:var(--color-heading)]">{todayN}</strong> hoy
-          </span>
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[color:var(--color-warning)]/10 text-[color:var(--color-warning)]">
-            <Clock className="w-3 h-3" /> <strong>{pen}</strong> pend
-          </span>
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[color:var(--color-success)]/10 text-[color:var(--color-success)]">
-            <CheckCircle2 className="w-3 h-3" /> <strong>{conf}</strong> conf
-          </span>
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[color:var(--color-primary)]/10 text-[color:var(--color-primary)]">
-            S/ <strong>{new Intl.NumberFormat("es-PE", { style: "currency", currency: "PEN", maximumFractionDigits: 0 }).format(rev)}</strong> mes
-          </span>
-          {pag && <span className="text-[color:var(--color-muted)]">{pag.total} total</span>}
-        </div>
-
-        {/* Search + status */}
+        <div className="flex items-center gap-1.5">
+          {DATE_TABS.map((t) => (
+            <button key={t.k} onClick={() => { setPeriod(t.k); setPage(1); }}
+              className={`px-2.5 py-1 text-xs font-medium rounded-full transition-colors ${period === t.k ? "bg-[color:var(--color-primary)] text-white" : "text-[color:var(--color-muted)] hover:bg-[color:var(--color-surface-elevated)]"}`}>
+              {t.l}
+              </button>
+            ))}
+          </div>
+          {/* Search + status */}
         <div className="flex items-center gap-2">
           <div className="relative flex-1 max-w-sm">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[color:var(--color-muted)]" />

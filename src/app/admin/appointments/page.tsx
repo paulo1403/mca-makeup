@@ -1,7 +1,7 @@
 "use client";
 
 import { addDays, endOfMonth, format as dfFormat } from "date-fns";
-import { CalendarCheck, CheckCircle2, ChevronDown, Clock, MessageCircle, Plus, XCircle } from "lucide-react";
+import { CalendarCheck, Plus, XCircle } from "lucide-react";
 import { Suspense, useMemo, useState } from "react";
 import AppointmentModal from "@/components/appointments/AppointmentModal";
 import AppointmentTable from "@/components/appointments/AppointmentTable";
@@ -9,9 +9,7 @@ import LoadingSpinner from "@/components/appointments/LoadingSpinner";
 import ManualAppointmentModal from "@/components/appointments/ManualAppointmentModal";
 import Pagination from "@/components/appointments/Pagination";
 import { Button } from "@/components/ui/Button";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useAppointmentsPage } from "@/hooks/useAppointmentsPage";
-import { useDashboardStats } from "@/hooks/useDashboardStats";
 import type { Appointment } from "@/hooks/useAppointments";
 
 const FILTERS = [
@@ -39,10 +37,9 @@ function getDateRange(period: string) {
 }
 
 function AppointmentsContent() {
+  const [period, setPeriod] = useState("all");
   const [showManualModal, setShowManualModal] = useState(false);
   const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null);
-  const { data: dashboardStats } = useDashboardStats();
-  const [period, setPeriod] = useState("all");
 
   const range = useMemo(() => getDateRange(period), [period]);
 
@@ -99,38 +96,30 @@ function AppointmentsContent() {
     return <LoadingSpinner message="Cargando citas..." />;
   }
 
-  const currencyFormatter = new Intl.NumberFormat("es-PE", {
-    style: "currency",
-    currency: "PEN",
-    maximumFractionDigits: 2,
-  });
-
-  const monthlyRevenue = dashboardStats?.completedRevenueThisMonth || 0;
-
-  const confirmedCount = appointments.filter((a) => a.status === "CONFIRMED").length;
-  const pendingCount = appointments.filter((a) => a.status === "PENDING").length;
   const completedCount = appointments.filter((a) => a.status === "COMPLETED").length;
 
   return (
     <div className="min-h-screen bg-[color:var(--color-app-bg)]">
       <div className="sticky top-0 z-10 bg-[color:var(--color-surface)]/80 backdrop-blur-md border-b border-[color:var(--color-border)]">
-        <div className="px-4 py-3 sm:py-4">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-bold text-[color:var(--color-heading)]">
+        <div className="px-4 py-2.5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 min-w-0">
+              <h1 className="text-lg sm:text-xl font-bold text-[color:var(--color-heading)] shrink-0">
                 Citas
               </h1>
-              <span className="text-xs text-[color:var(--color-muted)] bg-[color:var(--color-accent-soft)] px-2 py-0.5 rounded-full">
-                {pagination?.total || 0}
+              <span className="text-[11px] text-[color:var(--color-muted)] tabular-nums">
+                {pagination?.total || 0} total
+              </span>
+              <span className="text-[color:var(--color-border)]">·</span>
+              <span className="text-[11px] text-[color:var(--color-success)]">
+                {completedCount} comp.
               </span>
             </div>
-            <Button variant="primary" size="md" onClick={() => setShowManualModal(true)}>
-              <Plus className="w-4 h-4" />
-              Nueva cita
+            <Button variant="primary" size="sm" onClick={() => setShowManualModal(true)}>
+              <Plus className="w-3.5 h-3.5" />
+              Nueva
             </Button>
           </div>
-
-          <KpiRow confirmed={confirmedCount} pending={pendingCount} completed={completedCount} />
 
           <div className="flex items-center gap-1.5 mt-2">
             {DATE_TABS.map((t) => (
@@ -147,21 +136,6 @@ function AppointmentsContent() {
               </button>
             ))}
           </div>
-
-          <Collapsible className="mt-2">
-            <CollapsibleTrigger className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)] hover:bg-[color:var(--color-accent-soft)]/50 transition-colors">
-              <span>Ingresos del mes</span>
-              <ChevronDown className="w-3 h-3 transition-transform group-data-[panel-open]:rotate-180" />
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <div className="flex items-center justify-between pt-2 text-sm">
-                <span className="text-[color:var(--color-muted)]">Total:</span>
-                <span className="font-semibold text-[color:var(--color-success)]">
-                  {currencyFormatter.format(monthlyRevenue)}
-                </span>
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
         </div>
       </div>
 
@@ -262,23 +236,5 @@ export default function AppointmentsPage() {
     <Suspense fallback={<LoadingSpinner message="Inicializando..." />}>
       <AppointmentsContent />
     </Suspense>
-  );
-}
-
-function KpiRow({ confirmed, pending, completed }: { confirmed: number; pending: number; completed: number }) {
-  return (
-    <div className="flex items-center gap-2.5 text-xs text-[color:var(--color-muted)]">
-      <span>
-        <strong className="text-[color:var(--color-heading)]">{confirmed}</strong> Confirmada{confirmed !== 1 ? "s" : ""}
-      </span>
-      <span className="text-[color:var(--color-border)]">·</span>
-      <span>
-        <strong className="text-[color:var(--color-heading)]">{pending}</strong> Pendiente{pending !== 1 ? "s" : ""}
-      </span>
-      <span className="text-[color:var(--color-border)]">·</span>
-      <span>
-        <strong className="text-[color:var(--color-heading)]">{completed}</strong> Completada{completed !== 1 ? "s" : ""}
-      </span>
-    </div>
   );
 }
