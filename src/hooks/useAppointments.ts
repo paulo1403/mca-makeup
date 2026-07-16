@@ -82,18 +82,22 @@ interface UseAppointmentsParams {
   filter: string;
   searchTerm: string;
   id?: string;
+  dateStart?: string;
+  dateEnd?: string;
 }
 
 // Hook para obtener citas
-export const useAppointments = ({ page, filter, searchTerm, id }: UseAppointmentsParams) => {
+export const useAppointments = ({ page, filter, searchTerm, id, dateStart, dateEnd }: UseAppointmentsParams) => {
   return useQuery({
-    queryKey: ["appointments", page, filter, searchTerm, id ?? null],
+    queryKey: ["appointments", page, filter, searchTerm, id ?? null, dateStart ?? null, dateEnd ?? null],
     queryFn: async (): Promise<AppointmentsResponse> => {
       const params = new URLSearchParams({
         page: page.toString(),
         limit: "10",
         ...(filter !== "all" && filter ? { status: filter } : {}),
         ...(searchTerm && { search: searchTerm }),
+        ...(dateStart && { dateStart }),
+        ...(dateEnd && { dateEnd }),
       });
 
       // Fetch base list and, if id provided, also fetch the single appointment
