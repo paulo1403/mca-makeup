@@ -605,7 +605,7 @@ export default function AppointmentTable({
       );
     } else {
       content = (
-        <div className="rounded-xl border border-[color:var(--color-border)] overflow-hidden bg-[color:var(--color-surface)] shadow-sm">
+        <div className="rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-sm">
           <Table>
             <TableHeader>
               <TableRow className="border-b border-[color:var(--color-border)] hover:bg-transparent">
