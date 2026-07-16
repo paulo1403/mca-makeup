@@ -213,7 +213,7 @@ function CitasContent() {
       {/* Main: list + detail */}
       <div className="flex-1 flex gap-0 min-h-0">
         {/* List */}
-        <div className={`flex-1 min-w-0 overflow-y-auto ${selAppt ? "hidden lg:block lg:w-[55%] lg:flex-none lg:border-r lg:border-[color:var(--color-border)] lg:pr-3" : ""}`}>
+        <div className={`flex-1 min-w-0 overflow-auto ${selAppt ? "hidden lg:block lg:w-[55%] lg:flex-none lg:border-r lg:border-[color:var(--color-border)] lg:pr-3" : ""}`}>
           {isLoading ? (
             <div className="py-16 text-center"><div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[color:var(--color-primary)] mx-auto" /></div>
           ) : apps.length === 0 ? (
@@ -253,9 +253,9 @@ function CitasContent() {
                                   <span className="text-xs font-medium text-[color:var(--color-heading)] truncate">{a.clientName}</span>
                                   <StatusBadge status={a.status} className="text-[10px] py-0 px-1.5" />
                                 </div>
-                                <div className="text-[11px] text-[color:var(--color-muted)] truncate mt-1">
-                                  {svc}
-                                  {pr.totalPrice > 0 && <span className="ml-1.5 font-medium text-[color:var(--color-heading)]">{formatPrice(pr.totalPrice)}</span>}
+                                <div className="flex items-center gap-1.5 text-[11px] text-[color:var(--color-muted)] mt-1 min-w-0">
+                                  <span className="truncate max-w-[180px]">{svc || "—"}</span>
+                                  {pr.totalPrice > 0 && <span className="font-medium text-[color:var(--color-heading)] shrink-0">{formatPrice(pr.totalPrice)}</span>}
                                 </div>
                               </div>
                             </button>

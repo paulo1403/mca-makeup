@@ -92,7 +92,7 @@ export const useAppointments = ({ page, filter, searchTerm, id }: UseAppointment
       const params = new URLSearchParams({
         page: page.toString(),
         limit: "10",
-        ...(filter === "all" || !filter ? { status: "PENDING,CONFIRMED" } : { status: filter }),
+        ...(filter !== "all" && filter ? { status: filter } : {}),
         ...(searchTerm && { search: searchTerm }),
       });
 
