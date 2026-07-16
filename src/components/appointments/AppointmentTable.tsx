@@ -258,10 +258,17 @@ function MobileAppointmentCard({
     .join(", ");
   const isStudio = (appointment.location || "").toLowerCase().includes("studio");
 
+  const statusBorder: Record<string, string> = {
+    PENDING: "border-l-[color:var(--color-warning)]",
+    CONFIRMED: "border-l-[color:var(--color-success)]",
+    COMPLETED: "border-l-[color:var(--color-primary)]",
+    CANCELLED: "border-l-[color:var(--color-muted)]",
+  };
+
   return (
     <div
       id={`appointment-${appointment.id}`}
-      className={`bg-[color:var(--color-surface)] rounded-xl border shadow-sm transition-all duration-200 overflow-hidden mb-4 last:mb-0 ${
+      className={`bg-[color:var(--color-surface)] rounded-xl border shadow-sm transition-all duration-200 overflow-hidden mb-4 last:mb-0 border-l-[3px] ${statusBorder[appointment.status] || ""} ${
         isHighlighted
           ? "border-[color:var(--color-primary)]/60 ring-2 ring-[color:var(--color-primary)]/30"
           : "border-[color:var(--color-border)]"
@@ -460,14 +467,21 @@ function AppointmentRow({
     .map((s) => s.displayText)
     .join(", ");
 
+  const statusAccent: Record<string, string> = {
+    PENDING: "border-l-[color:var(--color-warning)] bg-[color:var(--color-warning)]/[0.03]",
+    CONFIRMED: "border-l-[color:var(--color-success)] bg-[color:var(--color-success)]/[0.03]",
+    COMPLETED: "border-l-[color:var(--color-primary)] bg-[color:var(--color-primary)]/[0.03]",
+    CANCELLED: "border-l-[color:var(--color-muted)] bg-transparent",
+  };
+
   return (
     <TableRow
       id={`appointment-${appointment.id}`}
-      className={
+      className={`border-l-[3px] ${statusAccent[appointment.status] || ""} ${
         isHighlighted
           ? "bg-[color:var(--color-primary)]/8 ring-2 ring-inset ring-[color:var(--color-primary)]/30"
           : "hover:bg-[color:var(--color-accent-soft)]/50 transition-colors"
-      }
+      }`}
     >
       <TableCell className="px-3 py-3">
         <div className="flex items-center gap-2.5">
