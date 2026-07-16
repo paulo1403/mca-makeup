@@ -5,6 +5,7 @@ import { addDays, endOfMonth, format as dfFormat } from "date-fns";
 import { es } from "date-fns/locale";
 import {
   Calendar,
+  Check,
   CheckCircle2,
   ChevronDown,
   Mail,
@@ -104,6 +105,7 @@ function CitasContent() {
   const [editing, setEditing] = useState<Appointment | null>(null);
   const [emailId, setEmailId] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const [statusOpen, setStatusOpen] = useState(false);
 
   const { data: stats } = useDashboardStats();
   const upd = useUpdateAppointmentStatus();
@@ -159,38 +161,58 @@ function CitasContent() {
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 min-w-0">
             <h1 className="text-sm font-bold text-[color:var(--color-heading)] shrink-0">Citas</h1>
-            {pag && <span className="text-[11px] text-[color:var(--color-muted)] tabular-nums">{pag.total} total</span>}
-            {conf > 0 && <><span className="text-[color:var(--color-border)]">·</span><span className="text-[11px] text-[color:var(--color-success)]">{conf} conf.</span></>}
+            {pag && <span className="text-[11px] text-[color:var(--color-muted)] tabular-nums">{pag.total}</span>}
+            {conf > 0 && <><span className="text-[color:var(--color-border)]">·</span><span className="text-[11px] text-[color:var(--color-success)]">✓{conf}</span></>}
           </div>
           <Button variant="primary" size="sm" onClick={onNew}>
             <Plus className="w-3.5 h-3.5" /> Nueva
           </Button>
         </div>
 
-        <div className="flex items-center gap-1.5">
-          {DATE_TABS.map((t) => (
-            <button key={t.k} onClick={() => { setPeriod(t.k); setPage(1); }}
-              className={`px-2.5 py-1 text-xs font-medium rounded-full transition-colors ${period === t.k ? "bg-[color:var(--color-primary)] text-white" : "text-[color:var(--color-muted)] hover:bg-[color:var(--color-surface-elevated)]"}`}>
-              {t.l}
-              </button>
-            ))}
-          </div>
-          {/* Search + status */}
         <div className="flex items-center gap-2">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[color:var(--color-muted)]" />
-            <input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              placeholder="Buscar cliente o servicio..."
-              className="w-full pl-8 pr-6 py-1.5 text-xs rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] focus:outline-none focus:ring-1 focus:ring-[color:var(--color-primary)]" />
-            {search && <button onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2"><X className="w-3 h-3 text-[color:var(--color-muted)]" /></button>}
-          </div>
-          <div className="flex gap-0.5 overflow-x-auto scrollbar-none -mr-2 pr-2">
-            {STATUS_OPTS.map((t) => (
-              <button key={t.k} onClick={() => { setStatus(t.k); setPage(1); }}
-                className={`shrink-0 px-2 py-1 text-[11px] font-medium rounded-md border transition-colors ${status === t.k ? "bg-[color:var(--color-surface-elevated)] border-[color:var(--color-border)] text-[color:var(--color-heading)]" : "border-transparent text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)]"}`}>
+          <div className="flex items-center gap-0.5 -ml-2">
+            {DATE_TABS.map((t) => (
+              <button key={t.k} onClick={() => { setPeriod(t.k); setPage(1); }}
+                className={`relative px-2.5 py-1.5 text-xs font-medium transition-colors ${
+                  period === t.k
+                    ? "text-[color:var(--color-heading)] after:absolute after:bottom-0 after:left-2 after:right-2 after:h-0.5 after:rounded-full after:bg-[color:var(--color-primary)]"
+                    : "text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)]"
+                }`}>
                 {t.l}
               </button>
             ))}
+          </div>
+          <div className="relative flex-1 max-w-[180px] ml-auto">
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-[color:var(--color-muted)]" />
+            <input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+              placeholder="Buscar..."
+              className="w-full pl-7 pr-5 py-1.5 text-xs rounded-md bg-[color:var(--color-surface-elevated)] text-[color:var(--color-heading)] placeholder-[color:var(--color-muted)] border border-[color:var(--color-border)]/50 focus:outline-none focus:border-[color:var(--color-border)]" />
+            {search && <button onClick={() => setSearch("")} className="absolute right-1.5 top-1/2 -translate-y-1/2"><X className="w-3 h-3 text-[color:var(--color-muted)]" /></button>}
+          </div>
+          <div className="relative">
+            <button onClick={() => setStatusOpen(!statusOpen)}
+              className="flex items-center gap-1 px-2 py-1.5 text-xs font-medium rounded-md border border-[color:var(--color-border)]/50 bg-[color:var(--color-surface-elevated)] text-[color:var(--color-heading)] hover:border-[color:var(--color-border)] transition-colors"
+            >
+              {STATUS_OPTS.find((f) => f.k === status)?.l || "Todas"}
+              <ChevronDown className="w-3 h-3 text-[color:var(--color-muted)]" />
+            </button>
+            {statusOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setStatusOpen(false)} />
+                <div className="absolute right-0 mt-1 w-36 bg-[color:var(--color-surface)] rounded-lg shadow-lg border border-[color:var(--color-border)] z-50 overflow-hidden">
+                  {STATUS_OPTS.map((item) => (
+                    <button key={item.k}
+                      onClick={() => { setStatus(item.k); setPage(1); setStatusOpen(false); }}
+                      className={`w-full flex items-center justify-between px-3 py-2 text-xs transition-colors hover:bg-[color:var(--color-surface-elevated)] ${
+                        status === item.k ? "text-[color:var(--color-primary)] font-medium bg-[color:var(--color-primary)]/5" : "text-[color:var(--color-body)]"
+                      }`}>
+                      {item.l}
+                      {status === item.k && <Check className="w-3 h-3" />}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
