@@ -790,6 +790,14 @@ async function main() {
     },
   ];
 
+  // ponytail: delete old system seeds to prevent duplicates on re-seed
+  await prisma.notification.deleteMany({
+    where: {
+      type: NotificationType.SYSTEM,
+      title: { in: systemNotifications.map((n) => n.title) },
+    },
+  });
+
   for (const notification of systemNotifications) {
     await prisma.notification.create({
       data: notification,
