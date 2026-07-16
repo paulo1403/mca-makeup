@@ -1,6 +1,5 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import {
   AlertTriangle,
   Calendar,
@@ -19,6 +18,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import Logo from "@/components/Logo";
 
 interface AdminSidebarProps {
   isOpen: boolean;
@@ -45,7 +45,6 @@ const navItems = [
 
 export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebarProps) {
   const pathname = usePathname();
-  const { data: session } = useSession();
   const getInitialCollapsed = (): boolean => {
     try {
       if (typeof window === "undefined") return false;
@@ -96,35 +95,28 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
       >
         <div className="flex flex-col h-full">
           {/* Sidebar Header */}
-          <div className={`p-4 border-b border-[color:var(--color-border)] flex-shrink-0 ${
-            collapsed ? "flex flex-col items-center gap-3" : "flex items-center justify-between"
+          <div className={`flex-shrink-0 border-b border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)]/40 ${
+            collapsed ? "px-3 py-4 flex flex-col items-center gap-3" : "px-5 py-4 flex items-center justify-between"
           }`}>
-            {/* Logo + Brand */}
-            <div className={`flex items-center gap-3 ${collapsed ? "flex-col" : "min-w-0"}`}>
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[color:var(--color-primary)] to-[color:var(--color-primary)]/70 flex items-center justify-center flex-shrink-0 shadow-sm">
-                <span className="text-white font-bold text-xs tracking-tight">
-                  {session?.user?.name?.charAt(0).toUpperCase() || "M"}
-                  {session?.user?.name?.split(" ")[1]?.charAt(0).toUpperCase() || "C"}
-                </span>
-              </div>
-              {!collapsed && (
-                <div className="min-w-0">
-                  <h2 className="text-sm font-semibold text-[color:var(--color-heading)] font-montserrat truncate tracking-tight leading-tight">
-                    {session?.user?.name || "Marcela Cordero"}
-                  </h2>
-                  <p className="text-[11px] text-[color:var(--color-muted)] font-montserrat truncate leading-tight">
-                    Administradora
-                  </p>
+            {/* Brand */}
+            <div className={collapsed ? "flex flex-col items-center gap-2" : "flex items-center gap-3 min-w-0"}>
+              {collapsed ? (
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[color:var(--color-primary)] to-[color:var(--color-primary)]/70 flex items-center justify-center shadow-sm">
+                  <span className="text-white font-bold text-xs">MC</span>
+                </div>
+              ) : (
+                <div className="scale-90 origin-left">
+                  <Logo />
                 </div>
               )}
             </div>
 
             {/* Toggle + close */}
-            <div className={`flex items-center gap-1 ${collapsed ? "flex-col" : ""}`}>
+            <div className="flex items-center gap-0.5">
               {/* Collapse toggle (desktop) */}
               <button
                 onClick={() => setCollapsed((c) => !c)}
-                className="hidden md:inline-flex p-1.5 rounded-md text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface-elevated)] transition-colors"
+                className="hidden md:inline-flex p-2 rounded-lg text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface)] transition-colors"
                 aria-label={collapsed ? "Expandir barra" : "Colapsar barra"}
               >
                 <ChevronLeft
@@ -134,7 +126,7 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
               {/* Close button (mobile) */}
               <button
                 onClick={onClose}
-                className="md:hidden p-1 rounded-md text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface-elevated)] transition-colors"
+                className="md:hidden p-2 rounded-lg text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface)] transition-colors"
                 aria-label="Cerrar menú"
               >
                 <X className="h-5 w-5" />
