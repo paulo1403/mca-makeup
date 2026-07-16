@@ -8,6 +8,7 @@ import {
   Link,
   Mail,
   MapPin,
+  MessageCircle,
   Pencil,
   RotateCcw,
   Trash2,
@@ -43,6 +44,19 @@ import {
   getPriceBreakdown,
 } from "@/utils/appointmentHelpers";
 import { copyReviewLink } from "@/utils/reviewHelpers";
+
+// ponytail: inline wa link builder to avoid extra import
+function buildWaLink(a: Appointment) {
+  const svc = formatServices(a).map((s) => s.displayText).join(", ");
+  const phone = (a.clientPhone || "").replace(/\D/g, "").slice(-9);
+  const text = [
+    `💄 *${a.clientName}*`,
+    `📅 ${formatDate(a.appointmentDate)} · ${formatTime(a.appointmentTime)}`,
+    `💄 ${svc}`,
+    a.additionalNotes ? `📝 ${a.additionalNotes}` : "",
+  ].filter(Boolean).join("\n");
+  return `https://wa.me/51${phone}?text=${encodeURIComponent(text)}`;
+}
 
 interface AppointmentTableProps {
   appointments: Appointment[];
@@ -264,6 +278,16 @@ function MobileAppointmentCard({
         >
           <Mail className="w-3.5 h-3.5" />
         </ActionButton>
+        <a
+          href={buildWaLink(appointment)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center w-8 h-8 rounded-md text-[#25D366] hover:bg-[#25D366]/10 transition-colors"
+          title="WhatsApp"
+          aria-label="Enviar WhatsApp"
+        >
+          <MessageCircle className="w-3.5 h-3.5" />
+        </a>
         <ActionButton
           tooltip="Eliminar"
           onClick={() => onDelete(appointment.id)}
@@ -453,6 +477,16 @@ function AppointmentRow({
           >
             <Mail className="w-4 h-4 text-[color:var(--color-muted)]" />
           </ActionButton>
+          <a
+            href={buildWaLink(appointment)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center w-8 h-8 rounded-md text-[#25D366] hover:bg-[#25D366]/10 transition-colors"
+            title="WhatsApp"
+            aria-label="Enviar WhatsApp"
+          >
+            <MessageCircle className="w-4 h-4" />
+          </a>
           <ActionButton
             tooltip="Eliminar"
             onClick={() => onDelete(appointment.id)}

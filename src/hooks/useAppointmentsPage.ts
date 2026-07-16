@@ -7,7 +7,7 @@ import {
 } from "@/hooks/useAppointments";
 import { scrollToAppointment } from "@/utils/appointmentHelpers";
 
-export const useAppointmentsPage = () => {
+export const useAppointmentsPage = (dateStart?: string, dateEnd?: string) => {
   const router = useRouter();
   const { filter: urlFilter } = useAppointmentUrlParams();
   const searchParams =
@@ -29,6 +29,8 @@ export const useAppointmentsPage = () => {
     filter,
     searchTerm,
     id: highlightId || undefined,
+    dateStart,
+    dateEnd,
   });
 
   const appointments = useMemo(() => data?.appointments || [], [data?.appointments]);
