@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, CalendarClock, CheckCheck, Info, X } from "lucide-react";
+import { Bell, CheckCheck, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -16,21 +16,6 @@ interface Notification {
   appointmentId?: string;
   appointment?: { id: string };
 }
-
-const ICON_MAP = {
-  appointment: CalendarClock,
-  system: Bell,
-} as const;
-
-const ICON_COLOR = {
-  appointment: "text-[color:var(--color-primary)]",
-  system: "text-[color:var(--color-muted)]",
-} as const;
-
-const ICON_BG = {
-  appointment: "bg-[color:var(--color-primary)]/10",
-  system: "bg-[color:var(--color-surface-elevated)]",
-} as const;
 
 function formatTime(dateString: string) {
   const date = new Date(dateString);
@@ -188,64 +173,53 @@ export default function NotificationCenter() {
                   </Link>
                 </div>
               ) : (
-                notifications.map((notification) => {
-                  const Icon = ICON_MAP[notification.type] || Bell;
-                  const iconColor = ICON_COLOR[notification.type];
-                  const iconBg = ICON_BG[notification.type];
-
-                  return (
-                    <button
-                      key={notification.id}
-                      onClick={() => notification.link && navigateTo(notification)}
-                      className={`w-full text-left px-4 py-3 border-b border-[color:var(--color-border)]/60 last:border-b-0 transition-colors hover:bg-[color:var(--color-surface-elevated)]/50 ${
-                        !notification.read
-                          ? "bg-[color:var(--color-primary)]/[0.04]"
-                          : ""
-                      } ${notification.link ? "cursor-pointer" : "cursor-default"}`}
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className={`w-8 h-8 rounded-full ${iconBg} flex items-center justify-center shrink-0 mt-0.5`}>
-                          <Icon className={`w-4 h-4 ${iconColor}`} />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between gap-2">
-                            <p className={`text-sm truncate ${
-                              !notification.read
-                                ? "font-semibold text-[color:var(--color-heading)]"
-                                : "font-medium text-[color:var(--color-body)]"
-                            }`}>
-                              {notification.title}
-                            </p>
-                            <span className="text-[10px] text-[color:var(--color-muted)] shrink-0 tabular-nums">
-                              {formatTime(notification.createdAt)}
-                            </span>
-                          </div>
-                          <p className="text-xs text-[color:var(--color-muted)] mt-0.5 line-clamp-2">
-                            {notification.message}
-                          </p>
-                          <div className="flex items-center gap-3 mt-1.5">
-                            {notification.link && (
-                              <span className="text-[11px] text-[color:var(--color-primary)] font-medium">
-                                Ver detalles
-                              </span>
-                            )}
-                            {!notification.read && (
-                              <span
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  markAsRead(notification.id);
-                                }}
-                                className="text-[11px] text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)]"
-                              >
-                                Marcar leída
-                              </span>
-                            )}
-                          </div>
-                        </div>
+                notifications.map((notification) => (
+                  <button
+                    key={notification.id}
+                    onClick={() => notification.link && navigateTo(notification)}
+                    className={`w-full text-left px-4 py-3 border-b border-[color:var(--color-border)]/60 last:border-b-0 transition-colors hover:bg-[color:var(--color-surface-elevated)]/50 ${
+                      !notification.read
+                        ? "bg-[color:var(--color-primary)]/[0.04]"
+                        : ""
+                    } ${notification.link ? "cursor-pointer" : "cursor-default"}`}
+                  >
+                    <div className="min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className={`text-sm truncate ${
+                          !notification.read
+                            ? "font-semibold text-[color:var(--color-heading)]"
+                            : "font-medium text-[color:var(--color-body)]"
+                        }`}>
+                          {notification.title}
+                        </p>
+                        <span className="text-[10px] text-[color:var(--color-muted)] shrink-0 tabular-nums">
+                          {formatTime(notification.createdAt)}
+                        </span>
                       </div>
-                    </button>
-                  );
-                })
+                      <p className="text-xs text-[color:var(--color-muted)] mt-0.5 line-clamp-2">
+                        {notification.message}
+                      </p>
+                      <div className="flex items-center gap-3 mt-1.5">
+                        {notification.link && (
+                          <span className="text-[11px] text-[color:var(--color-primary)] font-medium">
+                            Ver detalles
+                          </span>
+                        )}
+                        {!notification.read && (
+                          <span
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              markAsRead(notification.id);
+                            }}
+                            className="text-[11px] text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)]"
+                          >
+                            Marcar leída
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                ))
               )}
             </div>
 
