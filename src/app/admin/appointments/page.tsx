@@ -5,7 +5,6 @@ import { CalendarCheck, Check, ChevronDown, Plus, Search, X, XCircle } from "luc
 import { Suspense, useMemo, useState } from "react";
 import AppointmentModal from "@/components/appointments/AppointmentModal";
 import AppointmentTable from "@/components/appointments/AppointmentTable";
-import LoadingSpinner from "@/components/appointments/LoadingSpinner";
 import ManualAppointmentModal from "@/components/appointments/ManualAppointmentModal";
 import Pagination from "@/components/appointments/Pagination";
 import { Button } from "@/components/ui/Button";
@@ -94,7 +93,7 @@ function AppointmentsContent() {
   }
 
   if (isLoading) {
-    return <LoadingSpinner message="Cargando citas..." />;
+    return <AppointmentsSkeleton />;
   }
 
   const completedCount = appointments.filter((a) => a.status === "COMPLETED").length;
@@ -222,8 +221,66 @@ function AppointmentsContent() {
 
 export default function AppointmentsPage() {
   return (
-    <Suspense fallback={<LoadingSpinner message="Inicializando..." />}>
+    <Suspense fallback={<AppointmentsSkeleton />}>
       <AppointmentsContent />
     </Suspense>
+  );
+}
+
+function AppointmentsSkeleton() {
+  return (
+    <div className="min-h-screen bg-[color:var(--color-app-bg)]">
+      <div className="sticky top-0 z-10 bg-[color:var(--color-surface)]/80 backdrop-blur-md border-b border-[color:var(--color-border)]">
+        <div className="px-4 py-2.5">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <div className="h-5 w-14 rounded bg-[color:var(--color-surface-elevated)] animate-pulse" />
+              <div className="h-3 w-6 rounded bg-[color:var(--color-surface-elevated)] animate-pulse" />
+            </div>
+            <div className="h-8 w-20 rounded-lg bg-[color:var(--color-surface-elevated)] animate-pulse" />
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-0.5 -ml-2">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-8 w-12 rounded bg-[color:var(--color-surface-elevated)] animate-pulse" />
+              ))}
+            </div>
+            <div className="h-8 w-32 rounded ml-auto bg-[color:var(--color-surface-elevated)] animate-pulse" />
+            <div className="h-8 w-24 rounded bg-[color:var(--color-surface-elevated)] animate-pulse" />
+          </div>
+        </div>
+      </div>
+      <div className="px-0 py-3 space-y-3">
+        <div className="rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)]">
+          <div className="px-4 py-3 border-b border-[color:var(--color-border)]">
+            <div className="flex gap-8">
+              {["Cliente", "Servicio", "Fecha", "Precio", "Estado", "Acciones"].map((h) => (
+                <div key={h} className="h-3 w-16 rounded bg-[color:var(--color-surface-elevated)] animate-pulse" />
+              ))}
+            </div>
+          </div>
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="px-4 py-3 border-b border-[color:var(--color-border)]/50 last:border-b-0">
+              <div className="flex items-center gap-4">
+                <div className="h-8 w-8 rounded-full bg-[color:var(--color-surface-elevated)] animate-pulse shrink-0" />
+                <div className="flex-1 space-y-1.5">
+                  <div className="h-3 w-28 rounded bg-[color:var(--color-surface-elevated)] animate-pulse" />
+                  <div className="h-3 w-20 rounded bg-[color:var(--color-surface-elevated)] animate-pulse" />
+                </div>
+                <div className="h-3 w-16 rounded bg-[color:var(--color-surface-elevated)] animate-pulse" />
+                <div className="h-3 w-24 rounded bg-[color:var(--color-surface-elevated)] animate-pulse" />
+                <div className="h-3 w-12 rounded bg-[color:var(--color-surface-elevated)] animate-pulse" />
+                <div className="h-3 w-14 rounded bg-[color:var(--color-surface-elevated)] animate-pulse" />
+                <div className="flex gap-1">
+                  <div className="h-8 w-8 rounded bg-[color:var(--color-surface-elevated)] animate-pulse" />
+                  <div className="h-8 w-8 rounded bg-[color:var(--color-surface-elevated)] animate-pulse" />
+                  <div className="h-8 w-8 rounded bg-[color:var(--color-surface-elevated)] animate-pulse" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
