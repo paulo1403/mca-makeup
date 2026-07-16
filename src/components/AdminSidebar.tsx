@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import {
   AlertTriangle,
   Calendar,
@@ -44,7 +45,7 @@ const navItems = [
 
 export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebarProps) {
   const pathname = usePathname();
-  // Initialize collapsed synchronously from cookie or localStorage to avoid layout shifts
+  const { data: session } = useSession();
   const getInitialCollapsed = (): boolean => {
     try {
       if (typeof window === "undefined") return false;
@@ -100,16 +101,19 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
           }`}>
             {/* Logo + Brand */}
             <div className={`flex items-center gap-3 ${collapsed ? "flex-col" : "min-w-0"}`}>
-              <div className="w-9 h-9 bg-[color:var(--color-primary)]/15 rounded-full flex items-center justify-center flex-shrink-0">
-                <span className="text-[color:var(--color-primary)] font-semibold text-sm">MC</span>
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[color:var(--color-primary)] to-[color:var(--color-primary)]/70 flex items-center justify-center flex-shrink-0 shadow-sm">
+                <span className="text-white font-bold text-xs tracking-tight">
+                  {session?.user?.name?.charAt(0).toUpperCase() || "M"}
+                  {session?.user?.name?.split(" ")[1]?.charAt(0).toUpperCase() || "C"}
+                </span>
               </div>
               {!collapsed && (
                 <div className="min-w-0">
-                  <h2 className="text-base font-semibold text-[color:var(--color-heading)] font-montserrat truncate tracking-tight">
-                    Marcela Cordero
+                  <h2 className="text-sm font-semibold text-[color:var(--color-heading)] font-montserrat truncate tracking-tight leading-tight">
+                    {session?.user?.name || "Marcela Cordero"}
                   </h2>
-                  <p className="text-xs text-[color:var(--color-muted)] font-montserrat truncate">
-                    Panel Admin
+                  <p className="text-[11px] text-[color:var(--color-muted)] font-montserrat truncate leading-tight">
+                    Administradora
                   </p>
                 </div>
               )}
