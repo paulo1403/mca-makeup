@@ -69,26 +69,43 @@ interface AppointmentTableProps {
 function ActionsMenu({
   appointment,
   onStatusUpdate,
-  onViewDetails,
   onEdit,
   onSendEmail,
   onDelete,
   isUpdating,
-  isSendingEmail,
 }: {
   appointment: Appointment;
   onStatusUpdate: (id: string, status: Appointment["status"]) => void;
-  onViewDetails: (appointment: Appointment) => void;
   onEdit: (appointment: Appointment) => void;
   onSendEmail: (id: string) => void;
   onDelete: (id: string) => void;
   isUpdating: boolean;
-  isSendingEmail: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
   const items: { label: string; icon: React.ReactNode; onClick: () => void; danger?: boolean }[] = [];
 
+  if (appointment.status === "PENDING") {
+    items.push({
+      label: "Confirmar",
+      icon: <CheckCircle className="w-3.5 h-3.5" />,
+      onClick: () => { onStatusUpdate(appointment.id, "CONFIRMED"); setOpen(false); },
+    });
+  }
+  if (appointment.status === "CONFIRMED") {
+    items.push({
+      label: "Completar",
+      icon: <CheckCircle className="w-3.5 h-3.5" />,
+      onClick: () => { onStatusUpdate(appointment.id, "COMPLETED"); setOpen(false); },
+    });
+  }
+  if (appointment.status === "COMPLETED" || appointment.status === "CANCELLED") {
+    items.push({
+      label: "Reabrir",
+      icon: <RotateCcw className="w-3.5 h-3.5" />,
+      onClick: () => { onStatusUpdate(appointment.id, "CONFIRMED"); setOpen(false); },
+    });
+  }
   if (appointment.status === "PENDING") {
     items.push({
       label: "Cancelar",
@@ -97,12 +114,8 @@ function ActionsMenu({
       danger: true,
     });
   }
+
   items.push(
-    {
-      label: "Ver detalles",
-      icon: <Eye className="w-3.5 h-3.5" />,
-      onClick: () => { onViewDetails(appointment); setOpen(false); },
-    },
     {
       label: "Editar",
       icon: <Pencil className="w-3.5 h-3.5" />,
@@ -153,7 +166,7 @@ function ActionsMenu({
             {items.map((item) => (
               <button key={item.label}
                 onClick={item.onClick}
-                disabled={(item.label === "Cancelar" || item.label === "Reabrir") && isUpdating}
+                disabled={(item.label === "Confirmar" || item.label === "Completar" || item.label === "Cancelar" || item.label === "Reabrir") && isUpdating}
                 className={`w-full flex items-center gap-2 px-3 py-2 text-xs transition-colors hover:bg-[color:var(--color-surface-elevated)] ${
                   item.danger ? "text-[color:var(--color-danger)]" : "text-[color:var(--color-body)]"
                 }`}>
@@ -502,33 +515,9 @@ function AppointmentRow({
       </TableCell>
       <TableCell className="px-3 py-3">
         <div className="flex items-center gap-1">
-          {appointment.status === "PENDING" && (
-            <ActionButton
-              tooltip="Confirmar"
-              onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
-              disabled={isUpdating}
-            >
-              <CheckCircle className="w-4 h-4 text-[color:var(--color-muted)]" />
-            </ActionButton>
-          )}
-          {appointment.status === "CONFIRMED" && (
-            <ActionButton
-              tooltip="Completar"
-              onClick={() => onStatusUpdate(appointment.id, "COMPLETED")}
-              disabled={isUpdating}
-            >
-              <CheckCircle className="w-4 h-4 text-[color:var(--color-muted)]" />
-            </ActionButton>
-          )}
-          {(appointment.status === "COMPLETED" || appointment.status === "CANCELLED") && (
-            <ActionButton
-              tooltip="Reabrir"
-              onClick={() => onStatusUpdate(appointment.id, "CONFIRMED")}
-              disabled={isUpdating}
-            >
-              <RotateCcw className="w-4 h-4 text-[color:var(--color-muted)]" />
-            </ActionButton>
-          )}
+          <ActionButton tooltip="Ver detalles" onClick={() => onViewDetails(appointment)}>
+            <Eye className="w-4 h-4 text-[color:var(--color-muted)]" />
+          </ActionButton>
           <a
             href={buildWaLink(appointment)}
             target="_blank"
@@ -542,12 +531,10 @@ function AppointmentRow({
           <ActionsMenu
             appointment={appointment}
             onStatusUpdate={onStatusUpdate}
-            onViewDetails={onViewDetails}
             onEdit={onEdit}
             onSendEmail={onSendEmail}
             onDelete={onDelete}
             isUpdating={isUpdating}
-            isSendingEmail={isSendingEmail}
           />
         </div>
       </TableCell>
