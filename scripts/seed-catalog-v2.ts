@@ -19,7 +19,7 @@ const services = [
     duration: 150,
     category: "BRIDAL",
     cost: 140,
-    images: ["picsum-bridal", "picsum-bride", "1616394584738-fc6e612e71b9"],
+    images: [c("picsum-bridal"), c("picsum-bride"), c("1616394584738-fc6e612e71b9")],
     videoUrl: "https://www.youtube.com/embed/6LIItw7SJRE",
   },
   {
@@ -30,7 +30,7 @@ const services = [
     duration: 90,
     category: "SOCIAL",
     cost: 60,
-    images: ["picsum-elegant", "picsum-glamour", "picsum-makeup"],
+    images: [c("picsum-elegant"), c("picsum-glamour"), c("picsum-makeup")],
     videoUrl: "https://www.youtube.com/embed/9kRgoPQYfmo",
   },
   {
@@ -41,7 +41,7 @@ const services = [
     duration: 110,
     category: "MATURE_SKIN",
     cost: 80,
-    images: ["picsum-beauty", "picsum-portrait", "1596462502278-27bfdc403348"],
+    images: [c("picsum-beauty"), c("picsum-portrait"), c("1596462502278-27bfdc403348")],
   },
   {
     name: "Peinado Profesional",
@@ -51,7 +51,7 @@ const services = [
     duration: 60,
     category: "HAIRSTYLE",
     cost: 40,
-    images: ["picsum-hairstyle", "1522337360788-8b13dee7a37e", canva("011")],
+    images: [c("picsum-hairstyle"), c("1522337360788-8b13dee7a37e"), canva("011")],
   },
   {
     name: "Maquillaje Express - Retoque Rápido",
@@ -61,7 +61,7 @@ const services = [
     duration: 30,
     category: "OTHER",
     cost: 35,
-    images: ["1519699047748-de8e457a634e", canva("004")],
+    images: [c("1519699047748-de8e457a634e"), canva("004")],
   },
 ];
 
