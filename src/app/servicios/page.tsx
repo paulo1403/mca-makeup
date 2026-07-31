@@ -187,7 +187,7 @@ export default function ServiciosPage() {
                     </div>
                     <button
                       onClick={() => setSelected(s)}
-                      className="mt-4 w-full rounded-full border border-[color:var(--color-border)] py-2.5 text-sm font-medium text-[color:var(--color-heading)] transition hover:bg-[color:var(--color-primary)] hover:text-white"
+                      className="mt-auto w-full rounded-full border border-[color:var(--color-border)] h-10 text-sm font-medium text-[color:var(--color-heading)] transition hover:bg-[color:var(--color-primary)] hover:text-white"
                     >
                       Ver galería
                     </button>
