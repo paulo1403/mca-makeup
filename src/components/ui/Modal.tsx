@@ -5,7 +5,6 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import IconButton from "@/components/ui/IconButton";
-import Typography from "@/components/ui/Typography";
 import { useClickOutside } from "@/hooks/useClickOutside";
 
 export type ModalSize = "sm" | "md" | "lg" | "xl";
@@ -99,14 +98,10 @@ export function ModalHeader({
     <div className="relative p-4 sm:p-6 border-b border-[color:var(--color-border)]">
       <div className="pr-10">
         {typeof title === "string" ? (
-          <Typography
-            as="h2"
-            variant="h3"
-            className="flex items-center text-[color:var(--color-heading)] font-bold"
-          >
+          <div className="flex items-center text-base font-semibold text-[color:var(--color-heading)]">
             {icon && <span className="mr-2">{icon}</span>}
             {title}
-          </Typography>
+          </div>
         ) : (
           title
         )}

@@ -803,10 +803,10 @@ export default function AdminFinancePage() {
         </ModalBody>
         <ModalFooter>
           <div className="flex justify-end gap-2">
-            <Button type="button" variant="soft" size="sm" onClick={() => setEditingEntry(null)}>
+            <Button type="button" variant="ghost" size="md" onClick={() => setEditingEntry(null)}>
               Cancelar
             </Button>
-            <Button type="button" variant="primary" size="sm" onClick={saveEntryEdition}>
+            <Button type="button" variant="primary" size="md" onClick={saveEntryEdition}>
               {updateMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Guardar cambios
             </Button>

@@ -165,8 +165,7 @@ export default function TransportCostsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[color:var(--color-surface)] py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="space-y-6">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-[color:var(--color-heading)] mb-2">
@@ -371,7 +370,7 @@ export default function TransportCostsPage() {
           </ModalBody>
           <ModalFooter>
             <div className="flex gap-3 pt-2 w-full justify-end">
-              <Button type="button" variant="outline" size="md" onClick={handleCloseModal}>
+              <Button type="button" variant="ghost" size="md" onClick={handleCloseModal}>
                 Cancelar
               </Button>
               <Button form="transport-costs-form" type="submit" variant="primary" size="md">
@@ -391,7 +390,6 @@ export default function TransportCostsPage() {
           onConfirm={performDelete}
           onCancel={() => setDeleteConfirm(null)}
         />
-      </div>
     </div>
   );
 }

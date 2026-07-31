@@ -31,7 +31,6 @@ interface AdminSidebarProps {
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/finance", label: "Finanzas", icon: Wallet },
-  { href: "/admin/income", label: "Ingresos", icon: ChartColumn },
   { href: "/admin/calendar", label: "Calendario", icon: Calendar },
   { href: "/admin/citas", label: "Citas", icon: Clock },
   { href: "/admin/appointments", label: "Citas (legacy)", icon: Eye },
@@ -39,7 +38,6 @@ const navItems = [
   { href: "/admin/transport-costs", label: "Transporte", icon: Truck },
   { href: "/admin/reviews", label: "Reseñas", icon: Star },
   { href: "/admin/availability", label: "Disponibilidad", icon: Home },
-  { href: "/admin/error-reports", label: "Errores", icon: AlertTriangle },
   { href: "/", label: "Ver Sitio", icon: Eye },
 ];
 

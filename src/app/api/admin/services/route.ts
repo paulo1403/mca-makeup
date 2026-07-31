@@ -2,12 +2,16 @@ import { type NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
+
+const imagesInclude = { images: { orderBy: { sortOrder: Prisma.SortOrder.asc } } };
 
 // GET - Obtener todos los servicios
 export async function GET() {
   try {
     const services = await prisma.service.findMany({
       orderBy: [{ category: "asc" }, { name: "asc" }],
+      include: imagesInclude,
     });
 
     return NextResponse.json({ services });
@@ -26,9 +30,9 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { name, description, price, duration, category, isActive } = body;
+    const { name, description, price, duration, category, isActive, cost, videoUrl, images } =
+      body;
 
-    // Validaciones
     if (
       !name ||
       price === undefined ||
@@ -47,22 +51,17 @@ export async function POST(request: NextRequest) {
 
     if (price < 0 || duration < 0) {
       return NextResponse.json(
-        {
-          error: "Precio debe ser mayor o igual a 0 y duración debe ser mayor o igual a 0",
-        },
+        { error: "Precio y duración deben ser mayores o igual a 0" },
         { status: 400 },
       );
     }
 
-    // Verificar que el nombre no exista
-    const existingService = await prisma.service.findUnique({
-      where: { name },
-    });
-
+    const existingService = await prisma.service.findUnique({ where: { name } });
     if (existingService) {
       return NextResponse.json({ error: "Ya existe un servicio con este nombre" }, { status: 400 });
     }
 
+    const gallery = Array.isArray(images) ? images : [];
     const service = await prisma.service.create({
       data: {
         name,
@@ -71,13 +70,21 @@ export async function POST(request: NextRequest) {
         duration: Number.parseInt(duration, 10),
         category,
         isActive: isActive !== undefined ? isActive : true,
+        cost: cost !== undefined && cost !== "" ? Number.parseFloat(cost) : null,
+        videoUrl: videoUrl || null,
+        images: {
+          create: gallery.map((img: { url: string; isPrimary?: boolean; alt?: string }, i: number) => ({
+            url: img.url,
+            isPrimary: !!img.isPrimary,
+            alt: img.alt || null,
+            sortOrder: i,
+          })),
+        },
       },
+      include: imagesInclude,
     });
 
-    return NextResponse.json({
-      message: "Servicio creado exitosamente",
-      service,
-    });
+    return NextResponse.json({ message: "Servicio creado exitosamente", service });
   } catch (error) {
     console.error("Error creating service:", error);
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });

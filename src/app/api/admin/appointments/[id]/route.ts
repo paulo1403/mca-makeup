@@ -85,6 +85,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
         additionalNotes: true,
         servicePrice: true,
         transportCost: true,
+        nightShiftCost: true,
         totalPrice: true,
         review: {
           select: {
@@ -153,6 +154,59 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       } catch (emailError) {
         console.error("Error enviando email al cliente:", emailError);
         // No falla la operación si el email falla
+      }
+    }
+
+    // Auto-create finance entries when appointment completes
+    if (status === "COMPLETED" && appointmentData.status !== "COMPLETED") {
+      const entries = [];
+
+      // Income: totalPrice or servicePrice
+      const income = updatedAppointment.totalPrice || updatedAppointment.servicePrice || 0;
+      if (income > 0) {
+        entries.push({
+          entryDate: updatedAppointment.appointmentDate,
+          type: "INCOME",
+          amount: income,
+          category: updatedAppointment.serviceType || "Servicios",
+          serviceLine: "GENERAL",
+          paymentMethod: "OTHER",
+          source: "APPOINTMENT",
+          note: `Cita: ${updatedAppointment.id} - ${updatedAppointment.clientName}`,
+        });
+      }
+
+      // Expense: transport cost
+      if ((updatedAppointment.transportCost || 0) > 0) {
+        entries.push({
+          entryDate: updatedAppointment.appointmentDate,
+          type: "EXPENSE",
+          amount: updatedAppointment.transportCost,
+          category: "Transporte",
+          serviceLine: "GENERAL",
+          paymentMethod: "OTHER",
+          source: "APPOINTMENT",
+          note: `Cita: ${updatedAppointment.id} - Transporte`,
+        });
+      }
+
+      // Expense: night shift cost
+      if ((updatedAppointment.nightShiftCost || 0) > 0) {
+        entries.push({
+          entryDate: updatedAppointment.appointmentDate,
+          type: "EXPENSE",
+          amount: updatedAppointment.nightShiftCost,
+          category: "Recargo nocturno",
+          serviceLine: "GENERAL",
+          paymentMethod: "OTHER",
+          source: "APPOINTMENT",
+          note: `Cita: ${updatedAppointment.id} - Recargo nocturno`,
+        });
+      }
+
+      if (entries.length > 0) {
+        await prisma.financeEntry.createMany({ data: entries as any });
+        console.log(`📊 ${entries.length} finanza(s) creadas desde cita ${updatedAppointment.id}`);
       }
     }
 

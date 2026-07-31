@@ -189,11 +189,11 @@ export default function AdminReviewsPage() {
   );
 
   return (
-    <div className="p-6">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[color:var(--color-heading)]">
+          <h1 className="text-xl font-bold text-[color:var(--color-heading)]">
             Gestión de Reseñas
           </h1>
           <p className="text-[color:var(--color-muted)]">Administra las reseñas de tus clientes</p>
@@ -409,7 +409,7 @@ export default function AdminReviewsPage() {
           title={
             <span
               id="review-modal-title"
-              className="text-xl font-bold text-[color:var(--color-heading)]"
+              className="text-base font-bold text-[color:var(--color-heading)]"
             >
               Detalle de Reseña
             </span>

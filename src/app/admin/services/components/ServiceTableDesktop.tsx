@@ -27,6 +27,11 @@ interface ServiceTableDesktopProps {
   openNewModal: () => void;
 }
 
+function primaryImage(service: Service) {
+  if (!service.images?.length) return null;
+  return service.images.find((i) => i.isPrimary)?.url || service.images[0].url;
+}
+
 export default function ServiceTableDesktop({
   services,
   serviceCategories,
@@ -77,6 +82,9 @@ export default function ServiceTableDesktop({
                 <TableHeader>
                   <TableRow className="border-[color:var(--color-border)]/60 hover:bg-transparent">
                     <TableHead className="pl-6 text-xs font-medium uppercase tracking-wider text-[color:var(--color-muted)]">
+                      Imagen
+                    </TableHead>
+                    <TableHead className="text-xs font-medium uppercase tracking-wider text-[color:var(--color-muted)]">
                       Servicio
                     </TableHead>
                     <TableHead className="text-xs font-medium uppercase tracking-wider text-[color:var(--color-muted)]">
@@ -84,6 +92,9 @@ export default function ServiceTableDesktop({
                     </TableHead>
                     <TableHead className="text-xs font-medium uppercase tracking-wider text-[color:var(--color-muted)]">
                       Precio
+                    </TableHead>
+                    <TableHead className="text-xs font-medium uppercase tracking-wider text-[color:var(--color-muted)]">
+                      Margen
                     </TableHead>
                     <TableHead className="text-xs font-medium uppercase tracking-wider text-[color:var(--color-muted)]">
                       Duración
@@ -97,82 +108,117 @@ export default function ServiceTableDesktop({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {services.map((service) => (
-                    <TableRow
-                      key={service.id}
-                      className="border-[color:var(--color-border)]/60 hover:bg-[color:var(--color-surface-elevated)]"
-                    >
-                      <TableCell className="pl-6">
-                        <div className="max-w-xs">
-                          <p className="truncate text-sm font-medium text-[color:var(--color-heading)]">
-                            {service.name}
-                          </p>
-                          {service.description && (
-                            <p className="mt-0.5 truncate text-xs text-[color:var(--color-muted)]">
-                              {service.description}
-                            </p>
+                  {services.map((service) => {
+                    const margin =
+                      service.cost != null && service.price > 0
+                        ? ((service.price - service.cost) / service.price) * 100
+                        : null;
+                    const img = primaryImage(service);
+                    return (
+                      <TableRow
+                        key={service.id}
+                        className="border-[color:var(--color-border)]/60 hover:bg-[color:var(--color-surface-elevated)]"
+                      >
+                        <TableCell className="pl-6">
+                          {img ? (
+                            <img
+                              src={img}
+                              alt={service.name}
+                              className="h-12 w-12 rounded-lg object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[color:var(--color-surface-elevated)] text-[color:var(--color-muted)]">
+                              <Sparkles className="h-5 w-5" />
+                            </div>
                           )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant="outline"
-                          className="border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] text-xs text-[color:var(--color-body)]"
-                        >
-                          {serviceCategories[service.category as keyof typeof serviceCategories]}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="tabular-nums text-sm font-medium text-[color:var(--color-heading)]">
-                        S/ {service.price}
-                      </TableCell>
-                      <TableCell className="text-sm text-[color:var(--color-heading)]">
-                        {service.duration} min
-                      </TableCell>
-                      <TableCell>
-                        <button
-                          onClick={() => toggleActive(service)}
-                          className="focus-ring rounded"
-                          title={service.isActive ? "Desactivar servicio" : "Activar servicio"}
-                        >
+                        </TableCell>
+                        <TableCell>
+                          <div className="max-w-xs">
+                            <p className="truncate text-sm font-medium text-[color:var(--color-heading)]">
+                              {service.name}
+                            </p>
+                            {service.description && (
+                              <p className="mt-0.5 truncate text-xs text-[color:var(--color-muted)]">
+                                {service.description}
+                              </p>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
                           <Badge
                             variant="outline"
-                            className={
-                              service.isActive
-                                ? "cursor-pointer border-[color:var(--status-confirmed-border)] bg-[color:var(--status-confirmed-bg)] text-[color:var(--status-confirmed-text)] transition-opacity hover:opacity-75"
-                                : "cursor-pointer border-[color:var(--status-cancelled-border)] bg-[color:var(--status-cancelled-bg)] text-[color:var(--status-cancelled-text)] transition-opacity hover:opacity-75"
-                            }
+                            className="border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] text-xs text-[color:var(--color-body)]"
                           >
-                            {service.isActive ? "Activo" : "Inactivo"}
+                            {serviceCategories[service.category as keyof typeof serviceCategories]}
                           </Badge>
-                        </button>
-                      </TableCell>
-                      <TableCell className="pr-6">
-                        <div className="flex items-center gap-0.5">
+                        </TableCell>
+                        <TableCell className="tabular-nums text-sm font-medium text-[color:var(--color-heading)]">
+                          S/ {service.price}
+                        </TableCell>
+                        <TableCell className="tabular-nums text-sm">
+                          {margin != null ? (
+                            <span
+                              className={
+                                margin >= 0
+                                  ? "text-emerald-500"
+                                  : "text-[color:var(--status-cancelled-text)]"
+                              }
+                            >
+                              {margin.toFixed(0)}%
+                            </span>
+                          ) : (
+                            <span className="text-[color:var(--color-muted)]">—</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-sm text-[color:var(--color-heading)]">
+                          {service.duration} min
+                        </TableCell>
+                        <TableCell>
                           <button
-                            onClick={() => handleView(service)}
-                            className="rounded-md p-1.5 text-[color:var(--color-muted)] transition-colors hover:bg-[color:var(--color-primary)]/10 hover:text-[color:var(--color-primary)] focus-ring"
-                            title="Ver detalles"
+                            onClick={() => toggleActive(service)}
+                            className="focus-ring rounded"
+                            title={service.isActive ? "Desactivar servicio" : "Activar servicio"}
                           >
-                            <Eye className="h-4 w-4" />
+                            <Badge
+                              variant="outline"
+                              className={
+                                service.isActive
+                                  ? "cursor-pointer border-[color:var(--status-confirmed-border)] bg-[color:var(--status-confirmed-bg)] text-[color:var(--status-confirmed-text)] transition-opacity hover:opacity-75"
+                                  : "cursor-pointer border-[color:var(--status-cancelled-border)] bg-[color:var(--status-cancelled-bg)] text-[color:var(--status-cancelled-text)] transition-opacity hover:opacity-75"
+                              }
+                            >
+                              {service.isActive ? "Activo" : "Inactivo"}
+                            </Badge>
                           </button>
-                          <button
-                            onClick={() => handleEdit(service)}
-                            className="rounded-md p-1.5 text-[color:var(--color-muted)] transition-colors hover:bg-[color:var(--color-primary)]/10 hover:text-[color:var(--color-primary)] focus-ring"
-                            title="Editar servicio"
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(service.id)}
-                            className="rounded-md p-1.5 text-[color:var(--color-muted)] transition-colors hover:bg-[color:var(--status-cancelled-bg)] hover:text-[color:var(--status-cancelled-text)] focus-ring"
-                            title="Eliminar servicio"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        </TableCell>
+                        <TableCell className="pr-6">
+                          <div className="flex items-center gap-0.5">
+                            <button
+                              onClick={() => handleView(service)}
+                              className="rounded-md p-1.5 text-[color:var(--color-muted)] transition-colors hover:bg-[color:var(--color-primary)]/10 hover:text-[color:var(--color-primary)] focus-ring"
+                              title="Ver detalles"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => handleEdit(service)}
+                              className="rounded-md p-1.5 text-[color:var(--color-muted)] transition-colors hover:bg-[color:var(--color-primary)]/10 hover:text-[color:var(--color-primary)] focus-ring"
+                              title="Editar servicio"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(service.id)}
+                              className="rounded-md p-1.5 text-[color:var(--color-muted)] transition-colors hover:bg-[color:var(--status-cancelled-bg)] hover:text-[color:var(--status-cancelled-text)] focus-ring"
+                              title="Eliminar servicio"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </CardContent>

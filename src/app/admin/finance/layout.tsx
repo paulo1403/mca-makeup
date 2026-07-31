@@ -6,8 +6,10 @@ import { usePathname } from "next/navigation";
 import EasterEgg from "@/components/ui/EasterEgg";
 
 const TABS = [
+  { href: "/admin/finance/resumen", label: "Resumen" },
   { href: "/admin/finance/historial", label: "Historial" },
   { href: "/admin/finance/crear", label: "Crear" },
+  { href: "/admin/finance/margen", label: "Margen" },
 ];
 
 export default function FinanceLayout({ children }: { children: React.ReactNode }) {
@@ -17,7 +19,7 @@ export default function FinanceLayout({ children }: { children: React.ReactNode 
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-semibold text-(--color-heading)">Finanzas</h1>
+          <h1 className="text-xl font-semibold text-(--color-heading)">Finanzas</h1>
           <EasterEgg>
             <Heart className="h-5 w-5 text-(--color-muted) hover:text-red-400 transition-colors" />
           </EasterEgg>

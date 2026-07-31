@@ -65,19 +65,19 @@
   --text-h1: clamp(1.75rem, 4vw, 2.75rem);
   --text-h1-lh: 1.2;
 
-  --text-h2: clamp(1.5rem, 3.5vw, 2rem);
+  --text-h2: clamp(1.125rem, 2vw, 1.25rem);
   --text-h2-lh: 1.3;
 
-  --text-h3: clamp(1.375rem, 2.5vw, 1.75rem);
+  --text-h3: clamp(1rem, 1.5vw, 1.125rem);
   --text-h3-lh: 1.4;
 
-  --text-h4: clamp(1.125rem, 2vw, 1.375rem);
+  --text-h4: clamp(0.875rem, 1.5vw, 1rem);
   --text-h4-lh: 1.4;
 
-  --text-body: clamp(0.975rem, 1.5vw, 1.0625rem);
+  --text-body: clamp(0.8125rem, 1vw, 0.875rem);
   --text-body-lh: 1.6;
 
-  --text-small: clamp(0.85rem, 1.2vw, 0.9rem);
+  --text-small: clamp(0.6875rem, 0.8vw, 0.75rem);
   --text-small-lh: 1.5;
 
   --text-caption: 0.75rem;

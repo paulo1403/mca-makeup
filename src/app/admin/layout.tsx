@@ -134,7 +134,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Page Content - Scrollable */}
-        <main className="flex-1 overflow-y-auto scrollbar-thin">
+        <main className="flex-1 overflow-y-auto scrollbar-thin text-[13px] admin-content">
           <div className="p-4 md:p-6 lg:p-8">
             <div className="max-w-7xl mx-auto">{children}</div>
           </div>

@@ -98,7 +98,7 @@ function DashboardContent() {
               <p className="text-xs font-semibold tracking-widest text-[color:var(--color-primary)] uppercase mb-1">
                 {dayName} · {dateStr}
               </p>
-              <h1 className="text-xl sm:text-2xl font-bold text-[color:var(--color-heading)]">
+              <h1 className="text-lg sm:text-xl font-bold text-[color:var(--color-heading)]">
                 ¡Hola {firstName}!
               </h1>
               <div className="flex flex-wrap items-center gap-x-4 gap-y-0.5 mt-2 text-sm text-[color:var(--color-body)]">
@@ -127,7 +127,7 @@ function DashboardContent() {
                   <Icon className={`w-4 h-4 ${k.text}`} />
                 </div>
               </div>
-              <p className="text-xl sm:text-2xl font-bold text-[color:var(--color-heading)] tabular-nums">{k.value}</p>
+              <p className="text-lg sm:text-xl font-bold text-[color:var(--color-heading)] tabular-nums">{k.value}</p>
               <p className="text-[11px] text-[color:var(--color-muted)] mt-0.5">{k.label}</p>
             </div>
           );
@@ -265,7 +265,7 @@ function DashboardContent() {
             <div className="space-y-1">
               {[
                 { href: "/admin/appointments", label: "Citas", sub: "Gestionar reservas" },
-                { href: "/admin/income", label: "Ingresos", sub: "Ver finanzas" },
+                { href: "/admin/finance/resumen", label: "Ingresos", sub: "Ver finanzas" },
                 { href: "/admin/services", label: "Servicios", sub: "Catálogo y precios" },
                 { href: "/admin/availability", label: "Disponibilidad", sub: "Horarios y fechas" },
               ].map((l) => (

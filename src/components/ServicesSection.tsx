@@ -1,17 +1,14 @@
 "use client";
 
+import { ArrowRight } from "lucide-react";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
 
-const services = [
-  {
-    title: "Novias",
-    portfolioUrl: "https://marcelacorderobeauty.my.canva.site/n",
-  },
-  {
-    title: "Sociales",
-    portfolioUrl: "https://marcelacorderobeauty.my.canva.site",
-  },
+const categories = [
+  { title: "Novias", href: "/servicios" },
+  { title: "Sociales", href: "/servicios" },
+  { title: "Piel Madura", href: "/servicios" },
+  { title: "Peinados", href: "/servicios" },
 ];
 
 export default function ServicesSection() {
@@ -26,25 +23,40 @@ export default function ServicesSection() {
           <Typography as="h2" variant="h2" className="text-(--color-heading)">
             Nuestros Servicios
           </Typography>
+          <p className="mt-3 text-[color:var(--color-body)]">
+            Explora cada experiencia y reserva la que mejor se adapte a tu momento.
+          </p>
         </div>
 
         <div className="space-y-3 sm:space-y-4">
-          {services.map((service) => (
+          {categories.map((cat) => (
             <Button
-              key={service.title}
+              key={cat.title}
               as="a"
+              href={cat.href}
               variant="outline"
               size="lg"
-              href={service.portfolioUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full justify-center py-5 text-lg bg-(--color-surface)/40 hover:bg-[color:var(--color-primary)]"
+              className="w-full justify-between py-5 text-lg bg-(--color-surface)/40 hover:bg-[color:var(--color-primary)]"
             >
               <Typography as="span" variant="h3" className="font-normal">
-                {service.title}
+                {cat.title}
               </Typography>
+              <ArrowRight className="h-5 w-5" />
             </Button>
           ))}
+        </div>
+
+        <div className="mt-8 text-center">
+          <Button
+            as="a"
+            href="/servicios"
+            variant="ghost"
+            size="sm"
+            className="inline-flex items-center gap-2 text-sm font-medium text-[color:var(--color-primary)]"
+          >
+            Ver catálogo completo
+            <ArrowRight className="h-4 w-4" />
+          </Button>
         </div>
       </div>
     </section>

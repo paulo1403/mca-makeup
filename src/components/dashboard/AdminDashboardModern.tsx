@@ -166,7 +166,7 @@ export default function AdminDashboardModern() {
       toneBg: "bg-[color:var(--color-primary)]/12",
     },
     {
-      href: "/admin/income",
+      href: "/admin/finance/resumen",
       title: "Revisar ingresos",
       subtitle: "Resumen financiero",
       icon: CircleDollarSign,

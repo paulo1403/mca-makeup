@@ -73,7 +73,7 @@ function AppointmentsContent() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[color:var(--color-app-bg)] flex items-center justify-center px-4">
+      <div className=" flex items-center justify-center px-4">
         <div className="max-w-md w-full text-center">
           <div className="w-14 h-14 bg-[color:var(--color-danger)]/10 rounded-xl flex items-center justify-center mx-auto mb-4">
             <XCircle className="w-7 h-7 text-[color:var(--color-danger)]" />

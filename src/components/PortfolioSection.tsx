@@ -28,21 +28,21 @@ const portfolioCategories: PortfolioCategory[] = [
     title: "Novias",
     description: "Maquillaje elegante y duradero para el día más especial",
     count: "120+",
-    url: "https://marcelacorderomakeup.my.canva.site/#page-0",
+    url: "/servicios",
     icon: <Heart className="w-5 h-5" />,
   },
   {
     title: "Eventos Sociales",
     description: "Looks sofisticados para celebraciones importantes",
     count: "200+",
-    url: "https://marcelacorderomakeup.my.canva.site/#page-0",
+    url: "/servicios",
     icon: <Sparkles className="w-5 h-5" />,
   },
   {
     title: "Piel Madura",
     description: "Maquillaje que realza la belleza natural en pieles maduras",
     count: "50+",
-    url: "https://marcelacorderomakeup.my.canva.site/#page-2",
+    url: "/servicios",
     icon: <Users className="w-5 h-5" />,
   },
 ];
@@ -151,8 +151,6 @@ export default function PortfolioSection() {
                   <Button
                     as="a"
                     href={cat.url}
-                    target="_blank"
-                    rel="noreferrer"
                     variant="secondary"
                     size="md"
                     className="w-full py-3 px-4 rounded-lg text-[color:var(--color-body)] font-medium"

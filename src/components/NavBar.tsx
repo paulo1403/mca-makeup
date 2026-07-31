@@ -75,7 +75,7 @@ const NavBar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <Link
-              href="/#servicios"
+              href="/servicios"
               className="text-[color:var(--color-muted)] hover:text-[color:var(--color-primary)] transition-colors"
               onClick={(e) => {
                 e.preventDefault();

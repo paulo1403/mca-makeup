@@ -395,7 +395,7 @@ export default function AdminCalendarPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[color:var(--color-background)] p-2 md:p-4">
+    <div className="space-y-6">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 md:gap-6">
         <Card className="border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[color:var(--color-heading)]">
           <CardHeader className="pb-2">

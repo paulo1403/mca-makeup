@@ -160,25 +160,25 @@ export default function ErrorReportsPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="bg-[color:var(--color-surface-elevated)] rounded-lg p-4 border border-[color:var(--color-border)]">
-          <div className="text-2xl font-bold text-[color:var(--color-heading)]">{stats.total}</div>
+          <div className="text-lg font-bold text-[color:var(--color-heading)]">{stats.total}</div>
           <Typography variant="caption" className="text-[color:var(--color-muted)]">
             Total de reportes
           </Typography>
         </div>
         <div className="bg-[color:var(--color-surface-elevated)] rounded-lg p-4 border border-[color:var(--color-border)]">
-          <div className="text-2xl font-bold text-[color:var(--color-primary)]">{stats.pending}</div>
+          <div className="text-lg font-bold text-[color:var(--color-primary)]">{stats.pending}</div>
           <Typography variant="caption" className="text-[color:var(--color-muted)]">
             Pendientes
           </Typography>
         </div>
         <div className="bg-[color:var(--color-surface-elevated)] rounded-lg p-4 border border-[color:var(--color-border)]">
-          <div className="text-2xl font-bold text-[color:var(--color-danger)]">{stats.critical}</div>
+          <div className="text-lg font-bold text-[color:var(--color-danger)]">{stats.critical}</div>
           <Typography variant="caption" className="text-[color:var(--color-muted)]">
             Críticos
           </Typography>
         </div>
         <div className="bg-[color:var(--color-surface-elevated)] rounded-lg p-4 border border-[color:var(--color-border)]">
-          <div className="text-2xl font-bold text-[color:var(--color-success)]">{stats.resolved}</div>
+          <div className="text-lg font-bold text-[color:var(--color-success)]">{stats.resolved}</div>
           <Typography variant="caption" className="text-[color:var(--color-muted)]">
             Resueltos
           </Typography>

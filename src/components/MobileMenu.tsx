@@ -59,7 +59,7 @@ export default function MobileMenu({ isOpen, onClose, handleNavClick }: MobileMe
                 </Link>
 
                 <Link
-                  href="/#servicios"
+                  href="/servicios"
                   className="flex items-center gap-3 p-4 rounded-lg hover:bg-[color:var(--color-surface)]/50 transition-colors mb-2"
                   onClick={(e) => {
                     e.preventDefault();

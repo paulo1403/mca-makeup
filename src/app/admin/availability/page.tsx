@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, Calendar, Clock, Plus, Trash2 } from "lucide-react";
+import { AlertTriangle, Calendar, Clock, Plus, Settings2, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import AddSpecialDateModal from "@/components/availability/AddSpecialDateModal";
 import AddTimeSlotModal from "@/components/availability/AddTimeSlotModal";
@@ -11,7 +11,6 @@ import TimeSlotList from "@/components/availability/TimeSlotList";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Button from "@/components/ui/Button";
 import ConfirmModal from "@/components/ui/ConfirmModal";
-import Typography from "@/components/ui/Typography";
 import { type SpecialDate, type TimeSlot, useAvailability } from "@/hooks/useAvailability";
 
 export default function AvailabilityPage() {
@@ -74,155 +73,121 @@ export default function AvailabilityPage() {
   }
 
   return (
-    <div className="space-y-4 sm:space-y-8 px-2 sm:px-0">
-      {/* Header con instrucciones - Optimizado para móvil */}
-      <div className="rounded-lg p-3 sm:p-6 border border-[color:var(--color-border)]/30 bg-[color:var(--color-surface)]">
-        <div className="flex items-center space-x-3 mb-2">
-          <Calendar className="h-6 w-6 text-[color:var(--color-primary)]" />
-          <Typography
-            as="h1"
-            variant="h3"
-            className="sm:text-h2 font-bold text-[color:var(--color-heading)] font-playfair"
-          >
-            Gestión de Disponibilidad
-          </Typography>
-        </div>
-        <Typography variant="p" className="text-[color:var(--color-muted)] mb-3 sm:mb-4">
-          Administra tu horario semanal y fechas especiales para que los clientes puedan agendar
-          citas contigo.
-        </Typography>
-
-        <div className="rounded-lg p-3 sm:p-4 border border-[color:var(--color-border)]/30 bg-[color:var(--color-surface-elevated)]">
-          <Typography
-            as="h3"
-            variant="h4"
-            className="font-semibold text-[color:var(--color-heading)] mb-3"
-          >
-            Estados de disponibilidad:
-          </Typography>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs sm:text-sm">
-            <div className="flex items-center space-x-2 p-2 rounded-md border border-[color:var(--status-confirmed-border)]/50 bg-[color:var(--status-confirmed-bg)]">
-              <div className="w-3 h-3 rounded-full bg-[color:var(--status-confirmed-text)]" />
-              <div>
-                <Typography
-                  as="span"
-                  variant="small"
-                  className="text-[color:var(--status-confirmed-text)] font-semibold"
-                >
-                  Activo:
-                </Typography>
-                <Typography as="span" variant="p" className="text-[color:var(--color-muted)] block">
-                  Los clientes pueden reservar
-                </Typography>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 p-2 rounded-md border border-[color:var(--status-pending-border)]/50 bg-[color:var(--status-pending-bg)]">
-              <div className="w-3 h-3 rounded-full bg-[color:var(--status-pending-text)]" />
-              <div>
-                <Typography
-                  as="span"
-                  variant="small"
-                  className="text-[color:var(--status-pending-text)] font-semibold"
-                >
-                  Pausado:
-                </Typography>
-                <Typography as="span" variant="p" className="text-[color:var(--color-muted)] block">
-                  Temporalmente no disponible
-                </Typography>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 p-2 rounded-md border border-[color:var(--color-border)]/50 bg-[color:var(--color-surface)]">
-              <div className="w-3 h-3 rounded-full bg-[color:var(--color-muted)]" />
-              <div>
-                <Typography
-                  as="span"
-                  variant="small"
-                  className="text-[color:var(--color-heading)] font-semibold"
-                >
-                  Sin horario:
-                </Typography>
-                <Typography as="span" variant="p" className="text-[color:var(--color-muted)] block">
-                  Día libre
-                </Typography>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-xl font-semibold text-(--color-heading)">Disponibilidad</h1>
+        <p className="mt-1 text-sm text-[color:var(--color-muted)]">
+          Define tu horario semanal, fechas especiales y el intervalo entre citas.
+        </p>
       </div>
 
-      {/* Mensajes de confirmación */}
       {message && (
         <div
-          className={`p-3 sm:p-4 rounded-lg border text-sm sm:text-base ${message.includes("Error")
+          className={`px-4 py-3 rounded-xl border text-sm ${
+            message.includes("Error")
               ? "bg-[color:var(--status-cancelled-bg)] text-[color:var(--status-cancelled-text)] border-[color:var(--status-cancelled-border)]"
               : "bg-[color:var(--status-confirmed-bg)] text-[color:var(--status-confirmed-text)] border-[color:var(--status-confirmed-border)]"
-            }`}
+          }`}
         >
           {message}
         </div>
       )}
 
-      {/* Horario Regular Semanal */}
-      <div className="bg-[color:var(--color-surface)] rounded-lg border border-[color:var(--color-border)]/30">
-        <div className="px-3 sm:px-6 py-3 sm:py-4 border-b border-[color:var(--color-border)]/30 bg-gradient-to-r from-[color:var(--color-primary)]/10 to-[color:var(--color-accent)]/10">
-          <div className="flex items-center space-x-2 mb-1">
+      {/* Horario Semanal + Intervalos */}
+      <div className="rounded-xl border border-[color:var(--color-border)]/60 bg-[color:var(--color-surface)]">
+        {/* Section header */}
+        <div className="flex items-center justify-between border-b border-[color:var(--color-border)]/60 px-5 py-4">
+          <div className="flex items-center gap-3">
             <Clock className="h-5 w-5 text-[color:var(--color-primary)]" />
-            <Typography as="h2" variant="h3" className="text-[color:var(--color-heading)] font-semibold">
-              Configuración de intervalos
-            </Typography>
+            <div>
+              <h2 className="text-sm font-semibold text-(--color-heading)">Horario Semanal</h2>
+              <p className="text-xs text-[color:var(--color-muted)]">
+                Días y horas laborales habituales
+              </p>
+            </div>
           </div>
-          <Typography variant="p" className="text-[color:var(--color-muted)]">
-            Define cada cuántos minutos se ofrecerán inicios de cita para estudio y domicilio.
-          </Typography>
+          <Button
+            onClick={() => setShowAddSlot(true)}
+            variant="primary"
+            size="sm"
+            className="flex items-center gap-1.5"
+          >
+            <Plus className="h-4 w-4" />
+            Agregar
+          </Button>
         </div>
 
-        <div className="p-3 sm:p-6">
-          <div className="grid gap-3 sm:grid-cols-2 max-w-xl">
-            <div>
-              <label
-                htmlFor="studio-interval"
-                className="block mb-2 text-sm font-medium text-[color:var(--color-heading)]"
+        <div className="p-5">
+          <TimeSlotList
+            timeSlots={timeSlots}
+            onToggleAction={(id: string) => {
+              const slot = timeSlots.find((s) => s.id === id);
+              if (slot) updateTimeSlot({ id, isActive: !slot.isActive });
+            }}
+            onEditAction={(slot: TimeSlot) => setEditingSlot(slot.id)}
+            onDeleteAction={(id: string) => setDeletingSlotId(id)}
+            onAddAction={handleAddFromDay}
+          />
+
+          {timeSlots.length === 0 && (
+            <div className="py-8 text-center">
+              <p className="text-sm text-[color:var(--color-muted)] mb-4">
+                Aún no tienes horarios configurados
+              </p>
+              <Button
+                onClick={() => setShowAddSlot(true)}
+                variant="primary"
+                size="md"
               >
-                Intervalo de inicio en Estudio
+                Configurar Primer Horario
+              </Button>
+            </div>
+          )}
+        </div>
+
+        {/* Intervalos */}
+        <div className="border-t border-[color:var(--color-border)]/60 px-5 py-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Settings2 className="h-4 w-4 text-[color:var(--color-primary)]" />
+            <h3 className="text-sm font-medium text-(--color-heading)">Intervalo entre citas</h3>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <div className="flex items-center gap-2">
+              <label htmlFor="si" className="text-xs text-[color:var(--color-body)] shrink-0">
+                Estudio
               </label>
               <select
-                id="studio-interval"
+                id="si"
                 value={studioInterval}
                 onChange={(e) => setStudioInterval(Number(e.target.value))}
-                className="w-full rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] px-3 py-2 text-[color:var(--color-heading)]"
+                className="rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] px-2 py-1.5 text-sm text-[color:var(--color-heading)]"
               >
-                <option value={15}>Cada 15 minutos</option>
-                <option value={30}>Cada 30 minutos</option>
-                <option value={45}>Cada 45 minutos</option>
-                <option value={60}>Cada 60 minutos</option>
+                <option value={15}>15 min</option>
+                <option value={30}>30 min</option>
+                <option value={45}>45 min</option>
+                <option value={60}>60 min</option>
               </select>
             </div>
-
-            <div>
-              <label
-                htmlFor="home-interval"
-                className="block mb-2 text-sm font-medium text-[color:var(--color-heading)]"
-              >
-                Intervalo de inicio en Domicilio
+            <div className="flex items-center gap-2">
+              <label htmlFor="hi" className="text-xs text-[color:var(--color-body)] shrink-0">
+                Domicilio
               </label>
               <select
-                id="home-interval"
+                id="hi"
                 value={homeInterval}
                 onChange={(e) => setHomeInterval(Number(e.target.value))}
-                className="w-full rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] px-3 py-2 text-[color:var(--color-heading)]"
+                className="rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] px-2 py-1.5 text-sm text-[color:var(--color-heading)]"
               >
-                <option value={15}>Cada 15 minutos</option>
-                <option value={30}>Cada 30 minutos</option>
-                <option value={45}>Cada 45 minutos</option>
-                <option value={60}>Cada 60 minutos</option>
+                <option value={15}>15 min</option>
+                <option value={30}>30 min</option>
+                <option value={45}>45 min</option>
+                <option value={60}>60 min</option>
               </select>
             </div>
-          </div>
-
-          <div className="mt-3">
             <Button
               variant="primary"
-              size="md"
+              size="sm"
               disabled={
                 isUpdatingSettings ||
                 (studioInterval === studioSlotIntervalMinutes &&
@@ -234,107 +199,37 @@ export default function AvailabilityPage() {
                   homeSlotIntervalMinutes: homeInterval,
                 })
               }
-              className="w-full sm:w-auto"
             >
-              {isUpdatingSettings ? "Guardando..." : "Guardar intervalos"}
+              {isUpdatingSettings ? "Guardando..." : "Guardar"}
             </Button>
           </div>
-        </div>
-      </div>
-
-      {/* Horario Regular Semanal */}
-      <div className="bg-[color:var(--color-surface)] rounded-lg border border-[color:var(--color-border)]/30">
-        <div className="px-3 sm:px-6 py-3 sm:py-4 border-b border-[color:var(--color-border)]/30 bg-gradient-to-r from-[color:var(--color-primary)]/10 to-[color:var(--color-accent)]/10">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
-            <div>
-              <div className="flex items-center space-x-2 mb-1">
-                <Clock className="h-5 w-5 text-[color:var(--color-primary)]" />
-                <Typography
-                  as="h2"
-                  variant="h3"
-                  className="text-[color:var(--color-heading)] font-semibold"
-                >
-                  Horario Semanal Regular
-                </Typography>
-              </div>
-              <Typography variant="p" className="text-[color:var(--color-muted)]">
-                Define tus días y horas de trabajo habituales. Puedes pausar/activar horarios según
-                necesites.
-              </Typography>
-            </div>
-            <Button
-              onClick={() => setShowAddSlot(true)}
-              variant="primary"
-              size="md"
-              className="w-full sm:w-auto flex items-center space-x-2 justify-center shadow-md hover:shadow-lg hover:opacity-90"
-            >
-              <Plus className="h-4 w-4" />
-              <span>Agregar Horario</span>
-            </Button>
-          </div>
-        </div>
-
-        <div className="p-3 sm:p-6">
-          <TimeSlotList
-            timeSlots={timeSlots}
-            onToggleAction={(id: string) => {
-              const slot = timeSlots.find((s) => s.id === id);
-              if (slot) {
-                updateTimeSlot({ id, isActive: !slot.isActive });
-              }
-            }}
-            onEditAction={(slot: TimeSlot) => setEditingSlot(slot.id)}
-            onDeleteAction={(id: string) => setDeletingSlotId(id)}
-            onAddAction={handleAddFromDay}
-          />
-
-          {timeSlots.length === 0 && (
-            <div className="text-center">
-              <Button
-                onClick={() => setShowAddSlot(true)}
-                variant="primary"
-                size="md"
-                className="shadow-md hover:shadow-lg hover:opacity-90"
-              >
-                Configurar Primer Horario
-              </Button>
-            </div>
-          )}
         </div>
       </div>
 
       {/* Fechas Especiales */}
-      <div className="bg-[color:var(--color-surface)] rounded-lg border border-[color:var(--color-border)]/30">
-        <div className="px-3 sm:px-6 py-3 sm:py-4 border-b border-[color:var(--color-border)]/30 bg-gradient-to-r from-[color:var(--color-primary)]/10 to-[color:var(--color-accent)]/10">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
+      <div className="rounded-xl border border-[color:var(--color-border)]/60 bg-[color:var(--color-surface)]">
+        <div className="flex items-center justify-between border-b border-[color:var(--color-border)]/60 px-5 py-4">
+          <div className="flex items-center gap-3">
+            <Calendar className="h-5 w-5 text-[color:var(--color-primary)]" />
             <div>
-              <div className="flex items-center space-x-2 mb-1">
-                <Calendar className="h-5 w-5 text-[color:var(--color-accent)]" />
-                <Typography
-                  as="h2"
-                  variant="h3"
-                  className="text-[color:var(--color-heading)] font-semibold"
-                >
-                  Fechas Especiales
-                </Typography>
-              </div>
-              <Typography variant="p" className="text-[color:var(--color-muted)]">
-                Días libres, vacaciones, horarios extendidos para eventos sociales, etc.
-              </Typography>
+              <h2 className="text-sm font-semibold text-(--color-heading)">Fechas Especiales</h2>
+              <p className="text-xs text-[color:var(--color-muted)]">
+                Días libres, vacaciones, horarios extendidos
+              </p>
             </div>
-            <Button
-              onClick={() => setShowAddSpecialDate(true)}
-              variant="primary"
-              size="md"
-              className="w-full sm:w-auto flex items-center space-x-2 justify-center shadow-md hover:shadow-lg hover:opacity-90"
-            >
-              <Plus className="h-4 w-4" />
-              <span>Agregar Fecha Especial</span>
-            </Button>
           </div>
+          <Button
+            onClick={() => setShowAddSpecialDate(true)}
+            variant="primary"
+            size="sm"
+            className="flex items-center gap-1.5"
+          >
+            <Plus className="h-4 w-4" />
+            Agregar
+          </Button>
         </div>
 
-        <div className="p-3 sm:p-6">
+        <div className="p-5">
           <SpecialDateList
             specialDates={specialDates}
             onEditAction={(specialDate: SpecialDate) => setEditingSpecialDate(specialDate)}
@@ -342,14 +237,16 @@ export default function AvailabilityPage() {
           />
 
           {specialDates.length === 0 && (
-            <div className="text-center">
+            <div className="py-8 text-center">
+              <p className="text-sm text-[color:var(--color-muted)] mb-4">
+                No hay fechas especiales configuradas
+              </p>
               <Button
                 onClick={() => setShowAddSpecialDate(true)}
                 variant="primary"
                 size="md"
-                className="shadow-md hover:shadow-lg hover:opacity-90"
               >
-                Agregar Primera Fecha Especial
+                Agregar Primera Fecha
               </Button>
             </div>
           )}
@@ -365,7 +262,6 @@ export default function AvailabilityPage() {
         preselectedDay={preselectedDay}
         preselectedLocation={preselectedLocation}
       />
-
       <EditTimeSlotModal
         isOpen={!!editingSlot}
         onClose={() => setEditingSlot(null)}
@@ -376,7 +272,6 @@ export default function AvailabilityPage() {
         isLoading={isEditingTimeSlot}
         slot={editingSlot ? timeSlots.find((slot) => slot.id === editingSlot) || null : null}
       />
-
       <EditSpecialDateModal
         isOpen={!!editingSpecialDate}
         onClose={() => setEditingSpecialDate(null)}
@@ -387,14 +282,12 @@ export default function AvailabilityPage() {
         isLoading={isEditingSpecialDate}
         specialDate={editingSpecialDate}
       />
-
       <AddSpecialDateModal
         isOpen={showAddSpecialDate}
         onClose={() => setShowAddSpecialDate(false)}
         onSubmit={createSpecialDate}
         isLoading={isCreatingSpecialDate}
       />
-
       <ConfirmModal
         open={!!deletingSlotId}
         title="Eliminar horario"
@@ -411,7 +304,6 @@ export default function AvailabilityPage() {
         }}
         onCancel={() => setDeletingSlotId(null)}
       />
-
       <ConfirmModal
         open={!!deletingSpecialId}
         title="Eliminar fecha especial"

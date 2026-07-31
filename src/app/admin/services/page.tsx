@@ -23,10 +23,22 @@ const SERVICE_CATEGORIES = {
   OTHER: "Otros",
 };
 
+const emptyForm = (): ServiceFormData => ({
+  name: "",
+  description: "",
+  price: "",
+  duration: "",
+  category: "SOCIAL",
+  isActive: true,
+  cost: "",
+  videoUrl: "",
+  images: [],
+});
+
 const fetchServices = async () => {
   const response = await fetch("/api/admin/services");
   if (!response.ok) throw new Error("Error al cargar servicios");
-  return response.json(); // { services: Service[] }
+  return response.json();
 };
 
 export default function ServicesPage() {
@@ -49,14 +61,7 @@ export default function ServicesPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState<ServiceFormData>({
-    name: "",
-    description: "",
-    price: "",
-    duration: "",
-    category: "SOCIAL",
-    isActive: true,
-  });
+  const [formData, setFormData] = useState<ServiceFormData>(emptyForm());
 
   useEffect(() => {
     if (status === "loading") return;
@@ -77,13 +82,14 @@ export default function ServicesPage() {
 
       const response = await fetch(url, {
         method,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
           price: Number.parseFloat(formData.price),
           duration: Number.parseInt(formData.duration, 10),
+          cost: formData.cost === "" ? null : Number.parseFloat(formData.cost),
+          videoUrl: formData.videoUrl || null,
+          images: formData.images,
         }),
       });
 
@@ -110,6 +116,13 @@ export default function ServicesPage() {
       duration: service.duration.toString(),
       category: service.category,
       isActive: service.isActive,
+      cost: service.cost != null ? service.cost.toString() : "",
+      videoUrl: service.videoUrl || "",
+      images: (service.images || []).map((img) => ({
+        url: img.url,
+        isPrimary: img.isPrimary,
+        key: img.url.replace(/^\/media\//, ""),
+      })),
     });
     setShowModal(true);
   };
@@ -128,20 +141,13 @@ export default function ServicesPage() {
     try {
       const response = await fetch(`/api/admin/services/${service.id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...service,
-          isActive: !service.isActive,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...service, isActive: !service.isActive }),
       });
-
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.error || "Error al actualizar el servicio");
       }
-
       await queryClient.invalidateQueries({ queryKey: ["admin-services"] });
       await queryClient.invalidateQueries({ queryKey: ["services"] });
     } catch (error) {
@@ -152,14 +158,7 @@ export default function ServicesPage() {
 
   const openNewModal = () => {
     setEditingService(null);
-    setFormData({
-      name: "",
-      description: "",
-      price: "",
-      duration: "",
-      category: "SOCIAL",
-      isActive: true,
-    });
+    setFormData(emptyForm());
     setShowModal(true);
   };
 
@@ -199,7 +198,6 @@ export default function ServicesPage() {
         </div>
       )}
 
-      {/* Mobile View - Cards */}
       <ServiceListMobile
         services={services}
         serviceCategories={SERVICE_CATEGORIES}
@@ -210,7 +208,6 @@ export default function ServicesPage() {
         openNewModal={openNewModal}
       />
 
-      {/* Desktop View - Table */}
       <ServiceTableDesktop
         services={services}
         serviceCategories={SERVICE_CATEGORIES}
@@ -221,7 +218,6 @@ export default function ServicesPage() {
         openNewModal={openNewModal}
       />
 
-      {/* Modal */}
       <ServiceFormModal
         show={showModal}
         editingService={editingService}
@@ -232,9 +228,7 @@ export default function ServicesPage() {
         serviceCategories={SERVICE_CATEGORIES}
       />
 
-      {/* Modal de información sobre combinaciones de servicios */}
       <ServiceInfoModal show={showInfoModal} onClose={() => setShowInfoModal(false)} />
-      {/* Modal de ver detalles del servicio */}
       <ViewServiceModal
         show={showViewModal && !!viewingService}
         viewingService={viewingService}
