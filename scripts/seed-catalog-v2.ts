@@ -9,6 +9,7 @@ const prisma = new PrismaClient({ adapter: new PrismaPg(pool) });
 const c = (name: string) => `/media/catalog-images/${name}.jpg`;
 const canva = (n: string) => `/media/canva-import/${n}.jpg`;
 const canvaPng = (n: string) => `/media/canva-import/${n}.png`;
+const v = (name: string) => `/media/catalog-videos/${name}.mp4`;
 
 const services = [
   {
@@ -20,7 +21,7 @@ const services = [
     category: "BRIDAL",
     cost: 140,
     images: [c("picsum-bridal"), c("picsum-bride"), c("1616394584738-fc6e612e71b9")],
-    videoUrl: "https://www.youtube.com/embed/6LIItw7SJRE",
+    videoUrl: v("39899-720"),
   },
   {
     name: "Maquillaje Social / Eventos",
@@ -31,7 +32,7 @@ const services = [
     category: "SOCIAL",
     cost: 60,
     images: [c("picsum-elegant"), c("picsum-glamour"), c("picsum-makeup")],
-    videoUrl: "https://www.youtube.com/embed/9kRgoPQYfmo",
+    videoUrl: v("41058-720"),
   },
   {
     name: "Maquillaje Piel Madura",

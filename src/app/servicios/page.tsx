@@ -44,6 +44,10 @@ function primaryImage(s: Service) {
   return s.images.find((i) => i.isPrimary)?.url || s.images[0].url;
 }
 
+function isFileVideo(url?: string | null) {
+  return url && /\.(mp4|webm|mov)(\?|$)/i.test(url);
+}
+
 export default function ServiciosPage() {
   const { data: services = [], isLoading } = useQuery({
     queryKey: ["services"],
@@ -51,7 +55,6 @@ export default function ServiciosPage() {
   });
   const [active, setActive] = useState("TODOS");
   const [selected, setSelected] = useState<Service | null>(null);
-  const [hovered, setHovered] = useState<string | null>(null);
 
   const categories = useMemo(() => {
     const present = Array.from(new Set(services.map((s) => s.category)));
@@ -121,76 +124,86 @@ export default function ServiciosPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((s, i) => {
+            {filtered.map((s) => {
               const img = primaryImage(s);
-              const isVideo =
-                !!s.videoUrl && hovered === s.id && !/youtube\.com|youtu\.be|vimeo/.test(s.videoUrl);
+              const isFile = isFileVideo(s.videoUrl);
               return (
                 <article
                   key={s.id}
-                  style={{ animationDelay: `${i * 60}ms` }}
-                  className="group flex flex-col overflow-hidden rounded-2xl bg-[color:var(--color-surface)] shadow-sm transition hover:shadow-xl"
+                  className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl bg-[color:var(--color-surface)] shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
+                  onClick={() => setSelected(s)}
+                  onMouseEnter={(e) => {
+                    const video = (e.currentTarget as HTMLElement).querySelector(".hover-video") as HTMLVideoElement | null;
+                    if (video) video.play().catch(() => {});
+                  }}
+                  onMouseLeave={(e) => {
+                    const video = (e.currentTarget as HTMLElement).querySelector(".hover-video") as HTMLVideoElement | null;
+                    if (video) { video.pause(); video.currentTime = 0; }
+                  }}
                 >
-                  <button
-                    onClick={() => setSelected(s)}
-                    onMouseEnter={() => setHovered(s.id)}
-                    onMouseLeave={() => setHovered(null)}
-                    className="relative block aspect-[4/5] w-full overflow-hidden bg-[color:var(--color-surface-elevated)]"
-                  >
-                    {img && !isVideo && (
+                  {/* Image / Video area */}
+                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-[color:var(--color-surface-elevated)]">
+                    {img && (
                       <img
                         src={img}
                         alt={s.name}
                         className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                       />
                     )}
-                    {isVideo && (
-                      <video
-                        src={s.videoUrl!}
-                        autoPlay
-                        muted
-                        loop
-                        className="h-full w-full object-cover"
-                      />
-                    )}
-                    {!img && !isVideo && (
+                    {!img && (
                       <div className="flex h-full items-center justify-center text-[color:var(--color-muted)]">
                         Sin imagen
                       </div>
                     )}
-                    {s.videoUrl && (
-                      <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-black/50 px-2 py-1 text-xs text-white">
-                        <Play className="h-3 w-3" /> Video
+                    {/* Hidden hover video */}
+                    {isFile && (
+                      <video
+                        src={s.videoUrl!}
+                        muted
+                        loop
+                        className="hover-video absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                      />
+                    )}
+                    {isFile && (
+                      <span className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full bg-black/50 px-2 py-1 text-xs text-white backdrop-blur-sm">
+                        <Play className="h-3 w-3 fill-white" /> Video
                       </span>
                     )}
-                    <span className="absolute left-3 top-3 rounded-full bg-[color:var(--color-primary)]/90 px-3 py-1 text-xs font-medium text-white">
+                    <span className="absolute left-3 top-3 z-10 rounded-full bg-[color:var(--color-primary)]/90 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
                       {CATEGORY_LABELS[s.category] || s.category}
                     </span>
-                  </button>
+                    {!isFile && s.videoUrl && (
+                      <span className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full bg-black/50 px-2 py-1 text-xs text-white backdrop-blur-sm">
+                        <Play className="h-3 w-3 fill-white" /> Video
+                      </span>
+                    )}
+                  </div>
 
+                  {/* Info strip */}
                   <div className="flex flex-1 flex-col p-5">
-                    <h2 className="font-[family:var(--font-playfair)] text-lg font-semibold text-[color:var(--color-heading)]">
-                      {s.name}
-                    </h2>
+                    <div className="flex items-start justify-between gap-2">
+                      <h2 className="font-[family:var(--font-playfair)] text-lg font-semibold leading-tight text-[color:var(--color-heading)]">
+                        {s.name}
+                      </h2>
+                    </div>
                     {s.description && (
                       <p className="mt-1 line-clamp-2 text-sm text-[color:var(--color-body)]">
                         {s.description}
                       </p>
                     )}
-                    <div className="mt-3 flex items-center gap-3 text-sm text-[color:var(--color-muted)]">
-                      <span className="font-semibold text-[color:var(--color-primary)]">S/ {s.price}</span>
-                      {s.duration > 0 && (
-                        <span className="flex items-center gap-1">
-                          <Clock className="h-3.5 w-3.5" /> {s.duration} min
-                        </span>
-                      )}
+                    <div className="mt-auto flex items-center justify-between pt-4">
+                      <span className="text-lg font-semibold text-[color:var(--color-primary)]">
+                        S/ {s.price}
+                      </span>
+                      <div className="flex items-center gap-3 text-sm text-[color:var(--color-muted)]">
+                        {s.duration > 0 && (
+                          <span className="flex items-center gap-1">
+                            <Clock className="h-3.5 w-3.5" />
+                            {s.duration} min
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <button
-                      onClick={() => setSelected(s)}
-                      className="mt-auto w-full rounded-full border border-[color:var(--color-border)] h-10 text-sm font-medium text-[color:var(--color-heading)] transition hover:bg-[color:var(--color-primary)] hover:text-white"
-                    >
-                      Ver galería
-                    </button>
                   </div>
                 </article>
               );
