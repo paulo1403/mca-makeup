@@ -165,12 +165,12 @@ export default function ToggleServiceCategoryGroup({ category, services, fieldNa
 
   const handleQuantityChange = (serviceId: string, qty: number) => {
     const currentServices = [...selectedServices];
-    const idx = currentServices.findIndex((s: { id: string }) => s.id === serviceId);
+    const idx = currentServices.findIndex((s) => s.id === serviceId);
     if (idx >= 0) {
       if (qty <= 0) {
         currentServices.splice(idx, 1);
       } else {
-        currentServices[idx].quantity = qty;
+        currentServices[idx] = { ...currentServices[idx], quantity: qty };
       }
     }
     setValue(fieldName, currentServices, { shouldValidate: true });
