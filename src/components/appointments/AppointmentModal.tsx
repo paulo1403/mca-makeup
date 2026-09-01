@@ -43,9 +43,9 @@ export default function AppointmentModal({ appointment, isOpen, onClose, onEdit 
   const handleExportPng = async () => {
     setExportBtn("Exportando...");
     try {
-      const copied = await copyQuotePngToClipboard({ appointment, deposit: 150 });
+      const copied = await copyQuotePngToClipboard({ appointment });
       if (!copied) {
-        const blob = await generateQuotePng({ appointment, deposit: 150 });
+        const blob = await generateQuotePng({ appointment });
         if (blob) {
           const url = URL.createObjectURL(blob);
           const a = document.createElement("a");
@@ -72,7 +72,7 @@ export default function AppointmentModal({ appointment, isOpen, onClose, onEdit 
   const handleCopyBudgetText = async () => {
     setCopyTextBtn("Copiando...");
     try {
-      await navigator.clipboard.writeText(buildQuoteText({ appointment, deposit: 150 }));
+      await navigator.clipboard.writeText(buildQuoteText({ appointment }));
       toast.success("Texto copiado al portapapeles");
       setCopyTextBtn("Copiado");
     } catch {

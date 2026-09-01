@@ -10,11 +10,11 @@ import useServicesQuery from "@/hooks/useServicesQuery";
 import { useTransportCost } from "@/hooks/useTransportCost";
 import type { BookingData } from "@/lib/bookingSchema";
 import { calculateNightShiftCost } from "@/utils/nightShift";
+import { calculateDepositForSelected } from "@/utils/deposit";
 
 export default function Section4_PersonalSummary() {
   const { control } = useFormContext<BookingData>();
   const [copied, setCopied] = useState(false);
-  const deposit = 150;
   const plinNumber = "+51999209880";
 
   const selected = useWatch({ name: "selectedServices" }) || [];
@@ -30,6 +30,7 @@ export default function Section4_PersonalSummary() {
     return svc?.category === "BRIDAL";
   });
   const nightShiftCost = timeSlot ? calculateNightShiftCost(timeSlot, district, isBridalSelected) : 0;
+  const deposit = calculateDepositForSelected(selected);
 
   useEffect(() => {
     if (transportEnabled && district) {

@@ -7,6 +7,7 @@ import {
   formatTime,
   getPriceBreakdown,
 } from "@/utils/appointmentHelpers";
+import { calculateDepositForAppointment } from "@/utils/deposit";
 
 export interface QuoteShareData {
   appointment: Appointment;
@@ -48,7 +49,8 @@ function normalizeStudioAddress(text: string) {
   return "Av Bolívar 1075 Pueblo Libre";
 }
 
-export function buildQuoteText({ appointment, deposit = 150 }: QuoteShareData) {
+export function buildQuoteText({ appointment, deposit }: QuoteShareData) {
+  const effectiveDeposit = deposit ?? calculateDepositForAppointment(appointment);
   const services = formatServices(appointment);
   const price = getPriceBreakdown(appointment);
   const lines: string[] = [];
@@ -90,15 +92,16 @@ export function buildQuoteText({ appointment, deposit = 150 }: QuoteShareData) {
     );
   }
   lines.push(`Total ${formatPrice(price.totalPrice)}`);
-  lines.push(`Adelanto ${formatPrice(deposit)}`);
-  lines.push(`Restante ${formatPrice(Math.max(0, (price.totalPrice || 0) - (deposit || 0)))}`);
+  lines.push(`Adelanto ${formatPrice(effectiveDeposit)}`);
+  lines.push(`Restante ${formatPrice(Math.max(0, (price.totalPrice || 0) - (effectiveDeposit || 0)))}`);
   return lines.join("\n");
 }
 
 export async function generateQuotePng({
   appointment,
-  deposit = 150,
+  deposit,
 }: QuoteShareData): Promise<Blob | null> {
+  const effectiveDeposit = deposit ?? calculateDepositForAppointment(appointment);
   const services = formatServices(appointment);
   const price = getPriceBreakdown(appointment);
 
@@ -364,7 +367,7 @@ export async function generateQuotePng({
   y = drawTwoColumnWrapped(
     ctx,
     "Adelanto",
-    formatPrice(deposit),
+    formatPrice(effectiveDeposit),
     contentX,
     y,
     contentWidth,
@@ -386,7 +389,7 @@ export async function generateQuotePng({
   roundRect(ctx, pillX, pillY, labelW + 20, pillH, 10, true, false);
   ctx.fillStyle = colors.accent;
   ctx.fillText(label, pillX + 10, y);
-  const value = formatPrice(Math.max(0, (price.totalPrice || 0) - (deposit || 0)));
+  const value = formatPrice(Math.max(0, (price.totalPrice || 0) - (effectiveDeposit || 0)));
   const valueW = ctx.measureText(value).width;
   ctx.fillStyle = colors.heading;
   ctx.fillText(value, contentX + contentWidth - valueW, y);

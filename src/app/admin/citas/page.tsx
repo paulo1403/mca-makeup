@@ -349,9 +349,9 @@ function DetailPanel({ a, onClose, onEdit, onStatus, onDelete, onEmail, isUpdati
     setExportLabel("Exportando...");
     try {
       const { copyQuotePngToClipboard, generateQuotePng } = await import("@/components/share/QuoteShareCard");
-      const copied = await copyQuotePngToClipboard({ appointment: a, deposit: 150 });
+      const copied = await copyQuotePngToClipboard({ appointment: a });
       if (!copied) {
-        const blob = await generateQuotePng({ appointment: a, deposit: 150 });
+        const blob = await generateQuotePng({ appointment: a });
         if (blob) {
           const url = URL.createObjectURL(blob);
           const el = document.createElement("a");
@@ -373,7 +373,7 @@ function DetailPanel({ a, onClose, onEdit, onStatus, onDelete, onEmail, isUpdati
     setCopyLabel("Copiando...");
     try {
       const { buildQuoteText } = await import("@/components/share/QuoteShareCard");
-      await navigator.clipboard.writeText(buildQuoteText({ appointment: a, deposit: 150 }));
+      await navigator.clipboard.writeText(buildQuoteText({ appointment: a }));
       toast.success("Texto copiado");
     } catch { toast.error("No se pudo copiar"); }
     setTimeout(() => setCopyLabel("Copiar texto"), 1800);
