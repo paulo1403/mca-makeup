@@ -7,29 +7,12 @@ export async function GET(request: NextRequest) {
     const from = searchParams.get("from");
     const to = searchParams.get("to");
 
-    const now = new Date();
-    const monthStart = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
-
     const fromDate = from ? new Date(`${from}T00:00:00.000Z`) : undefined;
     const toDate = to ? new Date(`${to}T23:59:59.999Z`) : undefined;
     const globalDateFilter = {
       gte: fromDate,
       lte: toDate,
     };
-    const thisMonthStart = fromDate && fromDate > monthStart ? fromDate : monthStart;
-
-    const thisMonthEntries = await prisma.financeEntry.findMany({
-      where: {
-        entryDate: {
-          gte: thisMonthStart,
-          lte: toDate,
-        },
-      },
-      select: {
-        amount: true,
-        type: true,
-      },
-    });
 
     const allEntries = await prisma.financeEntry.findMany({
       where: {
@@ -47,21 +30,19 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    const thisMonthIncome = thisMonthEntries
+    // ponytail: totals = filtro actual, no mes fijo. Fix bug meses anteriores daban 0
+    const filteredIncome = allEntries
       .filter((item) => item.type === "INCOME")
       .reduce((sum, item) => sum + item.amount, 0);
 
-    const thisMonthExpense = thisMonthEntries
+    const filteredExpense = allEntries
       .filter((item) => item.type === "EXPENSE")
       .reduce((sum, item) => sum + item.amount, 0);
 
-    const allTimeIncome = allEntries
-      .filter((item) => item.type === "INCOME")
-      .reduce((sum, item) => sum + item.amount, 0);
-
-    const allTimeExpense = allEntries
-      .filter((item) => item.type === "EXPENSE")
-      .reduce((sum, item) => sum + item.amount, 0);
+    const thisMonthIncome = filteredIncome;
+    const thisMonthExpense = filteredExpense;
+    const allTimeIncome = filteredIncome;
+    const allTimeExpense = filteredExpense;
 
     const byServiceLineMap = new Map<
       string,
