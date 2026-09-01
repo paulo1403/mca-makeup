@@ -25,7 +25,11 @@ export default function Section4_PersonalSummary() {
 
   const { data: services = [] } = useServicesQuery();
   const transportEnabled = locationType === "HOME";
-  const nightShiftCost = timeSlot ? calculateNightShiftCost(timeSlot) : 0;
+  const isBridalSelected = (selected || []).some((s: { id: string }) => {
+    const svc = (services as { id: string; category: string }[]).find((x) => x.id === s.id);
+    return svc?.category === "BRIDAL";
+  });
+  const nightShiftCost = timeSlot ? calculateNightShiftCost(timeSlot, district, isBridalSelected) : 0;
 
   useEffect(() => {
     if (transportEnabled && district) {

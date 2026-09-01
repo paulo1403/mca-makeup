@@ -223,8 +223,9 @@ export async function POST(request: NextRequest) {
     let transportCost = 0;
     let totalPrice = calculatedServicePrice;
 
-    // Calculate night shift cost
-    const nightShiftCost = calculateNightShiftCost(validatedData.appointmentTimeRange);
+    // ponytail: novias S/80, sociales S/50, ventana extendida 7am para Lurin/Pachacamac/Cieneguilla
+    const isBridalBooking = categories.includes("BRIDAL");
+    const nightShiftCost = calculateNightShiftCost(validatedData.appointmentTimeRange, validatedData.district, isBridalBooking);
 
     if (validatedData.locationType === "HOME" && validatedData.district) {
       const transportCostData = await prisma.transportCost.findFirst({

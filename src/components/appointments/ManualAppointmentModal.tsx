@@ -186,9 +186,13 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
     const duration = items.reduce((sum, it) => sum + (it.duration || 0) * (it.quantity || 1), 0);
     const transport =
       locationType === "HOME" && transportCost ? transportCost.cost : 0;
-    const nightShift = timeSlot ? calculateNightShiftCost(timeSlot) : 0;
+    const isBridalSelected = selectedServices.some((s) => {
+      const svc = servicesList?.find((x: ServiceData) => x.id === s.id);
+      return svc?.category === "BRIDAL";
+    });
+    const nightShift = timeSlot ? calculateNightShiftCost(timeSlot, district, isBridalSelected) : 0;
     return { subtotal, total: subtotal + transport + nightShift, duration, transport, nightShift };
-  }, [selectedServices, servicesList, locationType, transportCost, timeSlot]);
+  }, [selectedServices, servicesList, locationType, transportCost, timeSlot, district]);
 
   const { data: rangesData, isLoading: slotsLoading } = useAvailableRanges(
     date || null,
