@@ -20,7 +20,6 @@ export interface EmailData {
   text?: string;
 }
 
-// Configurar Nodemailer
 let transporter: nodemailer.Transporter | null = null;
 
 const getTransporter = () => {
@@ -43,7 +42,6 @@ export const sendEmail = async (emailData: EmailData): Promise<boolean> => {
       }
       return false;
     }
-
     const transporter = getTransporter();
     if (!transporter) {
       if (process.env.NODE_ENV !== "production") {
@@ -51,7 +49,6 @@ export const sendEmail = async (emailData: EmailData): Promise<boolean> => {
       }
       return false;
     }
-
     const mailOptions = {
       from: `"Marcela Cordero Makeup" <${EMAIL_CONFIG.auth.user}>`,
       to: emailData.to,
@@ -59,9 +56,7 @@ export const sendEmail = async (emailData: EmailData): Promise<boolean> => {
       html: emailData.html,
       text: emailData.text,
     };
-
     const result = await transporter.sendMail(mailOptions);
-
     console.log("Email sent successfully to:", emailData.to, "Message ID:", result.messageId);
     return true;
   } catch (error) {
@@ -70,7 +65,6 @@ export const sendEmail = async (emailData: EmailData): Promise<boolean> => {
   }
 };
 
-// Nueva función para enviar emails a múltiples destinatarios (admins)
 export const sendEmailToAdmins = async (emailData: Omit<EmailData, "to">): Promise<boolean> => {
   try {
     if (!EMAIL_CONFIG.auth.user || !EMAIL_CONFIG.auth.pass) {
@@ -79,7 +73,6 @@ export const sendEmailToAdmins = async (emailData: Omit<EmailData, "to">): Promi
       }
       return false;
     }
-
     const transporter = getTransporter();
     if (!transporter) {
       if (process.env.NODE_ENV !== "production") {
@@ -87,7 +80,6 @@ export const sendEmailToAdmins = async (emailData: Omit<EmailData, "to">): Promi
       }
       return false;
     }
-
     const mailOptions = {
       from: `"Marcela Cordero Makeup" <${EMAIL_CONFIG.auth.user}>`,
       to: EMAIL_CONFIG.adminEmails,
@@ -95,9 +87,7 @@ export const sendEmailToAdmins = async (emailData: Omit<EmailData, "to">): Promi
       html: emailData.html,
       text: emailData.text,
     };
-
     const result = await transporter.sendMail(mailOptions);
-
     console.log(
       "Email sent successfully to admins:",
       EMAIL_CONFIG.adminEmails.join(", "),
@@ -111,62 +101,71 @@ export const sendEmailToAdmins = async (emailData: Omit<EmailData, "to">): Promi
   }
 };
 
-// Función helper para generar estructura de email con estilos inline compatibles con clientes de email
-const generateInlineEmailStructure = (content: string) => `
+// ponytail: modern sans, meta color-scheme, año dinámico, preheader hidden
+const generateInlineEmailStructure = (content: string, preheader?: string) => `
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
   <title>Marcela Cordero Makeup</title>
   <style>
-    /* Dark-mode friendly overrides for email clients that support prefers-color-scheme */
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    :root { color-scheme: light dark; }
     @media (prefers-color-scheme: dark) {
       body { background-color: #0F0B08 !important; }
-      .email-container { background-color: #16110D !important; color: #E9DED3 !important; }
-      .accent { background-color: #D0B9A7 !important; }
-      .accent-text { color: #D0B9A7 !important; }
-      .divider { background-color: #D0B9A7 !important; }
-      .info-box { background-color: #1E1712 !important; border-left-color: #D0B9A7 !important; color: #E9DED3 !important; }
-      a.button-primary { background-color: #D0B9A7 !important; color: #0F0B08 !important; }
-      .signature { color: #E9DED3 !important; }
+      .email-wrapper { background-color: #0F0B08 !important; }
+      .email-container { background-color: #1A120E !important; border-color: #2D1F16 !important; }
+      .email-header, .email-body { background-color: #1A120E !important; }
+      .email-footer { background-color: #161008 !important; border-color: #2D1F16 !important; }
+      .accent { background: linear-gradient(90deg, #C9A88A, #E8D5C4) !important; }
+      .accent-text { color: #E8D5C4 !important; }
+      .divider { background-color: #C9A88A !important; }
+      .info-box { background-color: #1E1712 !important; border-left-color: #C9A88A !important; color: #E9DED3 !important; }
+      .text-heading { color: #F5EDE4 !important; }
+      .text-body { color: #D4C4B0 !important; }
+      .text-muted { color: #9A8475 !important; }
+      a.button-primary { background-color: #C9A88A !important; color: #0F0B08 !important; }
+    }
+    @media only screen and (max-width: 600px) {
+      .email-container { width: 100% !important; border-radius: 16px !important; }
+      .email-header { padding: 28px 20px 16px !important; }
+      .email-body { padding: 8px 20px 28px !important; }
+      .email-footer { padding: 20px !important; }
     }
   </style>
 </head>
-<body style="margin: 0; padding: 0; font-family: Georgia, 'Times New Roman', serif; background-color: #F6EFE8;">
-  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #F6EFE8;">
+<body style="margin:0; padding:0; font-family: 'Plus Jakarta Sans', Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; background-color: #F6EFE8; -webkit-font-smoothing: antialiased;">
+  ${preheader ? `<div style="display:none; max-height:0; overflow:hidden; mso-hide:all;">${preheader}&#847; &zwnj; &nbsp; &#8199; &shy;</div>` : ""}
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" class="email-wrapper" style="background-color: #F6EFE8;">
     <tr>
-      <td align="center" style="padding: 20px 10px;">
-        <table role="presentation" class="email-container" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 20px; box-shadow: 0 8px 32px rgba(176, 132, 99, 0.12); overflow: hidden;">
-          <!-- Header Decorativo -->
+      <td align="center" style="padding: 32px 16px;">
+        <table role="presentation" class="email-container" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width:600px; width:100%; background-color:#ffffff; border-radius:24px; border:1px solid #EDE6DE; overflow:hidden; box-shadow: 0 4px 24px rgba(176,132,99,0.08);">
           <tr>
-            <td class="accent" style="height: 6px; background-color: #B08463;"></td>
+            <td class="accent" style="height:4px; background: linear-gradient(90deg, #B08463 0%, #D0B9A7 100%); line-height:4px; font-size:0;">&nbsp;</td>
           </tr>
-          
-          <!-- Header Principal -->
           <tr>
-            <td style="padding: 40px 30px 20px; text-align: center; background-color: #ffffff;">
-              <h1 style="margin: 0; font-size: 32px; font-weight: 400; letter-spacing: 1px; text-transform: none; color: #0F1724; font-family: Georgia, serif;">MARCELA CORDERO</h1>
-              <p class="accent-text" style="margin: 8px 0 0; font-size: 15px; font-weight: 500; font-style: italic; letter-spacing: 0.4px; color: #B08463;">Makeup Artist</p>
-              <div class="divider" style="width: 72px; height: 3px; background-color: #B08463; margin: 18px auto 0; border-radius: 2px;"></div>
+            <td class="email-header" style="padding: 36px 32px 18px; text-align:center; background-color:#ffffff;">
+              <div style="font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#9A8475; line-height:1;">MARCELA CORDERO</div>
+              <div style="font-size:26px; font-weight:300; letter-spacing:-0.5px; color:#1A120E; margin:6px 0 0; line-height:1.1;">Makeup Artist</div>
+              <div class="divider" style="width:40px; height:2px; background-color:#B08463; margin:16px auto 0; border-radius:999px;"></div>
             </td>
           </tr>
-          
-          <!-- Contenido Principal -->
           <tr>
-            <td style="padding: 0 30px 40px; background-color: #ffffff;">
+            <td class="email-body" style="padding: 8px 32px 32px; background-color:#ffffff; color:#3D2E24;">
               ${content}
             </td>
           </tr>
-          
-          <!-- Footer -->
           <tr>
-            <td style="padding: 25px 30px; text-align: center; border-top: 2px solid #f0f0f0; background-color: #ffffff;">
-              <p style="margin: 0; font-size: 14px; color: #8a8a8a;">© 2024 Marcela Cordero Makeup</p>
-              <p style="margin: 5px 0 0; font-size: 12px; color: #aaa;">Av. Bolívar 1075 , Pueblo Libre, Lima</p>
+            <td class="email-footer" style="padding: 22px 32px; text-align:center; background-color:#FDFBF9; border-top:1px solid #F0E6DE;">
+              <p class="text-muted" style="margin:0; font-size:13px; color:#9A8475; letter-spacing:0.2px;">© ${new Date().getFullYear()} Marcela Cordero Makeup</p>
+              <p class="text-muted" style="margin:6px 0 0; font-size:12px; color:#B8A89A; line-height:1.5;">Av. Bolívar 1075, Pueblo Libre · Lima<br><a href="https://marcelacorderomakeup.com" style="color:#B08463; text-decoration:none; font-weight:500;">marcelacorderomakeup.com</a> · <a href="https://www.instagram.com/marcelacorderomakeup" style="color:#B08463; text-decoration:none;">Instagram</a></p>
             </td>
           </tr>
         </table>
+        <p style="margin:16px 0 0; font-size:11px; color:#B8A89A; line-height:1.5;">Si no solicitaste este correo, puedes ignorarlo de forma segura.</p>
       </td>
     </tr>
   </table>
@@ -174,37 +173,31 @@ const generateInlineEmailStructure = (content: string) => `
 </html>
 `;
 
-// Función helper para crear botones compatibles con email
 const createEmailButton = (
   text: string,
   href?: string,
   style: "primary" | "secondary" = "primary",
 ) => {
   const baseStyle =
-    "display: inline-block; padding: 12px 22px; text-decoration: none; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center; text-transform: none; letter-spacing: 0.2px; margin: 8px 6px;";
-
-  const primaryStyle = `${baseStyle} background-color: #B08463; color: #ffffff; border: none; box-shadow: 0 8px 24px rgba(176,132,99,0.12);`;
-  const secondaryStyle = `${baseStyle} background-color: #ffffff; color: #374151; border: 1px solid #e9e7ff;`;
-
+    "display:inline-block; padding:13px 28px; text-decoration:none; border-radius:999px; font-size:14px; font-weight:600; text-align:center; letter-spacing:0.2px; margin:6px; line-height:1; mso-padding-alt:13px 28px;";
+  const primaryStyle = `${baseStyle} background-color:#B08463; color:#ffffff; border:1px solid #B08463;`;
+  const secondaryStyle = `${baseStyle} background-color:#ffffff; color:#3D2E24; border:1px solid #EDE6DE;`;
   const buttonStyle = style === "primary" ? primaryStyle : secondaryStyle;
-
+  const klass = style === "primary" ? "button-primary" : "";
   if (href) {
-    return `<a href="${href}" style="${buttonStyle}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+    return `<a href="${href}" class="${klass}" style="${buttonStyle}" target="_blank" rel="noopener noreferrer">${text}</a>`;
   }
-  return `<span style="${buttonStyle}">${text}</span>`;
+  return `<span class="${klass}" style="${buttonStyle}">${text}</span>`;
 };
 
-// Función helper para crear cajas de información
 const createInfoBox = (content: string, type: "info" | "success" | "warning" = "info") => {
-  const baseStyle = "padding: 18px; border-radius: 12px; margin: 18px 0; border-left: 4px solid;";
-
+  const baseStyle = "padding:16px 18px; border-radius:14px; margin:16px 0; border:1px solid; font-size:14px; line-height:1.6;";
   const styles = {
-    info: `${baseStyle} background-color: #fbf8ff; border-left-color: #B08463;`,
-    success: `${baseStyle} background-color: #f0fdf4; border-left-color: #10b981;`,
-    warning: `${baseStyle} background-color: #fffbeb; border-left-color: #f59e0b;`,
+    info: `${baseStyle} background-color:#FDFBF9; border-color:#EDE6DE; border-left:3px solid #B08463;`,
+    success: `${baseStyle} background-color:#F0FDF4; border-color:#BBF7D0; border-left:3px solid #10b981;`,
+    warning: `${baseStyle} background-color:#FFFBEB; border-color:#FDE68A; border-left:3px solid #F59E0B;`,
   };
-
-  return `<div style="${styles[type]}">${content}</div>`;
+  return `<div class="info-box" style="${styles[type]}">${content}</div>`;
 };
 
 // Templates de email usando HTML directo (sin dependencias de EmailJS)
@@ -222,42 +215,42 @@ export const emailTemplates = {
   ) => ({
     subject: "¡Tu cita ha sido confirmada! - Marcela Cordero Makeup",
     html: generateInlineEmailStructure(`
-  <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B08463;">¡Hola ${clientName}!</h2>
-
-      <p style="font-size: 16px; line-height: 1.7; margin-bottom: 20px; color: #5a5a5a;">
-  Me complace confirmar tu cita para <strong style="color: #B08463;">${serviceType}</strong>.
+  <h2 class="text-heading" style="margin:0 0 8px 0; font-size:22px; font-weight:600; text-align:center; color:#1A120E; letter-spacing:-0.3px;">¡Hola ${clientName}!</h2>
+  <p class="text-muted" style="margin:0 0 20px 0; font-size:13px; text-align:center; color:#9A8475;">Tu cita está confirmada</p>
+      <p class="text-body" style="font-size:15px; line-height:1.7; margin:0 0 20px 0; color:#3D2E24;">
+  Me complace confirmar tu cita para <strong style="color:#B08463; font-weight:600;">${serviceType}</strong>.
       </p>
 
       ${createInfoBox(
         `
-  <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 600; color: #B08463;">💄 Detalles de tu cita:</h3>
+  <h3 style="margin:0 0 12px 0; font-size:13px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; color:#9A8475;">Detalles de tu cita</h3>
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
           <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Servicio:</strong> ${serviceType}
+            <td style="padding:6px 0; font-size:14px; color:#3D2E24;">
+              <span style="color:#9A8475;">Servicio</span> <strong style="color:#1A120E; float:right;">${serviceType}</strong>
             </td>
           </tr>
           <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Fecha:</strong> ${date}
+            <td style="padding:6px 0; font-size:14px; color:#3D2E24; border-top:1px solid #F0E6DE;">
+              <span style="color:#9A8475;">Fecha</span> <strong style="color:#1A120E; float:right;">${date}</strong>
             </td>
           </tr>
           <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Hora:</strong> ${time}
+            <td style="padding:6px 0; font-size:14px; color:#3D2E24; border-top:1px solid #F0E6DE;">
+              <span style="color:#9A8475;">Hora</span> <strong style="color:#1A120E; float:right;">${time}</strong>
             </td>
           </tr>
           <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Ubicación:</strong> ${locationType === "STUDIO" ? "Av. Bolívar 1075 , Pueblo Libre" : "A domicilio"}
+            <td style="padding:6px 0; font-size:14px; color:#3D2E24; border-top:1px solid #F0E6DE;">
+              <span style="color:#9A8475;">Ubicación</span> <strong style="color:#1A120E; float:right;">${locationType === "STUDIO" ? "Studio · Bolívar 1075" : "A domicilio"}</strong>
             </td>
           </tr>
           ${
             locationType === "HOME" && district
               ? `
           <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Distrito:</strong> ${district}
+            <td style="padding:6px 0; font-size:14px; color:#3D2E24; border-top:1px solid #F0E6DE;">
+              <span style="color:#9A8475;">Distrito</span> <strong style="color:#1A120E; float:right;">${district}</strong>
             </td>
           </tr>
           `
@@ -267,19 +260,8 @@ export const emailTemplates = {
             locationType === "HOME" && address
               ? `
           <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Dirección:</strong> ${address}
-            </td>
-          </tr>
-          `
-              : ""
-          }
-          ${
-            locationType === "HOME" && addressReference
-              ? `
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Referencia:</strong> ${addressReference}
+            <td style="padding:6px 0; font-size:14px; color:#3D2E24; border-top:1px solid #F0E6DE;">
+              <span style="color:#9A8475;">Dirección</span> <strong style="color:#1A120E; float:right; max-width:55%; text-align:right;">${address}</strong>
             </td>
           </tr>
           `
@@ -287,34 +269,30 @@ export const emailTemplates = {
           }
         </table>
       `,
-        "success",
+        "info",
       )}
 
       ${
         additionalNotes
           ? createInfoBox(
               `
-        <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #1C1C1C;">💬 Mensaje adicional:</h3>
-        <p style="margin: 0; font-style: italic; color: #5a5a5a;">"${additionalNotes}"</p>
+        <p style="margin:0; font-size:13px; font-weight:600; color:#9A8475; text-transform:uppercase; letter-spacing:0.5px;">Tu mensaje</p>
+        <p style="margin:8px 0 0; font-style:italic; color:#3D2E24; font-size:14px;">"${additionalNotes}"</p>
       `,
               "info",
             )
           : ""
       }
 
-      <p style="font-size: 16px; line-height: 1.7; margin-bottom: 20px; color: #5a5a5a;">
-        Estoy muy emocionada de trabajar contigo. Me pondré en contacto contigo 24 horas antes de la cita para confirmar los detalles finales.
+      <p class="text-body" style="font-size:14px; line-height:1.7; margin:20px 0 0; color:#3D2E24;">
+        Te escribiré 24h antes para confirmar detalles finales. Si necesitas cambiar algo, respóndeme a este correo.
       </p>
 
-      <p style="font-size: 16px; line-height: 1.7; margin-bottom: 30px; color: #5a5a5a;">
-        Si necesitas hacer algún cambio o tienes alguna pregunta, no dudes en contactarme.
-      </p>
-
-      <div style="text-align: center; margin: 30px 0;">
-  <p style="font-size: 18px; font-weight: 600; color: #B08463; margin: 0;">¡Nos vemos pronto!</p>
-  <p style="font-size: 16px; font-style: italic; color: #6b7280; margin: 10px 0 0;">Marcela Cordero</p>
+      <div style="text-align:center; margin:28px 0 0;">
+  <p style="font-size:15px; font-weight:600; color:#B08463; margin:0;">¡Nos vemos pronto!</p>
+  <p style="font-size:13px; color:#9A8475; margin:6px 0 0; letter-spacing:0.3px;">Marcela Cordero · Makeup Artist</p>
       </div>
-    `),
+    `, `Cita confirmada para ${serviceType} el ${date} a las ${time}`),
     text: `
       ¡Hola ${clientName}!
 
@@ -324,16 +302,14 @@ export const emailTemplates = {
       - Servicio: ${serviceType}
       - Fecha: ${date}
       - Hora: ${time}
-      - Ubicación: ${locationType === "STUDIO" ? "Av. Bolívar 1073 , Pueblo Libre" : "A domicilio"}
+      - Ubicación: ${locationType === "STUDIO" ? "Av. Bolívar 1075, Pueblo Libre" : "A domicilio"}
       ${locationType === "HOME" && district ? `- Distrito: ${district}` : ""}
       ${locationType === "HOME" && address ? `- Dirección: ${address}` : ""}
       ${locationType === "HOME" && addressReference ? `- Referencia: ${addressReference}` : ""}
 
       ${additionalNotes ? `Mensaje adicional: "${additionalNotes}"` : ""}
 
-      Estoy muy emocionada de trabajar contigo. Me pondré en contacto contigo 24 horas antes de la cita para confirmar los detalles finales.
-
-      Si necesitas hacer algún cambio o tienes alguna pregunta, no dudes en contactarme.
+      Te escribiré 24h antes para confirmar detalles finales.
 
       ¡Nos vemos pronto!
       Marcela Cordero
@@ -343,61 +319,43 @@ export const emailTemplates = {
   appointmentCancelled: (clientName: string, serviceType: string, date: string, time: string) => ({
     subject: "Cita cancelada - Marcela Cordero Makeup",
     html: generateInlineEmailStructure(`
-  <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B08463;">Hola ${clientName},</h2>
+  <h2 class="text-heading" style="margin:0 0 20px 0; font-size:22px; font-weight:600; text-align:center; color:#1A120E;">Hola ${clientName},</h2>
 
-      <p style="font-size: 16px; line-height: 1.7; margin-bottom: 20px; color: #5a5a5a;">
-        Lamento informarte que he tenido que cancelar tu cita programada.
+      <p class="text-body" style="font-size:15px; line-height:1.7; margin:0 0 20px 0; color:#3D2E24;">
+        Lamento informarte que tu cita ha sido cancelada.
       </p>
 
       ${createInfoBox(
         `
-        <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 600; color: #ef4444;">⚠️ Cita cancelada:</h3>
+        <h3 style="margin:0 0 12px 0; font-size:13px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; color:#9A8475;">Cita cancelada</h3>
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Servicio:</strong> ${serviceType}
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Fecha:</strong> ${date}
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Hora:</strong> ${time}
-            </td>
-          </tr>
+          <tr><td style="padding:6px 0; font-size:14px;"><span style="color:#9A8475;">Servicio</span> <strong style="color:#1A120E; float:right;">${serviceType}</strong></td></tr>
+          <tr><td style="padding:6px 0; font-size:14px; border-top:1px solid #FDE68A;"><span style="color:#9A8475;">Fecha</span> <strong style="color:#1A120E; float:right;">${date}</strong></td></tr>
+          <tr><td style="padding:6px 0; font-size:14px; border-top:1px solid #FDE68A;"><span style="color:#9A8475;">Hora</span> <strong style="color:#1A120E; float:right;">${time}</strong></td></tr>
         </table>
       `,
         "warning",
       )}
 
-      <p style="font-size: 16px; line-height: 1.7; margin-bottom: 20px; color: #5a5a5a;">
-        Si estás interesada en reprogramar, por favor contáctame y estaré encantada de encontrar una nueva fecha que funcione para ambas.
+      <p class="text-body" style="font-size:14px; line-height:1.7; margin:20px 0 0; color:#3D2E24;">
+        Si deseas reprogramar, respóndeme y encontramos nueva fecha juntas. Disculpa las molestias.
       </p>
 
-      <p style="font-size: 16px; line-height: 1.7; margin-bottom: 30px; color: #5a5a5a;">
-        Disculpa las molestias ocasionadas.
-      </p>
-
-      <div style="text-align: center; margin: 30px 0;">
-  <p style="font-size: 16px; font-style: italic; color: #6b7280; margin: 0;">Marcela Cordero</p>
+      <div style="text-align:center; margin:28px 0 0;">
+  <p style="font-size:13px; color:#9A8475; margin:0;">Marcela Cordero · Makeup Artist</p>
       </div>
-    `),
+    `, `Cita cancelada: ${serviceType} el ${date}`),
     text: `
       Hola ${clientName},
 
-      Lamento informarte que he tenido que cancelar tu cita programada.
+      Lamento informarte que tu cita ha sido cancelada.
 
       Cita cancelada:
       - Servicio: ${serviceType}
       - Fecha: ${date}
       - Hora: ${time}
 
-      Si estás interesada en reprogramar, por favor contáctame y estaré encantada de encontrar una nueva fecha que funcione para ambas.
-
-      Disculpa las molestias ocasionadas.
+      Si deseas reprogramar, contáctame.
 
       Marcela Cordero
     `,
@@ -418,42 +376,17 @@ export const emailTemplates = {
   ) => ({
     subject: "Nueva solicitud de cita pendiente - Marcela Cordero Makeup",
     html: generateInlineEmailStructure(`
-  <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B08463;">🔔 Nueva solicitud de cita pendiente</h2>
+  <h2 class="text-heading" style="margin:0 0 20px 0; font-size:20px; font-weight:600; text-align:center; color:#1A120E;">🔔 Nueva solicitud pendiente</h2>
 
       ${createInfoBox(
         `
-  <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 600; color: #B08463;">👤 Detalles del cliente:</h3>
+  <h3 style="margin:0 0 12px 0; font-size:13px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; color:#9A8475;">Cliente</h3>
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Nombre:</strong> ${clientName}
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Email:</strong> ${clientEmail}
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Teléfono:</strong> ${clientPhone}
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Servicio:</strong> ${serviceType}
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Fecha solicitada:</strong> ${date}
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Hora solicitada:</strong> ${time}
-            </td>
-          </tr>
+          <tr><td style="padding:5px 0; font-size:14px;"><span style="color:#9A8475;">Nombre</span> <strong style="color:#1A120E; float:right;">${clientName}</strong></td></tr>
+          <tr><td style="padding:5px 0; font-size:14px; border-top:1px solid #F0E6DE;"><span style="color:#9A8475;">Email</span> <strong style="color:#1A120E; float:right;">${clientEmail}</strong></td></tr>
+          <tr><td style="padding:5px 0; font-size:14px; border-top:1px solid #F0E6DE;"><span style="color:#9A8475;">Teléfono</span> <strong style="color:#1A120E; float:right;">${clientPhone}</strong></td></tr>
+          <tr><td style="padding:5px 0; font-size:14px; border-top:1px solid #F0E6DE;"><span style="color:#9A8475;">Servicio</span> <strong style="color:#1A120E; float:right;">${serviceType}</strong></td></tr>
+          <tr><td style="padding:5px 0; font-size:14px; border-top:1px solid #F0E6DE;"><span style="color:#9A8475;">Fecha</span> <strong style="color:#1A120E; float:right;">${date} · ${time}</strong></td></tr>
         </table>
       `,
         "info",
@@ -461,92 +394,30 @@ export const emailTemplates = {
 
       ${createInfoBox(
         `
-  <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 600; color: #B08463;">📍 Detalles del servicio:</h3>
+  <h3 style="margin:0 0 12px 0; font-size:13px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; color:#9A8475;">Servicio</h3>
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Ubicación:</strong> ${locationType === "STUDIO" ? "Av. Bolívar 1075 , Pueblo Libre" : "Servicio a domicilio"}
-            </td>
-          </tr>
-          ${
-            locationType === "HOME" && district
-              ? `
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Distrito:</strong> ${district}
-            </td>
-          </tr>
-          `
-              : ""
-          }
-          ${
-            locationType === "HOME" && address
-              ? `
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Dirección:</strong> ${address}
-            </td>
-          </tr>
-          `
-              : ""
-          }
-          ${
-            locationType === "HOME" && addressReference
-              ? `
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Referencia:</strong> ${addressReference}
-            </td>
-          </tr>
-          `
-              : ""
-          }
+          <tr><td style="padding:5px 0; font-size:14px;"><span style="color:#9A8475;">Ubicación</span> <strong style="color:#1A120E; float:right;">${locationType === "STUDIO" ? "Studio · Bolívar 1075" : "A domicilio"}</strong></td></tr>
+          ${locationType === "HOME" && district ? `<tr><td style="padding:5px 0; font-size:14px; border-top:1px solid #EDE6DE;"><span style="color:#9A8475;">Distrito</span> <strong style="color:#1A120E; float:right;">${district}</strong></td></tr>` : ""}
+          ${locationType === "HOME" && address ? `<tr><td style="padding:5px 0; font-size:14px; border-top:1px solid #EDE6DE;"><span style="color:#9A8475;">Dirección</span> <strong style="color:#1A120E; float:right; max-width:55%; text-align:right;">${address}</strong></td></tr>` : ""}
+          ${locationType === "HOME" && addressReference ? `<tr><td style="padding:5px 0; font-size:14px; border-top:1px solid #EDE6DE;"><span style="color:#9A8475;">Referencia</span> <strong style="color:#1A120E; float:right;">${addressReference}</strong></td></tr>` : ""}
         </table>
       `,
-        "success",
+        "info",
       )}
 
-      ${
-        additionalNotes
-          ? createInfoBox(
-              `
-        <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #1C1C1C;">💬 Mensaje adicional:</h3>
-        <p style="margin: 0; font-style: italic; color: #5a5a5a;">"${additionalNotes}"</p>
-      `,
-              "info",
-            )
-          : ""
-      }
+      ${additionalNotes ? createInfoBox(`<p style="margin:0; font-size:13px; font-weight:600; color:#9A8475; text-transform:uppercase; letter-spacing:0.5px;">Mensaje</p><p style="margin:8px 0 0; font-style:italic; color:#3D2E24; font-size:14px;">"${additionalNotes}"</p>`, "info") : ""}
 
-      ${createInfoBox(
-        `
-        <p style="margin: 0; font-size: 14px; color: #f59e0b;"><strong>Estado:</strong> Esta cita está PENDIENTE de confirmación.</p>
-        <p style="margin: 10px 0 0; font-size: 14px; color: #5a5a5a;">El cliente recibió una notificación de solicitud. Puedes confirmar o modificar la cita desde el panel de administración.</p>
-      `,
-        "warning",
-      )}
-    `),
+      ${createInfoBox(`<p style="margin:0; font-size:13px; color:#92400E;"><strong>Estado: PENDIENTE</strong> — El cliente ya recibió confirmación de solicitud. Confirma desde el panel admin.</p>`, "warning")}
+    `, `Nueva solicitud: ${clientName} - ${serviceType} ${date}`),
     text: `
       Nueva solicitud de cita pendiente
 
-      Detalles del cliente:
-      - Nombre: ${clientName}
-      - Email: ${clientEmail}
-      - Teléfono: ${clientPhone}
-      - Servicio: ${serviceType}
-      - Fecha solicitada: ${date}
-      - Hora solicitada: ${time}
+      Cliente: ${clientName} - ${clientEmail} - ${clientPhone}
+      Servicio: ${serviceType} - ${date} ${time}
+      Ubicación: ${locationType === "STUDIO" ? "Studio" : "A domicilio"} ${district || ""} ${address || ""}
+      ${additionalNotes ? `Mensaje: "${additionalNotes}"` : ""}
 
-      Detalles del servicio:
-      - Ubicación: ${locationType === "STUDIO" ? "Av. Bolívar 1075 , Pueblo Libre" : "Servicio a domicilio"}
-      ${locationType === "HOME" && district ? `- Distrito: ${district}` : ""}
-      ${locationType === "HOME" && address ? `- Dirección: ${address}` : ""}
-      ${locationType === "HOME" && addressReference ? `- Referencia: ${addressReference}` : ""}
-
-      ${additionalNotes ? `Mensaje adicional: "${additionalNotes}"` : ""}
-
-      Estado: Esta cita está PENDIENTE de confirmación. El cliente recibió una notificación de solicitud.
-      Puedes confirmar o modificar la cita desde el panel de administración.
+      Estado: PENDIENTE
     `,
   }),
 
@@ -563,125 +434,45 @@ export const emailTemplates = {
   ) => ({
     subject: "Solicitud de cita recibida - Marcela Cordero Makeup",
     html: generateInlineEmailStructure(`
-  <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B08463;">¡Hola ${clientName}!</h2>
-
-      <p style="font-size: 16px; line-height: 1.7; margin-bottom: 20px; color: #5a5a5a;">
-  He recibido tu solicitud de cita para <strong style="color: #B08463;">${serviceType}</strong>. Te contactaré pronto para confirmar la disponibilidad y finalizar los detalles.
+  <h2 class="text-heading" style="margin:0 0 8px 0; font-size:22px; font-weight:600; text-align:center; color:#1A120E;">¡Hola ${clientName}!</h2>
+  <p class="text-muted" style="margin:0 0 20px 0; font-size:13px; text-align:center; color:#9A8475;">Solicitud recibida</p>
+      <p class="text-body" style="font-size:15px; line-height:1.7; margin:0 0 20px 0; color:#3D2E24;">
+  Recibí tu solicitud para <strong style="color:#B08463; font-weight:600;">${serviceType}</strong>. Te confirmo en breve.
       </p>
 
       ${createInfoBox(
         `
-        <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: 600; color: #f59e0b;">⏳ Detalles de tu solicitud:</h3>
+        <h3 style="margin:0 0 12px 0; font-size:13px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; color:#9A8475;">Tu solicitud</h3>
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Servicio:</strong> ${serviceType}
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Fecha solicitada:</strong> ${date}
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Hora solicitada:</strong> ${time}
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Ubicación:</strong> ${locationType === "STUDIO" ? "Av. Bolívar 1075 , Pueblo Libre" : "A domicilio"}
-            </td>
-          </tr>
-          ${
-            locationType === "HOME" && district
-              ? `
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Distrito:</strong> ${district}
-            </td>
-          </tr>
-          `
-              : ""
-          }
-          ${
-            locationType === "HOME" && address
-              ? `
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Dirección:</strong> ${address}
-            </td>
-          </tr>
-          `
-              : ""
-          }
-          ${
-            locationType === "HOME" && addressReference
-              ? `
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              <strong style="color: #1C1C1C;">Referencia:</strong> ${addressReference}
-            </td>
-          </tr>
-          `
-              : ""
-          }
+          <tr><td style="padding:5px 0; font-size:14px;"><span style="color:#9A8475;">Servicio</span> <strong style="color:#1A120E; float:right;">${serviceType}</strong></td></tr>
+          <tr><td style="padding:5px 0; font-size:14px; border-top:1px solid #FDE68A;"><span style="color:#9A8475;">Fecha</span> <strong style="color:#1A120E; float:right;">${date}</strong></td></tr>
+          <tr><td style="padding:5px 0; font-size:14px; border-top:1px solid #FDE68A;"><span style="color:#9A8475;">Hora</span> <strong style="color:#1A120E; float:right;">${time}</strong></td></tr>
+          <tr><td style="padding:5px 0; font-size:14px; border-top:1px solid #FDE68A;"><span style="color:#9A8475;">Ubicación</span> <strong style="color:#1A120E; float:right;">${locationType === "STUDIO" ? "Studio" : "A domicilio"}</strong></td></tr>
+          ${locationType === "HOME" && district ? `<tr><td style="padding:5px 0; font-size:14px; border-top:1px solid #FDE68A;"><span style="color:#9A8475;">Distrito</span> <strong style="color:#1A120E; float:right;">${district}</strong></td></tr>` : ""}
+          ${locationType === "HOME" && address ? `<tr><td style="padding:5px 0; font-size:14px; border-top:1px solid #FDE68A;"><span style="color:#9A8475;">Dirección</span> <strong style="color:#1A120E; float:right; max-width:55%; text-align:right;">${address}</strong></td></tr>` : ""}
         </table>
       `,
         "warning",
       )}
 
-      ${
-        additionalNotes
-          ? createInfoBox(
-              `
-        <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #1C1C1C;">💬 Tu mensaje:</h3>
-        <p style="margin: 0; font-style: italic; color: #5a5a5a;">"${additionalNotes}"</p>
-      `,
-              "info",
-            )
-          : ""
-      }
+      ${additionalNotes ? createInfoBox(`<p style="margin:0; font-size:13px; font-weight:600; color:#9A8475; text-transform:uppercase; letter-spacing:0.5px;">Tu mensaje</p><p style="margin:8px 0 0; font-style:italic; color:#3D2E24; font-size:14px;">"${additionalNotes}"</p>`, "info") : ""}
 
-      ${createInfoBox(
-        `
-        <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #10b981;">📞 ¿Qué sigue?</h3>
-        <p style="margin: 0; font-size: 14px; color: #5a5a5a;">Me pondré en contacto contigo dentro de las próximas <strong style="color: #1C1C1C;">24 horas</strong> para confirmar la disponibilidad y coordinar los detalles finales de tu cita.</p>
-      `,
-        "success",
-      )}
+      ${createInfoBox(`<p style="margin:0; font-size:13px; color:#065F46;"><strong style="color:#10b981;">¿Qué sigue?</strong> Te respondo en <strong>24h</strong> para confirmar disponibilidad.</p>`, "success")}
 
-      <p style="font-size: 16px; line-height: 1.7; margin-bottom: 30px; color: #5a5a5a;">
-        Si tienes alguna pregunta urgente o necesitas hacer algún cambio, no dudes en contactarme directamente.
-      </p>
-
-      <div style="text-align: center; margin: 30px 0;">
-  <p style="font-size: 18px; font-weight: 600; color: #B08463; margin: 0;">¡Gracias por contactarme!</p>
-  <p style="font-size: 16px; font-style: italic; color: #6b7280; margin: 10px 0 0;">Marcela Cordero</p>
+      <div style="text-align:center; margin:28px 0 0;">
+  <p style="font-size:15px; font-weight:600; color:#B08463; margin:0;">¡Gracias por contactarme!</p>
+  <p style="font-size:13px; color:#9A8475; margin:6px 0 0;">Marcela Cordero</p>
       </div>
-    `),
+    `, `Solicitud recibida: ${serviceType} ${date}`),
     text: `
       ¡Hola ${clientName}!
 
-      He recibido tu solicitud de cita para ${serviceType}. Te contactaré pronto para confirmar la disponibilidad y finalizar los detalles.
+      Solicitud recibida para ${serviceType} - ${date} ${time}
+      Ubicación: ${locationType === "STUDIO" ? "Studio" : "A domicilio"} ${district || ""} ${address || ""}
+      ${additionalNotes ? `Mensaje: "${additionalNotes}"` : ""}
 
-      Detalles de tu solicitud:
-      - Servicio: ${serviceType}
-      - Fecha solicitada: ${date}
-      - Hora solicitada: ${time}
-      - Ubicación: ${locationType === "STUDIO" ? "Av. Bolívar 1075 , Pueblo Libre" : "A domicilio"}
-      ${locationType === "HOME" && district ? `- Distrito: ${district}` : ""}
-      ${locationType === "HOME" && address ? `- Dirección: ${address}` : ""}
-      ${locationType === "HOME" && addressReference ? `- Referencia: ${addressReference}` : ""}
+      Te respondo en 24h.
 
-      ${additionalNotes ? `Tu mensaje: "${additionalNotes}"` : ""}
-
-      ¿Qué sigue?
-      Me pondré en contacto contigo dentro de las próximas 24 horas para confirmar la disponibilidad y coordinar los detalles finales de tu cita.
-
-      Si tienes alguna pregunta urgente o necesitas hacer algún cambio, no dudes en contactarme directamente.
-
-      ¡Gracias por contactarme!
       Marcela Cordero
     `,
   }),
@@ -689,69 +480,28 @@ export const emailTemplates = {
   reviewRequest: (clientName: string, serviceType: string, date: string, reviewToken: string) => ({
     subject: "¡Comparte tu experiencia! - Marcela Cordero Makeup",
     html: generateInlineEmailStructure(`
-  <h2 style="margin: 0 0 25px 0; font-size: 24px; font-weight: 400; text-align: center; color: #B08463;">¡Hola ${clientName}!</h2>
-
-      <p style="font-size: 16px; line-height: 1.7; margin-bottom: 20px; color: #5a5a5a;">
-  Espero que hayas disfrutado tu experiencia con mi servicio de <strong style="color: #B08463;">${serviceType}</strong> el día <strong>${date}</strong>.
+  <h2 class="text-heading" style="margin:0 0 20px 0; font-size:22px; font-weight:600; text-align:center; color:#1A120E;">¡Hola ${clientName}!</h2>
+      <p class="text-body" style="font-size:15px; line-height:1.7; margin:0 0 20px 0; color:#3D2E24;">
+  Espero que hayas disfrutado tu <strong style="color:#B08463;">${serviceType}</strong> del <strong>${date}</strong>.
       </p>
-
-      <p style="font-size: 16px; line-height: 1.7; margin-bottom: 30px; color: #5a5a5a;">
-        Tu opinión es muy importante para mí y me ayuda a seguir mejorando mis servicios. ¿Te gustaría compartir tu experiencia?
+      <p class="text-body" style="font-size:14px; line-height:1.7; margin:0 0 24px 0; color:#3D2E24; text-align:center;">
+        ¿Me regalas 2 minutos para contar tu experiencia?
       </p>
-
-      <div style="text-align: center; margin: 30px 0;">
+      <div style="text-align:center; margin:24px 0;">
         ${createEmailButton("⭐ Escribir mi reseña", `${process.env.NEXTAUTH_URL || "https://marcelacorderomakeup.com"}/review/${reviewToken}`, "primary")}
       </div>
-
-      ${createInfoBox(
-        `
-        <h3 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #1C1C1C;">¿Por qué tu reseña es importante?</h3>
-        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              • Me ayuda a mejorar continuamente mis servicios
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              • Ayuda a otras clientas a conocer sobre mi trabajo
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0; font-size: 14px; color: #5a5a5a;">
-              • Solo toma unos minutos de tu tiempo
-            </td>
-          </tr>
-        </table>
-      `,
-        "info",
-      )}
-
-      <p style="font-size: 14px; line-height: 1.6; font-style: italic; color: #8a8a8a; margin-bottom: 30px;">
-        <strong>Nota:</strong> Tu reseña será revisada antes de ser publicada. Si prefieres mantenerla privada, también puedes indicarlo en el formulario.
-      </p>
-
-      <div style="text-align: center; margin: 30px 0;">
-  <p style="font-size: 18px; font-weight: 600; color: #B08463; margin: 0;">¡Gracias por elegirme!</p>
-  <p style="font-size: 16px; font-style: italic; color: #6b7280; margin: 10px 0 0;">Marcela Cordero</p>
+      ${createInfoBox(`<p style="margin:0; font-size:13px; color:#3D2E24; text-align:center;">Tu reseña ayuda a otras clientas y me permite mejorar. Será revisada antes de publicarse.</p>`, "info")}
+      <div style="text-align:center; margin:28px 0 0;">
+  <p style="font-size:15px; font-weight:600; color:#B08463; margin:0;">¡Gracias por elegirme!</p>
+  <p style="font-size:13px; color:#9A8475; margin:6px 0 0;">Marcela Cordero</p>
       </div>
-    `),
+    `, `Comparte tu experiencia: ${serviceType}`),
     text: `
       ¡Hola ${clientName}!
 
-      Espero que hayas disfrutado tu experiencia con mi servicio de ${serviceType} el día ${date}.
+      Espero que hayas disfrutado tu ${serviceType} el ${date}.
 
-      Tu opinión es muy importante para mí y me ayuda a seguir mejorando mis servicios. ¿Te gustaría compartir tu experiencia?
-
-      Puedes escribir tu reseña en el siguiente enlace:
-      ${process.env.NEXTAUTH_URL || "https://marcelacorderomakeup.com"}/review/${reviewToken}
-
-      ¿Por qué tu reseña es importante?
-      - Me ayuda a mejorar continuamente mis servicios
-      - Ayuda a otras clientas a conocer sobre mi trabajo
-      - Solo toma unos minutos de tu tiempo
-
-      Nota: Tu reseña será revisada antes de ser publicada. Si prefieres mantenerla privada, también puedes indicarlo en el formulario.
+      Comparte tu experiencia: ${process.env.NEXTAUTH_URL || "https://marcelacorderomakeup.com"}/review/${reviewToken}
 
       ¡Gracias por elegirme!
       Marcela Cordero
