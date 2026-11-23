@@ -4,6 +4,7 @@ import { LogOut, Menu, User } from "lucide-react";
 import { SessionProvider, signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import AdminSidebar from "@/components/AdminSidebar";
+import ChangelogModal from "@/components/admin/ChangelogModal";
 import NotificationCenter from "@/components/NotificationCenter";
 import "@/styles/admin.css";
 import Logo from "@/components/Logo";
@@ -155,6 +156,8 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
           tabIndex={0}
         />
       )}
+
+      <ChangelogModal />
     </div>
   );
 }
