@@ -188,7 +188,7 @@ export default function DistrictSelector({
   useEffect(() => {
     if (isOpen && filtered.length > 0) {
       const currentIndex = filtered.findIndex((d) => d.name === value);
-      setHighlightedIndex(currentIndex >= 0 ? currentIndex : 0);
+      setHighlightedIndex(Math.max(currentIndex, 0));
     } else {
       setHighlightedIndex(-1);
     }

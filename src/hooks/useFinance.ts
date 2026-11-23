@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
   CreateFinanceEntriesRequest,
-  FinanceEntryDTO,
   FinanceEntriesResponse,
+  FinanceEntryDTO,
   FinanceStatsResponse,
   ParseFinanceResponse,
 } from "@/interfaces/finance";

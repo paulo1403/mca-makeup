@@ -3,17 +3,21 @@
 import { ChevronLeft, ChevronRight, Loader2, Pencil, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import Modal, { ModalBody, ModalFooter, ModalHeader } from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
+import Modal, { ModalBody, ModalFooter, ModalHeader } from "@/components/ui/Modal";
 import Typography from "@/components/ui/Typography";
-import type { FinanceEntryDTO, PaymentMethod, ServiceLine } from "@/interfaces/finance";
-import type { FinanceEntryType } from "@/interfaces/finance";
 import {
   useDeleteFinanceEntry,
   useFinanceEntries,
   useFinanceStats,
   useUpdateFinanceEntry,
 } from "@/hooks/useFinance";
+import type {
+  FinanceEntryDTO,
+  FinanceEntryType,
+  PaymentMethod,
+  ServiceLine,
+} from "@/interfaces/finance";
 
 const currency = new Intl.NumberFormat("es-PE", {
   style: "currency",
@@ -78,16 +82,9 @@ function formatDate(iso: string) {
   });
 }
 
-function formatDay(iso: string) {
-  const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString("es-PE", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-  });
-}
-
-function groupByDate(entries: FinanceEntryDTO[]): Array<{ date: string; entries: FinanceEntryDTO[] }> {
+function groupByDate(
+  entries: FinanceEntryDTO[],
+): Array<{ date: string; entries: FinanceEntryDTO[] }> {
   const map = new Map<string, FinanceEntryDTO[]>();
   for (const entry of entries) {
     const key = entry.entryDate.slice(0, 10);
@@ -140,9 +137,10 @@ export default function AdminFinancePage() {
     [from, to, type, serviceLine, search],
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: reset pagination whenever a filter changes
   useEffect(() => {
     setPage(1);
-  }, [filters]);
+  }, [from, to, type, serviceLine, search]);
 
   const { data: stats, isLoading: statsLoading } = useFinanceStats({ from, to });
   const { data: entriesData, isLoading: entriesLoading } = useFinanceEntries({
@@ -370,11 +368,16 @@ export default function AdminFinancePage() {
               </thead>
               <tbody>
                 {(stats?.byServiceLine || []).map((row) => (
-                  <tr key={row.serviceLine} className="border-b border-[color:var(--color-border)]/10 text-(--color-body)">
+                  <tr
+                    key={row.serviceLine}
+                    className="border-b border-[color:var(--color-border)]/10 text-(--color-body)"
+                  >
                     <td className="px-2 py-2">{serviceLineLabel(row.serviceLine)}</td>
                     <td className="px-2 py-2">{currency.format(row.income)}</td>
                     <td className="px-2 py-2">{currency.format(row.expense)}</td>
-                    <td className={`px-2 py-2 font-medium ${row.net >= 0 ? "text-[color:var(--color-success)]" : "text-[color:var(--color-danger)]"}`}>
+                    <td
+                      className={`px-2 py-2 font-medium ${row.net >= 0 ? "text-[color:var(--color-success)]" : "text-[color:var(--color-danger)]"}`}
+                    >
                       {currency.format(row.net)}
                     </td>
                   </tr>
@@ -405,11 +408,16 @@ export default function AdminFinancePage() {
               </thead>
               <tbody>
                 {(stats?.byCategory || []).slice(0, 8).map((row) => (
-                  <tr key={row.category} className="border-b border-[color:var(--color-border)]/10 text-(--color-body)">
+                  <tr
+                    key={row.category}
+                    className="border-b border-[color:var(--color-border)]/10 text-(--color-body)"
+                  >
                     <td className="px-2 py-2">{row.category}</td>
                     <td className="px-2 py-2">{currency.format(row.income)}</td>
                     <td className="px-2 py-2">{currency.format(row.expense)}</td>
-                    <td className={`px-2 py-2 font-medium ${row.net >= 0 ? "text-[color:var(--color-success)]" : "text-[color:var(--color-danger)]"}`}>
+                    <td
+                      className={`px-2 py-2 font-medium ${row.net >= 0 ? "text-[color:var(--color-success)]" : "text-[color:var(--color-danger)]"}`}
+                    >
                       {currency.format(row.net)}
                     </td>
                   </tr>
@@ -439,175 +447,199 @@ export default function AdminFinancePage() {
             Aún no hay movimientos registrados.
           </Typography>
         ) : (
-          <>
-            {groupByDate(entriesData.entries).map(({ date, entries }) => {
-              const total = dayTotal(entries);
-              return (
-                <article key={date} className="mt-6 first:mt-4">
-                  <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
-                    <Typography as="h4" variant="h4" className="text-(--color-heading)">
-                      {formatDate(date)}
-                    </Typography>
-                    <span className="text-sm text-(--color-muted)">
-                      {currency.format(total.income)} ingreso · {currency.format(total.expense)} egreso ·
-                      <span className={total.net >= 0 ? "ml-1 text-[color:var(--color-success)]" : "ml-1 text-[color:var(--color-danger)]"}>
-                        {currency.format(total.net)} neto
-                      </span>
+          groupByDate(entriesData.entries).map(({ date, entries }) => {
+            const total = dayTotal(entries);
+            return (
+              <article key={date} className="mt-6 first:mt-4">
+                <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
+                  <Typography as="h4" variant="h4" className="text-(--color-heading)">
+                    {formatDate(date)}
+                  </Typography>
+                  <span className="text-sm text-(--color-muted)">
+                    {currency.format(total.income)} ingreso · {currency.format(total.expense)}{" "}
+                    egreso ·
+                    <span
+                      className={
+                        total.net >= 0
+                          ? "ml-1 text-[color:var(--color-success)]"
+                          : "ml-1 text-[color:var(--color-danger)]"
+                      }
+                    >
+                      {currency.format(total.net)} neto
                     </span>
-                  </div>
+                  </span>
+                </div>
 
-                  {/* Mobile */}
-                  <div className="space-y-2 md:hidden">
-                    {entries.map((entry) => (
-                      <article
-                        key={entry.id}
-                        className="rounded-xl border border-[color:var(--color-border)]/20 bg-(--color-surface)/50 p-3"
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex items-center gap-2">
+                {/* Mobile */}
+                <div className="space-y-2 md:hidden">
+                  {entries.map((entry) => (
+                    <article
+                      key={entry.id}
+                      className="rounded-xl border border-[color:var(--color-border)]/20 bg-(--color-surface)/50 p-3"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`rounded-full px-2 py-0.5 text-xs font-semibold ${entry.type === "INCOME" ? "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]" : "bg-[color:var(--color-danger)]/15 text-[color:var(--color-danger)]"}`}
+                          >
+                            {typeLabel(entry.type)}
+                          </span>
+                          <Typography
+                            as="p"
+                            variant="p"
+                            className="font-semibold text-(--color-heading)"
+                          >
+                            {currency.format(entry.amount)}
+                          </Typography>
+                        </div>
+                        <span className="rounded bg-[color:var(--color-border)]/20 px-1.5 py-0.5 text-[10px] uppercase text-(--color-muted)">
+                          {sourceLabel(entry.source)}
+                        </span>
+                      </div>
+
+                      <div className="mt-1.5 text-sm text-(--color-body)">
+                        <p>
+                          {entry.category}
+                          <span className="mx-1 text-(--color-muted)">·</span>
+                          {serviceLineLabel(entry.serviceLine)}
+                          <span className="mx-1 text-(--color-muted)">·</span>
+                          {paymentLabel(entry.paymentMethod)}
+                        </p>
+                        {entry.note ? (
+                          <p className="mt-0.5 text-(--color-muted)">{entry.note}</p>
+                        ) : null}
+                      </div>
+
+                      <div className="mt-2 flex gap-2">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => openEditEntryModal(entry)}
+                          className="text-(--color-primary) hover:bg-[color:var(--color-primary)]/10"
+                          aria-label="Editar"
+                        >
+                          <Pencil className="mr-1 h-3.5 w-3.5" />
+                          Editar
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            openDeleteModal({
+                              id: entry.id,
+                              type: entry.type,
+                              amount: entry.amount,
+                              category: entry.category,
+                            })
+                          }
+                          className="text-[color:var(--color-danger)] hover:bg-[color:var(--color-danger)]/10"
+                          aria-label="Eliminar"
+                        >
+                          <Trash2 className="mr-1 h-3.5 w-3.5" />
+                          Eliminar
+                        </Button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+
+                {/* Desktop table */}
+                <div className="hidden overflow-x-auto md:block">
+                  <table className="min-w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-[color:var(--color-border)]/20 text-left text-(--color-muted)">
+                        <th className="px-2 py-1.5 font-medium">Tipo</th>
+                        <th className="px-2 py-1.5 font-medium">Categoría</th>
+                        <th className="px-2 py-1.5 font-medium">Servicio</th>
+                        <th className="px-2 py-1.5 font-medium">Monto</th>
+                        <th className="px-2 py-1.5 font-medium">Método</th>
+                        <th className="px-2 py-1.5 font-medium">Nota</th>
+                        <th className="px-2 py-1.5 font-medium">Origen</th>
+                        <th className="px-2 py-1.5 font-medium">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {entries.map((entry) => (
+                        <tr
+                          key={entry.id}
+                          className="border-b border-[color:var(--color-border)]/10 text-(--color-body)"
+                        >
+                          <td className="px-2 py-1.5">
                             <span
                               className={`rounded-full px-2 py-0.5 text-xs font-semibold ${entry.type === "INCOME" ? "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]" : "bg-[color:var(--color-danger)]/15 text-[color:var(--color-danger)]"}`}
                             >
                               {typeLabel(entry.type)}
                             </span>
-                            <Typography as="p" variant="p" className="font-semibold text-(--color-heading)">
-                              {currency.format(entry.amount)}
-                            </Typography>
-                          </div>
-                          <span className="rounded bg-[color:var(--color-border)]/20 px-1.5 py-0.5 text-[10px] uppercase text-(--color-muted)">
-                            {sourceLabel(entry.source)}
-                          </span>
-                        </div>
-
-                        <div className="mt-1.5 text-sm text-(--color-body)">
-                          <p>
-                            {entry.category}
-                            <span className="mx-1 text-(--color-muted)">·</span>
+                          </td>
+                          <td className="px-2 py-1.5">{entry.category}</td>
+                          <td className="px-2 py-1.5 text-(--color-muted)">
                             {serviceLineLabel(entry.serviceLine)}
-                            <span className="mx-1 text-(--color-muted)">·</span>
+                          </td>
+                          <td className="px-2 py-1.5 font-medium text-(--color-heading)">
+                            {currency.format(entry.amount)}
+                          </td>
+                          <td className="px-2 py-1.5 text-(--color-muted)">
                             {paymentLabel(entry.paymentMethod)}
-                          </p>
-                          {entry.note ? <p className="mt-0.5 text-(--color-muted)">{entry.note}</p> : null}
-                        </div>
-
-                        <div className="mt-2 flex gap-2">
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => openEditEntryModal(entry)}
-                            className="text-(--color-primary) hover:bg-[color:var(--color-primary)]/10"
-                            aria-label="Editar"
+                          </td>
+                          <td
+                            className="max-w-[180px] truncate px-2 py-1.5 text-(--color-muted)"
+                            title={entry.note ?? ""}
                           >
-                            <Pencil className="mr-1 h-3.5 w-3.5" />
-                            Editar
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() =>
-                              openDeleteModal({
-                                id: entry.id,
-                                type: entry.type,
-                                amount: entry.amount,
-                                category: entry.category,
-                              })
-                            }
-                            className="text-[color:var(--color-danger)] hover:bg-[color:var(--color-danger)]/10"
-                            aria-label="Eliminar"
-                          >
-                            <Trash2 className="mr-1 h-3.5 w-3.5" />
-                            Eliminar
-                          </Button>
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-
-                  {/* Desktop table */}
-                  <div className="hidden overflow-x-auto md:block">
-                    <table className="min-w-full text-sm">
-                      <thead>
-                        <tr className="border-b border-[color:var(--color-border)]/20 text-left text-(--color-muted)">
-                          <th className="px-2 py-1.5 font-medium">Tipo</th>
-                          <th className="px-2 py-1.5 font-medium">Categoría</th>
-                          <th className="px-2 py-1.5 font-medium">Servicio</th>
-                          <th className="px-2 py-1.5 font-medium">Monto</th>
-                          <th className="px-2 py-1.5 font-medium">Método</th>
-                          <th className="px-2 py-1.5 font-medium">Nota</th>
-                          <th className="px-2 py-1.5 font-medium">Origen</th>
-                          <th className="px-2 py-1.5 font-medium">Acciones</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {entries.map((entry) => (
-                          <tr key={entry.id} className="border-b border-[color:var(--color-border)]/10 text-(--color-body)">
-                            <td className="px-2 py-1.5">
-                              <span
-                                className={`rounded-full px-2 py-0.5 text-xs font-semibold ${entry.type === "INCOME" ? "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]" : "bg-[color:var(--color-danger)]/15 text-[color:var(--color-danger)]"}`}
+                            {entry.note || "—"}
+                          </td>
+                          <td className="px-2 py-1.5">
+                            <span className="rounded bg-[color:var(--color-border)]/20 px-1.5 py-0.5 text-[10px] uppercase text-(--color-muted)">
+                              {sourceLabel(entry.source)}
+                            </span>
+                          </td>
+                          <td className="px-2 py-1.5">
+                            <div className="flex items-center gap-1">
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon-sm"
+                                onClick={() => openEditEntryModal(entry)}
+                                className="text-(--color-primary) hover:bg-[color:var(--color-primary)]/10"
+                                aria-label="Editar"
                               >
-                                {typeLabel(entry.type)}
-                              </span>
-                            </td>
-                            <td className="px-2 py-1.5">{entry.category}</td>
-                            <td className="px-2 py-1.5 text-(--color-muted)">{serviceLineLabel(entry.serviceLine)}</td>
-                            <td className="px-2 py-1.5 font-medium text-(--color-heading)">{currency.format(entry.amount)}</td>
-                            <td className="px-2 py-1.5 text-(--color-muted)">{paymentLabel(entry.paymentMethod)}</td>
-                            <td className="max-w-[180px] truncate px-2 py-1.5 text-(--color-muted)" title={entry.note ?? ""}>
-                              {entry.note || "—"}
-                            </td>
-                            <td className="px-2 py-1.5">
-                              <span className="rounded bg-[color:var(--color-border)]/20 px-1.5 py-0.5 text-[10px] uppercase text-(--color-muted)">
-                                {sourceLabel(entry.source)}
-                              </span>
-                            </td>
-                            <td className="px-2 py-1.5">
-                              <div className="flex items-center gap-1">
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  size="icon-sm"
-                                  onClick={() => openEditEntryModal(entry)}
-                                  className="text-(--color-primary) hover:bg-[color:var(--color-primary)]/10"
-                                  aria-label="Editar"
-                                >
-                                  <Pencil className="h-3.5 w-3.5" />
-                                </Button>
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  size="icon-sm"
-                                  onClick={() =>
-                                    openDeleteModal({
-                                      id: entry.id,
-                                      type: entry.type,
-                                      amount: entry.amount,
-                                      category: entry.category,
-                                    })
-                                  }
-                                  className="text-[color:var(--color-danger)] hover:bg-[color:var(--color-danger)]/10"
-                                  aria-label="Eliminar"
-                                >
-                                  <Trash2 className="h-3.5 w-3.5" />
-                                </Button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </article>
-              );
-            })}
-          </>
+                                <Pencil className="h-3.5 w-3.5" />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon-sm"
+                                onClick={() =>
+                                  openDeleteModal({
+                                    id: entry.id,
+                                    type: entry.type,
+                                    amount: entry.amount,
+                                    category: entry.category,
+                                  })
+                                }
+                                className="text-[color:var(--color-danger)] hover:bg-[color:var(--color-danger)]/10"
+                                aria-label="Eliminar"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </article>
+            );
+          })
         )}
 
         {entriesData?.pagination && entriesData.pagination.pages > 1 ? (
           <div className="mt-6 flex items-center justify-between border-t border-[color:var(--color-border)]/20 pt-4">
             <Typography as="p" variant="small" className="text-(--color-muted)">
-              {entriesData.pagination.total} movimientos · Página {page} de {entriesData.pagination.pages}
+              {entriesData.pagination.total} movimientos · Página {page} de{" "}
+              {entriesData.pagination.pages}
             </Typography>
             <div className="flex items-center gap-1">
               <Button
@@ -620,7 +652,9 @@ export default function AdminFinancePage() {
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               {Array.from({ length: entriesData.pagination.pages }, (_, i) => i + 1)
-                .filter((p) => p === 1 || p === entriesData.pagination.pages || Math.abs(p - page) <= 2)
+                .filter(
+                  (p) => p === 1 || p === entriesData.pagination.pages || Math.abs(p - page) <= 2,
+                )
                 .map((p, idx, arr) => (
                   <span key={p} className="flex items-center">
                     {idx > 0 && arr[idx - 1] !== p - 1 ? (
@@ -664,11 +698,13 @@ export default function AdminFinancePage() {
         <ModalHeader title="Confirmar eliminación" onClose={() => setDeleteTarget(null)} />
         <ModalBody>
           <Typography as="p" variant="p" className="text-(--color-body)">
-            ¿Seguro que deseas eliminar este {deleteTarget?.type === "INCOME" ? "ingreso" : "egreso"}?
+            ¿Seguro que deseas eliminar este{" "}
+            {deleteTarget?.type === "INCOME" ? "ingreso" : "egreso"}?
           </Typography>
           {deleteTarget ? (
             <Typography as="p" variant="small" className="mt-2 text-(--color-muted)">
-              {typeLabel(deleteTarget.type)} · {deleteTarget.category} · {currency.format(deleteTarget.amount)}
+              {typeLabel(deleteTarget.type)} · {deleteTarget.category} ·{" "}
+              {currency.format(deleteTarget.amount)}
             </Typography>
           ) : null}
         </ModalBody>
@@ -691,7 +727,10 @@ export default function AdminFinancePage() {
         size="md"
         ariaLabelledBy="finance-edit-entry-title"
       >
-        <ModalHeader title={`Editar ${editingEntry?.type === "INCOME" ? "ingreso" : "egreso"}`} onClose={() => setEditingEntry(null)} />
+        <ModalHeader
+          title={`Editar ${editingEntry?.type === "INCOME" ? "ingreso" : "egreso"}`}
+          onClose={() => setEditingEntry(null)}
+        />
         <ModalBody>
           {editingEntry ? (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -701,7 +740,9 @@ export default function AdminFinancePage() {
                   type="date"
                   value={editingEntry.entryDate}
                   onChange={(event) =>
-                    setEditingEntry((prev) => (prev ? { ...prev, entryDate: event.target.value } : prev))
+                    setEditingEntry((prev) =>
+                      prev ? { ...prev, entryDate: event.target.value } : prev,
+                    )
                   }
                   className="w-full rounded-lg border border-[color:var(--color-border)]/20 bg-(--color-surface)/60 px-3 py-2"
                 />
@@ -712,7 +753,9 @@ export default function AdminFinancePage() {
                 <input
                   value={editingEntry.amount}
                   onChange={(event) =>
-                    setEditingEntry((prev) => (prev ? { ...prev, amount: event.target.value } : prev))
+                    setEditingEntry((prev) =>
+                      prev ? { ...prev, amount: event.target.value } : prev,
+                    )
                   }
                   className="w-full rounded-lg border border-[color:var(--color-border)]/20 bg-(--color-surface)/60 px-3 py-2"
                   placeholder="150"
@@ -724,7 +767,9 @@ export default function AdminFinancePage() {
                 <input
                   value={editingEntry.category}
                   onChange={(event) =>
-                    setEditingEntry((prev) => (prev ? { ...prev, category: event.target.value } : prev))
+                    setEditingEntry((prev) =>
+                      prev ? { ...prev, category: event.target.value } : prev,
+                    )
                   }
                   className="w-full rounded-lg border border-[color:var(--color-border)]/20 bg-(--color-surface)/60 px-3 py-2"
                   placeholder="maquillaje_novia"
@@ -771,14 +816,7 @@ export default function AdminFinancePage() {
                   }
                   className="w-full rounded-lg border border-[color:var(--color-border)]/20 bg-(--color-surface)/60 px-3 py-2"
                 >
-                  {[
-                    "YAPE",
-                    "PLIN",
-                    "TRANSFER",
-                    "CASH",
-                    "CARD",
-                    "OTHER",
-                  ].map((value) => (
+                  {["YAPE", "PLIN", "TRANSFER", "CASH", "CARD", "OTHER"].map((value) => (
                     <option key={value} value={value}>
                       {paymentLabel(value)}
                     </option>

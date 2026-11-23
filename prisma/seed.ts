@@ -55,7 +55,8 @@ async function main() {
     },
     {
       name: "Maquillaje para Piel Madura",
-      description: "Técnicas especializadas para piel madura, enfoque en hidratación y luminosidad.",
+      description:
+        "Técnicas especializadas para piel madura, enfoque en hidratación y luminosidad.",
       price: 200.0,
       duration: 135,
       category: ServiceCategory.MATURE_SKIN,

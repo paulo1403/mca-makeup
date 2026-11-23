@@ -1,7 +1,7 @@
 "use client";
+import { Calendar, Clock, MapPin, Pencil, Star } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { Calendar, Clock, MapPin, Pencil, Star } from "lucide-react";
 import StatusBadge from "@/components/appointments/StatusBadge";
 import {
   buildQuoteText,
@@ -26,7 +26,12 @@ interface AppointmentModalProps {
   onEdit?: (appointment: Appointment) => void;
 }
 
-export default function AppointmentModal({ appointment, isOpen, onClose, onEdit }: AppointmentModalProps) {
+export default function AppointmentModal({
+  appointment,
+  isOpen,
+  onClose,
+  onEdit,
+}: AppointmentModalProps) {
   const updateStatusMutation = useUpdateAppointmentStatus();
   const deleteMutation = useDeleteAppointment();
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -198,7 +203,10 @@ export default function AppointmentModal({ appointment, isOpen, onClose, onEdit 
           {priceInfo.totalPrice > 0 && (
             <div className="py-3 space-y-1.5">
               {appointment.services?.map((s) => {
-                const svcPrice = s.price != null ? s.price : priceInfo.servicePrice / Math.max((appointment.services ?? []).length, 1);
+                const svcPrice =
+                  s.price != null
+                    ? s.price
+                    : priceInfo.servicePrice / Math.max((appointment.services ?? []).length, 1);
                 return (
                   <div key={s.id} className="flex items-center justify-between text-sm">
                     <span className="text-[color:var(--color-body)]">

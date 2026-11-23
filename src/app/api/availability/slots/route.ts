@@ -41,10 +41,7 @@ function parseTimeRange(range: string): { start: number; end: number } | null {
   };
 }
 
-function isSlotAvailable(
-  slot: string,
-  bookedAppointments: { appointmentTime: string }[],
-): boolean {
+function isSlotAvailable(slot: string, bookedAppointments: { appointmentTime: string }[]): boolean {
   const slotRange = parseTimeRange(slot);
   if (!slotRange) return false;
 
@@ -103,16 +100,11 @@ export async function GET(request: NextRequest) {
 
     const allSlots = generateTimeSlots(SLOT_INTERVAL);
 
-    const availableSlots = allSlots.filter((slot) =>
-      isSlotAvailable(slot, bookedAppointments),
-    );
+    const availableSlots = allSlots.filter((slot) => isSlotAvailable(slot, bookedAppointments));
 
     return NextResponse.json({ availableRanges: availableSlots });
   } catch (error) {
     console.error("Error fetching available slots:", error);
-    return NextResponse.json(
-      { error: "Error al obtener horarios disponibles" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Error al obtener horarios disponibles" }, { status: 500 });
   }
 }

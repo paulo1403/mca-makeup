@@ -54,8 +54,9 @@ export default function TimeSlotList({
     );
   }
 
-  const SlotCard = ({ slot }: { slot: TimeSlot }) => (
+  const renderSlotCard = (slot: TimeSlot) => (
     <div
+      key={slot.id}
       className={`p-3 sm:p-4 rounded-lg border transition-all ${
         slot.isActive
           ? "bg-[color:var(--color-card)] border-[color:var(--color-primary)]/30 shadow-sm"
@@ -313,9 +314,7 @@ export default function TimeSlotList({
                   <div className="p-3">
                     {daySlots.length > 0 ? (
                       <div className="space-y-3">
-                        {daySlots.map((slot) => (
-                          <SlotCard key={slot.id} slot={slot} />
-                        ))}
+                        {daySlots.map((slot) => renderSlotCard(slot))}
                       </div>
                     ) : (
                       <div className="text-center py-4">

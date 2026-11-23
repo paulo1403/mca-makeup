@@ -69,9 +69,7 @@ export default function NotificationCenter() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, read: true }),
       });
-      setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
-      );
+      setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
     } catch {
       // silent
     }
@@ -161,9 +159,7 @@ export default function NotificationCenter() {
                   <div className="w-12 h-12 rounded-full bg-[color:var(--color-surface-elevated)] flex items-center justify-center mx-auto mb-3">
                     <Bell className="w-5 h-5 text-[color:var(--color-muted)]" />
                   </div>
-                  <p className="text-sm text-[color:var(--color-muted)] mb-4">
-                    Todo al día
-                  </p>
+                  <p className="text-sm text-[color:var(--color-muted)] mb-4">Todo al día</p>
                   <Link
                     href="/admin/appointments"
                     onClick={() => setShowDropdown(false)}
@@ -178,18 +174,18 @@ export default function NotificationCenter() {
                     key={notification.id}
                     onClick={() => notification.link && navigateTo(notification)}
                     className={`w-full text-left px-4 py-3 border-b border-[color:var(--color-border)]/60 last:border-b-0 transition-colors hover:bg-[color:var(--color-surface-elevated)]/50 ${
-                      !notification.read
-                        ? "bg-[color:var(--color-primary)]/[0.04]"
-                        : ""
+                      !notification.read ? "bg-[color:var(--color-primary)]/[0.04]" : ""
                     } ${notification.link ? "cursor-pointer" : "cursor-default"}`}
                   >
                     <div className="min-w-0">
                       <div className="flex items-center justify-between gap-2">
-                        <p className={`text-sm truncate ${
-                          !notification.read
-                            ? "font-semibold text-[color:var(--color-heading)]"
-                            : "font-medium text-[color:var(--color-body)]"
-                        }`}>
+                        <p
+                          className={`text-sm truncate ${
+                            !notification.read
+                              ? "font-semibold text-[color:var(--color-heading)]"
+                              : "font-medium text-[color:var(--color-body)]"
+                          }`}
+                        >
                           {notification.title}
                         </p>
                         <span className="text-[10px] text-[color:var(--color-muted)] shrink-0 tabular-nums">

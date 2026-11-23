@@ -33,7 +33,11 @@ function getNightEndMinutes(district: string | null | undefined, isBridal: boole
  * @param district - Distrito opcional para ventana extendida
  * @param isBridal - true si incluye servicio de novia
  */
-export function isNightShift(timeString: string, district?: string | null, isBridal?: boolean): boolean {
+export function isNightShift(
+  timeString: string,
+  district?: string | null,
+  isBridal?: boolean,
+): boolean {
   if (!timeString) return false;
 
   const startTimeStr = timeString.includes(" - ")
@@ -73,7 +77,8 @@ export function calculateNightShiftCost(
  */
 export function getNightShiftExplanation(district?: string | null, isBridal?: boolean): string {
   const isFar = FAR_DISTRICTS.includes(normalizeDistrict(district));
-  if (isBridal && isFar) return "Costo adicional S/ 80 por atención nocturna (7:30 PM - 7:00 AM, distritos lejanos)";
+  if (isBridal && isFar)
+    return "Costo adicional S/ 80 por atención nocturna (7:30 PM - 7:00 AM, distritos lejanos)";
   if (isBridal) return "Costo adicional S/ 80 por atención nocturna novias (7:30 PM - 6:00 AM)";
   return "Costo adicional S/ 50 por atención fuera del horario laboral (después de 7:30 PM o antes de 6:00 AM)";
 }

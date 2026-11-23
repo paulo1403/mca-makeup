@@ -5,18 +5,13 @@ import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import Button from "@/components/ui/Button";
 import Typography from "@/components/ui/Typography";
-import type { CreateFinanceEntriesRequest, PaymentMethod, ServiceLine } from "@/interfaces/finance";
-import type { FinanceEntryType } from "@/interfaces/finance";
-import {
-  useCreateFinanceEntries,
-  useParseFinanceText,
-} from "@/hooks/useFinance";
-
-const currency = new Intl.NumberFormat("es-PE", {
-  style: "currency",
-  currency: "PEN",
-  maximumFractionDigits: 2,
-});
+import { useCreateFinanceEntries, useParseFinanceText } from "@/hooks/useFinance";
+import type {
+  CreateFinanceEntriesRequest,
+  FinanceEntryType,
+  PaymentMethod,
+  ServiceLine,
+} from "@/interfaces/finance";
 
 const DEFAULT_TEMPLATE = `FECHA: 2026-05-29
 INGRESO | 380 | maquillaje_novia | maquillaje | yape | Boda Valeria
@@ -171,7 +166,10 @@ export default function CrearPage() {
             type="button"
             variant={quickType === "INCOME" ? "primary" : "soft"}
             size="sm"
-            onClick={() => { setQuickType("INCOME"); setQuickCategory(""); }}
+            onClick={() => {
+              setQuickType("INCOME");
+              setQuickCategory("");
+            }}
           >
             Ingreso
           </Button>
@@ -179,7 +177,10 @@ export default function CrearPage() {
             type="button"
             variant={quickType === "EXPENSE" ? "primary" : "soft"}
             size="sm"
-            onClick={() => { setQuickType("EXPENSE"); setQuickCategory(""); }}
+            onClick={() => {
+              setQuickType("EXPENSE");
+              setQuickCategory("");
+            }}
           >
             Egreso
           </Button>
@@ -205,7 +206,9 @@ export default function CrearPage() {
             >
               <option value="">Seleccionar...</option>
               {categories.map((cat) => (
-                <option key={cat.value} value={cat.value}>{cat.label}</option>
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
+                </option>
               ))}
             </select>
           </label>
@@ -230,7 +233,9 @@ export default function CrearPage() {
               className="w-full rounded-lg border border-[color:var(--color-border)]/20 bg-(--color-surface)/60 px-3 py-2"
             >
               {PAYMENT_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
               ))}
             </select>
           </label>
@@ -243,7 +248,9 @@ export default function CrearPage() {
               className="w-full rounded-lg border border-[color:var(--color-border)]/20 bg-(--color-surface)/60 px-3 py-2"
             >
               {SERVICE_LINE_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
               ))}
             </select>
           </label>
@@ -302,7 +309,9 @@ export default function CrearPage() {
             <p className="font-semibold text-(--color-heading)">Formato por línea</p>
             <p className="mt-2">TIPO | MONTO | CATEGORIA | SERVICIO | MEDIO | NOTA</p>
             <p className="mt-2">TIPO: INGRESO, EGRESO o GASTO</p>
-            <p className="mt-1">SERVICIO: MAQUILLAJE, UÑAS, PEINADO, GENERAL, TRANSPORTE, MATERIALES, etc.</p>
+            <p className="mt-1">
+              SERVICIO: MAQUILLAJE, UÑAS, PEINADO, GENERAL, TRANSPORTE, MATERIALES, etc.
+            </p>
             <p className="mt-1">MEDIO: YAPE, PLIN, EFECTIVO, TARJETA, TRANSFERENCIA u OTRO</p>
           </div>
         </div>
@@ -321,7 +330,10 @@ export default function CrearPage() {
               type="button"
               variant="soft"
               size="md"
-              onClick={() => { setRawText(""); parseMutation.reset(); }}
+              onClick={() => {
+                setRawText("");
+                parseMutation.reset();
+              }}
             >
               Limpiar
             </Button>
@@ -336,7 +348,8 @@ export default function CrearPage() {
             Vista previa
           </Typography>
           <Typography as="p" variant="small" className="mt-2 text-(--color-body)">
-            Válidas: {parseMutation.data.summary.validLines} · Inválidas: {parseMutation.data.summary.invalidLines}
+            Válidas: {parseMutation.data.summary.validLines} · Inválidas:{" "}
+            {parseMutation.data.summary.invalidLines}
           </Typography>
 
           <div className="mt-4 space-y-2">
@@ -349,8 +362,12 @@ export default function CrearPage() {
                     : "border-[color:var(--color-danger)]/40 bg-[color:var(--color-danger)]/10"
                 }`}
               >
-                <p className="font-medium">Línea {item.line}: {item.rawLine}</p>
-                {!item.isValid ? <p className="mt-1 text-[color:var(--color-danger)]">{item.errors.join(" ")}</p> : null}
+                <p className="font-medium">
+                  Línea {item.line}: {item.rawLine}
+                </p>
+                {!item.isValid ? (
+                  <p className="mt-1 text-[color:var(--color-danger)]">{item.errors.join(" ")}</p>
+                ) : null}
               </div>
             ))}
           </div>

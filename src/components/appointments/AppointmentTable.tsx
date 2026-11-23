@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import {
   Calendar,
   CheckCircle,
@@ -16,6 +15,7 @@ import {
   User,
   XCircle,
 } from "lucide-react";
+import { useState } from "react";
 import { toast } from "react-hot-toast";
 import StatusBadge from "@/components/appointments/StatusBadge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -48,14 +48,18 @@ import { copyReviewLink } from "@/utils/reviewHelpers";
 
 // ponytail: inline wa link builder to avoid extra import
 function buildWaLink(a: Appointment) {
-  const svc = formatServices(a).map((s) => s.displayText).join(", ");
+  const svc = formatServices(a)
+    .map((s) => s.displayText)
+    .join(", ");
   const phone = (a.clientPhone || "").replace(/\D/g, "").slice(-9);
   const text = [
     `💄 *${a.clientName}*`,
     `📅 ${formatDate(a.appointmentDate)} · ${formatTime(a.appointmentTime)}`,
     `💄 ${svc}`,
     a.additionalNotes ? `📝 ${a.additionalNotes}` : "",
-  ].filter(Boolean).join("\n");
+  ]
+    .filter(Boolean)
+    .join("\n");
   return `https://wa.me/51${phone}?text=${encodeURIComponent(text)}`;
 }
 
@@ -84,34 +88,50 @@ function ActionsMenu({
   const [open, setOpen] = useState(false);
   const [confirm, setConfirm] = useState<{ action: string; message: string } | null>(null);
 
-  const items: { label: string; icon: React.ReactNode; onClick: () => void; danger?: boolean }[] = [];
+  const items: { label: string; icon: React.ReactNode; onClick: () => void; danger?: boolean }[] =
+    [];
 
   if (appointment.status === "PENDING") {
     items.push({
       label: "Confirmar",
       icon: <CheckCircle className="w-3.5 h-3.5" />,
-      onClick: () => { onStatusUpdate(appointment.id, "CONFIRMED"); setOpen(false); },
+      onClick: () => {
+        onStatusUpdate(appointment.id, "CONFIRMED");
+        setOpen(false);
+      },
     });
   }
   if (appointment.status === "CONFIRMED") {
     items.push({
       label: "Completar",
       icon: <CheckCircle className="w-3.5 h-3.5" />,
-      onClick: () => { onStatusUpdate(appointment.id, "COMPLETED"); setOpen(false); },
+      onClick: () => {
+        onStatusUpdate(appointment.id, "COMPLETED");
+        setOpen(false);
+      },
     });
   }
   if (appointment.status === "COMPLETED" || appointment.status === "CANCELLED") {
     items.push({
       label: "Reabrir",
       icon: <RotateCcw className="w-3.5 h-3.5" />,
-      onClick: () => { setOpen(false); setConfirm({ action: "reopen", message: "Volver la cita a Confirmada. Podrás gestionarla de nuevo." }); },
+      onClick: () => {
+        setOpen(false);
+        setConfirm({
+          action: "reopen",
+          message: "Volver la cita a Confirmada. Podrás gestionarla de nuevo.",
+        });
+      },
     });
   }
   if (appointment.status === "PENDING") {
     items.push({
       label: "Cancelar",
       icon: <XCircle className="w-3.5 h-3.5" />,
-      onClick: () => { setOpen(false); setConfirm({ action: "cancel", message: "¿Cancelar esta cita?" }); },
+      onClick: () => {
+        setOpen(false);
+        setConfirm({ action: "cancel", message: "¿Cancelar esta cita?" });
+      },
       danger: true,
     });
   }
@@ -120,25 +140,37 @@ function ActionsMenu({
     {
       label: "Editar",
       icon: <Pencil className="w-3.5 h-3.5" />,
-      onClick: () => { onEdit(appointment); setOpen(false); },
+      onClick: () => {
+        onEdit(appointment);
+        setOpen(false);
+      },
     },
     {
       label: "Enviar email",
       icon: <Mail className="w-3.5 h-3.5" />,
-      onClick: () => { onSendEmail(appointment.id); setOpen(false); },
+      onClick: () => {
+        onSendEmail(appointment.id);
+        setOpen(false);
+      },
     },
   );
   if (appointment.review?.reviewToken) {
     items.push({
       label: "Link de reseña",
       icon: <Link className="w-3.5 h-3.5" />,
-      onClick: () => { copyReviewLink(appointment.review!.reviewToken); setOpen(false); },
+      onClick: () => {
+        copyReviewLink(appointment.review!.reviewToken);
+        setOpen(false);
+      },
     });
   }
   items.push({
     label: "Eliminar",
     icon: <Trash2 className="w-3.5 h-3.5" />,
-    onClick: () => { onDelete(appointment.id); setOpen(false); },
+    onClick: () => {
+      onDelete(appointment.id);
+      setOpen(false);
+    },
     danger: true,
   });
 
@@ -165,12 +197,16 @@ function ActionsMenu({
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div className="absolute right-0 mt-1 w-44 bg-[color:var(--color-surface)] rounded-lg shadow-lg border border-[color:var(--color-border)] z-50 overflow-hidden">
             {items.map((item) => (
-              <button key={item.label}
+              <button
+                key={item.label}
                 onClick={item.onClick}
                 disabled={(item.label === "Confirmar" || item.label === "Completar") && isUpdating}
                 className={`w-full flex items-center gap-2 px-3 py-2 text-xs transition-colors hover:bg-[color:var(--color-surface-elevated)] ${
-                  item.danger ? "text-[color:var(--color-danger)]" : "text-[color:var(--color-body)]"
-                }`}>
+                  item.danger
+                    ? "text-[color:var(--color-danger)]"
+                    : "text-[color:var(--color-body)]"
+                }`}
+              >
                 {item.icon}
                 {item.label}
               </button>
@@ -283,7 +319,7 @@ function MobileAppointmentCard({
       >
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2.5 min-w-0">
-              <Avatar className="w-9 h-9">
+            <Avatar className="w-9 h-9">
               <AvatarFallback className="bg-[color:var(--color-accent-soft)] text-[color:var(--color-muted)] text-xs">
                 <User className="w-4 h-4" />
               </AvatarFallback>
@@ -448,8 +484,6 @@ function AppointmentRow({
   onEdit,
   onSendEmail,
   isUpdating,
-  isDeleting,
-  isSendingEmail,
 }: {
   appointment: Appointment;
   isHighlighted: boolean;
@@ -459,8 +493,6 @@ function AppointmentRow({
   onEdit: (appointment: Appointment) => void;
   onSendEmail: (id: string) => void;
   isUpdating: boolean;
-  isDeleting: boolean;
-  isSendingEmail: boolean;
 }) {
   const priceInfo = getPriceBreakdown(appointment);
   const serviceLabel = formatServices(appointment)
@@ -658,8 +690,6 @@ export default function AppointmentTable({
                   onEdit={onEdit}
                   onSendEmail={handleSendEmail}
                   isUpdating={updateStatusMutation.isPending}
-                  isDeleting={deleteMutation.isPending}
-                  isSendingEmail={sendEmailMutation.isPending}
                 />
               ))}
             </TableBody>

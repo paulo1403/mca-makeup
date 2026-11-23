@@ -49,8 +49,14 @@ export async function GET(request: NextRequest) {
       { serviceLine: string; income: number; expense: number; net: number }
     >();
 
-    const byCategoryMap = new Map<string, { category: string; income: number; expense: number; net: number }>();
-    const dailyMap = new Map<string, { day: string; income: number; expense: number; net: number }>();
+    const byCategoryMap = new Map<
+      string,
+      { category: string; income: number; expense: number; net: number }
+    >();
+    const dailyMap = new Map<
+      string,
+      { day: string; income: number; expense: number; net: number }
+    >();
 
     for (const item of allEntries) {
       const serviceLine = item.serviceLine;

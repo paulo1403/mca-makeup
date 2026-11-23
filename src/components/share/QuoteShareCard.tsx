@@ -93,7 +93,9 @@ export function buildQuoteText({ appointment, deposit }: QuoteShareData) {
   }
   lines.push(`Total ${formatPrice(price.totalPrice)}`);
   lines.push(`Adelanto ${formatPrice(effectiveDeposit)}`);
-  lines.push(`Restante ${formatPrice(Math.max(0, (price.totalPrice || 0) - (effectiveDeposit || 0)))}`);
+  lines.push(
+    `Restante ${formatPrice(Math.max(0, (price.totalPrice || 0) - (effectiveDeposit || 0)))}`,
+  );
   return lines.join("\n");
 }
 
@@ -185,7 +187,12 @@ export async function generateQuotePng({
   const clientContact = appointment.clientPhone?.trim()
     ? `${appointment.clientName} · ${appointment.clientPhone.trim()}`
     : appointment.clientName;
-  const clientWrapped = wrapLines(measureCtx, `Cliente: ${clientContact}`, contentWMeasure, smallFont);
+  const clientWrapped = wrapLines(
+    measureCtx,
+    `Cliente: ${clientContact}`,
+    contentWMeasure,
+    smallFont,
+  );
   measureCtx.font = lineFont;
   let dynamicLines = baseLines + clientWrapped.length + headerWrapped.length;
   // Always include a Dirección line (Studio uses fixed address)

@@ -355,14 +355,14 @@ export async function GET(request: NextRequest) {
       })),
       specialDate: specialDate
         ? {
-          date: specialDate.date,
-          isAvailable: specialDate.isAvailable,
-          customHours:
-            specialDate.startTime && specialDate.endTime
-              ? `${specialDate.startTime} - ${specialDate.endTime}`
-              : null,
-          note: specialDate.note,
-        }
+            date: specialDate.date,
+            isAvailable: specialDate.isAvailable,
+            customHours:
+              specialDate.startTime && specialDate.endTime
+                ? `${specialDate.startTime} - ${specialDate.endTime}`
+                : null,
+            note: specialDate.note,
+          }
         : null,
     });
 
@@ -560,8 +560,8 @@ export async function GET(request: NextRequest) {
       ...(specialDate?.isAvailable &&
         specialDate.startTime &&
         specialDate.endTime && {
-        message: `Horario especial: ${specialDate.startTime} - ${specialDate.endTime}${specialDate.note ? ` (${specialDate.note})` : ""}`,
-      }),
+          message: `Horario especial: ${specialDate.startTime} - ${specialDate.endTime}${specialDate.note ? ` (${specialDate.note})` : ""}`,
+        }),
     });
   } catch (error) {
     console.error("Error fetching availability:", error);

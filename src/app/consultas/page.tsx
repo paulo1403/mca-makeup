@@ -1,6 +1,5 @@
 "use client";
 
-import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import {
   Calendar as CalendarIcon,
@@ -13,13 +12,12 @@ import {
   Sparkles,
   Truck,
 } from "lucide-react";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useState } from "react";
-import { Calendar } from "@/components/ui/calendar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Button from "@/components/ui/Button";
+import { Calendar } from "@/components/ui/calendar";
 import Typography from "@/components/ui/Typography";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAvailableSlots } from "@/hooks/useAvailableSlots";
 import { useDistricts } from "@/hooks/useDistricts";
 import { useServicesList } from "@/hooks/useServices";
@@ -135,9 +133,7 @@ function ServicesTab() {
         if (catServices.length === 0) return null;
         const isOpen = openCats[cat.key] ?? true;
 
-        const catSelectedCount = catServices.filter(
-          (s: { id: string }) => selected[s.id],
-        ).length;
+        const catSelectedCount = catServices.filter((s: { id: string }) => selected[s.id]).length;
 
         return (
           <div
@@ -248,7 +244,8 @@ function ServicesTab() {
         <div className="sticky bottom-4 rounded-xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)]/40 shadow-lg p-4 flex items-center justify-between">
           <div>
             <p className="text-xs text-[color:var(--color-muted)]">
-              {selectedCount} servicio{selectedCount !== 1 ? "s" : ""} seleccionado{selectedCount !== 1 ? "s" : ""}
+              {selectedCount} servicio{selectedCount !== 1 ? "s" : ""} seleccionado
+              {selectedCount !== 1 ? "s" : ""}
             </p>
             <p className="text-lg font-bold text-[color:var(--color-heading)]">
               S/ {total.toFixed(2)}
@@ -451,7 +448,11 @@ function ConsultasContent() {
             <Typography as="h3" variant="h3" className="text-[color:var(--color-heading)] mb-2">
               ¿Listo para reservar?
             </Typography>
-            <Typography as="p" variant="p" className="text-[color:var(--color-body)] mb-5 max-w-sm mx-auto">
+            <Typography
+              as="p"
+              variant="p"
+              className="text-[color:var(--color-body)] mb-5 max-w-sm mx-auto"
+            >
               Agenda tu cita de maquillaje profesional en pocos pasos.
             </Typography>
             <Button as="a" href="/booking" variant="primary" size="lg">

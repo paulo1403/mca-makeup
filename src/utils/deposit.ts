@@ -10,9 +10,7 @@ export function calculateDepositFromQuantity(totalQuantity: number): number {
   return qty * DEPOSIT_PER_SERVICE;
 }
 
-export function calculateDepositForSelected(
-  selected: Array<{ quantity?: number }>,
-): number {
+export function calculateDepositForSelected(selected: Array<{ quantity?: number }>): number {
   const total = (selected || []).reduce((sum, s) => sum + (s.quantity || 1), 0);
   return calculateDepositFromQuantity(total);
 }
@@ -22,7 +20,11 @@ export function calculateDepositForAppointment(appointment: {
   services?: Array<{ quantity?: number }> | null;
   serviceType?: string;
 }): number {
-  if (appointment.services && Array.isArray(appointment.services) && appointment.services.length > 0) {
+  if (
+    appointment.services &&
+    Array.isArray(appointment.services) &&
+    appointment.services.length > 0
+  ) {
     const total = appointment.services.reduce((sum, s) => sum + (s.quantity || 1), 0);
     return calculateDepositFromQuantity(total);
   }

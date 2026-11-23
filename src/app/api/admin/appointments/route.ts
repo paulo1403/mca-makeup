@@ -1,8 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { emailTemplates, sendEmailToAdmins } from "@/lib/serverEmail";
-import { debugDate, parseDateFromString } from "@/utils/dateUtils";
 import { parseAppointmentTime } from "@/utils/dateRange";
+import { debugDate, parseDateFromString } from "@/utils/dateUtils";
 
 // GET /api/admin/appointments - Get all appointments
 export async function GET(request: NextRequest) {
@@ -334,12 +334,13 @@ async function enrichServices(services: Record<string, unknown>[]) {
   const catalogIds = services
     .filter((s) => typeof s.id === "string" && !(s.id as string).startsWith("_custom_"))
     .map((s) => s.id as string);
-  const dbServices = catalogIds.length > 0
-    ? await prisma.service.findMany({
-        where: { id: { in: catalogIds } },
-        select: { id: true, name: true, price: true, duration: true },
-      })
-    : [];
+  const dbServices =
+    catalogIds.length > 0
+      ? await prisma.service.findMany({
+          where: { id: { in: catalogIds } },
+          select: { id: true, name: true, price: true, duration: true },
+        })
+      : [];
   const map = new Map(dbServices.map((s) => [s.id, s]));
   return services.map((s) => {
     const id = s.id as string;
@@ -453,7 +454,14 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    if (!clientName || !clientEmail || !clientPhone || !serviceType || !appointmentDate || !appointmentTime) {
+    if (
+      !clientName ||
+      !clientEmail ||
+      !clientPhone ||
+      !serviceType ||
+      !appointmentDate ||
+      !appointmentTime
+    ) {
       return NextResponse.json(
         { success: false, message: "Missing required fields" },
         { status: 400 },

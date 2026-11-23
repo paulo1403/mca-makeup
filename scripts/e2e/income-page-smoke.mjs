@@ -34,7 +34,7 @@ const run = async () => {
     }
 
     await page.waitForTimeout(2000);
-    const bodyText = await page.locator("body").innerText();
+    const bodyText = await page.locator("body").textContent();
 
     if (!/ingresos/i.test(bodyText) || !/tendencia mensual/i.test(bodyText)) {
       throw new Error(`Income page content missing expected text. URL=${page.url()}`);
@@ -44,7 +44,7 @@ const run = async () => {
     await detailsBtn.click();
     await page.waitForTimeout(600);
 
-    const expandedText = await page.locator("body").innerText();
+    const expandedText = await page.locator("body").textContent();
     if (!/total historico/i.test(expandedText)) {
       throw new Error("Detail section did not expand correctly");
     }

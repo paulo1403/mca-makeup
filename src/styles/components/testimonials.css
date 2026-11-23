@@ -7,9 +7,11 @@
 }
 
 .testimonials-section {
-  background: linear-gradient(180deg,
-      color-mix(in srgb, var(--color-surface) 90%, transparent),
-      transparent);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-surface) 90%, transparent),
+    transparent
+  );
 }
 
 .testimonials-container {

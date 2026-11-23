@@ -161,7 +161,9 @@ export function parseFinanceText(text: string, source: EntrySource = "PASTE") {
 
     const serviceLine = SERVICE_LINE_MAP[rawServiceLine.toUpperCase()];
     if (!serviceLine) {
-      errors.push("SERVICIO inválido. Usa MAQUILLAJE, UÑAS, PEINADO, GENERAL u otros (TRANSPORTE, PRODUCTOS, COMIDA, ALQUILER...).");
+      errors.push(
+        "SERVICIO inválido. Usa MAQUILLAJE, UÑAS, PEINADO, GENERAL u otros (TRANSPORTE, PRODUCTOS, COMIDA, ALQUILER...).",
+      );
     }
 
     const paymentMethod = PAYMENT_MAP[rawPayment.toUpperCase()];

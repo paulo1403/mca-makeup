@@ -36,9 +36,7 @@ export default function CountryFields() {
         control={control}
         render={({ field }) => (
           <div className="space-y-2">
-            <span className="text-sm font-medium text-[color:var(--color-heading)]">
-              País
-            </span>
+            <span className="text-sm font-medium text-[color:var(--color-heading)]">País</span>
             <div className="flex gap-2">
               {[
                 { value: "PE" as const, label: "Perú" },

@@ -6,17 +6,21 @@ import { Check, Plus, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import DistrictSelector from "@/components/DistrictSelector";
 import ToggleServiceCategoryGroup from "@/components/booking-accordion/ToggleServiceSelector";
-import { Calendar } from "@/components/ui/calendar";
-import AdminFormField, { AdminInput, AdminSelect, AdminTextarea } from "@/components/ui/AdminFormField";
+import DistrictSelector from "@/components/DistrictSelector";
+import AdminFormField, {
+  AdminInput,
+  AdminSelect,
+  AdminTextarea,
+} from "@/components/ui/AdminFormField";
 import Button from "@/components/ui/Button";
+import { Calendar } from "@/components/ui/calendar";
 import Modal, { ModalBody, ModalFooter, ModalHeader } from "@/components/ui/Modal";
-import { useAvailableRanges } from "@/hooks/useAvailableRanges";
-import { useCreateAppointment, useUpdateAppointment } from "@/hooks/useAppointments";
 import type { Appointment } from "@/hooks/useAppointments";
-import { useGroupedServicesQuery } from "@/hooks/useServicesQuery";
+import { useCreateAppointment, useUpdateAppointment } from "@/hooks/useAppointments";
+import { useAvailableRanges } from "@/hooks/useAvailableRanges";
 import { type ServiceData, useServicesList } from "@/hooks/useServices";
+import { useGroupedServicesQuery } from "@/hooks/useServicesQuery";
 import { useTransportCost } from "@/hooks/useTransportCost";
 import { validateSelection } from "@/lib/serviceRules";
 import { calculateNightShiftCost } from "@/utils/nightShift";
@@ -81,7 +85,11 @@ function validatePEFields(phone: string, document: string): string | null {
   return null;
 }
 
-export default function ManualAppointmentModal({ isOpen, onClose, editingAppointment }: ManualAppointmentModalProps) {
+export default function ManualAppointmentModal({
+  isOpen,
+  onClose,
+  editingAppointment,
+}: ManualAppointmentModalProps) {
   const createAppointment = useCreateAppointment();
   const updateAppointment = useUpdateAppointment();
   const { data: groupedServices } = useGroupedServicesQuery();
@@ -110,9 +118,15 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
         selectedServices: (editingAppointment.services || []).map((s) => ({
           id: s.id,
           quantity: s.quantity || 1,
-          ...((s as Record<string, unknown>)._customName ? { _customName: (s as Record<string, unknown>)._customName as string } : {}),
-          ...((s as Record<string, unknown>)._customPrice != null ? { _customPrice: (s as Record<string, unknown>)._customPrice as number } : {}),
-          ...((s as Record<string, unknown>)._customDuration != null ? { _customDuration: (s as Record<string, unknown>)._customDuration as number } : {}),
+          ...((s as Record<string, unknown>)._customName
+            ? { _customName: (s as Record<string, unknown>)._customName as string }
+            : {}),
+          ...((s as Record<string, unknown>)._customPrice != null
+            ? { _customPrice: (s as Record<string, unknown>)._customPrice as number }
+            : {}),
+          ...((s as Record<string, unknown>)._customDuration != null
+            ? { _customDuration: (s as Record<string, unknown>)._customDuration as number }
+            : {}),
         })),
         date: new Date(editingAppointment.appointmentDate),
         timeSlot: editingAppointment.appointmentTime || "",
@@ -142,12 +156,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
     defaultValues: buildDefaultValues(),
   });
 
-  const {
-    watch,
-    setValue,
-    reset,
-    handleSubmit,
-  } = form;
+  const { watch, setValue, reset, handleSubmit } = form;
 
   useEffect(() => {
     if (isOpen) {
@@ -172,20 +181,30 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
   );
 
   const calculated = useMemo(() => {
-    const items: ({ price: number; duration: number; quantity: number; name: string })[] = selectedServices
-      .map((s) => {
-        if ("_customPrice" in s && s._customPrice != null) {
-          return { price: s._customPrice, duration: s._customDuration || 0, quantity: s.quantity || 1, name: s._customName || "Servicio" };
-        }
-        const svc = servicesList?.find((x: ServiceData) => x.id === s.id);
-        if (!svc) return null;
-        return { price: svc.price, duration: svc.duration, quantity: s.quantity || 1, name: svc.name };
-      })
-      .filter((x): x is NonNullable<typeof x> => x != null);
+    const items: { price: number; duration: number; quantity: number; name: string }[] =
+      selectedServices
+        .map((s) => {
+          if ("_customPrice" in s && s._customPrice != null) {
+            return {
+              price: s._customPrice,
+              duration: s._customDuration || 0,
+              quantity: s.quantity || 1,
+              name: s._customName || "Servicio",
+            };
+          }
+          const svc = servicesList?.find((x: ServiceData) => x.id === s.id);
+          if (!svc) return null;
+          return {
+            price: svc.price,
+            duration: svc.duration,
+            quantity: s.quantity || 1,
+            name: svc.name,
+          };
+        })
+        .filter((x): x is NonNullable<typeof x> => x != null);
     const subtotal = items.reduce((sum, it) => sum + (it.price || 0) * (it.quantity || 1), 0);
     const duration = items.reduce((sum, it) => sum + (it.duration || 0) * (it.quantity || 1), 0);
-    const transport =
-      locationType === "HOME" && transportCost ? transportCost.cost : 0;
+    const transport = locationType === "HOME" && transportCost ? transportCost.cost : 0;
     const isBridalSelected = selectedServices.some((s) => {
       const svc = servicesList?.find((x: ServiceData) => x.id === s.id);
       return svc?.category === "BRIDAL";
@@ -227,23 +246,31 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
     }
     const dur = Number.parseInt(customServiceDuration, 10) || 0;
     if (!selectedServices.some((s) => s.id === `_custom_${customServiceName.trim()}`)) {
-      setValue("selectedServices", [
-        ...selectedServices,
-        {
-          id: `_custom_${customServiceName.trim()}`,
-          quantity: 1,
-          _customName: customServiceName.trim(),
-          _customPrice: price,
-          _customDuration: dur,
-        },
-      ], { shouldValidate: true });
+      setValue(
+        "selectedServices",
+        [
+          ...selectedServices,
+          {
+            id: `_custom_${customServiceName.trim()}`,
+            quantity: 1,
+            _customName: customServiceName.trim(),
+            _customPrice: price,
+            _customDuration: dur,
+          },
+        ],
+        { shouldValidate: true },
+      );
     } else {
       // increment quantity if already exists
-      setValue("selectedServices", selectedServices.map((s) =>
-        s.id === `_custom_${customServiceName.trim()}`
-          ? { ...s, quantity: (s.quantity || 1) + 1, _customPrice: price, _customDuration: dur }
-          : s
-      ), { shouldValidate: true });
+      setValue(
+        "selectedServices",
+        selectedServices.map((s) =>
+          s.id === `_custom_${customServiceName.trim()}`
+            ? { ...s, quantity: (s.quantity || 1) + 1, _customPrice: price, _customDuration: dur }
+            : s,
+        ),
+        { shouldValidate: true },
+      );
     }
     setCustomServiceName("");
     setCustomServiceUnitPrice("");
@@ -251,7 +278,11 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
   };
 
   const removeCustomService = (id: string) => {
-    setValue("selectedServices", selectedServices.filter((s) => s.id !== id), { shouldValidate: true });
+    setValue(
+      "selectedServices",
+      selectedServices.filter((s) => s.id !== id),
+      { shouldValidate: true },
+    );
   };
 
   const [customServicePrice, setCustomServicePrice] = useState<string>("");
@@ -271,6 +302,7 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
   }, [transportCost, locationType, district, transportManuallyEdited]);
 
   useEffect(() => {
+    if (!district) return;
     setTransportManuallyEdited(false);
   }, [district]);
 
@@ -280,22 +312,24 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
       setCustomTransportCost(
         editingAppointment.transportCost != null && editingAppointment.transportCost > 0
           ? String(editingAppointment.transportCost)
-          : ""
+          : "",
       );
     } else if (!isOpen) {
       setCustomTransportCost("");
     }
   }, [isEditing, editingAppointment, isOpen]);
 
-  const effectiveServicePrice = priceOverridden && customServicePrice
-    ? Number.parseFloat(customServicePrice) || 0
-    : calculated.subtotal;
+  const effectiveServicePrice =
+    priceOverridden && customServicePrice
+      ? Number.parseFloat(customServicePrice) || 0
+      : calculated.subtotal;
   const effectiveTransport = customTransportCost
     ? Number.parseFloat(customTransportCost) || 0
     : calculated.transport;
-  const effectiveNightShift = priceOverridden && customNightShiftCost
-    ? Number.parseFloat(customNightShiftCost) || 0
-    : calculated.nightShift;
+  const effectiveNightShift =
+    priceOverridden && customNightShiftCost
+      ? Number.parseFloat(customNightShiftCost) || 0
+      : calculated.nightShift;
   const effectiveTotal = effectiveServicePrice + effectiveTransport + effectiveNightShift;
 
   const onSubmit = (data: FormData) => {
@@ -352,7 +386,8 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
       locationType: data.locationType,
       district: data.locationType === "HOME" ? data.district.trim() || undefined : undefined,
       address: data.locationType === "HOME" ? data.address.trim() || undefined : undefined,
-      addressReference: data.locationType === "HOME" ? data.addressReference.trim() || undefined : undefined,
+      addressReference:
+        data.locationType === "HOME" ? data.addressReference.trim() || undefined : undefined,
       additionalNotes: data.additionalNotes.trim(),
       services: data.selectedServices,
       totalDuration: calculated.duration,
@@ -382,7 +417,12 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
   const isPending = createAppointment.isPending || updateAppointment.isPending;
 
   return (
-    <Modal open={isOpen} onClose={() => !isPending && onClose()} size="lg" ariaLabelledBy="manual-appointment-title">
+    <Modal
+      open={isOpen}
+      onClose={() => !isPending && onClose()}
+      size="lg"
+      ariaLabelledBy="manual-appointment-title"
+    >
       <ModalHeader
         title={
           <span className="text-base font-semibold text-[color:var(--color-heading)]">
@@ -396,7 +436,9 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
           <ModalBody>
             <div className="space-y-5">
               <div>
-                <p className="text-[11px] font-semibold text-[color:var(--color-muted)] uppercase tracking-wider mb-2">Datos de la clienta</p>
+                <p className="text-[11px] font-semibold text-[color:var(--color-muted)] uppercase tracking-wider mb-2">
+                  Datos de la clienta
+                </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <AdminFormField label="Nombre" required>
                     <AdminInput
@@ -444,7 +486,9 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                         setValue("clientPhone", docType === "PE" ? formatPhonePE(raw) : raw);
                       }}
                       inputMode="tel"
-                      placeholder={watch("documentType") === "PE" ? "+51 999 999 999" : "+XX XXX XXX XXXX"}
+                      placeholder={
+                        watch("documentType") === "PE" ? "+51 999 999 999" : "+XX XXX XXX XXXX"
+                      }
                     />
                   </AdminFormField>
                 </div>
@@ -453,7 +497,9 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
               <div className="border-t border-[color:var(--color-border)]" />
 
               <div>
-                <p className="text-[11px] font-semibold text-[color:var(--color-muted)] uppercase tracking-wider mb-2">Ubicación</p>
+                <p className="text-[11px] font-semibold text-[color:var(--color-muted)] uppercase tracking-wider mb-2">
+                  Ubicación
+                </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <AdminFormField label="Tipo">
                     <AdminSelect
@@ -505,7 +551,13 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                               setTransportManuallyEdited(true);
                             }}
                             inputMode="decimal"
-                            placeholder={transportLoading ? "Calculando..." : calculated.transport > 0 ? calculated.transport.toFixed(2) : "0.00"}
+                            placeholder={
+                              transportLoading
+                                ? "Calculando..."
+                                : calculated.transport > 0
+                                  ? calculated.transport.toFixed(2)
+                                  : "0.00"
+                            }
                           />
                           {transportCost?.notes && (
                             <p className="text-[10px] text-[color:var(--color-muted)] mt-1">
@@ -522,7 +574,9 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
               <div className="border-t border-[color:var(--color-border)]" />
 
               <div>
-                <p className="text-[11px] font-semibold text-[color:var(--color-muted)] uppercase tracking-wider mb-2">Servicios</p>
+                <p className="text-[11px] font-semibold text-[color:var(--color-muted)] uppercase tracking-wider mb-2">
+                  Servicios
+                </p>
                 {groupedServices && Object.keys(groupedServices).length > 0 ? (
                   <div className="space-y-3">
                     <div className="space-y-2">
@@ -537,32 +591,43 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                     </div>
 
                     {/* Custom services */}
-                    {(selectedServices.filter((s) => "_customName" in s && s._customName).length > 0) && (
+                    {selectedServices.filter((s) => "_customName" in s && s._customName).length >
+                      0 && (
                       <div className="rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-3 space-y-2">
-                        <p className="text-xs font-medium text-[color:var(--color-muted)]">Servicios personalizados</p>
-                        {selectedServices.filter((s) => "_customName" in s && s._customName).map((s) => (
-                          <div key={s.id} className="flex items-center justify-between gap-2">
-                            <div className="flex-1 min-w-0">
-                              <span className="text-sm text-[color:var(--color-heading)]">{s._customName}</span>
-                              {s.quantity > 1 && (
-                                <span className="text-xs text-[color:var(--color-muted)] ml-1">×{s.quantity}</span>
-                              )}
-                              {s._customDuration ? (
-                                <span className="text-xs text-[color:var(--color-muted)] ml-2">{s._customDuration}min</span>
-                              ) : null}
+                        <p className="text-xs font-medium text-[color:var(--color-muted)]">
+                          Servicios personalizados
+                        </p>
+                        {selectedServices
+                          .filter((s) => "_customName" in s && s._customName)
+                          .map((s) => (
+                            <div key={s.id} className="flex items-center justify-between gap-2">
+                              <div className="flex-1 min-w-0">
+                                <span className="text-sm text-[color:var(--color-heading)]">
+                                  {s._customName}
+                                </span>
+                                {s.quantity > 1 && (
+                                  <span className="text-xs text-[color:var(--color-muted)] ml-1">
+                                    ×{s.quantity}
+                                  </span>
+                                )}
+                                {s._customDuration ? (
+                                  <span className="text-xs text-[color:var(--color-muted)] ml-2">
+                                    {s._customDuration}min
+                                  </span>
+                                ) : null}
+                              </div>
+                              <span className="text-sm font-medium text-[color:var(--color-heading)] shrink-0">
+                                S/ {((s._customPrice || 0) * (s.quantity || 1)).toFixed(2)}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => removeCustomService(s.id)}
+                                className="p-1 rounded-md hover:bg-[color:var(--color-danger)]/10 text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] transition-colors"
+                              >
+                                <X className="w-3.5 h-3.5" />
+                              </button>
                             </div>
-                            <span className="text-sm font-medium text-[color:var(--color-heading)] shrink-0">
-                              S/ {((s._customPrice || 0) * (s.quantity || 1)).toFixed(2)}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => removeCustomService(s.id)}
-                              className="p-1 rounded-md hover:bg-[color:var(--color-danger)]/10 text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] transition-colors"
-                            >
-                              <X className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        ))}
+                          ))}
                       </div>
                     )}
 
@@ -612,7 +677,9 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
               <div className="border-t border-[color:var(--color-border)]" />
 
               <div>
-                <p className="text-[11px] font-semibold text-[color:var(--color-muted)] uppercase tracking-wider mb-2">Fecha y horario</p>
+                <p className="text-[11px] font-semibold text-[color:var(--color-muted)] uppercase tracking-wider mb-2">
+                  Fecha y horario
+                </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Calendar
                     mode="single"
@@ -629,11 +696,14 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                     required
                     className="mx-auto w-full max-w-[300px] rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-card)] p-2"
                     classNames={{
-                      caption_label: "text-sm font-semibold capitalize text-[color:var(--color-heading)]",
+                      caption_label:
+                        "text-sm font-semibold capitalize text-[color:var(--color-heading)]",
                       weekday: "text-xs font-semibold text-[color:var(--color-muted)] w-9",
                       day_button: "h-9 w-9 text-sm font-medium text-[color:var(--color-heading)]",
-                      disabled: "h-9 w-9 text-sm font-medium text-[color:var(--calendar-inactive)] opacity-50",
-                      outside: "h-9 w-9 text-sm font-medium text-[color:var(--calendar-inactive)] opacity-60",
+                      disabled:
+                        "h-9 w-9 text-sm font-medium text-[color:var(--calendar-inactive)] opacity-50",
+                      outside:
+                        "h-9 w-9 text-sm font-medium text-[color:var(--calendar-inactive)] opacity-60",
                     }}
                   />
 
@@ -644,7 +714,10 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                     {slotsLoading ? (
                       <div className="space-y-2">
                         {[1, 2, 3].map((i) => (
-                          <div key={i} className="h-8 bg-[color:var(--color-surface)] rounded-lg animate-pulse" />
+                          <div
+                            key={i}
+                            className="h-8 bg-[color:var(--color-surface)] rounded-lg animate-pulse"
+                          />
                         ))}
                       </div>
                     ) : rangesData?.availableRanges?.length ? (
@@ -668,9 +741,13 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                         })}
                       </div>
                     ) : date ? (
-                      <p className="text-xs text-[color:var(--color-body)]">No hay horarios disponibles para esta fecha.</p>
+                      <p className="text-xs text-[color:var(--color-body)]">
+                        No hay horarios disponibles para esta fecha.
+                      </p>
                     ) : (
-                      <p className="text-xs text-[color:var(--color-body)]">Selecciona servicios, fecha y ubicación para ver horarios.</p>
+                      <p className="text-xs text-[color:var(--color-body)]">
+                        Selecciona servicios, fecha y ubicación para ver horarios.
+                      </p>
                     )}
                     {date && timeSlot && (
                       <div className="mt-2 p-2 bg-[color:var(--color-primary)]/10 rounded-lg flex items-center gap-1.5">
@@ -687,7 +764,9 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
               <div className="border-t border-[color:var(--color-border)]" />
 
               <div>
-                <p className="text-[11px] font-semibold text-[color:var(--color-muted)] uppercase tracking-wider mb-2">Resumen y estado</p>
+                <p className="text-[11px] font-semibold text-[color:var(--color-muted)] uppercase tracking-wider mb-2">
+                  Resumen y estado
+                </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <AdminFormField label="Estado">
                     <AdminSelect
@@ -704,14 +783,19 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                     <div className="rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] p-3 space-y-3 text-xs">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-medium text-[color:var(--color-muted)]">
-                          Costos {priceOverridden ? "(personalizados)" : "(calculados automáticamente)"}
+                          Costos{" "}
+                          {priceOverridden ? "(personalizados)" : "(calculados automáticamente)"}
                         </span>
                         <button
                           type="button"
                           onClick={() => {
                             if (!priceOverridden) {
-                              setCustomServicePrice(calculated.subtotal > 0 ? String(calculated.subtotal) : "");
-                              setCustomNightShiftCost(calculated.nightShift > 0 ? String(calculated.nightShift) : "");
+                              setCustomServicePrice(
+                                calculated.subtotal > 0 ? String(calculated.subtotal) : "",
+                              );
+                              setCustomNightShiftCost(
+                                calculated.nightShift > 0 ? String(calculated.nightShift) : "",
+                              );
                             }
                             setPriceOverridden(!priceOverridden);
                           }}
@@ -750,7 +834,9 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                         <>
                           <div className="flex justify-between">
                             <span className="text-[color:var(--color-muted)]">Servicios</span>
-                            <span className="text-[color:var(--color-heading)]">S/ {calculated.subtotal.toFixed(2)}</span>
+                            <span className="text-[color:var(--color-heading)]">
+                              S/ {calculated.subtotal.toFixed(2)}
+                            </span>
                           </div>
                           {locationType === "HOME" && (
                             <div className="flex justify-between">
@@ -762,16 +848,24 @@ export default function ManualAppointmentModal({ isOpen, onClose, editingAppoint
                           )}
                           {calculated.nightShift > 0 && (
                             <div className="flex justify-between">
-                              <span className="text-[color:var(--color-muted)]">Recargo nocturno</span>
-                              <span className="text-[color:var(--color-heading)]">S/ {calculated.nightShift.toFixed(2)}</span>
+                              <span className="text-[color:var(--color-muted)]">
+                                Recargo nocturno
+                              </span>
+                              <span className="text-[color:var(--color-heading)]">
+                                S/ {calculated.nightShift.toFixed(2)}
+                              </span>
                             </div>
                           )}
                         </>
                       )}
 
                       <div className="flex justify-between pt-1.5 border-t border-[color:var(--color-border)]">
-                        <span className="font-semibold text-[color:var(--color-heading)]">Total</span>
-                        <span className="font-semibold text-[color:var(--color-heading)]">S/ {effectiveTotal.toFixed(2)}</span>
+                        <span className="font-semibold text-[color:var(--color-heading)]">
+                          Total
+                        </span>
+                        <span className="font-semibold text-[color:var(--color-heading)]">
+                          S/ {effectiveTotal.toFixed(2)}
+                        </span>
                       </div>
                       <p className="text-[10px] text-[color:var(--color-muted)] pt-1">
                         Duración total: {calculated.duration} min

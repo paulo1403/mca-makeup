@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle2, Clock, Info, Scissors, Sparkles, XCircle } from "lucide-react";
+import Button from "@/components/ui/Button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -11,7 +12,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import Button from "@/components/ui/Button";
 
 interface ServiceInfoModalProps {
   show: boolean;
@@ -31,14 +31,31 @@ const notAllowed = [
 ];
 
 const tips = [
-  { icon: Clock, label: "Duración 0", detail: "Se realiza simultáneo al maquillaje, no suma tiempo" },
-  { icon: Sparkles, label: "Paquetes por temporada", detail: "Crea combos Glam vs Básico para distintos presupuestos" },
-  { icon: Scissors, label: "Upselling natural", detail: "Ofrece el peinado como complemento al confirmar la cita" },
+  {
+    icon: Clock,
+    label: "Duración 0",
+    detail: "Se realiza simultáneo al maquillaje, no suma tiempo",
+  },
+  {
+    icon: Sparkles,
+    label: "Paquetes por temporada",
+    detail: "Crea combos Glam vs Básico para distintos presupuestos",
+  },
+  {
+    icon: Scissors,
+    label: "Upselling natural",
+    detail: "Ofrece el peinado como complemento al confirmar la cita",
+  },
 ];
 
 export default function ServiceInfoModal({ show, onClose }: ServiceInfoModalProps) {
   return (
-    <Dialog open={show} onOpenChange={(open) => { if (!open) onClose(); }}>
+    <Dialog
+      open={show}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+    >
       <DialogContent
         showCloseButton
         className="sm:max-w-2xl flex flex-col max-h-[90dvh] bg-[color:var(--color-surface)] text-[color:var(--color-body)] border-[color:var(--color-border)] p-0 gap-0 overflow-hidden"
@@ -125,7 +142,8 @@ export default function ServiceInfoModal({ show, onClose }: ServiceInfoModalProp
                 <span className="font-semibold text-[color:var(--color-heading)]">
                   servicios complementarios
                 </span>{" "}
-                de maquillaje. Precios accesibles incentivan la combinación y aumentan el ticket promedio.
+                de maquillaje. Precios accesibles incentivan la combinación y aumentan el ticket
+                promedio.
               </p>
               <div className="grid gap-3 sm:grid-cols-2 mb-4">
                 <div className="rounded-lg border border-[color:var(--color-border)]/60 bg-[color:var(--color-surface)] px-3 py-2.5">
@@ -144,12 +162,17 @@ export default function ServiceInfoModal({ show, onClose }: ServiceInfoModalProp
 
               <div className="space-y-2">
                 {tips.map(({ icon: Icon, label, detail }) => (
-                  <div key={label} className="flex items-start gap-3 rounded-lg border border-[color:var(--color-border)]/60 bg-[color:var(--color-surface)] px-3 py-2.5">
+                  <div
+                    key={label}
+                    className="flex items-start gap-3 rounded-lg border border-[color:var(--color-border)]/60 bg-[color:var(--color-surface)] px-3 py-2.5"
+                  >
                     <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[color:var(--color-primary)]/10">
                       <Icon className="h-3.5 w-3.5 text-[color:var(--color-primary)]" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs font-semibold text-[color:var(--color-heading)]">{label}</p>
+                      <p className="text-xs font-semibold text-[color:var(--color-heading)]">
+                        {label}
+                      </p>
                       <p className="text-xs text-[color:var(--color-muted)]">{detail}</p>
                     </div>
                   </div>
@@ -160,13 +183,22 @@ export default function ServiceInfoModal({ show, onClose }: ServiceInfoModalProp
 
           {/* Quick reference badges */}
           <div className="flex flex-wrap gap-2">
-            <Badge variant="outline" className="border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] text-[color:var(--color-body)] text-xs">
+            <Badge
+              variant="outline"
+              className="border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] text-[color:var(--color-body)] text-xs"
+            >
               Duración 0 = simultáneo
             </Badge>
-            <Badge variant="outline" className="border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] text-[color:var(--color-body)] text-xs">
+            <Badge
+              variant="outline"
+              className="border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] text-[color:var(--color-body)] text-xs"
+            >
               &gt; 0 min = secuencial
             </Badge>
-            <Badge variant="outline" className="border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] text-[color:var(--color-body)] text-xs">
+            <Badge
+              variant="outline"
+              className="border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] text-[color:var(--color-body)] text-xs"
+            >
               Máx. 2 categorías por cita
             </Badge>
           </div>
@@ -174,7 +206,13 @@ export default function ServiceInfoModal({ show, onClose }: ServiceInfoModalProp
 
         {/* Footer */}
         <DialogFooter className="px-6 py-4">
-          <Button type="button" onClick={onClose} variant="ghost" size="md" className="min-w-[100px]">
+          <Button
+            type="button"
+            onClick={onClose}
+            variant="ghost"
+            size="md"
+            className="min-w-[100px]"
+          >
             Cerrar
           </Button>
         </DialogFooter>
@@ -182,5 +220,3 @@ export default function ServiceInfoModal({ show, onClose }: ServiceInfoModalProp
     </Dialog>
   );
 }
-
-
