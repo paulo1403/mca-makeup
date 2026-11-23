@@ -1,12 +1,30 @@
 "use client";
 
-import { Activity, ArrowUpRight, CalendarClock, CalendarDays, CheckCircle2, CircleDollarSign, Clock3, MessageSquare, Star, XCircle } from "lucide-react";
+import {
+  Activity,
+  ArrowUpRight,
+  CalendarClock,
+  CalendarDays,
+  CheckCircle2,
+  CircleDollarSign,
+  Clock3,
+  MessageSquare,
+  Star,
+  XCircle,
+} from "lucide-react";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import Button from "@/components/ui/Button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { useRecentAppointments } from "@/hooks/useRecentAppointments";
@@ -65,8 +83,12 @@ function DashboardError({ onRetry }: { onRetry: () => void }) {
   return (
     <Card className="border border-[color:var(--status-cancelled-border)]/60 bg-[color:var(--status-cancelled-bg)]/30 text-[color:var(--color-body)] shadow-none">
       <CardHeader>
-        <CardTitle className="text-[color:var(--status-cancelled-text)]">No se pudo cargar el dashboard</CardTitle>
-        <CardDescription>Hubo un problema obteniendo métricas y actividad reciente.</CardDescription>
+        <CardTitle className="text-[color:var(--status-cancelled-text)]">
+          No se pudo cargar el dashboard
+        </CardTitle>
+        <CardDescription>
+          Hubo un problema obteniendo métricas y actividad reciente.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Button variant="outline" onClick={onRetry}>
@@ -222,13 +244,22 @@ export default function AdminDashboardModern() {
               </p>
             </div>
             <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-3">
-              <Badge variant="outline" className="justify-center border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] px-3 py-1 text-[color:var(--color-body)]">
+              <Badge
+                variant="outline"
+                className="justify-center border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] px-3 py-1 text-[color:var(--color-body)]"
+              >
                 Hoy: {stats.todayAppointments}
               </Badge>
-              <Badge variant="outline" className="justify-center border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] px-3 py-1 text-[color:var(--color-body)]">
+              <Badge
+                variant="outline"
+                className="justify-center border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] px-3 py-1 text-[color:var(--color-body)]"
+              >
                 Semana: {stats.thisWeekAppointments}
               </Badge>
-              <Badge variant="outline" className="justify-center border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] px-3 py-1 text-[color:var(--color-body)]">
+              <Badge
+                variant="outline"
+                className="justify-center border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] px-3 py-1 text-[color:var(--color-body)]"
+              >
                 Mes: {stats.thisMonthAppointments}
               </Badge>
             </div>
@@ -243,10 +274,14 @@ export default function AdminDashboardModern() {
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <p className="text-xs text-[color:var(--color-muted)]">{label}</p>
-                  <p className="mt-1 text-2xl font-semibold tabular-nums text-[color:var(--color-heading)]">{value}</p>
+                  <p className="mt-1 text-2xl font-semibold tabular-nums text-[color:var(--color-heading)]">
+                    {value}
+                  </p>
                   <p className="mt-1 text-xs text-[color:var(--color-body)]">{detail}</p>
                 </div>
-                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[color:var(--color-border)]/50 ${accentBg}`}>
+                <div
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[color:var(--color-border)]/50 ${accentBg}`}
+                >
                   <Icon className={`h-[18px] w-[18px] ${accent}`} />
                 </div>
               </div>
@@ -267,7 +302,9 @@ export default function AdminDashboardModern() {
                 </div>
                 <ArrowUpRight className="h-4 w-4 text-[color:var(--color-muted)] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </div>
-              <p className="mt-3 text-sm font-semibold text-[color:var(--color-heading)]">{action.title}</p>
+              <p className="mt-3 text-sm font-semibold text-[color:var(--color-heading)]">
+                {action.title}
+              </p>
               <p className="mt-0.5 text-xs text-[color:var(--color-muted)]">{action.subtitle}</p>
             </Link>
           );
@@ -315,7 +352,9 @@ export default function AdminDashboardModern() {
                     </span>
                   </p>
                 ) : (
-                  <p className="text-xs text-[color:var(--color-muted)]">Aún no hay ingresos mensuales para mostrar.</p>
+                  <p className="text-xs text-[color:var(--color-muted)]">
+                    Aún no hay ingresos mensuales para mostrar.
+                  </p>
                 )}
               </CardContent>
             </Card>
@@ -333,7 +372,9 @@ export default function AdminDashboardModern() {
                     <div key={row.key} className="space-y-1">
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-[color:var(--color-body)]">{row.label}</span>
-                        <span className="font-semibold text-[color:var(--color-heading)]">{row.value}</span>
+                        <span className="font-semibold text-[color:var(--color-heading)]">
+                          {row.value}
+                        </span>
                       </div>
                       <div className="h-2 rounded-full bg-[color:var(--color-surface-elevated)]">
                         <div
@@ -369,7 +410,10 @@ export default function AdminDashboardModern() {
                   <TableBody>
                     {recentAppointments.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={4} className="py-8 text-center text-[color:var(--color-muted)]">
+                        <TableCell
+                          colSpan={4}
+                          className="py-8 text-center text-[color:var(--color-muted)]"
+                        >
                           No hay citas recientes.
                         </TableCell>
                       </TableRow>
@@ -384,10 +428,17 @@ export default function AdminDashboardModern() {
                               <div className="font-medium text-[color:var(--color-heading)]">
                                 {appointment.clientName}
                               </div>
-                              <div className="text-xs text-[color:var(--color-muted)]">{appointment.clientPhone}</div>
+                              <div className="text-xs text-[color:var(--color-muted)]">
+                                {appointment.clientPhone}
+                              </div>
                             </TableCell>
                             <TableCell className="max-w-[220px] truncate">{mainService}</TableCell>
-                            <TableCell>{formatDateTime(appointment.appointmentDate, appointment.appointmentTime)}</TableCell>
+                            <TableCell>
+                              {formatDateTime(
+                                appointment.appointmentDate,
+                                appointment.appointmentTime,
+                              )}
+                            </TableCell>
                             <TableCell>
                               <span
                                 className={`inline-flex rounded-full border px-2 py-0.5 text-xs ${statusTone[appointment.status] ?? ""}`}
@@ -420,7 +471,9 @@ export default function AdminDashboardModern() {
                       >
                         <div className="flex items-start justify-between gap-2">
                           <div>
-                            <p className="font-medium text-[color:var(--color-heading)]">{appointment.clientName}</p>
+                            <p className="font-medium text-[color:var(--color-heading)]">
+                              {appointment.clientName}
+                            </p>
                             <p className="text-xs text-[color:var(--color-body)]">{mainService}</p>
                           </div>
                           <span
@@ -442,7 +495,12 @@ export default function AdminDashboardModern() {
 
           <div className="flex justify-end">
             <Link href="/admin/appointments">
-              <Button variant="soft" className="bg-[color:var(--color-surface-elevated)] text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface)]">Ir a todas las citas</Button>
+              <Button
+                variant="soft"
+                className="bg-[color:var(--color-surface-elevated)] text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface)]"
+              >
+                Ir a todas las citas
+              </Button>
             </Link>
           </div>
         </TabsContent>
@@ -464,7 +522,9 @@ export default function AdminDashboardModern() {
                     className="rounded-lg border border-[color:var(--color-border)]/60 bg-[color:var(--color-surface-elevated)] p-3"
                   >
                     <p className="text-xs text-[color:var(--color-muted)]">{item.label}</p>
-                    <p className="mt-1 text-lg font-semibold text-[color:var(--color-heading)]">{item.value}</p>
+                    <p className="mt-1 text-lg font-semibold text-[color:var(--color-heading)]">
+                      {item.value}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -478,7 +538,9 @@ export default function AdminDashboardModern() {
             </CardHeader>
             <CardContent>
               {stats.monthlyRevenueByIncome.length === 0 ? (
-                <p className="text-sm text-[color:var(--color-muted)]">No hay datos mensuales disponibles.</p>
+                <p className="text-sm text-[color:var(--color-muted)]">
+                  No hay datos mensuales disponibles.
+                </p>
               ) : (
                 <div className="space-y-2">
                   {stats.monthlyRevenueByIncome.slice(0, 6).map((month) => (
@@ -487,7 +549,9 @@ export default function AdminDashboardModern() {
                       className="flex items-center justify-between rounded-lg border border-[color:var(--color-border)]/60 bg-[color:var(--color-surface-elevated)] px-3 py-2"
                     >
                       <div>
-                        <p className="text-sm font-medium text-[color:var(--color-heading)]">{month.monthLabel}</p>
+                        <p className="text-sm font-medium text-[color:var(--color-heading)]">
+                          {month.monthLabel}
+                        </p>
                         <p className="text-xs text-[color:var(--color-muted)]">
                           {month.completedAppointments} completadas
                         </p>
@@ -504,7 +568,12 @@ export default function AdminDashboardModern() {
 
           <div className="flex justify-end">
             <Link href="/admin/reviews">
-              <Button variant="soft" className="bg-[color:var(--color-surface-elevated)] text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface)]">Gestionar reseñas</Button>
+              <Button
+                variant="soft"
+                className="bg-[color:var(--color-surface-elevated)] text-[color:var(--color-heading)] hover:bg-[color:var(--color-surface)]"
+              >
+                Gestionar reseñas
+              </Button>
             </Link>
           </div>
         </TabsContent>
@@ -512,9 +581,7 @@ export default function AdminDashboardModern() {
 
       <Card className={elevatedCardClass}>
         <CardContent className="flex flex-col gap-2 py-4 text-xs text-[color:var(--color-body)] sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            Datos sincronizados automáticamente cada 30 minutos.
-          </p>
+          <p>Datos sincronizados automáticamente cada 30 minutos.</p>
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1">
               <CheckCircle2 className="h-3.5 w-3.5 text-[color:var(--status-completed-text)]" />

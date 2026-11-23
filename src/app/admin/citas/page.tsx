@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { addDays, endOfMonth, format as dfFormat } from "date-fns";
+import { addDays, format as dfFormat, endOfMonth } from "date-fns";
 import { es } from "date-fns/locale";
 import {
   Calendar,
@@ -33,7 +33,6 @@ import {
   useSendAppointmentEmail,
   useUpdateAppointmentStatus,
 } from "@/hooks/useAppointments";
-import { useDashboardStats } from "@/hooks/useDashboardStats";
 import {
   formatDate,
   formatPrice,
@@ -65,7 +64,9 @@ function groupByDate(apps: Appointment[]) {
 
 function buildWaLink(a: Appointment) {
   const p = getPriceBreakdown(a);
-  const svc = formatServices(a).map((s) => s.displayText).join(", ");
+  const svc = formatServices(a)
+    .map((s) => s.displayText)
+    .join(", ");
   const phone = (a.clientPhone || "").replace(/\D/g, "");
   const text = [
     `💄 *${a.clientName}*`,
@@ -76,7 +77,9 @@ function buildWaLink(a: Appointment) {
       ? "📍 Studio — Av. Bolívar 1073, Pueblo Libre"
       : `📍 ${[a.address, a.district].filter(Boolean).join(", ")}`,
     a.additionalNotes ? `📝 ${a.additionalNotes}` : "",
-  ].filter(Boolean).join("\n");
+  ]
+    .filter(Boolean)
+    .join("\n");
   return `https://wa.me/51${phone.slice(-9)}?text=${encodeURIComponent(text)}`;
 }
 
@@ -107,7 +110,6 @@ function CitasContent() {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [statusOpen, setStatusOpen] = useState(false);
 
-  const { data: stats } = useDashboardStats();
   const upd = useUpdateAppointmentStatus();
   const del = useDeleteAppointment();
   const mail = useSendAppointmentEmail();
@@ -117,7 +119,10 @@ function CitasContent() {
     const p: Record<string, string> = { page: String(page), limit: "50" };
     if (status !== "all") p.status = status;
     if (search) p.search = search;
-    if (range) { p.dateStart = range.dateStart; p.dateEnd = range.dateEnd; }
+    if (range) {
+      p.dateStart = range.dateStart;
+      p.dateEnd = range.dateEnd;
+    }
     return p;
   }, [page, status, search, range]);
 
@@ -127,7 +132,10 @@ function CitasContent() {
       const res = await fetch(`/api/admin/appointments?${new URLSearchParams(qp)}`);
       const json = await res.json();
       if (!json.success) throw new Error(json.message);
-      return json.data as { appointments: Appointment[]; pagination: { page: number; limit: number; total: number; pages: number } };
+      return json.data as {
+        appointments: Appointment[];
+        pagination: { page: number; limit: number; total: number; pages: number };
+      };
     },
     staleTime: 60_000,
   });
@@ -146,12 +154,33 @@ function CitasContent() {
   };
 
   const onStatus = (id: string, s: Appointment["status"]) => upd.mutate({ id, status: s });
-  const onDelete = (id: string) => del.mutate(id, { onSuccess: () => { toast.success("Eliminada"); setSelId(null); }, onError: (e) => toast.error(e.message) });
-  const doEmail = () => { if (emailId) mail.mutate(emailId, { onSuccess: () => { toast.success("Email enviado"); setEmailId(null); }, onError: (e) => toast.error(e.message) }); };
-  const onEdit = (a: Appointment) => { setEditing(a); setShowManual(true); };
-  const onNew = () => { setEditing(null); setShowManual(true); };
+  const onDelete = (id: string) =>
+    del.mutate(id, {
+      onSuccess: () => {
+        toast.success("Eliminada");
+        setSelId(null);
+      },
+      onError: (e) => toast.error(e.message),
+    });
+  const doEmail = () => {
+    if (emailId)
+      mail.mutate(emailId, {
+        onSuccess: () => {
+          toast.success("Email enviado");
+          setEmailId(null);
+        },
+        onError: (e) => toast.error(e.message),
+      });
+  };
+  const onEdit = (a: Appointment) => {
+    setEditing(a);
+    setShowManual(true);
+  };
+  const onNew = () => {
+    setEditing(null);
+    setShowManual(true);
+  };
 
-  const pen = apps.filter((a) => a.status === "PENDING").length;
   const conf = apps.filter((a) => a.status === "CONFIRMED").length;
 
   return (
@@ -161,8 +190,17 @@ function CitasContent() {
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 min-w-0">
             <h1 className="text-sm font-bold text-[color:var(--color-heading)] shrink-0">Citas</h1>
-            {pag && <span className="text-[11px] text-[color:var(--color-muted)] tabular-nums">{pag.total}</span>}
-            {conf > 0 && <><span className="text-[color:var(--color-border)]">·</span><span className="text-[11px] text-[color:var(--color-success)]">✓{conf}</span></>}
+            {pag && (
+              <span className="text-[11px] text-[color:var(--color-muted)] tabular-nums">
+                {pag.total}
+              </span>
+            )}
+            {conf > 0 && (
+              <>
+                <span className="text-[color:var(--color-border)]">·</span>
+                <span className="text-[11px] text-[color:var(--color-success)]">✓{conf}</span>
+              </>
+            )}
           </div>
           <Button variant="primary" size="sm" onClick={onNew}>
             <Plus className="w-3.5 h-3.5" /> Nueva
@@ -172,25 +210,45 @@ function CitasContent() {
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-0.5 -ml-2">
             {DATE_TABS.map((t) => (
-              <button key={t.k} onClick={() => { setPeriod(t.k); setPage(1); }}
+              <button
+                key={t.k}
+                onClick={() => {
+                  setPeriod(t.k);
+                  setPage(1);
+                }}
                 className={`relative px-2.5 py-1.5 text-xs font-medium transition-colors ${
                   period === t.k
                     ? "text-[color:var(--color-heading)] after:absolute after:bottom-0 after:left-2 after:right-2 after:h-0.5 after:rounded-full after:bg-[color:var(--color-primary)]"
                     : "text-[color:var(--color-muted)] hover:text-[color:var(--color-heading)]"
-                }`}>
+                }`}
+              >
                 {t.l}
               </button>
             ))}
           </div>
           <div className="relative flex-1 max-w-[180px] ml-auto">
             <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-[color:var(--color-muted)]" />
-            <input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            <input
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
               placeholder="Buscar..."
-              className="w-full pl-7 pr-5 py-1.5 text-xs rounded-md bg-[color:var(--color-surface-elevated)] text-[color:var(--color-heading)] placeholder-[color:var(--color-muted)] border border-[color:var(--color-border)]/50 focus:outline-none focus:border-[color:var(--color-border)]" />
-            {search && <button onClick={() => setSearch("")} className="absolute right-1.5 top-1/2 -translate-y-1/2"><X className="w-3 h-3 text-[color:var(--color-muted)]" /></button>}
+              className="w-full pl-7 pr-5 py-1.5 text-xs rounded-md bg-[color:var(--color-surface-elevated)] text-[color:var(--color-heading)] placeholder-[color:var(--color-muted)] border border-[color:var(--color-border)]/50 focus:outline-none focus:border-[color:var(--color-border)]"
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-1.5 top-1/2 -translate-y-1/2"
+              >
+                <X className="w-3 h-3 text-[color:var(--color-muted)]" />
+              </button>
+            )}
           </div>
           <div className="relative">
-            <button onClick={() => setStatusOpen(!statusOpen)}
+            <button
+              onClick={() => setStatusOpen(!statusOpen)}
               className="flex items-center gap-1 px-2 py-1.5 text-xs font-medium rounded-md border border-[color:var(--color-border)]/50 bg-[color:var(--color-surface-elevated)] text-[color:var(--color-heading)] hover:border-[color:var(--color-border)] transition-colors"
             >
               {STATUS_OPTS.find((f) => f.k === status)?.l || "Todas"}
@@ -201,11 +259,19 @@ function CitasContent() {
                 <div className="fixed inset-0 z-40" onClick={() => setStatusOpen(false)} />
                 <div className="absolute right-0 mt-1 w-36 bg-[color:var(--color-surface)] rounded-lg shadow-lg border border-[color:var(--color-border)] z-50 overflow-hidden">
                   {STATUS_OPTS.map((item) => (
-                    <button key={item.k}
-                      onClick={() => { setStatus(item.k); setPage(1); setStatusOpen(false); }}
+                    <button
+                      key={item.k}
+                      onClick={() => {
+                        setStatus(item.k);
+                        setPage(1);
+                        setStatusOpen(false);
+                      }}
                       className={`w-full flex items-center justify-between px-3 py-2 text-xs transition-colors hover:bg-[color:var(--color-surface-elevated)] ${
-                        status === item.k ? "text-[color:var(--color-primary)] font-medium bg-[color:var(--color-primary)]/5" : "text-[color:var(--color-body)]"
-                      }`}>
+                        status === item.k
+                          ? "text-[color:var(--color-primary)] font-medium bg-[color:var(--color-primary)]/5"
+                          : "text-[color:var(--color-body)]"
+                      }`}
+                    >
                       {item.l}
                       {status === item.k && <Check className="w-3 h-3" />}
                     </button>
@@ -220,9 +286,13 @@ function CitasContent() {
       {/* Main: list + detail */}
       <div className="flex-1 flex gap-0 min-h-0">
         {/* List */}
-        <div className={`flex-1 min-w-0 overflow-auto ${selAppt ? "hidden lg:block lg:w-[55%] lg:flex-none lg:border-r lg:border-[color:var(--color-border)] lg:pr-3" : ""}`}>
+        <div
+          className={`flex-1 min-w-0 overflow-auto ${selAppt ? "hidden lg:block lg:w-[55%] lg:flex-none lg:border-r lg:border-[color:var(--color-border)] lg:pr-3" : ""}`}
+        >
           {isLoading ? (
-            <div className="py-16 text-center"><div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[color:var(--color-primary)] mx-auto" /></div>
+            <div className="py-16 text-center">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[color:var(--color-primary)] mx-auto" />
+            </div>
           ) : apps.length === 0 ? (
             <div className="py-16 text-center text-sm text-[color:var(--color-muted)]">
               {period !== "all" ? "Sin citas en este período" : "Sin citas"}
@@ -233,36 +303,55 @@ function CitasContent() {
                 const isOpen = !expanded.has(dk);
                 return (
                   <div key={dk}>
-                    <button onClick={() => toggleExpand(dk)}
-                      className="w-full flex items-center gap-2 text-left py-1 px-1 rounded-md hover:bg-[color:var(--color-surface-elevated)]/50">
-                      <ChevronDown className={`w-3 h-3 text-[color:var(--color-muted)] transition-transform ${!isOpen ? "-rotate-90" : ""}`} />
+                    <button
+                      onClick={() => toggleExpand(dk)}
+                      className="w-full flex items-center gap-2 text-left py-1 px-1 rounded-md hover:bg-[color:var(--color-surface-elevated)]/50"
+                    >
+                      <ChevronDown
+                        className={`w-3 h-3 text-[color:var(--color-muted)] transition-transform ${!isOpen ? "-rotate-90" : ""}`}
+                      />
                       <Calendar className="w-3 h-3 text-[color:var(--color-primary)]" />
                       <span className="text-[11px] font-semibold text-[color:var(--color-muted)] uppercase">
                         {dfFormat(new Date(`${dk}T12:00:00`), "EEE d MMM", { locale: es })}
                       </span>
-                      <span className="text-[10px] text-[color:var(--color-muted)] bg-[color:var(--color-surface-elevated)] px-1.5 py-0.5 rounded-full ml-auto">{dayApps.length}</span>
+                      <span className="text-[10px] text-[color:var(--color-muted)] bg-[color:var(--color-surface-elevated)] px-1.5 py-0.5 rounded-full ml-auto">
+                        {dayApps.length}
+                      </span>
                     </button>
                     {isOpen && (
                       <div className="ml-5 space-y-0.5 mt-0.5">
                         {dayApps.map((a) => {
                           const active = selId === a.id;
                           const pr = getPriceBreakdown(a);
-                          const svc = formatServices(a).map((s) => s.displayText).join(", ");
-                          const isStudio = (a.locationType || "").toUpperCase() === "STUDIO";
+                          const svc = formatServices(a)
+                            .map((s) => s.displayText)
+                            .join(", ");
                           return (
-                            <button key={a.id} onClick={() => setSelId(active ? null : a.id)}
-                              className={`w-full text-left rounded-lg border transition-all ${active ? "border-[color:var(--color-primary)] bg-[color:var(--color-primary)]/5 ring-1 ring-[color:var(--color-primary)]/20" : "border-transparent hover:bg-[color:var(--color-surface-elevated)]"}`}>
+                            <button
+                              key={a.id}
+                              onClick={() => setSelId(active ? null : a.id)}
+                              className={`w-full text-left rounded-lg border transition-all ${active ? "border-[color:var(--color-primary)] bg-[color:var(--color-primary)]/5 ring-1 ring-[color:var(--color-primary)]/20" : "border-transparent hover:bg-[color:var(--color-surface-elevated)]"}`}
+                            >
                               <div className="px-3 py-2">
                                 <div className="text-[11px] font-semibold text-[color:var(--color-primary)] tabular-nums mb-1">
                                   {formatTime(a.appointmentTime).split(" - ")[0]}
                                 </div>
                                 <div className="flex items-center gap-1.5">
-                                  <span className="text-xs font-medium text-[color:var(--color-heading)] truncate">{a.clientName}</span>
-                                  <StatusBadge status={a.status} className="text-[10px] py-0 px-1.5" />
+                                  <span className="text-xs font-medium text-[color:var(--color-heading)] truncate">
+                                    {a.clientName}
+                                  </span>
+                                  <StatusBadge
+                                    status={a.status}
+                                    className="text-[10px] py-0 px-1.5"
+                                  />
                                 </div>
                                 <div className="flex items-center gap-1.5 text-[11px] text-[color:var(--color-muted)] mt-1 min-w-0">
                                   <span className="truncate max-w-[180px]">{svc || "—"}</span>
-                                  {pr.totalPrice > 0 && <span className="font-medium text-[color:var(--color-heading)] shrink-0">{formatPrice(pr.totalPrice)}</span>}
+                                  {pr.totalPrice > 0 && (
+                                    <span className="font-medium text-[color:var(--color-heading)] shrink-0">
+                                      {formatPrice(pr.totalPrice)}
+                                    </span>
+                                  )}
                                 </div>
                               </div>
                             </button>
@@ -276,8 +365,11 @@ function CitasContent() {
               {pag && pag.pages > 1 && (
                 <div className="flex justify-center gap-1 pt-2">
                   {Array.from({ length: pag.pages }, (_, i) => (
-                    <button key={i} onClick={() => setPage(i + 1)}
-                      className={`w-7 h-7 rounded text-xs ${page === i + 1 ? "bg-[color:var(--color-primary)] text-white" : "text-[color:var(--color-muted)] hover:bg-[color:var(--color-surface-elevated)]"}`}>
+                    <button
+                      key={i}
+                      onClick={() => setPage(i + 1)}
+                      className={`w-7 h-7 rounded text-xs ${page === i + 1 ? "bg-[color:var(--color-primary)] text-white" : "text-[color:var(--color-muted)] hover:bg-[color:var(--color-surface-elevated)]"}`}
+                    >
                       {i + 1}
                     </button>
                   ))}
@@ -298,7 +390,6 @@ function CitasContent() {
               onDelete={(id) => onDelete(id)}
               onEmail={(id) => setEmailId(id)}
               isUpdating={upd.isPending}
-              isDeleting={del.isPending}
               isSending={mail.isPending}
             />
           </div>
@@ -315,20 +406,43 @@ function CitasContent() {
               onDelete={(id) => onDelete(id)}
               onEmail={(id) => setEmailId(id)}
               isUpdating={upd.isPending}
-              isDeleting={del.isPending}
               isSending={mail.isPending}
             />
           </div>
         )}
       </div>
 
-      <ManualAppointmentModal isOpen={showManual} onClose={() => { setShowManual(false); setEditing(null); }} editingAppointment={editing} />
-      <ConfirmModal open={!!emailId} title="Enviar email" description="¿Enviar email con los detalles de la cita?" confirmText={mail.isPending ? "Enviando..." : "Enviar"} cancelText="Cancelar" onConfirm={doEmail} onCancel={() => setEmailId(null)} />
+      <ManualAppointmentModal
+        isOpen={showManual}
+        onClose={() => {
+          setShowManual(false);
+          setEditing(null);
+        }}
+        editingAppointment={editing}
+      />
+      <ConfirmModal
+        open={!!emailId}
+        title="Enviar email"
+        description="¿Enviar email con los detalles de la cita?"
+        confirmText={mail.isPending ? "Enviando..." : "Enviar"}
+        cancelText="Cancelar"
+        onConfirm={doEmail}
+        onCancel={() => setEmailId(null)}
+      />
     </div>
   );
 }
 
-function DetailPanel({ a, onClose, onEdit, onStatus, onDelete, onEmail, isUpdating, isDeleting, isSending }: {
+function DetailPanel({
+  a,
+  onClose,
+  onEdit,
+  onStatus,
+  onDelete,
+  onEmail,
+  isUpdating,
+  isSending,
+}: {
   a: Appointment;
   onClose: () => void;
   onEdit: (a: Appointment) => void;
@@ -336,7 +450,6 @@ function DetailPanel({ a, onClose, onEdit, onStatus, onDelete, onEmail, isUpdati
   onDelete: (id: string) => void;
   onEmail: (id: string) => void;
   isUpdating: boolean;
-  isDeleting: boolean;
   isSending: boolean;
 }) {
   const pr = getPriceBreakdown(a);
@@ -348,14 +461,17 @@ function DetailPanel({ a, onClose, onEdit, onStatus, onDelete, onEmail, isUpdati
   const handleExport = async () => {
     setExportLabel("Exportando...");
     try {
-      const { copyQuotePngToClipboard, generateQuotePng } = await import("@/components/share/QuoteShareCard");
+      const { copyQuotePngToClipboard, generateQuotePng } = await import(
+        "@/components/share/QuoteShareCard"
+      );
       const copied = await copyQuotePngToClipboard({ appointment: a });
       if (!copied) {
         const blob = await generateQuotePng({ appointment: a });
         if (blob) {
           const url = URL.createObjectURL(blob);
           const el = document.createElement("a");
-          el.href = url; el.download = `presupuesto-${a.id}.png`;
+          el.href = url;
+          el.download = `presupuesto-${a.id}.png`;
           document.body.appendChild(el);
           el.click();
           document.body.removeChild(el);
@@ -365,7 +481,9 @@ function DetailPanel({ a, onClose, onEdit, onStatus, onDelete, onEmail, isUpdati
       } else {
         toast.success("Imagen copiada al portapapeles");
       }
-    } catch { toast.error("No se pudo exportar"); }
+    } catch {
+      toast.error("No se pudo exportar");
+    }
     setTimeout(() => setExportLabel("Exportar PNG"), 1800);
   };
 
@@ -375,7 +493,9 @@ function DetailPanel({ a, onClose, onEdit, onStatus, onDelete, onEmail, isUpdati
       const { buildQuoteText } = await import("@/components/share/QuoteShareCard");
       await navigator.clipboard.writeText(buildQuoteText({ appointment: a }));
       toast.success("Texto copiado");
-    } catch { toast.error("No se pudo copiar"); }
+    } catch {
+      toast.error("No se pudo copiar");
+    }
     setTimeout(() => setCopyLabel("Copiar texto"), 1800);
   };
 
@@ -392,9 +512,11 @@ function DetailPanel({ a, onClose, onEdit, onStatus, onDelete, onEmail, isUpdati
 
   // ponytail: review status helpers inline
   const reviewStatusColor = (s: string) =>
-    s === "APPROVED" ? "bg-[color:var(--color-success)]/10 text-[color:var(--color-success)]"
-    : s === "REJECTED" ? "bg-[color:var(--color-danger)]/10 text-[color:var(--color-danger)]"
-    : "bg-[color:var(--color-warning)]/10 text-[color:var(--color-warning)]";
+    s === "APPROVED"
+      ? "bg-[color:var(--color-success)]/10 text-[color:var(--color-success)]"
+      : s === "REJECTED"
+        ? "bg-[color:var(--color-danger)]/10 text-[color:var(--color-danger)]"
+        : "bg-[color:var(--color-warning)]/10 text-[color:var(--color-warning)]";
   const reviewStatusText = (s: string) =>
     s === "APPROVED" ? "Publicada" : s === "REJECTED" ? "Rechazada" : "Pendiente";
 
@@ -404,24 +526,47 @@ function DetailPanel({ a, onClose, onEdit, onStatus, onDelete, onEmail, isUpdati
       <div className="flex items-start justify-between p-3 border-b border-[color:var(--color-border)] shrink-0">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-[color:var(--color-heading)]">{a.clientName}</span>
+            <span className="text-sm font-semibold text-[color:var(--color-heading)]">
+              {a.clientName}
+            </span>
             <StatusBadge status={a.status} className="text-[10px]" />
           </div>
-          <div className="text-xs text-[color:var(--color-muted)] mt-0.5">{formatDate(a.appointmentDate)} · {formatTime(a.appointmentTime)}</div>
+          <div className="text-xs text-[color:var(--color-muted)] mt-0.5">
+            {formatDate(a.appointmentDate)} · {formatTime(a.appointmentTime)}
+          </div>
         </div>
-        <button onClick={onClose} className="p-1 rounded hover:bg-[color:var(--color-surface-elevated)]"><X className="w-4 h-4 text-[color:var(--color-muted)]" /></button>
+        <button
+          onClick={onClose}
+          className="p-1 rounded hover:bg-[color:var(--color-surface-elevated)]"
+        >
+          <X className="w-4 h-4 text-[color:var(--color-muted)]" />
+        </button>
       </div>
 
       {/* Body */}
       <div className="flex-1 overflow-y-auto p-3 space-y-3 text-xs">
         {/* Contact */}
         <div>
-          <p className="text-[10px] font-semibold text-[color:var(--color-muted)] uppercase mb-1">Contacto</p>
-          {a.clientEmail && <div className="flex items-center gap-1.5 text-[color:var(--color-body)]"><Mail className="w-3 h-3 text-[color:var(--color-muted)]" />{a.clientEmail}</div>}
-          {a.clientPhone && <div className="flex items-center gap-1.5 text-[color:var(--color-body)]"><Phone className="w-3 h-3 text-[color:var(--color-muted)]" />{a.clientPhone}</div>}
+          <p className="text-[10px] font-semibold text-[color:var(--color-muted)] uppercase mb-1">
+            Contacto
+          </p>
+          {a.clientEmail && (
+            <div className="flex items-center gap-1.5 text-[color:var(--color-body)]">
+              <Mail className="w-3 h-3 text-[color:var(--color-muted)]" />
+              {a.clientEmail}
+            </div>
+          )}
+          {a.clientPhone && (
+            <div className="flex items-center gap-1.5 text-[color:var(--color-body)]">
+              <Phone className="w-3 h-3 text-[color:var(--color-muted)]" />
+              {a.clientPhone}
+            </div>
+          )}
           {a.clientDocument && (
             <div className="flex items-center gap-1.5 text-[color:var(--color-body)] mt-0.5">
-              <span className="text-[color:var(--color-muted)]">{a.documentType === "PE" ? "DNI" : "Doc"}:</span>
+              <span className="text-[color:var(--color-muted)]">
+                {a.documentType === "PE" ? "DNI" : "Doc"}:
+              </span>
               <span>{a.clientDocument}</span>
             </div>
           )}
@@ -429,34 +574,63 @@ function DetailPanel({ a, onClose, onEdit, onStatus, onDelete, onEmail, isUpdati
 
         {/* Location */}
         <div>
-          <p className="text-[10px] font-semibold text-[color:var(--color-muted)] uppercase mb-1">Ubicación</p>
+          <p className="text-[10px] font-semibold text-[color:var(--color-muted)] uppercase mb-1">
+            Ubicación
+          </p>
           <div className="flex items-start gap-1.5 text-[color:var(--color-body)]">
             <MapPin className="w-3 h-3 text-[color:var(--color-muted)] mt-0.5 shrink-0" />
-            <span>{(a.locationType || "").toUpperCase() === "STUDIO" ? "Studio — Av. Bolívar 1073, Pueblo Libre" : [a.address, a.district, a.addressReference ? `Ref: ${a.addressReference}` : ""].filter(Boolean).join(", ")}</span>
+            <span>
+              {(a.locationType || "").toUpperCase() === "STUDIO"
+                ? "Studio — Av. Bolívar 1073, Pueblo Libre"
+                : [a.address, a.district, a.addressReference ? `Ref: ${a.addressReference}` : ""]
+                    .filter(Boolean)
+                    .join(", ")}
+            </span>
           </div>
           {(a.locationType || "").toUpperCase() !== "STUDIO" && a.address && (
             <div className="flex gap-1.5 mt-1.5">
-              <Button variant="outline" size="xs" onClick={handleCopyAddress}>Copiar</Button>
-              <Button variant="outline" size="xs" onClick={handleOpenMaps}>Maps</Button>
+              <Button variant="outline" size="xs" onClick={handleCopyAddress}>
+                Copiar
+              </Button>
+              <Button variant="outline" size="xs" onClick={handleOpenMaps}>
+                Maps
+              </Button>
             </div>
           )}
         </div>
 
         {/* Price */}
         <div>
-          <p className="text-[10px] font-semibold text-[color:var(--color-muted)] uppercase mb-1">Costos</p>
+          <p className="text-[10px] font-semibold text-[color:var(--color-muted)] uppercase mb-1">
+            Costos
+          </p>
           <div className="space-y-0.5">
             {svc.map((s) => (
               <div key={s.name} className="flex justify-between text-[color:var(--color-body)]">
                 <span>{s.displayText}</span>
               </div>
             ))}
-            <div className="flex justify-between"><span className="text-[color:var(--color-muted)]">Servicios</span><span className="font-medium">{formatPrice(pr.servicePrice)}</span></div>
-            {pr.hasTransport && <div className="flex justify-between"><span className="text-[color:var(--color-muted)]">Movilidad</span><span className="font-medium">{formatPrice(pr.transportCost)}</span></div>}
-            {pr.hasNightShift && <div className="flex justify-between"><span className="text-[color:var(--color-muted)]">Nocturno</span><span className="font-medium">{formatPrice(pr.nightShiftCost)}</span></div>}
+            <div className="flex justify-between">
+              <span className="text-[color:var(--color-muted)]">Servicios</span>
+              <span className="font-medium">{formatPrice(pr.servicePrice)}</span>
+            </div>
+            {pr.hasTransport && (
+              <div className="flex justify-between">
+                <span className="text-[color:var(--color-muted)]">Movilidad</span>
+                <span className="font-medium">{formatPrice(pr.transportCost)}</span>
+              </div>
+            )}
+            {pr.hasNightShift && (
+              <div className="flex justify-between">
+                <span className="text-[color:var(--color-muted)]">Nocturno</span>
+                <span className="font-medium">{formatPrice(pr.nightShiftCost)}</span>
+              </div>
+            )}
             <div className="flex justify-between border-t border-[color:var(--color-border)] pt-1 font-semibold">
               <span>Total</span>
-              <span className="text-[color:var(--color-primary)]">{formatPrice(pr.totalPrice)}</span>
+              <span className="text-[color:var(--color-primary)]">
+                {formatPrice(pr.totalPrice)}
+              </span>
             </div>
           </div>
         </div>
@@ -464,25 +638,36 @@ function DetailPanel({ a, onClose, onEdit, onStatus, onDelete, onEmail, isUpdati
         {/* Notes */}
         {a.additionalNotes ? (
           <div>
-            <p className="text-[10px] font-semibold text-[color:var(--color-muted)] uppercase mb-1">Notas</p>
-            <p className="text-[color:var(--color-body)] bg-[color:var(--color-surface-elevated)] rounded p-2">{a.additionalNotes.replace(/^\[REGISTRO MANUAL\]\s*/i, "")}</p>
+            <p className="text-[10px] font-semibold text-[color:var(--color-muted)] uppercase mb-1">
+              Notas
+            </p>
+            <p className="text-[color:var(--color-body)] bg-[color:var(--color-surface-elevated)] rounded p-2">
+              {a.additionalNotes.replace(/^\[REGISTRO MANUAL\]\s*/i, "")}
+            </p>
           </div>
         ) : null}
 
         {/* Review */}
         {a.review && (
           <div>
-            <p className="text-[10px] font-semibold text-[color:var(--color-muted)] uppercase mb-1">Reseña</p>
+            <p className="text-[10px] font-semibold text-[color:var(--color-muted)] uppercase mb-1">
+              Reseña
+            </p>
             <div className="space-y-1.5">
               <div className="flex items-center gap-2">
-                <span className={`inline-flex px-1.5 py-0.5 text-[10px] font-medium rounded-full ${reviewStatusColor(a.review.status)}`}>
+                <span
+                  className={`inline-flex px-1.5 py-0.5 text-[10px] font-medium rounded-full ${reviewStatusColor(a.review.status)}`}
+                >
                   {reviewStatusText(a.review.status)}
                 </span>
               </div>
               {a.review.rating && (
                 <div className="flex gap-0.5">
                   {Array.from({ length: 5 }, (_, i) => (
-                    <Star key={i} className={`w-3 h-3 ${i < (a.review?.rating || 0) ? "text-[color:var(--color-primary)] fill-current" : "text-[color:var(--color-border)]"}`} />
+                    <Star
+                      key={i}
+                      className={`w-3 h-3 ${i < (a.review?.rating || 0) ? "text-[color:var(--color-primary)] fill-current" : "text-[color:var(--color-border)]"}`}
+                    />
                   ))}
                 </div>
               )}
@@ -506,34 +691,126 @@ function DetailPanel({ a, onClose, onEdit, onStatus, onDelete, onEmail, isUpdati
       <div className="border-t border-[color:var(--color-border)] p-3 space-y-2 shrink-0">
         {/* Budget tools */}
         <div className="flex gap-1.5">
-          <Button variant="outline" size="xs" onClick={handleCopyText} disabled={copyLabel !== "Copiar texto"}>{copyLabel}</Button>
-          <Button variant="outline" size="xs" onClick={handleExport} disabled={exportLabel !== "Exportar PNG"}>{exportLabel}</Button>
+          <Button
+            variant="outline"
+            size="xs"
+            onClick={handleCopyText}
+            disabled={copyLabel !== "Copiar texto"}
+          >
+            {copyLabel}
+          </Button>
+          <Button
+            variant="outline"
+            size="xs"
+            onClick={handleExport}
+            disabled={exportLabel !== "Exportar PNG"}
+          >
+            {exportLabel}
+          </Button>
         </div>
 
         {/* Status + tools */}
         <div className="flex flex-wrap gap-1.5">
-          {a.status === "PENDING" && <>
-            <Button variant="primary" size="xs" onClick={() => onStatus(a.id, "CONFIRMED")} disabled={isUpdating}><CheckCircle2 className="w-3 h-3" />Confirmar</Button>
-            <Button variant="outline" size="xs" onClick={() => onStatus(a.id, "CANCELLED")} disabled={isUpdating}><XCircle className="w-3 h-3" />Cancelar</Button>
-          </>}
-          {a.status === "CONFIRMED" && <Button variant="primary" size="xs" onClick={() => onStatus(a.id, "COMPLETED")} disabled={isUpdating}><CheckCircle2 className="w-3 h-3" />Completar</Button>}
-          {(a.status === "COMPLETED" || a.status === "CANCELLED") && <Button variant="outline" size="xs" onClick={() => onStatus(a.id, "CONFIRMED")} disabled={isUpdating}><RotateCcw className="w-3 h-3" />Reabrir</Button>}
-          <Button variant="ghost" size="xs" onClick={() => onEdit(a)}><Pencil className="w-3 h-3" /></Button>
-          <Button variant="ghost" size="xs" onClick={() => onEmail(a.id)} disabled={isSending}><Mail className="w-3 h-3" /></Button>
-          <a href={buildWaLink(a)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-2 py-1 rounded text-xs bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20"><MessageCircle className="w-3 h-3" /></a>
-          {a.review?.reviewToken ? <Button variant="ghost" size="xs" onClick={() => copyReviewLink(a.review!.reviewToken)}><Star className="w-3 h-3" /></Button> : null}
-          <Button variant="ghost" size="xs" onClick={() => setDelOpen(true)} className="ml-auto text-[color:var(--color-danger)]"><Trash2 className="w-3 h-3" /></Button>
+          {a.status === "PENDING" && (
+            <>
+              <Button
+                variant="primary"
+                size="xs"
+                onClick={() => onStatus(a.id, "CONFIRMED")}
+                disabled={isUpdating}
+              >
+                <CheckCircle2 className="w-3 h-3" />
+                Confirmar
+              </Button>
+              <Button
+                variant="outline"
+                size="xs"
+                onClick={() => onStatus(a.id, "CANCELLED")}
+                disabled={isUpdating}
+              >
+                <XCircle className="w-3 h-3" />
+                Cancelar
+              </Button>
+            </>
+          )}
+          {a.status === "CONFIRMED" && (
+            <Button
+              variant="primary"
+              size="xs"
+              onClick={() => onStatus(a.id, "COMPLETED")}
+              disabled={isUpdating}
+            >
+              <CheckCircle2 className="w-3 h-3" />
+              Completar
+            </Button>
+          )}
+          {(a.status === "COMPLETED" || a.status === "CANCELLED") && (
+            <Button
+              variant="outline"
+              size="xs"
+              onClick={() => onStatus(a.id, "CONFIRMED")}
+              disabled={isUpdating}
+            >
+              <RotateCcw className="w-3 h-3" />
+              Reabrir
+            </Button>
+          )}
+          <Button variant="ghost" size="xs" onClick={() => onEdit(a)}>
+            <Pencil className="w-3 h-3" />
+          </Button>
+          <Button variant="ghost" size="xs" onClick={() => onEmail(a.id)} disabled={isSending}>
+            <Mail className="w-3 h-3" />
+          </Button>
+          <a
+            href={buildWaLink(a)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center px-2 py-1 rounded text-xs bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20"
+          >
+            <MessageCircle className="w-3 h-3" />
+          </a>
+          {a.review?.reviewToken ? (
+            <Button variant="ghost" size="xs" onClick={() => copyReviewLink(a.review!.reviewToken)}>
+              <Star className="w-3 h-3" />
+            </Button>
+          ) : null}
+          <Button
+            variant="ghost"
+            size="xs"
+            onClick={() => setDelOpen(true)}
+            className="ml-auto text-[color:var(--color-danger)]"
+          >
+            <Trash2 className="w-3 h-3" />
+          </Button>
         </div>
       </div>
 
-      <ConfirmModal open={delOpen} title="Eliminar cita" description="¿Eliminar esta cita? No se puede deshacer." confirmText="Eliminar" cancelText="Cancelar" destructive onConfirm={() => { onDelete(a.id); setDelOpen(false); }} onCancel={() => setDelOpen(false)} />
+      <ConfirmModal
+        open={delOpen}
+        title="Eliminar cita"
+        description="¿Eliminar esta cita? No se puede deshacer."
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        destructive
+        onConfirm={() => {
+          onDelete(a.id);
+          setDelOpen(false);
+        }}
+        onCancel={() => setDelOpen(false)}
+      />
     </div>
   );
 }
 
 export default function CitasPage() {
   return (
-    <Suspense fallback={<div className="py-16 text-center"><div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[color:var(--color-primary)] mx-auto" /></div>}>
+    <Suspense
+      fallback={
+        <div className="py-16 text-center">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[color:var(--color-primary)] mx-auto" />
+        </div>
+      }
+    >
       <CitasContent />
     </Suspense>
   );

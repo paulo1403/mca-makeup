@@ -10,7 +10,6 @@ import {
   Search,
   Star,
   Trash2,
-  X,
   XCircle,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";

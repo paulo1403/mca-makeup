@@ -87,9 +87,24 @@ interface UseAppointmentsParams {
 }
 
 // Hook para obtener citas
-export const useAppointments = ({ page, filter, searchTerm, id, dateStart, dateEnd }: UseAppointmentsParams) => {
+export const useAppointments = ({
+  page,
+  filter,
+  searchTerm,
+  id,
+  dateStart,
+  dateEnd,
+}: UseAppointmentsParams) => {
   return useQuery({
-    queryKey: ["appointments", page, filter, searchTerm, id ?? null, dateStart ?? null, dateEnd ?? null],
+    queryKey: [
+      "appointments",
+      page,
+      filter,
+      searchTerm,
+      id ?? null,
+      dateStart ?? null,
+      dateEnd ?? null,
+    ],
     queryFn: async (): Promise<AppointmentsResponse> => {
       const params = new URLSearchParams({
         page: page.toString(),

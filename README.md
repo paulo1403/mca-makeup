@@ -5,24 +5,28 @@ Página web profesional para Marcela Cordero, maquilladora especializada en serv
 ## ✨ Lo que incluye
 
 ### 🌟 Página Principal
+
 - **Portafolio** de trabajos realizados
 - **Servicios** con precios y descripciones
 - **Testimonios** de clientas satisfechas
 - **Información** sobre la maquilladora
 
 ### 📅 Sistema de Reservas
+
 - Reserva de citas en línea
 - Verificación de disponibilidad en tiempo real
 - Confirmación automática por email
 - Recordatorios de citas
 
 ### 👩‍💼 Panel de Administración
+
 - Gestión de citas y agenda
 - Administración de disponibilidad horaria
 - Gestión de servicios y precios
 - Panel de estadísticas
 
 ### 📱 Diseño Profesional
+
 - Diseño elegante y moderno
 - Optimizado para móviles y tablets
 - Colores sofisticados (negro, dorado, rosa)
@@ -36,4 +40,4 @@ Página web profesional para Marcela Cordero, maquilladora especializada en serv
 
 ---
 
-*Sitio web creado para mostrar profesionalismo y facilitar la gestión de un negocio de maquillaje.*
+_Sitio web creado para mostrar profesionalismo y facilitar la gestión de un negocio de maquillaje._

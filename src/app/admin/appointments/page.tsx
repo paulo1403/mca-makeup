@@ -1,6 +1,6 @@
 "use client";
 
-import { addDays, endOfMonth, format as dfFormat } from "date-fns";
+import { addDays, format as dfFormat, endOfMonth } from "date-fns";
 import { CalendarCheck, Check, ChevronDown, Plus, Search, X, XCircle } from "lucide-react";
 import { Suspense, useMemo, useState } from "react";
 import AppointmentModal from "@/components/appointments/AppointmentModal";
@@ -8,8 +8,8 @@ import AppointmentTable from "@/components/appointments/AppointmentTable";
 import ManualAppointmentModal from "@/components/appointments/ManualAppointmentModal";
 import Pagination from "@/components/appointments/Pagination";
 import { Button } from "@/components/ui/Button";
-import { useAppointmentsPage } from "@/hooks/useAppointmentsPage";
 import type { Appointment } from "@/hooks/useAppointments";
+import { useAppointmentsPage } from "@/hooks/useAppointmentsPage";
 
 const FILTERS = [
   { value: "all", label: "Todas" },
@@ -104,9 +104,20 @@ function AppointmentsContent() {
         <div className="px-4 py-2.5">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3 min-w-0">
-              <h1 className="text-base font-bold text-[color:var(--color-heading)] shrink-0">Citas</h1>
-              <span className="text-[11px] text-[color:var(--color-muted)] tabular-nums">{pagination?.total || 0}</span>
-              {completedCount > 0 && <><span className="text-[color:var(--color-border)]">·</span><span className="text-[11px] text-[color:var(--color-success)]">✓{completedCount}</span></>}
+              <h1 className="text-base font-bold text-[color:var(--color-heading)] shrink-0">
+                Citas
+              </h1>
+              <span className="text-[11px] text-[color:var(--color-muted)] tabular-nums">
+                {pagination?.total || 0}
+              </span>
+              {completedCount > 0 && (
+                <>
+                  <span className="text-[color:var(--color-border)]">·</span>
+                  <span className="text-[11px] text-[color:var(--color-success)]">
+                    ✓{completedCount}
+                  </span>
+                </>
+              )}
             </div>
             <Button variant="primary" size="sm" onClick={() => setShowManualModal(true)}>
               <Plus className="w-3.5 h-3.5" /> Nueva
@@ -116,7 +127,9 @@ function AppointmentsContent() {
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-0.5 -ml-2">
               {DATE_TABS.map((t) => (
-                <button key={t.k} onClick={() => setPeriod(t.k)}
+                <button
+                  key={t.k}
+                  onClick={() => setPeriod(t.k)}
                   className={`relative px-2.5 py-1.5 text-xs font-medium transition-colors ${
                     period === t.k
                       ? "text-[color:var(--color-heading)] after:absolute after:bottom-0 after:left-2 after:right-2 after:h-0.5 after:rounded-full after:bg-[color:var(--color-primary)]"
@@ -136,10 +149,18 @@ function AppointmentsContent() {
                 onChange={(e) => handleSearchChange(e.target.value)}
                 className="w-full pl-7 pr-5 py-1.5 text-xs rounded-md bg-[color:var(--color-surface-elevated)] text-[color:var(--color-heading)] placeholder-[color:var(--color-muted)] border border-[color:var(--color-border)]/50 focus:outline-none focus:border-[color:var(--color-border)]"
               />
-              {searchTerm && <button onClick={() => handleSearchChange("")} className="absolute right-1.5 top-1/2 -translate-y-1/2"><X className="w-3 h-3 text-[color:var(--color-muted)]" /></button>}
+              {searchTerm && (
+                <button
+                  onClick={() => handleSearchChange("")}
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2"
+                >
+                  <X className="w-3 h-3 text-[color:var(--color-muted)]" />
+                </button>
+              )}
             </div>
             <div className="relative">
-              <button onClick={() => setStatusOpen(!statusOpen)}
+              <button
+                onClick={() => setStatusOpen(!statusOpen)}
                 className="flex items-center gap-1 px-2 py-1.5 text-xs font-medium rounded-md border border-[color:var(--color-border)]/50 bg-[color:var(--color-surface-elevated)] text-[color:var(--color-heading)] hover:border-[color:var(--color-border)] transition-colors"
               >
                 {FILTERS.find((f) => f.value === filter)?.label || "Todas"}
@@ -150,11 +171,18 @@ function AppointmentsContent() {
                   <div className="fixed inset-0 z-40" onClick={() => setStatusOpen(false)} />
                   <div className="absolute right-0 mt-1 w-36 bg-[color:var(--color-surface)] rounded-lg shadow-lg border border-[color:var(--color-border)] z-50 overflow-hidden">
                     {FILTERS.map((item) => (
-                      <button key={item.value}
-                        onClick={() => { handleFilterChange(item.value); setStatusOpen(false); }}
+                      <button
+                        key={item.value}
+                        onClick={() => {
+                          handleFilterChange(item.value);
+                          setStatusOpen(false);
+                        }}
                         className={`w-full flex items-center justify-between px-3 py-2 text-xs transition-colors hover:bg-[color:var(--color-surface-elevated)] ${
-                          filter === item.value ? "text-[color:var(--color-primary)] font-medium bg-[color:var(--color-primary)]/5" : "text-[color:var(--color-body)]"
-                        }`}>
+                          filter === item.value
+                            ? "text-[color:var(--color-primary)] font-medium bg-[color:var(--color-primary)]/5"
+                            : "text-[color:var(--color-body)]"
+                        }`}
+                      >
                         {item.label}
                         {filter === item.value && <Check className="w-3 h-3" />}
                       </button>
@@ -242,7 +270,10 @@ function AppointmentsSkeleton() {
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-0.5 -ml-2">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-8 w-12 rounded bg-[color:var(--color-surface-elevated)] animate-pulse" />
+                <div
+                  key={i}
+                  className="h-8 w-12 rounded bg-[color:var(--color-surface-elevated)] animate-pulse"
+                />
               ))}
             </div>
             <div className="h-8 w-32 rounded ml-auto bg-[color:var(--color-surface-elevated)] animate-pulse" />
@@ -255,12 +286,18 @@ function AppointmentsSkeleton() {
           <div className="px-4 py-3 border-b border-[color:var(--color-border)]">
             <div className="flex gap-8">
               {["Cliente", "Servicio", "Fecha", "Precio", "Estado", "Acciones"].map((h) => (
-                <div key={h} className="h-3 w-16 rounded bg-[color:var(--color-surface-elevated)] animate-pulse" />
+                <div
+                  key={h}
+                  className="h-3 w-16 rounded bg-[color:var(--color-surface-elevated)] animate-pulse"
+                />
               ))}
             </div>
           </div>
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="px-4 py-3 border-b border-[color:var(--color-border)]/50 last:border-b-0">
+            <div
+              key={i}
+              className="px-4 py-3 border-b border-[color:var(--color-border)]/50 last:border-b-0"
+            >
               <div className="flex items-center gap-4">
                 <div className="h-8 w-8 rounded-full bg-[color:var(--color-surface-elevated)] animate-pulse shrink-0" />
                 <div className="flex-1 space-y-1.5">

@@ -1,9 +1,6 @@
 import type { Appointment } from "@/hooks/useAppointments";
 
-const STATUS_CONFIG: Record<
-  Appointment["status"],
-  { label: string; bg: string; text: string }
-> = {
+const STATUS_CONFIG: Record<Appointment["status"], { label: string; bg: string; text: string }> = {
   PENDING: {
     label: "Pendiente",
     bg: "bg-[color:var(--color-warning)]/10",

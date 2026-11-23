@@ -10,7 +10,7 @@ import {
   MapPin,
   Search,
 } from "lucide-react";
-import { useMemo, useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CompactServiceSelector from "@/components/availability/CompactServiceSelector";
 import Button from "@/components/ui/Button";
 import Typography from "@/components/ui/Typography";
@@ -71,8 +71,7 @@ export default function PriceQuoteSection() {
   };
 
   const showDistrict = locationType === "HOME";
-  const showServices =
-    locationType === "STUDIO" || (locationType === "HOME" && !!selectedDistrict);
+  const showServices = locationType === "STUDIO" || (locationType === "HOME" && !!selectedDistrict);
 
   // Sincronizar cambios con la sección de disponibilidad
   useEffect(() => {

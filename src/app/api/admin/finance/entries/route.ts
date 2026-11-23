@@ -1,4 +1,10 @@
-import { type Prisma, type EntrySource, type FinanceEntryType, type PaymentMethod, type ServiceLine } from "@prisma/client";
+import {
+  type EntrySource,
+  type FinanceEntryType,
+  type PaymentMethod,
+  type Prisma,
+  type ServiceLine,
+} from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";

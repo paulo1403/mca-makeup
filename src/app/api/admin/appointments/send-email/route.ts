@@ -6,7 +6,10 @@ export async function POST(request: NextRequest) {
   try {
     const { id } = await request.json();
     if (!id) {
-      return NextResponse.json({ success: false, message: "ID de cita requerido" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, message: "ID de cita requerido" },
+        { status: 400 },
+      );
     }
 
     const appointment = await prisma.appointment.findUnique({
@@ -84,7 +87,10 @@ export async function POST(request: NextRequest) {
 
     if (!sent) {
       return NextResponse.json(
-        { success: false, message: "No se pudo enviar el email. Verifica la configuración de correo." },
+        {
+          success: false,
+          message: "No se pudo enviar el email. Verifica la configuración de correo.",
+        },
         { status: 500 },
       );
     }

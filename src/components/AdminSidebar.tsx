@@ -9,10 +9,10 @@ import {
   Eye,
   Home,
   LayoutDashboard,
-  Wallet,
   Settings,
   Star,
   Truck,
+  Wallet,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -89,17 +89,26 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
     <>
       {/* Sidebar */}
       <aside
-        className={`${isOpen ? "translate-x-0" : "-translate-x-full"
-          } fixed inset-y-0 left-0 z-50 w-64 ${sidebarWidthClass} bg-[color:var(--color-surface)] shadow-lg border-r border-[color:var(--color-border)] transform transition-all duration-300 ease-in-out md:relative md:translate-x-0 admin-sidebar`}
+        className={`${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        } fixed inset-y-0 left-0 z-50 w-64 ${sidebarWidthClass} bg-[color:var(--color-surface)] shadow-lg border-r border-[color:var(--color-border)] transform transition-all duration-300 ease-in-out md:relative md:translate-x-0 admin-sidebar`}
         aria-label="Barra lateral de administración"
       >
         <div className="flex flex-col h-full">
           {/* Sidebar Header */}
-          <div className={`flex-shrink-0 border-b border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)]/40 ${
-            collapsed ? "px-3 py-4 flex flex-col items-center gap-3" : "px-5 py-4 flex items-center justify-between"
-          }`}>
+          <div
+            className={`flex-shrink-0 border-b border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)]/40 ${
+              collapsed
+                ? "px-3 py-4 flex flex-col items-center gap-3"
+                : "px-5 py-4 flex items-center justify-between"
+            }`}
+          >
             {/* Brand */}
-            <div className={collapsed ? "flex flex-col items-center gap-2" : "flex items-center gap-3 min-w-0"}>
+            <div
+              className={
+                collapsed ? "flex flex-col items-center gap-2" : "flex items-center gap-3 min-w-0"
+              }
+            >
               {collapsed ? (
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[color:var(--color-primary)] to-[color:var(--color-primary)]/70 flex items-center justify-center shadow-sm">
                   <span className="text-white font-bold text-xs">MC</span>
@@ -138,9 +147,10 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
           <nav className="admin-sidebar-nav px-3 py-6 space-y-1 scrollbar-thin">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = item.href === "/admin/finance"
-                ? pathname.startsWith("/admin/finance")
-                : pathname === item.href;
+              const isActive =
+                item.href === "/admin/finance"
+                  ? pathname.startsWith("/admin/finance")
+                  : pathname === item.href;
 
               const baseClasses = `flex items-center ${collapsed ? "justify-center" : "space-x-3"} ${itemPaddingClass} rounded-lg text-sm font-medium font-montserrat transition-all duration-200 group nav-item focus-ring relative border`;
               const activeClasses =
@@ -156,10 +166,11 @@ export default function AdminSidebar({ isOpen, onClose, isMobile }: AdminSidebar
                   className={`${baseClasses} ${isActive ? `active ${activeClasses}` : inactiveClasses}`}
                 >
                   <Icon
-                    className={`h-5 w-5 flex-shrink-0 transition-colors ${isActive
+                    className={`h-5 w-5 flex-shrink-0 transition-colors ${
+                      isActive
                         ? "text-[color:var(--color-cta-text)]"
                         : "text-[color:var(--color-muted)] group-hover:text-[color:var(--color-heading)]"
-                      }`}
+                    }`}
                   />
                   {!collapsed && <span className="truncate">{item.label}</span>}
                   {isActive && !collapsed && (

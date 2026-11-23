@@ -153,10 +153,11 @@ export default function AvailabilityPage() {
       {/* Mensajes de confirmación */}
       {message && (
         <div
-          className={`p-3 sm:p-4 rounded-lg border text-sm sm:text-base ${message.includes("Error")
+          className={`p-3 sm:p-4 rounded-lg border text-sm sm:text-base ${
+            message.includes("Error")
               ? "bg-[color:var(--status-cancelled-bg)] text-[color:var(--status-cancelled-text)] border-[color:var(--status-cancelled-border)]"
               : "bg-[color:var(--status-confirmed-bg)] text-[color:var(--status-confirmed-text)] border-[color:var(--status-confirmed-border)]"
-            }`}
+          }`}
         >
           {message}
         </div>
@@ -167,7 +168,11 @@ export default function AvailabilityPage() {
         <div className="px-3 sm:px-6 py-3 sm:py-4 border-b border-[color:var(--color-border)]/30 bg-gradient-to-r from-[color:var(--color-primary)]/10 to-[color:var(--color-accent)]/10">
           <div className="flex items-center space-x-2 mb-1">
             <Clock className="h-5 w-5 text-[color:var(--color-primary)]" />
-            <Typography as="h2" variant="h3" className="text-[color:var(--color-heading)] font-semibold">
+            <Typography
+              as="h2"
+              variant="h3"
+              className="text-[color:var(--color-heading)] font-semibold"
+            >
               Configuración de intervalos
             </Typography>
           </div>

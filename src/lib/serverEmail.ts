@@ -192,7 +192,8 @@ const createEmailButton = (
 };
 
 const createInfoBox = (content: string, type: "info" | "success" | "warning" = "info") => {
-  const baseStyle = "padding:16px 18px; border-radius:14px; margin:16px 0; border:1px solid; font-size:14px; line-height:1.6;";
+  const baseStyle =
+    "padding:16px 18px; border-radius:14px; margin:16px 0; border:1px solid; font-size:14px; line-height:1.6;";
   const styles = {
     info: `${baseStyle} background-color:#FDFBF9; border-color:#EDE6DE; border-left:3px solid #B08463;`,
     success: `${baseStyle} background-color:#F0FDF4; border-color:#BBF7D0; border-left:3px solid #10b981;`,
@@ -215,7 +216,8 @@ export const emailTemplates = {
     additionalNotes?: string,
   ) => ({
     subject: "¡Tu cita ha sido confirmada! - Marcela Cordero Makeup",
-    html: generateInlineEmailStructure(`
+    html: generateInlineEmailStructure(
+      `
   <h2 class="text-heading" style="margin:0 0 8px 0; font-size:22px; font-weight:600; text-align:center; color:#1A120E; letter-spacing:-0.3px;">¡Hola ${clientName}!</h2>
   <p class="text-muted" style="margin:0 0 20px 0; font-size:13px; text-align:center; color:#9A8475;">Tu cita está confirmada</p>
       <p class="text-body" style="font-size:15px; line-height:1.7; margin:0 0 20px 0; color:#3D2E24;">
@@ -293,7 +295,9 @@ export const emailTemplates = {
   <p style="font-size:15px; font-weight:600; color:#B08463; margin:0;">¡Nos vemos pronto!</p>
   <p style="font-size:13px; color:#9A8475; margin:6px 0 0; letter-spacing:0.3px;">Marcela Cordero · Makeup Artist</p>
       </div>
-    `, `Cita confirmada para ${serviceType} el ${date} a las ${time}`),
+    `,
+      `Cita confirmada para ${serviceType} el ${date} a las ${time}`,
+    ),
     text: `
       ¡Hola ${clientName}!
 
@@ -319,7 +323,8 @@ export const emailTemplates = {
 
   appointmentCancelled: (clientName: string, serviceType: string, date: string, time: string) => ({
     subject: "Cita cancelada - Marcela Cordero Makeup",
-    html: generateInlineEmailStructure(`
+    html: generateInlineEmailStructure(
+      `
   <h2 class="text-heading" style="margin:0 0 20px 0; font-size:22px; font-weight:600; text-align:center; color:#1A120E;">Hola ${clientName},</h2>
 
       <p class="text-body" style="font-size:15px; line-height:1.7; margin:0 0 20px 0; color:#3D2E24;">
@@ -345,7 +350,9 @@ export const emailTemplates = {
       <div style="text-align:center; margin:28px 0 0;">
   <p style="font-size:13px; color:#9A8475; margin:0;">Marcela Cordero · Makeup Artist</p>
       </div>
-    `, `Cita cancelada: ${serviceType} el ${date}`),
+    `,
+      `Cita cancelada: ${serviceType} el ${date}`,
+    ),
     text: `
       Hola ${clientName},
 
@@ -376,7 +383,8 @@ export const emailTemplates = {
     additionalNotes?: string,
   ) => ({
     subject: "Nueva solicitud de cita pendiente - Marcela Cordero Makeup",
-    html: generateInlineEmailStructure(`
+    html: generateInlineEmailStructure(
+      `
   <h2 class="text-heading" style="margin:0 0 20px 0; font-size:20px; font-weight:600; text-align:center; color:#1A120E;">🔔 Nueva solicitud pendiente</h2>
 
       ${createInfoBox(
@@ -409,7 +417,9 @@ export const emailTemplates = {
       ${additionalNotes ? createInfoBox(`<p style="margin:0; font-size:13px; font-weight:600; color:#9A8475; text-transform:uppercase; letter-spacing:0.5px;">Mensaje</p><p style="margin:8px 0 0; font-style:italic; color:#3D2E24; font-size:14px;">"${additionalNotes}"</p>`, "info") : ""}
 
       ${createInfoBox(`<p style="margin:0; font-size:13px; color:#92400E;"><strong>Estado: PENDIENTE</strong> — El cliente ya recibió confirmación de solicitud. Confirma desde el panel admin.</p>`, "warning")}
-    `, `Nueva solicitud: ${clientName} - ${serviceType} ${date}`),
+    `,
+      `Nueva solicitud: ${clientName} - ${serviceType} ${date}`,
+    ),
     text: `
       Nueva solicitud de cita pendiente
 
@@ -430,11 +440,12 @@ export const emailTemplates = {
     locationType?: string,
     district?: string,
     address?: string,
-    addressReference?: string,
+    _addressReference?: string,
     additionalNotes?: string,
   ) => ({
     subject: "Solicitud de cita recibida - Marcela Cordero Makeup",
-    html: generateInlineEmailStructure(`
+    html: generateInlineEmailStructure(
+      `
   <h2 class="text-heading" style="margin:0 0 8px 0; font-size:22px; font-weight:600; text-align:center; color:#1A120E;">¡Hola ${clientName}!</h2>
   <p class="text-muted" style="margin:0 0 20px 0; font-size:13px; text-align:center; color:#9A8475;">Solicitud recibida</p>
       <p class="text-body" style="font-size:15px; line-height:1.7; margin:0 0 20px 0; color:#3D2E24;">
@@ -464,7 +475,9 @@ export const emailTemplates = {
   <p style="font-size:15px; font-weight:600; color:#B08463; margin:0;">¡Gracias por contactarme!</p>
   <p style="font-size:13px; color:#9A8475; margin:6px 0 0;">Marcela Cordero</p>
       </div>
-    `, `Solicitud recibida: ${serviceType} ${date}`),
+    `,
+      `Solicitud recibida: ${serviceType} ${date}`,
+    ),
     text: `
       ¡Hola ${clientName}!
 
@@ -480,7 +493,8 @@ export const emailTemplates = {
 
   reviewRequest: (clientName: string, serviceType: string, date: string, reviewToken: string) => ({
     subject: "¡Comparte tu experiencia! - Marcela Cordero Makeup",
-    html: generateInlineEmailStructure(`
+    html: generateInlineEmailStructure(
+      `
   <h2 class="text-heading" style="margin:0 0 20px 0; font-size:22px; font-weight:600; text-align:center; color:#1A120E;">¡Hola ${clientName}!</h2>
       <p class="text-body" style="font-size:15px; line-height:1.7; margin:0 0 20px 0; color:#3D2E24;">
   Espero que hayas disfrutado tu <strong style="color:#B08463;">${serviceType}</strong> del <strong>${date}</strong>.
@@ -496,7 +510,9 @@ export const emailTemplates = {
   <p style="font-size:15px; font-weight:600; color:#B08463; margin:0;">¡Gracias por elegirme!</p>
   <p style="font-size:13px; color:#9A8475; margin:6px 0 0;">Marcela Cordero</p>
       </div>
-    `, `Comparte tu experiencia: ${serviceType}`),
+    `,
+      `Comparte tu experiencia: ${serviceType}`,
+    ),
     text: `
       ¡Hola ${clientName}!
 

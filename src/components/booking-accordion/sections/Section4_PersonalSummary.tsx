@@ -9,8 +9,8 @@ import { useBookingSummary } from "@/hooks/useBookingSummary";
 import useServicesQuery from "@/hooks/useServicesQuery";
 import { useTransportCost } from "@/hooks/useTransportCost";
 import type { BookingData } from "@/lib/bookingSchema";
-import { calculateNightShiftCost } from "@/utils/nightShift";
 import { calculateDepositForSelected } from "@/utils/deposit";
+import { calculateNightShiftCost } from "@/utils/nightShift";
 
 export default function Section4_PersonalSummary() {
   const { control } = useFormContext<BookingData>();
@@ -29,7 +29,9 @@ export default function Section4_PersonalSummary() {
     const svc = (services as { id: string; category: string }[]).find((x) => x.id === s.id);
     return svc?.category === "BRIDAL";
   });
-  const nightShiftCost = timeSlot ? calculateNightShiftCost(timeSlot, district, isBridalSelected) : 0;
+  const nightShiftCost = timeSlot
+    ? calculateNightShiftCost(timeSlot, district, isBridalSelected)
+    : 0;
   const deposit = calculateDepositForSelected(selected);
 
   useEffect(() => {

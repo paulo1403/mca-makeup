@@ -217,7 +217,10 @@ export default function TransportCostsPage() {
               <tbody className="bg-[color:var(--color-surface)] divide-y divide-[color:var(--color-border)]">
                 {transportCosts.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-[color:var(--color-muted)]">
+                    <td
+                      colSpan={5}
+                      className="px-6 py-12 text-center text-[color:var(--color-muted)]"
+                    >
                       No hay costos de transporte configurados
                     </td>
                   </tr>
@@ -360,10 +363,7 @@ export default function TransportCostsPage() {
                   onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                   className="rounded border-[color:var(--color-border)] text-[color:var(--color-primary)] focus:ring-[color:var(--color-primary)]"
                 />
-                <label
-                  htmlFor="isActive"
-                  className="ml-2 text-sm text-[color:var(--color-body)]"
-                >
+                <label htmlFor="isActive" className="ml-2 text-sm text-[color:var(--color-body)]">
                   Activo
                 </label>
               </div>

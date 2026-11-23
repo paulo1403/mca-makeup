@@ -1,6 +1,6 @@
-import { chromium } from "playwright";
 import { mkdirSync } from "node:fs";
 import path from "node:path";
+import { chromium } from "playwright";
 import "dotenv/config";
 
 const BASE_URL = "http://localhost:3001/admin/calendar";
@@ -47,7 +47,7 @@ async function runForTheme(browser, colorScheme) {
     } catch {
       loginSucceeded = false;
       const diag = await page.evaluate(() => {
-        const bodyText = document.body?.innerText || "";
+        const bodyText = document.body?.textContent || "";
         const likelyError = bodyText
           .split("\n")
           .map((x) => x.trim())
@@ -61,7 +61,10 @@ async function runForTheme(browser, colorScheme) {
       });
 
       loginDiagnostic = `${diag.url} | ${diag.likelyError}`;
-      await page.screenshot({ path: path.join(OUT_DIR, `admin-login-failure-${colorScheme}.png`), fullPage: true });
+      await page.screenshot({
+        path: path.join(OUT_DIR, `admin-login-failure-${colorScheme}.png`),
+        fullPage: true,
+      });
     }
   }
 
@@ -69,11 +72,14 @@ async function runForTheme(browser, colorScheme) {
   await page.waitForTimeout(1200);
 
   const state = await page.evaluate(() => {
-    const bodyText = document.body?.innerText || "";
+    const bodyText = document.body?.textContent || "";
     const title = document.querySelector("h1")?.textContent?.trim() || "";
 
-    const monthCells = Array.from(document.querySelectorAll("[class*='grid'] > div, td, [role='gridcell']"));
-    const hasCalendarLikeContent = /calendario|agenda|citas|appointments/i.test(bodyText) || monthCells.length > 20;
+    const monthCells = Array.from(
+      document.querySelectorAll("[class*='grid'] > div, td, [role='gridcell']"),
+    );
+    const hasCalendarLikeContent =
+      /calendario|agenda|citas|appointments/i.test(bodyText) || monthCells.length > 20;
 
     function parseRgb(str) {
       const m = str.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
@@ -82,7 +88,9 @@ async function runForTheme(browser, colorScheme) {
     }
 
     const sampled = [];
-    const candidates = Array.from(document.querySelectorAll("main *, [data-slot='card'], .card, button, p, span, h1, h2, h3")).slice(0, 1200);
+    const candidates = Array.from(
+      document.querySelectorAll("main *, [data-slot='card'], .card, button, p, span, h1, h2, h3"),
+    ).slice(0, 1200);
 
     for (const el of candidates) {
       const cs = window.getComputedStyle(el);

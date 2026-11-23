@@ -1,6 +1,16 @@
 "use client";
 
-import { CheckCircle2, Clock, Eye, Pencil, Plus, Sparkles, Tag, Trash2, XCircle } from "lucide-react";
+import {
+  CheckCircle2,
+  Clock,
+  Eye,
+  Pencil,
+  Plus,
+  Sparkles,
+  Tag,
+  Trash2,
+  XCircle,
+} from "lucide-react";
 import Button from "@/components/ui/Button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -56,10 +66,7 @@ export default function ServiceListMobile({
       ) : (
         <div className="space-y-3">
           {services.map((service) => (
-            <Card
-              key={service.id}
-              className={surfaceCardClass}
-            >
+            <Card key={service.id} className={surfaceCardClass}>
               <CardContent className="p-4">
                 {/* Header row */}
                 <div className="mb-3 flex items-start justify-between gap-2">

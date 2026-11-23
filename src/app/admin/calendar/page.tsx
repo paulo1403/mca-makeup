@@ -14,27 +14,19 @@ import {
 import { es } from "date-fns/locale";
 import {
   Calendar as CalendarIcon,
-  CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Clock3,
   Mail,
   Phone,
   User2,
-  XCircle,
 } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { Badge } from "@/components/ui/badge";
 import Button from "@/components/ui/Button";
+import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -43,7 +35,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
@@ -138,7 +137,10 @@ function AppointmentDetailDialog({
 
         <div className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full border px-3 py-1 text-xs font-semibold" style={statusMeta.style}>
+            <span
+              className="rounded-full border px-3 py-1 text-xs font-semibold"
+              style={statusMeta.style}
+            >
               {statusMeta.label}
             </span>
             <span className="rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] px-3 py-1 text-xs font-semibold text-[color:var(--color-heading)]">
@@ -149,7 +151,8 @@ function AppointmentDetailDialog({
           <div className="grid gap-3 rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] p-3">
             <div className="flex items-center gap-2 text-sm text-[color:var(--color-body)]">
               <Clock3 className="h-4 w-4" />
-              {capitalize(format(appointment.startDate, "EEEE d 'de' MMMM yyyy", { locale: es }))} - {appointment.time}
+              {capitalize(format(appointment.startDate, "EEEE d 'de' MMMM yyyy", { locale: es }))} -{" "}
+              {appointment.time}
             </div>
             <div className="flex items-center gap-2 text-sm text-[color:var(--color-body)]">
               <Mail className="h-4 w-4" />
@@ -170,14 +173,20 @@ function AppointmentDetailDialog({
                 appointment.services.map((service) => (
                   <div key={service.id} className="flex items-center justify-between gap-4">
                     <div>
-                      <p className="text-sm font-medium text-[color:var(--color-heading)]">{service.name}</p>
+                      <p className="text-sm font-medium text-[color:var(--color-heading)]">
+                        {service.name}
+                      </p>
                       <p className="text-xs text-[color:var(--color-muted)]">{service.category}</p>
                     </div>
-                    <p className="text-sm font-semibold text-[color:var(--color-body)]">S/ {service.price}</p>
+                    <p className="text-sm font-semibold text-[color:var(--color-body)]">
+                      S/ {service.price}
+                    </p>
                   </div>
                 ))
               ) : (
-                <p className="text-sm font-medium text-[color:var(--color-heading)]">{appointment.service}</p>
+                <p className="text-sm font-medium text-[color:var(--color-heading)]">
+                  {appointment.service}
+                </p>
               )}
             </div>
           </div>
@@ -257,7 +266,11 @@ export default function AdminCalendarPage() {
 
   const monthKey = format(visibleMonth, "yyyy-MM");
 
-  const { data: appointmentsRaw = [], isLoading, error } = useQuery<CalendarAppointment[]>({
+  const {
+    data: appointmentsRaw = [],
+    isLoading,
+    error,
+  } = useQuery<CalendarAppointment[]>({
     queryKey: ["admin-calendar-appointments", monthKey],
     queryFn: async () => {
       const startDate = format(startOfMonth(visibleMonth), "yyyy-MM-dd");
@@ -318,23 +331,6 @@ export default function AdminCalendarPage() {
       .sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
   }, [appointmentsRaw, parseAppointmentDateTime]);
 
-  const appointmentsByDay = useMemo(() => {
-    const grouped = new Map<string, ProcessedAppointment[]>();
-
-    for (const apt of appointments) {
-      const key = format(apt.startDate, "yyyy-MM-dd");
-      const dayList = grouped.get(key) ?? [];
-      dayList.push(apt);
-      grouped.set(key, dayList);
-    }
-
-    for (const [, dayList] of grouped) {
-      dayList.sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
-    }
-
-    return grouped;
-  }, [appointments]);
-
   const selectedDayAppointments = useMemo(() => {
     return appointments.filter((apt) => isSameDay(apt.startDate, selectedDate));
   }, [appointments, selectedDate]);
@@ -381,7 +377,9 @@ export default function AdminCalendarPage() {
       <div className="flex h-64 items-center justify-center">
         <Card className="max-w-md border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-center">
           <CardHeader>
-            <CardTitle className="text-[color:var(--status-cancelled-text)]">Error del calendario</CardTitle>
+            <CardTitle className="text-[color:var(--status-cancelled-text)]">
+              Error del calendario
+            </CardTitle>
             <CardDescription className="text-[color:var(--color-body)]">
               No se pudo cargar la información de citas.
             </CardDescription>
@@ -428,20 +426,45 @@ export default function AdminCalendarPage() {
 
           <CardContent>
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
-              <div className="rounded-lg border border-[var(--status-pending-border)] px-3 py-2 text-sm" style={{ backgroundColor: "var(--status-pending-bg)", color: "var(--status-pending-text)" }}>
+              <div
+                className="rounded-lg border border-[var(--status-pending-border)] px-3 py-2 text-sm"
+                style={{
+                  backgroundColor: "var(--status-pending-bg)",
+                  color: "var(--status-pending-text)",
+                }}
+              >
                 Pendientes: <strong>{stats.pending}</strong>
               </div>
-              <div className="rounded-lg border border-[var(--status-confirmed-border)] px-3 py-2 text-sm" style={{ backgroundColor: "var(--status-confirmed-bg)", color: "var(--status-confirmed-text)" }}>
+              <div
+                className="rounded-lg border border-[var(--status-confirmed-border)] px-3 py-2 text-sm"
+                style={{
+                  backgroundColor: "var(--status-confirmed-bg)",
+                  color: "var(--status-confirmed-text)",
+                }}
+              >
                 Confirmadas: <strong>{stats.confirmed}</strong>
               </div>
-              <div className="rounded-lg border border-[var(--status-completed-border)] px-3 py-2 text-sm" style={{ backgroundColor: "var(--status-completed-bg)", color: "var(--status-completed-text)" }}>
+              <div
+                className="rounded-lg border border-[var(--status-completed-border)] px-3 py-2 text-sm"
+                style={{
+                  backgroundColor: "var(--status-completed-bg)",
+                  color: "var(--status-completed-text)",
+                }}
+              >
                 Completadas: <strong>{stats.completed}</strong>
               </div>
-              <div className="rounded-lg border border-[var(--status-cancelled-border)] px-3 py-2 text-sm" style={{ backgroundColor: "var(--status-cancelled-bg)", color: "var(--status-cancelled-text)" }}>
+              <div
+                className="rounded-lg border border-[var(--status-cancelled-border)] px-3 py-2 text-sm"
+                style={{
+                  backgroundColor: "var(--status-cancelled-bg)",
+                  color: "var(--status-cancelled-text)",
+                }}
+              >
                 Canceladas: <strong>{stats.cancelled}</strong>
               </div>
               <div className="rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] px-3 py-2 text-sm text-[color:var(--color-body)]">
-                Mes: <strong>{capitalize(format(visibleMonth, "MMMM yyyy", { locale: es }))}</strong>
+                Mes:{" "}
+                <strong>{capitalize(format(visibleMonth, "MMMM yyyy", { locale: es }))}</strong>
               </div>
             </div>
           </CardContent>
@@ -451,13 +474,21 @@ export default function AdminCalendarPage() {
           <Card className="border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[color:var(--color-heading)]">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <Button variant="ghost" size="icon" onClick={() => setVisibleMonth((prev) => subMonths(prev, 1))}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setVisibleMonth((prev) => subMonths(prev, 1))}
+                >
                   <ChevronLeft className="h-5 w-5" />
                 </Button>
                 <CardTitle className="text-lg capitalize">
                   {format(visibleMonth, "MMMM yyyy", { locale: es })}
                 </CardTitle>
-                <Button variant="ghost" size="icon" onClick={() => setVisibleMonth((prev) => addMonths(prev, 1))}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setVisibleMonth((prev) => addMonths(prev, 1))}
+                >
                   <ChevronRight className="h-5 w-5" />
                 </Button>
               </div>
@@ -531,7 +562,9 @@ export default function AdminCalendarPage() {
                   {selectedDayAppointments.length === 0 ? (
                     <div className="rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] p-8 text-center">
                       <CalendarIcon className="mx-auto mb-3 h-10 w-10 text-[color:var(--color-muted)]/60" />
-                      <p className="text-sm text-[color:var(--color-body)]">No hay citas para esta fecha.</p>
+                      <p className="text-sm text-[color:var(--color-body)]">
+                        No hay citas para esta fecha.
+                      </p>
                     </div>
                   ) : (
                     <>
@@ -546,14 +579,25 @@ export default function AdminCalendarPage() {
                               className="w-full rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] p-3 text-left transition-all hover:opacity-95"
                             >
                               <div className="mb-2 flex items-center justify-between gap-2">
-                                <p className="font-semibold text-[color:var(--color-heading)]">{apt.clientName}</p>
-                                <span className="rounded-full border px-2 py-0.5 text-[11px] font-semibold" style={status.style}>
+                                <p className="font-semibold text-[color:var(--color-heading)]">
+                                  {apt.clientName}
+                                </p>
+                                <span
+                                  className="rounded-full border px-2 py-0.5 text-[11px] font-semibold"
+                                  style={status.style}
+                                >
                                   {status.label}
                                 </span>
                               </div>
-                              <p className="text-sm text-[color:var(--color-body)]">{formatStartTime(apt.time)}</p>
-                              <p className="text-xs text-[color:var(--color-muted)]">{apt.service}</p>
-                              <p className="mt-1 text-sm font-semibold text-[color:var(--color-heading)]">S/ {apt.totalPrice}</p>
+                              <p className="text-sm text-[color:var(--color-body)]">
+                                {formatStartTime(apt.time)}
+                              </p>
+                              <p className="text-xs text-[color:var(--color-muted)]">
+                                {apt.service}
+                              </p>
+                              <p className="mt-1 text-sm font-semibold text-[color:var(--color-heading)]">
+                                S/ {apt.totalPrice}
+                              </p>
                             </button>
                           );
                         })}
@@ -583,11 +627,16 @@ export default function AdminCalendarPage() {
                                   <TableCell className="font-medium">{apt.clientName}</TableCell>
                                   <TableCell>{apt.service}</TableCell>
                                   <TableCell>
-                                    <span className="rounded-full border px-2 py-0.5 text-xs font-semibold" style={status.style}>
+                                    <span
+                                      className="rounded-full border px-2 py-0.5 text-xs font-semibold"
+                                      style={status.style}
+                                    >
                                       {status.label}
                                     </span>
                                   </TableCell>
-                                  <TableCell className="text-right font-semibold">S/ {apt.totalPrice}</TableCell>
+                                  <TableCell className="text-right font-semibold">
+                                    S/ {apt.totalPrice}
+                                  </TableCell>
                                 </TableRow>
                               );
                             })}
@@ -602,7 +651,9 @@ export default function AdminCalendarPage() {
                   {appointments.length === 0 ? (
                     <div className="rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] p-8 text-center">
                       <CalendarIcon className="mx-auto mb-3 h-10 w-10 text-[color:var(--color-muted)]/60" />
-                      <p className="text-sm text-[color:var(--color-body)]">No hay citas este mes.</p>
+                      <p className="text-sm text-[color:var(--color-body)]">
+                        No hay citas este mes.
+                      </p>
                     </div>
                   ) : (
                     appointments.map((apt) => {
@@ -621,17 +672,27 @@ export default function AdminCalendarPage() {
                         >
                           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                             <div>
-                              <p className="font-semibold text-[color:var(--color-heading)]">{apt.clientName}</p>
-                              <p className="text-sm text-[color:var(--color-body)]">
-                                {capitalize(format(apt.startDate, "EEE d MMM", { locale: es }))} - {formatStartTime(apt.time)}
+                              <p className="font-semibold text-[color:var(--color-heading)]">
+                                {apt.clientName}
                               </p>
-                              <p className="text-xs text-[color:var(--color-muted)]">{apt.service}</p>
+                              <p className="text-sm text-[color:var(--color-body)]">
+                                {capitalize(format(apt.startDate, "EEE d MMM", { locale: es }))} -{" "}
+                                {formatStartTime(apt.time)}
+                              </p>
+                              <p className="text-xs text-[color:var(--color-muted)]">
+                                {apt.service}
+                              </p>
                             </div>
                             <div className="flex items-center gap-2">
-                              <span className="rounded-full border px-2 py-0.5 text-xs font-semibold" style={status.style}>
+                              <span
+                                className="rounded-full border px-2 py-0.5 text-xs font-semibold"
+                                style={status.style}
+                              >
                                 {status.label}
                               </span>
-                              <span className="text-sm font-semibold text-[color:var(--color-heading)]">S/ {apt.totalPrice}</span>
+                              <span className="text-sm font-semibold text-[color:var(--color-heading)]">
+                                S/ {apt.totalPrice}
+                              </span>
                             </div>
                           </div>
                         </button>
