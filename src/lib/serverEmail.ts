@@ -1,3 +1,4 @@
+import type { Transporter } from "nodemailer";
 import nodemailer from "nodemailer";
 
 const EMAIL_CONFIG = {
@@ -20,7 +21,7 @@ export interface EmailData {
   text?: string;
 }
 
-let transporter: nodemailer.Transporter | null = null;
+let transporter: Transporter | null = null;
 
 const getTransporter = () => {
   if (!transporter) {
