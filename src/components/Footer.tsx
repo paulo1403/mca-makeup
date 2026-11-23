@@ -191,17 +191,6 @@ export default function Footer() {
           <Typography as="p" variant="p" className="footer-copyright">
             © {currentYear} Marcela Cordero. Todos los derechos reservados.
           </Typography>
-          <Typography as="p" variant="p" className="footer-made-with">
-            Hecho con ❤️ por{" "}
-            <a
-              href="https://paulo-llanos.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="footer-contact-link"
-            >
-              Paulo
-            </a>
-          </Typography>
         </div>
       </div>
 

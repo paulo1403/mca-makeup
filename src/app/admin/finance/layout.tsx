@@ -1,9 +1,7 @@
 "use client";
 
-import { Heart } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import EasterEgg from "@/components/ui/EasterEgg";
 
 const TABS = [
   { href: "/admin/finance/historial", label: "Historial" },
@@ -18,9 +16,6 @@ export default function FinanceLayout({ children }: { children: React.ReactNode 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-semibold text-(--color-heading)">Finanzas</h1>
-          <EasterEgg>
-            <Heart className="h-5 w-5 text-(--color-muted) hover:text-red-400 transition-colors" />
-          </EasterEgg>
         </div>
       </div>
 

@@ -180,11 +180,6 @@
   font-size: 0.875rem;
 }
 
-.footer-made-with {
-  color: color-mix(in srgb, var(--footer-text) 70%, transparent);
-  font-size: 0.875rem;
-}
-
 .back-to-top {
   position: fixed;
   bottom: 1.5rem;
